@@ -1,2 +1,2 @@
 # textura
-A minimalistic, text-only community platform focused on meaningful conversations.
+A minimalist social network: no photos, no distractions, just honest words.
