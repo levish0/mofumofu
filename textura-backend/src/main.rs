@@ -5,6 +5,8 @@ use axum::Router;
 use std::net::SocketAddr;
 use tower_http::compression::CompressionLayer;
 use tracing::info;
+use crate::api::v0::routes::routes::api_routes;
+use crate::middleware::cors::cors_layer;
 
 mod config;
 mod database;
@@ -24,6 +26,8 @@ pub async fn run_server() -> anyhow::Result<()> {
         &DbConfig::get().server_port
     );
     let app = Router::new()
+        .merge(api_routes())
+        .layer(cors_layer())
         .layer(CompressionLayer::new())
         .with_state(AppState { conn });
 
