@@ -1,0 +1,51 @@
+name: Textura Frontend
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  create:
+    tags:
+      - v*
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: textura-frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 'textura-frontend/.nvmrc'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Cache build artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            textura-frontend/.pnpm-store
+            textura-frontend/node_modules
+            textura-frontend/.sveltekit
+          key: ${{ runner.os }}-sveltekit-${{ hashFiles('textura-frontend/pnpm-lock.yaml') }}-${{ hashFiles('textura-frontend/src/**/*') }}
+          restore-keys: |
+            ${{ runner.os }}-sveltekit-${{ hashFiles('textura-frontend/pnpm-lock.yaml') }}-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build SvelteKit project
+        run: pnpm build

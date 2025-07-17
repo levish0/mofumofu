@@ -1,0 +1,35 @@
+name: Textura Backend
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: textura-backend
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Cache Cargo dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            textura-backend/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('textura-backend/**/Cargo.lock') }}
+
+      - name: Release Build
+        run: cargo build --release
