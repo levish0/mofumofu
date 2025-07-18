@@ -43,7 +43,7 @@ impl IntoResponse for ErrorResponse {
 
 // From 트레이트 구현: 데이터베이스 오류를 애플리케이션 오류로 변환
 // 이를 통해 ? 연산자를 사용하여 데이터베이스 오류를 자동으로 처리할 수 있음
-impl From<sea_orm::DbErr> for Errors {
+impl From<DbErr> for Errors {
     fn from(err: sea_orm::DbErr) -> Self {
         error!("Database error: {}", err);
         Errors::DatabaseError(err.to_string())

@@ -6,36 +6,74 @@ pub struct Migration;
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
-        // Replace the sample below with your own migration scripts
-        todo!();
+        // PostgreSQL의 pgcrypto extension 설치 (UUID 자동생성 위해)
+        manager
+            .get_connection()
+            .execute_unprepared("CREATE EXTENSION IF NOT EXISTS \"pgcrypto\";")
+            .await?;
 
+        // users 테이블 생성
+        // - id: UUID, PK, 자동 생성 (gen_random_uuid)
+        // - name: 유저 이름, 20자 제한, NOT NULL
+        // - handle: 고유 핸들, 20자 제한, NOT NULL, UNIQUE (로그인/식별자)
+        // - email: 이메일, 254자 제한, NOT NULL, UNIQUE
+        // - password: 비밀번호 해시, NOT NULL (plain-text 저장 금지)
         manager
             .create_table(
                 Table::create()
-                    .table(Post::Table)
+                    .table(Users::Table)
                     .if_not_exists()
-                    .col(pk_auto(Post::Id))
-                    .col(string(Post::Title))
-                    .col(string(Post::Text))
+                    .col(
+                        ColumnDef::new(Users::Id)
+                            .uuid() // UUID 타입, 고유 식별자
+                            .not_null()
+                            .primary_key() // PK 지정
+                            .default(Expr::cust("gen_random_uuid()")), // 자동 생성
+                    )
+                    .col(string_len(Users::Name, 20).not_null()) // 이름, 20자 제한
+                    .col(string_len(Users::Handle, 20).not_null().unique_key()) // 핸들, UNIQUE
+                    .col(string_len(Users::Email, 254).not_null().unique_key()) // 이메일, UNIQUE
+                    .col(ColumnDef::new(Users::Password).text().not_null()) // 비밀번호 해시
+                    .to_owned(),
+            )
+            .await?;
+
+        // handle 컬럼 인덱스 생성 (로그인/검색 성능 최적화)
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_users_handle")
+                    .table(Users::Table)
+                    .col(Users::Handle)
                     .to_owned(),
             )
             .await
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
-        // Replace the sample below with your own migration scripts
-        todo!();
-
+        // handle 인덱스 삭제 (테이블 삭제 전에 인덱스 먼저 삭제)
         manager
-            .drop_table(Table::drop().table(Post::Table).to_owned())
+            .drop_index(
+                Index::drop()
+                    .name("idx_users_handle")
+                    .table(Users::Table)
+                    .to_owned(),
+            )
+            .await?;
+
+        // users 테이블 삭제 (모든 유저 정보 삭제됨, 롤백 시 주의)
+        manager
+            .drop_table(Table::drop().table(Users::Table).to_owned())
             .await
     }
 }
 
 #[derive(DeriveIden)]
-enum Post {
+enum Users {
     Table,
     Id,
-    Title,
-    Text,
+    Name,
+    Handle,
+    Email,
+    Password,
 }
