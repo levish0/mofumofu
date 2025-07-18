@@ -3,9 +3,7 @@ use crate::dto::user::request::create::CreateUserRequest;
 use crate::dto::user::response::info::UserInfoResponse;
 use crate::middleware::auth::access_jwt_auth;
 use crate::service::error::errors::Errors;
-use crate::service::user::create_user::service_create_user;
-use crate::service::user::get_user_by_handle::service_get_user_by_handle;
-use crate::service::user::get_user_by_uuid::service_get_user_by_uuid;
+use crate::service::user::*;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
 use axum::Router;
@@ -93,7 +91,7 @@ pub async fn get_profile(
     Extension(claims): Extension<AccessTokenClaims>,
 ) -> Result<UserInfoResponse, Errors> {
     let user_uuid = claims.sub.clone();
-    
+
     let user = service_get_user_by_uuid(&state.conn, &user_uuid).await?;
 
     Ok(user)

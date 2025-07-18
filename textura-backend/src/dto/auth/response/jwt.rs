@@ -23,7 +23,7 @@ impl IntoResponse for AuthJWTResponse {
             access_token: self.access_token.clone(),
             cookie_refresh_token: String::new(),
         })
-            .into_response();
+        .into_response();
 
         let cookie = Cookie::build(("refresh_token", self.cookie_refresh_token))
             .http_only(true)

@@ -1,2 +1,2 @@
-mod protocol;
 pub(crate) mod errors;
+mod protocol;

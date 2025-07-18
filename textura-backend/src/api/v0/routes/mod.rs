@@ -1,4 +1,4 @@
-pub mod routes;
-mod openapi;
 mod auth;
+mod openapi;
+pub mod routes;
 mod user;

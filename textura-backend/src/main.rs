@@ -1,22 +1,22 @@
+use crate::api::v0::routes::routes::api_routes;
 use crate::config::db_config::DbConfig;
 use crate::database::connection::establish_connection;
+use crate::middleware::cors::cors_layer;
 use crate::state::AppState;
 use axum::Router;
 use std::net::SocketAddr;
 use tower_http::compression::CompressionLayer;
 use tracing::info;
-use crate::api::v0::routes::routes::api_routes;
-use crate::middleware::cors::cors_layer;
 
+mod api;
 mod config;
 mod database;
-mod state;
-mod api;
-mod service;
-mod middleware;
 mod dto;
-mod utils;
 mod entity;
+mod middleware;
+mod service;
+mod state;
+mod utils;
 
 pub async fn run_server() -> anyhow::Result<()> {
     let conn = establish_connection().await;
