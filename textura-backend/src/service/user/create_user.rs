@@ -18,6 +18,8 @@ pub async fn service_create_user(
         handle: Set(payload.handle),
         email: Set(payload.email),
         password: Set(hashed_password),
+        profile_image: Default::default(),
+        banner_image: Default::default(),
     };
 
     new_user.insert(&txn).await?;
