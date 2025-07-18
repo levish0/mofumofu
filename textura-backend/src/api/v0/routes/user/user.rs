@@ -93,8 +93,7 @@ pub async fn get_profile(
     Extension(claims): Extension<AccessTokenClaims>,
 ) -> Result<UserInfoResponse, Errors> {
     let user_uuid = claims.sub.clone();
-
-    // 예시 응답 (실제로는 DB에서 조회)
+    
     let user = service_get_user_by_uuid(&state.conn, &user_uuid).await?;
 
     Ok(user)
