@@ -1,3 +1,7 @@
+use crate::dto::auth::request::login::AuthLoginRequest;
+use crate::dto::auth::response::jwt::AuthJWTResponse;
+use crate::dto::user::request::create::CreateUserRequest;
+use crate::dto::user::response::info::UserInfoResponse;
 use crate::service::error::errors::ErrorResponse;
 use utoipa::openapi::security::{ApiKey, ApiKeyValue};
 use utoipa::{
@@ -8,9 +12,18 @@ use utoipa::{
 #[derive(OpenApi)]
 #[openapi(
     paths(
+        crate::api::v0::routes::auth::auth::login,
+        crate::api::v0::routes::auth::auth::refresh,
+        crate::api::v0::routes::user::user::get_user,
+        crate::api::v0::routes::user::user::create_user,
+        crate::api::v0::routes::user::user::get_profile,
     ),
     components(
         schemas(
+            AuthLoginRequest,
+            AuthJWTResponse,
+            CreateUserRequest,
+            UserInfoResponse,
             ErrorResponse
         )
     ),

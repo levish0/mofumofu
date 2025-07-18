@@ -1,2 +1,4 @@
 pub mod error;
-pub(crate) mod auth;
+pub mod auth;
+pub mod validator;
+pub mod user;
