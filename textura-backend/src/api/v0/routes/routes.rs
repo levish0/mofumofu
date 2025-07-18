@@ -1,5 +1,7 @@
 use super::openapi::ApiDoc;
 use crate::api::v0::routes::auth::auth::auth_routes;
+use crate::api::v0::routes::post::post::post_routes;
+use crate::api::v0::routes::user::user::user_routes;
 use crate::service::error::errors::handler_404;
 use crate::state::AppState;
 use axum::Router;
@@ -11,5 +13,7 @@ pub fn api_routes() -> Router<AppState> {
     Router::new()
         .merge(SwaggerUi::new("/docs").url("/swagger.json", ApiDoc::openapi()))
         .nest("/v0", auth_routes())
+        .nest("/v0", user_routes())
+        .nest("/v0", post_routes())
         .fallback(handler_404)
 }

@@ -1,5 +1,6 @@
 use crate::dto::auth::request::login::AuthLoginRequest;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
+use crate::dto::post::request::create::CreatePostRequest;
 use crate::dto::user::request::create::CreateUserRequest;
 use crate::dto::user::response::info::UserInfoResponse;
 use crate::service::error::errors::ErrorResponse;
@@ -17,18 +18,21 @@ use utoipa::{
         crate::api::v0::routes::user::user::get_user,
         crate::api::v0::routes::user::user::create_user,
         crate::api::v0::routes::user::user::get_profile,
+        crate::api::v0::routes::post::post::create_post,
     ),
     components(
         schemas(
             AuthLoginRequest,
             AuthJWTResponse,
             CreateUserRequest,
+            CreatePostRequest,
             UserInfoResponse,
             ErrorResponse
         )
     ),
     tags(
-        (name = "User", description = "User management endpoints"),
+        (name = "User", description = "User endpoints"),
+        (name = "Post", description = "Post endpoints"),
         (name = "Auth", description = "Authentication endpoints")
     ),
     modifiers(&SecurityAddon) // 보안 스키마 등록
