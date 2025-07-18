@@ -19,7 +19,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: textura-frontend
+        working-directory: textura-ui
 
     steps:
       - name: Checkout code
@@ -28,7 +28,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version-file: 'textura-frontend/.nvmrc'
+          node-version-file: 'textura-ui/.nvmrc'
 
       - name: Install pnpm
         run: npm install -g pnpm
@@ -37,12 +37,12 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            textura-frontend/.pnpm-store
-            textura-frontend/node_modules
-            textura-frontend/.sveltekit
-          key: ${{ runner.os }}-sveltekit-${{ hashFiles('textura-frontend/pnpm-lock.yaml') }}-${{ hashFiles('textura-frontend/src/**/*') }}
+            textura-ui/.pnpm-store
+            textura-ui/node_modules
+            textura-ui/.sveltekit
+          key: ${{ runner.os }}-sveltekit-${{ hashFiles('textura-ui/pnpm-lock.yaml') }}-${{ hashFiles('textura-ui/src/**/*') }}
           restore-keys: |
-            ${{ runner.os }}-sveltekit-${{ hashFiles('textura-frontend/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-sveltekit-${{ hashFiles('textura-ui/pnpm-lock.yaml') }}-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
