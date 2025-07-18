@@ -1,5 +1,6 @@
 pub use sea_orm_migration::prelude::*;
 mod m20250717_064916_create_users;
+mod m20250718_155828_user_refresh_tokens;
 
 pub struct Migrator;
 
@@ -8,6 +9,7 @@ impl MigratorTrait for Migrator {
     fn migrations() -> Vec<Box<dyn MigrationTrait>> {
         vec![
             Box::new(m20250717_064916_create_users::Migration),
+            Box::new(m20250718_155828_user_refresh_tokens::Migration),
         ]
     }
 }
