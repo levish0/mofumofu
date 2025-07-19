@@ -1,4 +1,3 @@
-// auth.context.svelte.ts
 import { getContext, setContext } from 'svelte';
 
 const AUTH_CONTEXT_KEY = Symbol('auth');
