@@ -6,7 +6,6 @@ export class AuthStore {
   private _initialized = false;
 
   private constructor() {
-    // 브라우저 환경에서만 초기화
     if (browser) {
       this.init();
     }
@@ -59,5 +58,4 @@ export class AuthStore {
   }
 }
 
-// 싱글톤 인스턴스 export
 export const authStore = AuthStore.getInstance();
