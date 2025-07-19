@@ -1,49 +1,64 @@
-import { getContext, setContext } from 'svelte';
-
-const AUTH_CONTEXT_KEY = Symbol('auth');
+import { browser } from '$app/environment';
 
 export class AuthStore {
-  token: string;
+  private static instance: AuthStore;
+  private _token = $state('');
+  private _initialized = false;
 
-  constructor() {
-    this.token = $state('');
-  }
-
-  init() {
-    if (typeof window !== 'undefined') {
-      this.token = localStorage.getItem('textura_access_token') || '';
+  private constructor() {
+    // 브라우저 환경에서만 초기화
+    if (browser) {
+      this.init();
     }
   }
 
+  static getInstance(): AuthStore {
+    if (!AuthStore.instance) {
+      AuthStore.instance = new AuthStore();
+    }
+    return AuthStore.instance;
+  }
+
+  private init() {
+    if (this._initialized) return;
+    
+    this._token = localStorage.getItem('textura_access_token') || '';
+    this._initialized = true;
+  }
+
+  // 서버 사이드에서 안전하게 호출할 수 있도록
+  ensureInitialized() {
+    if (browser && !this._initialized) {
+      this.init();
+    }
+  }
+
+  get token(): string {
+    this.ensureInitialized();
+    return this._token;
+  }
+
   setToken(token: string) {
-    this.token = token;
-    if (typeof window !== 'undefined') {
+    this.ensureInitialized();
+    this._token = token;
+    if (browser) {
       localStorage.setItem('textura_access_token', token);
     }
   }
 
   clearToken() {
-    this.token = '';
-    if (typeof window !== 'undefined') {
+    this.ensureInitialized();
+    this._token = '';
+    if (browser) {
       localStorage.removeItem('textura_access_token');
     }
   }
 
   get isAuthenticated(): boolean {
-    return this.token !== '';
+    this.ensureInitialized();
+    return this._token !== '';
   }
 }
 
-export function createAuthContext(): AuthStore {
-  const authStore = new AuthStore();
-  setContext(AUTH_CONTEXT_KEY, authStore);
-  return authStore;
-}
-
-export function getAuthStore(): AuthStore {
-  const store = getContext<AuthStore>(AUTH_CONTEXT_KEY);
-  if (!store) {
-    throw new Error('AuthStore not found. Make sure to call createAuthContext() in a parent component.');
-  }
-  return store;
-}
+// 싱글톤 인스턴스 export
+export const authStore = AuthStore.getInstance();

@@ -20,10 +20,10 @@ import {
   ApiError
 } from './error/common_error';
 import { ErrorClassMap } from './error/error_class_map';
-import { getAuthStore } from '$lib/stores/auth.context.svelte';
+import { authStore } from '$lib/stores/auth.context.svelte';
+
 
 function getToken(): string | null {
-  const authStore = getAuthStore();
   return authStore.token || null;
 }
 
