@@ -1,7 +1,7 @@
 <script lang="ts">
   import { api } from '$lib/api/api';
   import spec from '$lib/api/spec.json';
-  import { authStore } from '$lib/stores/auth.context.svelte';
+  import { authStore } from '$lib/stores/auth.svelte';
 
   // --- Type Definitions ---
   type Schema = { [key: string]: any };

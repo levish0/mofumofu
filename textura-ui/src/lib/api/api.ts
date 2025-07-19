@@ -1,30 +1,10 @@
+// src/lib/api/api.ts
 import { API_URL } from './config';
 import ky from 'ky';
 import type { ErrorResponse } from './error/types';
-import {
-  UserInvalidPassword,
-  UserNotFound,
-  UserUnauthorized,
-  UserTokenExpired,
-  UserInvalidToken,
-  FollowCannotFollowSelf,
-  FollowAlreadyFollowing,
-  FollowNotExist,
-  BadRequestError,
-  SysHashingError,
-  SysNotFound,
-  SysTransactionError,
-  SysDatabaseError,
-  SysTokenCreationError,
-  ErrorCodes,
-  ApiError
-} from './error/common_error';
 import { ErrorClassMap } from './error/error_class_map';
-import { authStore } from '$lib/stores/auth.context.svelte';
-
-function getToken(): string | null {
-  return authStore.token || null;
-}
+import { authStore } from '$lib/stores/auth.svelte';
+import { ApiError } from './error/common_error';
 
 export const api = ky.create({
   prefixUrl: API_URL,
@@ -38,7 +18,7 @@ export const api = ky.create({
   hooks: {
     beforeRequest: [
       (request) => {
-        const token = getToken();
+        const token = authStore.token;
         if (token) {
           request.headers.set('Authorization', `Bearer ${token}`);
         }
@@ -53,12 +33,12 @@ export const api = ky.create({
           } catch (error) {
             console.error('Failed to parse error response:', error);
           }
+          
           if (errorBody?.code) {
             const ErrorClass = ErrorClassMap[errorBody.code];
             if (ErrorClass) {
               throw new ErrorClass(errorBody.code, errorBody.status, errorBody);
             } else {
-              // 알 수 없는 에러
               throw new ApiError(errorBody.code, errorBody.status, errorBody);
             }
           }
