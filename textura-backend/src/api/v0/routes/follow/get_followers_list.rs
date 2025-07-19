@@ -45,7 +45,7 @@ pub async fn get_followers(
             email: user.email,
         })
         .collect();
-    
+
     // Get total count for pagination info
     let total_count = service_get_follower_count(&state.conn, &handle).await?;
 

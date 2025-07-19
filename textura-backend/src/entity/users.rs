@@ -55,7 +55,7 @@ impl Linked for GetFollowersLink {
 
     fn link(&self) -> Vec<RelationDef> {
         vec![
-            Relation::Followers.def(), // users -> follows (followers)
+            Relation::Followers.def(),                // users -> follows (followers)
             super::follows::Relation::Follower.def(), // follows -> users (follower info)
         ]
     }
@@ -71,7 +71,7 @@ impl Linked for GetFollowingLink {
 
     fn link(&self) -> Vec<RelationDef> {
         vec![
-            Relation::Following.def(), // users -> follows (following)
+            Relation::Following.def(),                // users -> follows (following)
             super::follows::Relation::Followee.def(), // follows -> users (followee info)
         ]
     }
