@@ -33,27 +33,10 @@ pub enum Relation {
     Followee,
 }
 
-#[derive(Debug, Clone)]
-pub struct FollowerLink;
-
-impl Linked for FollowerLink {
-    type FromEntity = Entity;
-    type ToEntity = super::users::Entity;
-
-    fn link(&self) -> Vec<RelationDef> {
-        vec![Relation::Follower.def()]
-    }
-}
-
-#[derive(Debug, Clone)]
-pub struct FolloweeLink;
-
-impl Linked for FolloweeLink {
-    type FromEntity = Entity;
-    type ToEntity = super::users::Entity;
-
-    fn link(&self) -> Vec<RelationDef> {
-        vec![Relation::Followee.def()]
+// Follows -> Users 관계 구현 (follower 방향)
+impl Related<super::users::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Follower.def()
     }
 }
 

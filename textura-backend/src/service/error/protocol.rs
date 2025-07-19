@@ -6,6 +6,11 @@ pub mod user {
     pub const USER_INVALID_TOKEN: &str = "user:invalid_token";
 }
 
+pub mod follow {
+    pub const FOLLOW_CANNOT_FOLLOW_SELF: &str = "follow:cannot_follow_self";
+    pub const FOLLOW_ALREADY_FOLLOWING: &str = "follow:already_following";
+    pub const FOLLOW_NOT_EXIST: &str = "follow:not_exist";
+}
 pub mod general {
     pub const BAD_REQUEST: &str = "general:bad_request";
     pub const VALIDATION_ERROR: &str = "general:validation_error";

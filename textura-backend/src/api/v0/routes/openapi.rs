@@ -1,5 +1,8 @@
 use crate::dto::auth::request::login::AuthLoginRequest;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
+use crate::dto::follow::request::create::CreateFollowRequest;
+use crate::dto::follow::request::delete::DeleteFollowRequest;
+use crate::dto::follow::response::follow_list::FollowListResponse;
 use crate::dto::post::request::create::CreatePostRequest;
 use crate::dto::user::request::create::CreateUserRequest;
 use crate::dto::user::response::info::UserInfoResponse;
@@ -19,6 +22,10 @@ use utoipa::{
         crate::api::v0::routes::user::user::create_user,
         crate::api::v0::routes::user::user::get_profile,
         crate::api::v0::routes::post::post::create_post,
+        crate::api::v0::routes::follow::create_follow::api_create_follow,
+        crate::api::v0::routes::follow::delete_follow::api_delete_follow,
+        crate::api::v0::routes::follow::get_followers_list::get_followers,
+        crate::api::v0::routes::follow::get_following_list::get_following
     ),
     components(
         schemas(
@@ -26,6 +33,9 @@ use utoipa::{
             AuthJWTResponse,
             CreateUserRequest,
             CreatePostRequest,
+            CreateFollowRequest,
+            DeleteFollowRequest,
+            FollowListResponse,
             UserInfoResponse,
             ErrorResponse
         )
@@ -33,6 +43,7 @@ use utoipa::{
     tags(
         (name = "User", description = "User endpoints"),
         (name = "Post", description = "Post endpoints"),
+         (name = "Follow", description = "Follow endpoints"),
         (name = "Auth", description = "Authentication endpoints")
     ),
     modifiers(&SecurityAddon) // 보안 스키마 등록

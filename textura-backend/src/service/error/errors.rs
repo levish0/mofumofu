@@ -1,4 +1,7 @@
 use crate::config::db_config::DbConfig;
+use crate::service::error::protocol::follow::{
+    FOLLOW_ALREADY_FOLLOWING, FOLLOW_CANNOT_FOLLOW_SELF, FOLLOW_NOT_EXIST,
+};
 use crate::service::error::protocol::general::{BAD_REQUEST, VALIDATION_ERROR};
 use crate::service::error::protocol::system::{
     SYS_DATABASE_ERROR, SYS_HASHING_ERROR, SYS_NOT_FOUND, SYS_TOKEN_CREATION_ERROR,
@@ -16,7 +19,6 @@ use sea_orm::{DbErr, TransactionError};
 use serde::Serialize;
 use tracing::error;
 use utoipa::ToSchema;
-
 // 이 모듈은 애플리케이션의 오류 처리 시스템을 구현합니다.
 // 주요 기능:
 // 1. 다양한 오류 유형 정의 (사용자, 문서, 권한, 시스템 등)
@@ -68,6 +70,11 @@ pub enum Errors {
     UserTokenExpired,    // 만료된 토큰
     UserInvalidToken,    // 유효하지 않은 토큰
 
+    // follow 관련 오류
+    FollowCannotFollowSelf,
+    FollowAlreadyFollowing,
+    FollowNotExist,
+
     // 일반 오류
     BadRequestError(String), // 잘못된 요청 (추가 정보 포함)
     ValidationError(String), // 유효성 검사 오류 (추가 정보 포함)
@@ -92,6 +99,15 @@ impl IntoResponse for Errors {
             Errors::UserUnauthorized => (StatusCode::UNAUTHORIZED, USER_UNAUTHORIZED, None),
             Errors::UserTokenExpired => (StatusCode::UNAUTHORIZED, USER_TOKEN_EXPIRED, None),
             Errors::UserInvalidToken => (StatusCode::UNAUTHORIZED, USER_INVALID_TOKEN, None),
+
+            // Follow
+            Errors::FollowCannotFollowSelf => {
+                (StatusCode::BAD_REQUEST, FOLLOW_CANNOT_FOLLOW_SELF, None)
+            }
+            Errors::FollowAlreadyFollowing => {
+                (StatusCode::CONFLICT, FOLLOW_ALREADY_FOLLOWING, None)
+            }
+            Errors::FollowNotExist => (StatusCode::NOT_FOUND, FOLLOW_NOT_EXIST, None),
 
             // 일반 오류 - 400 Bad Request
             Errors::BadRequestError(msg) => (StatusCode::BAD_REQUEST, BAD_REQUEST, Some(msg)),
