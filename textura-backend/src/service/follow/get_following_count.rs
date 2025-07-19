@@ -2,7 +2,7 @@ use crate::service::error::errors::Errors;
 use crate::service::user::get_user_by_handle;
 use sea_orm::PaginatorTrait;
 use sea_orm::TransactionTrait;
-use sea_orm::{ActiveModelTrait, ConnectionTrait, QueryFilter};
+use sea_orm::{ConnectionTrait, QueryFilter};
 use sea_orm::{ColumnTrait, EntityTrait};
 
 pub async fn service_get_following_count<C>(

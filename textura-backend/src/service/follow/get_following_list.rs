@@ -1,16 +1,11 @@
-use crate::dto::follow::internal::delete::DeleteFollow;
-use crate::entity::follows::ActiveModel as FollowsActiveModel;
-use crate::entity::follows::Column as FollowsColumn;
-use crate::entity::follows::Entity as FollowsEntity;
 use crate::entity::users::Entity as UsersEntity;
-use crate::entity::users::Relation as UsersRelation;
-use crate::entity::users::{GetFollowersLink, GetFollowingLink, Model as UsersModel};
+use crate::entity::users::{GetFollowingLink, Model as UsersModel};
 use crate::service::error::errors::Errors;
-use crate::service::user::{get_user_by_handle, get_user_by_uuid};
-use sea_orm::{ActiveModelTrait, ConnectionTrait, QueryFilter, Set};
-use sea_orm::{ColumnTrait, EntityTrait};
-use sea_orm::{JoinType, TransactionTrait};
-use sea_orm::{PaginatorTrait, QuerySelect};
+use crate::service::user::get_user_by_handle;
+use sea_orm::{ConnectionTrait};
+use sea_orm::EntityTrait;
+use sea_orm::QuerySelect;
+use sea_orm::TransactionTrait;
 
 pub async fn service_get_following<C>(
     conn: &C,
