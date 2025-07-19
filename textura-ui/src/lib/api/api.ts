@@ -22,7 +22,6 @@ import {
 import { ErrorClassMap } from './error/error_class_map';
 import { authStore } from '$lib/stores/auth.context.svelte';
 
-
 function getToken(): string | null {
   return authStore.token || null;
 }

@@ -18,6 +18,7 @@ pub struct AuthJWTResponse {
 impl IntoResponse for AuthJWTResponse {
     fn into_response(self) -> Response {
         let access_token_lifetime = DbConfig::get().auth_access_token_expire_time;
+        let is_dev = DbConfig::get().is_dev;
 
         let mut response = Json(AuthJWTResponse {
             access_token: self.access_token.clone(),
@@ -25,10 +26,16 @@ impl IntoResponse for AuthJWTResponse {
         })
         .into_response();
 
+        let same_site_attribute = if is_dev {
+            SameSite::None
+        } else {
+            SameSite::Lax
+        };
+
         let cookie = Cookie::build(("refresh_token", self.cookie_refresh_token))
             .http_only(true)
             .secure(true)
-            .same_site(SameSite::Lax)
+            .same_site(same_site_attribute)
             .path("/")
             .max_age(Duration::days(access_token_lifetime))
             .build();

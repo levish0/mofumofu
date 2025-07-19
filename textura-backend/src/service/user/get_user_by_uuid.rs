@@ -2,9 +2,7 @@ use crate::dto::user::internal::info::UserInfo;
 use crate::dto::user::response::info::UserInfoResponse;
 use crate::entity::users::Entity as UserEntity;
 use crate::service::error::errors::Errors;
-use sea_orm::{
-    ConnectionTrait, DatabaseConnection, EntityTrait, TransactionTrait,
-};
+use sea_orm::{ConnectionTrait, DatabaseConnection, EntityTrait, TransactionTrait};
 use tracing::error;
 use uuid::Uuid;
 

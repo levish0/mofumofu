@@ -3,8 +3,7 @@ use crate::dto::user::response::info::UserInfoResponse;
 use crate::entity::users::{Column, Entity as UserEntity};
 use crate::service::error::errors::Errors;
 use sea_orm::{
-    ColumnTrait, ConnectionTrait, DatabaseConnection, EntityTrait,
-    QueryFilter, TransactionTrait,
+    ColumnTrait, ConnectionTrait, DatabaseConnection, EntityTrait, QueryFilter, TransactionTrait,
 };
 use tracing::error;
 

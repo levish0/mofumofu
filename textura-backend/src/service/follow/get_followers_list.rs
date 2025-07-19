@@ -2,7 +2,7 @@ use crate::entity::users::Entity as UsersEntity;
 use crate::entity::users::{GetFollowersLink, Model as UsersModel};
 use crate::service::error::errors::Errors;
 use crate::service::user::get_user_by_handle;
-use sea_orm::{ConnectionTrait};
+use sea_orm::ConnectionTrait;
 use sea_orm::EntityTrait;
 use sea_orm::QuerySelect;
 use sea_orm::TransactionTrait;

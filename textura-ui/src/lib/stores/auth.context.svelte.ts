@@ -21,7 +21,7 @@ export class AuthStore {
 
   private init() {
     if (this._initialized) return;
-    
+
     this._token = localStorage.getItem('textura_access_token') || '';
     this._initialized = true;
   }
