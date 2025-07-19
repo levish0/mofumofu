@@ -1,7 +1,6 @@
 import { API_URL } from './config';
 import ky from 'ky';
-import { get } from 'svelte/store';
-import { auth } from '$lib/stores/auth';
+import { authStore } from '$lib/stores/auth.svelte';
 import type { ErrorResponse } from './error/types';
 import {
   UserInvalidPassword,
@@ -35,9 +34,8 @@ export const api = ky.create({
   hooks: {
     beforeRequest: [
       (request) => {
-        const token = get(auth);
-        if (token) {
-          request.headers.set('Authorization', `Bearer ${token}`);
+        if (authStore.token) {
+          request.headers.set('Authorization', `Bearer ${authStore.token}`);
         }
       }
     ],
