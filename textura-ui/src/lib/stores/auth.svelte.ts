@@ -1,7 +1,11 @@
 export class AuthStore {
   token: string;
   constructor() {
-    this.token = $state(localStorage.getItem('textura_access_token') || '');
+    this.token = $state('');
+  }
+
+  init() {
+    this.token = localStorage.getItem('textura_access_token') || '';
   }
 
   setToken(token: string) {
