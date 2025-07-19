@@ -7,7 +7,7 @@ pub struct Model {
     #[sea_orm(primary_key)]
     pub id: Uuid,
     #[sea_orm(column_type = "Uuid", not_null)]
-    pub author_id: Uuid,
+    pub user_id: Uuid,
     #[sea_orm(column_type = "Uuid", nullable)]
     pub reply_to_id: Option<Uuid>,
     #[sea_orm(column_type = "Text", string_len = 2000)]
@@ -25,7 +25,7 @@ pub struct Model {
 pub enum Relation {
     #[sea_orm(
         belongs_to = "super::users::Entity",
-        from = "Column::AuthorId",
+        from = "Column::UserId",
         to = "super::users::Column::Id",
         on_delete = "Cascade"
     )]

@@ -12,7 +12,7 @@ pub async fn service_create_post(
 
     let new_post = PostActiveModel {
         id: Default::default(),
-        author_id: Set(payload.author_id),
+        user_id: Set(payload.author_id),
         reply_to_id: Set(payload.reply_to_id),
         content: Set(payload.content),
         created_at: Set(Utc::now()),

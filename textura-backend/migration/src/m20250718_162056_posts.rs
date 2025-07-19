@@ -19,7 +19,7 @@ impl MigrationTrait for Migration {
                             .default(Expr::cust("gen_random_uuid()")),
                     )
                     .col(ColumnDef::new(Posts::Content).string_len(2000).not_null())
-                    .col(ColumnDef::new(Posts::AuthorId).uuid().not_null())
+                    .col(ColumnDef::new(Posts::UserId).uuid().not_null())
                     .col(ColumnDef::new(Posts::ReplyToId).uuid().null()) // 답글 대상 포스트
                     .col(
                         ColumnDef::new(Posts::CreatedAt)
@@ -53,7 +53,7 @@ impl MigrationTrait for Migration {
                     // 작성자와의 외래키
                     .foreign_key(
                         ForeignKey::create()
-                            .from(Posts::Table, Posts::AuthorId)
+                            .from(Posts::Table, Posts::UserId)
                             .to(Users::Table, Users::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
@@ -72,9 +72,9 @@ impl MigrationTrait for Migration {
         manager
             .create_index(
                 Index::create()
-                    .name("idx_posts_author_id")
+                    .name("idx_posts_user_id")
                     .table(Posts::Table)
-                    .col(Posts::AuthorId)
+                    .col(Posts::UserId)
                     .to_owned(),
             )
             .await?;
@@ -125,7 +125,7 @@ impl MigrationTrait for Migration {
 enum Posts {
     Table,
     Id,
-    AuthorId,
+    UserId,
     ReplyToId,
     Content,
     CreatedAt,
