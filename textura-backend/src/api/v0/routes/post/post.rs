@@ -45,6 +45,7 @@ pub async fn create_post(
         CreatePost {
             content: payload.content,
             author_id: user_uuid,
+            reply_to_id: payload.reply_to_id,
         },
     )
     .await?;

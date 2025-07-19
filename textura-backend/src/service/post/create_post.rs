@@ -1,5 +1,4 @@
 use crate::dto::post::internal::create::CreatePost;
-use crate::dto::post::request::create::CreatePostRequest;
 use crate::entity::posts::ActiveModel as PostActiveModel;
 use crate::service::error::errors::Errors;
 use chrono::Utc;
@@ -14,9 +13,11 @@ pub async fn service_create_post(
     let new_post = PostActiveModel {
         id: Default::default(),
         author_id: Set(payload.author_id),
+        reply_to_id: Set(payload.reply_to_id),
         content: Set(payload.content),
         created_at: Set(Utc::now()),
         updated_at: Set(Option::from(Utc::now())),
+        is_deleted: Default::default(),
         like_count: Default::default(),
         reply_count: Default::default(),
     };
