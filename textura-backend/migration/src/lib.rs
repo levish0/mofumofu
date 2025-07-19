@@ -2,6 +2,7 @@ pub use sea_orm_migration::prelude::*;
 mod m20250717_064916_create_users;
 mod m20250718_155828_user_refresh_tokens;
 mod m20250718_162056_posts;
+mod m20250719_031841_follows;
 
 pub struct Migrator;
 
@@ -12,6 +13,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20250717_064916_create_users::Migration),
             Box::new(m20250718_155828_user_refresh_tokens::Migration),
             Box::new(m20250718_162056_posts::Migration),
+            Box::new(m20250719_031841_follows::Migration),
         ]
     }
 }
