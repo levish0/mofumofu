@@ -47,5 +47,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Create .env file
+        run: |
+          echo "PUBLIC_API_URL=${{ secrets.PUBLIC_API_URL }}" > .env
+        working-directory: textura-ui
+
       - name: Build SvelteKit project
         run: pnpm build
