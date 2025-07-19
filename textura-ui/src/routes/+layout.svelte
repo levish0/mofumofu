@@ -1,14 +1,15 @@
+<!-- layout.svelte -->
 <script lang="ts">
-  import { onMount, setContext } from 'svelte';
-  import '../app.css';
-  import { authStore } from '$lib/stores/auth.svelte';
-
-  onMount(() => {
-    authStore.init();
-    setContext('auth', authStore);
-  });
+  import { createAuthContext } from '$lib/stores/auth.context.svelte';
+  import { onMount } from 'svelte';
 
   let { children } = $props();
+
+  // onMount에서 Context 생성
+  onMount(() => {
+    const authStore = createAuthContext();
+    authStore.init();
+  });
 </script>
 
 {@render children()}

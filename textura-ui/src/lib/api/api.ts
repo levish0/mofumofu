@@ -1,6 +1,5 @@
 import { API_URL } from './config';
 import ky from 'ky';
-import { authStore } from '$lib/stores/auth.svelte';
 import type { ErrorResponse } from './error/types';
 import {
   UserInvalidPassword,
@@ -21,6 +20,12 @@ import {
   ApiError
 } from './error/common_error';
 import { ErrorClassMap } from './error/error_class_map';
+import { getAuthStore } from '$lib/stores/auth.context.svelte';
+
+function getToken(): string | null {
+  const authStore = getAuthStore();
+  return authStore.token || null;
+}
 
 export const api = ky.create({
   prefixUrl: API_URL,
@@ -34,8 +39,9 @@ export const api = ky.create({
   hooks: {
     beforeRequest: [
       (request) => {
-        if (authStore.token) {
-          request.headers.set('Authorization', `Bearer ${authStore.token}`);
+        const token = getToken();
+        if (token) {
+          request.headers.set('Authorization', `Bearer ${token}`);
         }
       }
     ],
@@ -48,7 +54,6 @@ export const api = ky.create({
           } catch (error) {
             console.error('Failed to parse error response:', error);
           }
-
           if (errorBody?.code) {
             const ErrorClass = ErrorClassMap[errorBody.code];
             if (ErrorClass) {
