@@ -26,7 +26,6 @@ export class AuthStore {
     this._initialized = true;
   }
 
-  // 서버 사이드에서 안전하게 호출할 수 있도록
   ensureInitialized() {
     if (browser && !this._initialized) {
       this.init();
