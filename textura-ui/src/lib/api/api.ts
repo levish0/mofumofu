@@ -33,7 +33,7 @@ export const api = ky.create({
           } catch (error) {
             console.error('Failed to parse error response:', error);
           }
-          
+
           if (errorBody?.code) {
             const ErrorClass = ErrorClassMap[errorBody.code];
             if (ErrorClass) {
