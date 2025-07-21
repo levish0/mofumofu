@@ -6,4 +6,6 @@
 </script>
 
 <ModeWatcher />
-{@render children()}
+<div class="font-pretendard">
+  {@render children()}
+</div>
