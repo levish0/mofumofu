@@ -3,6 +3,7 @@ use crate::config::db_config::DbConfig;
 use crate::database::connection::establish_connection;
 use crate::middleware::cors::cors_layer;
 use crate::state::AppState;
+use crate::utils::logger::init_tracing;
 use axum::Router;
 use std::net::SocketAddr;
 use tower_http::compression::CompressionLayer;
@@ -45,18 +46,8 @@ pub async fn run_server() -> anyhow::Result<()> {
 
 #[tokio::main]
 async fn main() {
-    DbConfig::init();
-
-    #[cfg(debug_assertions)]
-    {
-        tracing_subscriber::fmt::init();
-    }
-    #[cfg(not(debug_assertions))]
-    {
-        tracing_subscriber::fmt()
-            .with_max_level(tracing::Level::ERROR)
-            .init();
-    }
+    // tracing 초기화
+    init_tracing();
 
     if let Err(err) = run_server().await {
         eprintln!("Application error: {}", err);

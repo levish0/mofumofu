@@ -1,1 +1,2 @@
-pub(crate) mod crypto;
+pub mod crypto;
+pub mod logger;
