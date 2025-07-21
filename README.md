@@ -1,4 +1,4 @@
-# 📝 Textura
+# 📝 Textuna
 
 > A minimalist social network: no photos, no distractions, just honest words.
 
@@ -7,7 +7,7 @@ short-form videos, endless scrolls, and media designed to grab attention.
 
 In the midst of this noise, we often forget the quiet power of simple words.
 
-**Textura** is a space to return to that simplicity.  
+**Textuna** is a space to return to that simplicity.  
 No photos. No videos. No filters.
 
 Just your thoughts, written plainly and shared honestly.
@@ -42,7 +42,7 @@ Setup instructions will be added soon as the project stabilizes.
 ## 🤍 Philosophy
 
 Simplicity is not a step back, it’s a way forward.  
-Textura believes in the value of words, unfiltered and unpolished.  
+Textuna believes in the value of words, unfiltered and unpolished.  
 A social network where you’re not the content, your thoughts are.
 
 ---
