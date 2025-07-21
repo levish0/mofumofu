@@ -19,7 +19,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: textura-ui
+        working-directory: textuna-ui
 
     steps:
       - name: Checkout code
@@ -28,7 +28,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version-file: 'textura-ui/.nvmrc'
+          node-version-file: 'textuna-ui/.nvmrc'
 
       - name: Install pnpm
         run: npm install -g pnpm
@@ -37,12 +37,12 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            textura-ui/.pnpm-store
-            textura-ui/node_modules
-            textura-ui/.sveltekit
-          key: ${{ runner.os }}-sveltekit-${{ hashFiles('textura-ui/pnpm-lock.yaml') }}-${{ hashFiles('textura-ui/src/**/*') }}
+            textuna-ui/.pnpm-store
+            textuna-ui/node_modules
+            textuna-ui/.sveltekit
+          key: ${{ runner.os }}-sveltekit-${{ hashFiles('textuna-ui/pnpm-lock.yaml') }}-${{ hashFiles('textuna-ui/src/**/*') }}
           restore-keys: |
-            ${{ runner.os }}-sveltekit-${{ hashFiles('textura-ui/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-sveltekit-${{ hashFiles('textuna-ui/pnpm-lock.yaml') }}-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -50,7 +50,7 @@ jobs:
       - name: Create .env file
         run: |
           echo "PUBLIC_API_URL=${{ secrets.PUBLIC_API_URL }}" > .env
-        working-directory: textura-ui
+        working-directory: textuna-ui
 
       - name: Build SvelteKit project
         run: pnpm build

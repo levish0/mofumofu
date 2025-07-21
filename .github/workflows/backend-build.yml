@@ -12,7 +12,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: textura-backend
+        working-directory: textuna-backend
 
     steps:
       - uses: actions/checkout@v3
@@ -28,8 +28,8 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
-            textura-backend/target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('textura-backend/**/Cargo.lock') }}
+            textuna-backend/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('textuna-backend/**/Cargo.lock') }}
 
       - name: Release Build
         run: cargo build --release
