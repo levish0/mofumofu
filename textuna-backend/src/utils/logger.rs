@@ -23,7 +23,7 @@ static TRACING_GUARD: LazyLock<tracing_appender::non_blocking::WorkerGuard> = La
                 fmt::layer()
                     .with_writer(non_blocking)
                     .with_ansi(false)
-                    .with_filter(tracing_subscriber::filter::LevelFilter::INFO),
+                    .with_filter(tracing_subscriber::filter::LevelFilter::DEBUG),
             )
             .init();
     }
@@ -35,7 +35,7 @@ static TRACING_GUARD: LazyLock<tracing_appender::non_blocking::WorkerGuard> = La
                 fmt::layer()
                     .with_writer(non_blocking)
                     .with_ansi(false)
-                    .with_filter(tracing_subscriber::filter::LevelFilter::ERROR),
+                    .with_filter(tracing_subscriber::filter::LevelFilter::DEBUG),
             )
             .init();
     }

@@ -35,7 +35,7 @@ pub async fn establish_connection() -> DatabaseConnection {
         .connect_timeout(Duration::from_secs(8)) // 연결 타임아웃: 8초
         .idle_timeout(Duration::from_secs(300)) // 유휴 타임아웃: 5분
         // SQL 로깅 활성화 (디버깅 용도)
-        .sqlx_logging(true);
+        .sqlx_logging(false);
 
     // 데이터베이스 연결 시도 및 결과 처리
     match Database::connect(options).await {

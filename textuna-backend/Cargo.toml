@@ -1,5 +1,5 @@
 [package]
-name = "textura-backend"
+name = "textuna-backend"
 version = "0.1.0"
 authors = [
     "Levi Lim <shiueo.csh@gmail.com>",

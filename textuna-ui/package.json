@@ -1,5 +1,5 @@
 {
-  "name": "textura-frontend",
+  "name": "textuna-frontend",
   "version": "0.0.1",
   "scripts": {
     "dev": "vite dev",
@@ -45,7 +45,7 @@
     "prettier-plugin-svelte": "^3.4.0",
     "prettier-plugin-tailwindcss": "^0.6.14",
     "publint": "^0.3.12",
-    "svelte": "^5.36.8",
+    "svelte": "^5.36.12",
     "svelte-check": "^4.3.0",
     "svelte-hero-icons": "^5.2.0",
     "tailwindcss": "^4.1.11",
