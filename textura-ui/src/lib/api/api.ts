@@ -4,7 +4,8 @@ import ky from 'ky';
 import type { ErrorResponse } from './error/types';
 import { ErrorClassMap } from './error/error_class_map';
 import { authStore } from '$lib/stores/auth.svelte';
-import { ApiError } from './error/common_error';
+import { ApiError, ErrorCodes } from './error/common_error';
+import { refreshAccessToken } from './auth/authApi';
 
 export const api = ky.create({
   prefixUrl: API_URL,
@@ -34,13 +35,24 @@ export const api = ky.create({
             console.error('Failed to parse error response:', error);
           }
 
-          if (errorBody?.code) {
-            const ErrorClass = ErrorClassMap[errorBody.code];
-            if (ErrorClass) {
-              throw new ErrorClass(errorBody.code, errorBody.status, errorBody);
-            } else {
-              throw new ApiError(errorBody.code, errorBody.status, errorBody);
+          if (errorBody?.code === ErrorCodes.UserTokenExpired && request.headers.has('Authorization')) {
+            try {
+              const refreshResponse = await refreshAccessToken();
+              authStore.setToken(refreshResponse.access_token);
+
+              const originalRequest = request.clone();
+              originalRequest.headers.set('Authorization', `Bearer ${refreshResponse.access_token}`);
+
+              return ky(originalRequest);
+            } catch (refreshError) {
+              console.error('Failed to refresh access token:', refreshError);
+              authStore.clearToken();
+              throw createApiError(errorBody);
             }
+          }
+
+          if (errorBody?.code) {
+            throw createApiError(errorBody);
           }
           throw new ApiError('unknown_error', response.status, null);
         }
@@ -48,3 +60,12 @@ export const api = ky.create({
     ]
   }
 });
+
+function createApiError(errorBody: ErrorResponse): ApiError {
+  const ErrorClass = ErrorClassMap[errorBody.code];
+  if (ErrorClass) {
+    return new ErrorClass(errorBody.code, errorBody.status, errorBody);
+  } else {
+    return new ApiError(errorBody.code, errorBody.status, errorBody);
+  }
+}
