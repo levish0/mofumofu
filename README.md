@@ -1,6 +1,6 @@
 # 📝 Tuna 🐟
 
-> A minimalist social network: no photos, no distractions, just honest words.
+> A minimalist social network: no tracking, no distractions.
 
 The internet today is overflowing with stimulation,  
 short-form videos, endless scrolls, and media designed to grab attention.
