@@ -1,4 +1,4 @@
-# 📝 Textuna
+# 📝 Tuna 🐟
 
 > A minimalist social network: no photos, no distractions, just honest words.
 
