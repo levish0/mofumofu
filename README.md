@@ -11,16 +11,6 @@ but if you can accept that, we can all enjoy a safer, more honest internet exper
 
 ---
 
-## ✨ Features
-
-- 🧘 **Distraction-free design**: focus on what really matters — your expression.  
-- 🖋️ **Simple text posts**: write freely with plain text.  
-- 🖼️ **Image support**: share moments beyond words.  
-- 🗂️ **Threaded conversations**: engage in clear, meaningful discussions.  
-- 🔒 **Privacy-first**: no user tracking, no profiling, your data is yours.
-
----
-
 ## 📦 Tech Stack
 
 - **Frontend**: [SvelteKit 5](https://kit.svelte.dev/)  
