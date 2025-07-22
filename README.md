@@ -1,4 +1,4 @@
-# 📝 Tuna 🐟
+# 🐟 Tuna
 
 > A minimalist social network: no tracking, no distractions.
 
