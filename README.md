@@ -1,14 +1,12 @@
 ![banner](./assets/mofu.png)
 # Mofu
 
-> A minimalist social network: no tracking, no distractions.
+> A cozy space for creators to write, share, and showcase their stories and art. 
 
-Today’s social networks collect, use, and sell your data.  
-We stand firmly against that.
+Mofu is an open-source, minimalist blogging platform.  
 
-As an open-source project, Tuna does **not** collect or use your information.  
-There are no algorithms manipulating your feed, and some conveniences may be missing,  
-but if you can accept that, we can all enjoy a safer, more honest internet experience together.
+Whether you're writing essays, tutorials, or daily thoughts,  
+Mofu helps you focus on what matters most.
 
 ---
 
@@ -22,15 +20,18 @@ but if you can accept that, we can all enjoy a safer, more honest internet exper
 
 ## 🚀 Getting Started (Coming Soon)
 
-Setup instructions will be added soon as the project stabilizes.
+Setup instructions will be added soon once the platform stabilizes.  
+Stay tuned!
 
 ---
 
-## 🤍 Philosophy
+## ✨ Philosophy
 
-Simplicity is not a step back, it’s a way forward.  
-Tuna believes in honest, untracked expression — no algorithms, no data selling, no distractions.  
-A social network where your thoughts and images speak for themselves.
+We believe the internet should be a space for genuine thought and expression.  
+Mofu doesn’t optimize for engagement metrics. 
+It’s built for clarity, ownership, and simplicity.
+
+If you’re tired of the noise, Mofu offers a quieter place to write.
 
 ---
 
