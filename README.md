@@ -1,4 +1,5 @@
-# 🐟 Mofu
+![banner](./assets/mofu.png)
+# Mofu
 
 > A minimalist social network: no tracking, no distractions.
 
