@@ -1,4 +1,4 @@
-name: Textura Backend
+name: Mofu Backend
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: textuna-backend
+        working-directory: mofu-backend
 
     steps:
       - uses: actions/checkout@v3
@@ -28,8 +28,8 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
-            textuna-backend/target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('textuna-backend/**/Cargo.lock') }}
+            mofu-backend/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('mofu-backend/**/Cargo.lock') }}
 
       - name: Release Build
         run: cargo build --release

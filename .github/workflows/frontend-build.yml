@@ -1,4 +1,4 @@
-name: Textura Frontend
+name: Mofu Frontend
 on:
   workflow_dispatch:
   push:
@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: textuna-ui
+        working-directory: mofu-ui
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version-file: 'textuna-ui/.nvmrc'
+          node-version-file: 'mofu-ui/.nvmrc'
       
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -48,11 +48,11 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            textuna-ui/node_modules
-            textuna-ui/.sveltekit
-          key: ${{ runner.os }}-sveltekit-${{ hashFiles('textuna-ui/pnpm-lock.yaml') }}-${{ hashFiles('textuna-ui/src/**/*') }}
+            mofu-ui/node_modules
+            mofu-ui/.sveltekit
+          key: ${{ runner.os }}-sveltekit-${{ hashFiles('mofu-ui/pnpm-lock.yaml') }}-${{ hashFiles('mofu-ui/src/**/*') }}
           restore-keys: |
-            ${{ runner.os }}-sveltekit-${{ hashFiles('textuna-ui/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-sveltekit-${{ hashFiles('mofu-ui/pnpm-lock.yaml') }}-
       
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
