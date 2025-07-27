@@ -1,5 +1,4 @@
 name: Textura Frontend
-
 on:
   workflow_dispatch:
   push:
@@ -8,49 +7,59 @@ on:
   create:
     tags:
       - v*
-
 permissions:
   contents: read
   packages: read
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     defaults:
       run:
         working-directory: textuna-ui
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+      
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version-file: 'textuna-ui/.nvmrc'
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Cache build artifacts
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+          run_install: false
+      
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      
+      - name: Cache node_modules and build artifacts
         uses: actions/cache@v4
         with:
           path: |
-            textuna-ui/.pnpm-store
             textuna-ui/node_modules
             textuna-ui/.sveltekit
           key: ${{ runner.os }}-sveltekit-${{ hashFiles('textuna-ui/pnpm-lock.yaml') }}-${{ hashFiles('textuna-ui/src/**/*') }}
           restore-keys: |
             ${{ runner.os }}-sveltekit-${{ hashFiles('textuna-ui/pnpm-lock.yaml') }}-
-
+      
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
+      
       - name: Create .env file
         run: |
           echo "PUBLIC_API_URL=${{ secrets.PUBLIC_API_URL }}" > .env
-        working-directory: textuna-ui
-
+      
       - name: Build SvelteKit project
         run: pnpm build
