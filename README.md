@@ -1,4 +1,4 @@
-# 🐟 Tuna
+# 🐟 Mofu
 
 > A minimalist social network: no tracking, no distractions.
 
