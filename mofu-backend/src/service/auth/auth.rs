@@ -11,15 +11,21 @@ use crate::service::error::errors::Errors;
 use crate::utils::crypto::verify_password;
 use anyhow::Result;
 use chrono::Utc;
-use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set};
+use sea_orm::{
+    ActiveModelTrait, ColumnTrait, ConnectionTrait, DatabaseConnection, EntityTrait, QueryFilter,
+    Set, TransactionTrait,
+};
 use tracing::error;
 
-pub async fn service_login(
-    conn: &DatabaseConnection,
+pub async fn service_login<C>(
+    conn: &C,
     user_agent: Option<String>,
     ip_address: Option<String>,
     payload: AuthLoginRequest,
-) -> Result<AuthJWTResponse, Errors> {
+) -> Result<AuthJWTResponse, Errors>
+where
+    C: ConnectionTrait + TransactionTrait,
+{
     let user = UserEntity::find()
         .filter(UserColumn::Handle.eq(&payload.handle))
         .one(conn)

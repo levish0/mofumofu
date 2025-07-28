@@ -2,12 +2,12 @@ use crate::dto::post::internal::create::CreatePost;
 use crate::entity::posts::ActiveModel as PostActiveModel;
 use crate::service::error::errors::Errors;
 use chrono::Utc;
-use sea_orm::{ActiveModelTrait, DatabaseConnection, Set, TransactionTrait};
+use sea_orm::{ActiveModelTrait, ConnectionTrait, DatabaseConnection, Set, TransactionTrait};
 
-pub async fn service_create_post(
-    conn: &DatabaseConnection,
-    payload: CreatePost,
-) -> anyhow::Result<(), Errors> {
+pub async fn service_create_post<C>(conn: &C, payload: CreatePost) -> anyhow::Result<(), Errors>
+where
+    C: ConnectionTrait + TransactionTrait,
+{
     let txn = conn.begin().await?;
 
     let new_post = PostActiveModel {
