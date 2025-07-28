@@ -2,7 +2,7 @@ use crate::dto::post::internal::create::CreatePost;
 use crate::entity::posts::ActiveModel as PostActiveModel;
 use crate::service::error::errors::Errors;
 use chrono::Utc;
-use sea_orm::{ActiveModelTrait, ConnectionTrait, DatabaseConnection, Set, TransactionTrait};
+use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
 
 pub async fn service_create_post<C>(conn: &C, payload: CreatePost) -> anyhow::Result<(), Errors>
 where
@@ -20,7 +20,6 @@ where
         is_deleted: Default::default(),
         status: Default::default(),
         published_at: Default::default(),
-        last_auto_saved_at: Default::default(),
         like_count: Default::default(),
         comment_count: Default::default(),
         view_count: Default::default(),

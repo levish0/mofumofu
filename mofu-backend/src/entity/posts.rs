@@ -35,9 +35,6 @@ pub struct Model {
     #[sea_orm(column_type = "TimestampWithTimeZone", nullable)]
     pub published_at: Option<DateTimeUtc>,
 
-    #[sea_orm(column_type = "TimestampWithTimeZone", nullable)]
-    pub last_auto_saved_at: Option<DateTimeUtc>,
-
     #[sea_orm(column_type = "Integer", not_null, default_value = "0")]
     pub like_count: i32,
 

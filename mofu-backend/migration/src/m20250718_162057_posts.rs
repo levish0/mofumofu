@@ -58,11 +58,6 @@ impl MigrationTrait for Migration {
                             .null(), // 발행 시간
                     )
                     .col(
-                        ColumnDef::new(Posts::LastAutoSavedAt)
-                            .timestamp_with_time_zone()
-                            .null(), // 마지막 자동저장 시간
-                    )
-                    .col(
                         ColumnDef::new(Posts::LikeCount)
                             .integer()
                             .not_null()
@@ -183,7 +178,6 @@ enum Posts {
     IsDeleted,
     Status,
     PublishedAt,
-    LastAutoSavedAt,
     LikeCount,
     CommentCount,
     ViewCount,
