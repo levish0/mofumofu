@@ -22,6 +22,30 @@ pub struct Model {
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
+    // 작성한 포스트들
+    #[sea_orm(
+        has_many = "super::posts::Entity",
+        from = "Column::Id",
+        to = "super::posts::Column::UserId"
+    )]
+    Posts,
+
+    // 작성한 댓글들
+    #[sea_orm(
+        has_many = "super::comments::Entity",
+        from = "Column::Id",
+        to = "super::comments::Column::UserId"
+    )]
+    Comments,
+
+    // 리프레시 토큰들
+    #[sea_orm(
+        has_many = "super::user_refresh_tokens::Entity",
+        from = "Column::Id",
+        to = "super::user_refresh_tokens::Column::UserId"
+    )]
+    RefreshTokens,
+
     // 이 유저를 팔로우하는 사람들 (followers)
     #[sea_orm(
         has_many = "super::follows::Entity",
@@ -37,6 +61,24 @@ pub enum Relation {
         to = "super::follows::Column::FollowerId"
     )]
     Following,
+}
+
+impl Related<super::posts::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Posts.def()
+    }
+}
+
+impl Related<super::comments::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Comments.def()
+    }
+}
+
+impl Related<super::user_refresh_tokens::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::RefreshTokens.def()
+    }
 }
 
 impl Related<super::follows::Entity> for Entity {

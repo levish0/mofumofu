@@ -59,13 +59,54 @@ pub enum Relation {
         to = "super::users::Column::Id",
         on_delete = "Cascade"
     )]
-    Users,
+    User,
+
+    #[sea_orm(
+        has_many = "super::comments::Entity",
+        from = "Column::Id",
+        to = "super::comments::Column::PostId"
+    )]
+    Comments,
+
+    #[sea_orm(
+        has_many = "super::post_hash_tags::Entity",
+        from = "Column::Id",
+        to = "super::post_hash_tags::Column::PostId"
+    )]
+    PostHashTags,
 }
 
-// Posts -> Users 관계 구현
 impl Related<super::users::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Users.def()
+        Relation::User.def()
+    }
+}
+
+impl Related<super::comments::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Comments.def()
+    }
+}
+
+impl Related<super::post_hash_tags::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::PostHashTags.def()
+    }
+}
+
+// Post -> HashTags (Many-to-Many through PostHashTags)
+#[derive(Debug, Clone)]
+pub struct PostToHashTagsLink;
+
+impl Linked for PostToHashTagsLink {
+    type FromEntity = Entity;
+    type ToEntity = super::hash_tags::Entity;
+
+    fn link(&self) -> Vec<RelationDef> {
+        vec![
+            Relation::PostHashTags.def(),
+            super::post_hash_tags::Relation::HashTag.def(),
+        ]
     }
 }
 

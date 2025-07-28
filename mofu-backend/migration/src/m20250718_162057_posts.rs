@@ -88,13 +88,6 @@ impl MigrationTrait for Migration {
                             .to(Users::Table, Users::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
-                    // 작성자와의 외래키
-                    .foreign_key(
-                        ForeignKey::create()
-                            .from(Posts::Table, Posts::UserId)
-                            .to(Users::Table, Users::Id)
-                            .on_delete(ForeignKeyAction::Cascade),
-                    )
                     .to_owned(),
             )
             .await?;

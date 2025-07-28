@@ -18,11 +18,7 @@ impl MigrationTrait for Migration {
                             .primary_key()
                             .default(Expr::cust("gen_random_uuid()")),
                     )
-                    .col(
-                        ColumnDef::new(Comments::Content)
-                            .string_len(2000)
-                            .not_null(),
-                    ) // 댓글 내용
+                    .col(ColumnDef::new(Comments::Content).text().not_null()) // 댓글 내용
                     .col(ColumnDef::new(Comments::PostId).uuid().not_null()) // 포스트 ID
                     .col(ColumnDef::new(Comments::UserId).uuid().not_null()) // 댓글 작성자
                     .col(ColumnDef::new(Comments::ParentId).uuid().null()) // 대댓글용 부모 댓글 ID

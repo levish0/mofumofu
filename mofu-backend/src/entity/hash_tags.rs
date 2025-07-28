@@ -21,6 +21,35 @@ pub struct Model {
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
-pub enum Relation {}
+pub enum Relation {
+    #[sea_orm(
+        has_many = "super::post_hash_tags::Entity",
+        from = "Column::Id",
+        to = "super::post_hash_tags::Column::HashTagId"
+    )]
+    PostHashTags,
+}
+
+impl Related<super::post_hash_tags::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::PostHashTags.def()
+    }
+}
+
+// HashTag -> Posts (Many-to-Many through PostHashTags)
+#[derive(Debug, Clone)]
+pub struct HashTagToPostsLink;
+
+impl Linked for HashTagToPostsLink {
+    type FromEntity = Entity;
+    type ToEntity = super::posts::Entity;
+
+    fn link(&self) -> Vec<RelationDef> {
+        vec![
+            Relation::PostHashTags.def(),
+            super::post_hash_tags::Relation::Post.def(),
+        ]
+    }
+}
 
 impl ActiveModelBehavior for ActiveModel {}
