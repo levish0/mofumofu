@@ -1,3 +1,5 @@
+// src/lib/api/error/common_error.ts
+
 import type { ErrorResponse } from './types';
 
 export const ErrorCodes = {

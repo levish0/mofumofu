@@ -1,3 +1,5 @@
+// src/lib/api/error/error_class_map.ts
+
 import type { ErrorResponse } from './types';
 import {
   ApiError,

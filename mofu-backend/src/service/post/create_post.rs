@@ -12,14 +12,20 @@ pub async fn service_create_post(
 
     let new_post = PostActiveModel {
         id: Default::default(),
+        title: Default::default(),
         user_id: Set(payload.author_id),
-        reply_to_id: Set(payload.reply_to_id),
         content: Set(payload.content),
         created_at: Set(Utc::now()),
         updated_at: Set(Option::from(Utc::now())),
         is_deleted: Default::default(),
+        status: Default::default(),
+        published_at: Default::default(),
+        last_auto_saved_at: Default::default(),
         like_count: Default::default(),
-        reply_count: Default::default(),
+        comment_count: Default::default(),
+        view_count: Default::default(),
+        summary: Default::default(),
+        slug: Default::default(),
     };
 
     // Insert the new post

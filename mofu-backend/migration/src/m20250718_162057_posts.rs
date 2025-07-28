@@ -1,4 +1,6 @@
+use crate::common::PostStatusEnums;
 use sea_orm_migration::prelude::*;
+use strum::IntoEnumIterator;
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -18,9 +20,10 @@ impl MigrationTrait for Migration {
                             .primary_key() // PK 지정
                             .default(Expr::cust("gen_random_uuid()")),
                     )
-                    .col(ColumnDef::new(Posts::Content).string_len(2000).not_null())
+                    .col(ColumnDef::new(Posts::Title).string_len(200).not_null()) // 블로그 제목
+                    .col(ColumnDef::new(Posts::Summary).string_len(500).null()) // 요약
+                    .col(ColumnDef::new(Posts::Content).text().not_null()) // 본문 (길이 제한 없음)
                     .col(ColumnDef::new(Posts::UserId).uuid().not_null())
-                    .col(ColumnDef::new(Posts::ReplyToId).uuid().null()) // 답글 대상 포스트
                     .col(
                         ColumnDef::new(Posts::CreatedAt)
                             .timestamp_with_time_zone()
@@ -39,17 +42,45 @@ impl MigrationTrait for Migration {
                             .default(false),
                     )
                     .col(
+                        ColumnDef::new(Posts::Status)
+                            .enumeration(
+                                PostStatusEnums::Table,
+                                PostStatusEnums::iter()
+                                    .filter(|p| !matches!(p, PostStatusEnums::Table))
+                                    .collect::<Vec<_>>(),
+                            )
+                            .not_null()
+                            .default("draft"),
+                    )
+                    .col(
+                        ColumnDef::new(Posts::PublishedAt)
+                            .timestamp_with_time_zone()
+                            .null(), // 발행 시간
+                    )
+                    .col(
+                        ColumnDef::new(Posts::LastAutoSavedAt)
+                            .timestamp_with_time_zone()
+                            .null(), // 마지막 자동저장 시간
+                    )
+                    .col(
                         ColumnDef::new(Posts::LikeCount)
                             .integer()
                             .not_null()
                             .default(0),
                     )
                     .col(
-                        ColumnDef::new(Posts::ReplyCount)
+                        ColumnDef::new(Posts::CommentCount)
                             .integer()
                             .not_null()
-                            .default(0),
+                            .default(0), // 댓글 수
                     )
+                    .col(
+                        ColumnDef::new(Posts::ViewCount)
+                            .integer()
+                            .not_null()
+                            .default(0), // 조회수
+                    )
+                    .col(ColumnDef::new(Posts::Slug).string_len(255).null()) // URL 슬러그
                     // 작성자와의 외래키
                     .foreign_key(
                         ForeignKey::create()
@@ -57,11 +88,11 @@ impl MigrationTrait for Migration {
                             .to(Users::Table, Users::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
-                    // 답글 관계 외래키 (자기 참조)
+                    // 작성자와의 외래키
                     .foreign_key(
                         ForeignKey::create()
-                            .from(Posts::Table, Posts::ReplyToId)
-                            .to(Posts::Table, Posts::Id)
+                            .from(Posts::Table, Posts::UserId)
+                            .to(Users::Table, Users::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
                     .to_owned(),
@@ -79,30 +110,42 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-        // 답글 조회 최적화 인덱스
+        // 발행 상태별 조회 최적화
         manager
             .create_index(
                 Index::create()
-                    .name("idx_posts_reply_to_id")
+                    .name("idx_posts_status")
                     .table(Posts::Table)
-                    .col(Posts::ReplyToId)
-                    .to_owned(),
-            )
-            .await?;
-
-        // 특정 포스트의 답글들을 시간순으로 조회하는 복합 인덱스
-        manager
-            .create_index(
-                Index::create()
-                    .name("idx_posts_reply_created")
-                    .table(Posts::Table)
-                    .col(Posts::ReplyToId)
+                    .col(Posts::Status)
                     .col(Posts::CreatedAt)
                     .to_owned(),
             )
             .await?;
 
-        // 타임라인 조회 최적화 (최신 포스트들)
+        // 발행된 포스트만 조회 최적화
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_posts_published")
+                    .table(Posts::Table)
+                    .col(Posts::Status)
+                    .col(Posts::PublishedAt)
+                    .to_owned(),
+            )
+            .await?;
+
+        // 슬러그로 포스트 찾기
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_posts_slug")
+                    .table(Posts::Table)
+                    .col(Posts::Slug)
+                    .to_owned(),
+            )
+            .await?;
+
+        // 생성일 기준 정렬
         manager
             .create_index(
                 Index::create()
@@ -125,16 +168,21 @@ impl MigrationTrait for Migration {
 enum Posts {
     Table,
     Id,
-    UserId,
-    ReplyToId,
+    Title,
+    Summary,
     Content,
+    UserId,
     CreatedAt,
     UpdatedAt,
     IsDeleted,
+    Status,
+    PublishedAt,
+    LastAutoSavedAt,
     LikeCount,
-    ReplyCount,
+    CommentCount,
+    ViewCount,
+    Slug,
 }
-
 #[derive(DeriveIden)]
 enum Users {
     Table,

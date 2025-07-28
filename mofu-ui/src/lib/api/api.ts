@@ -1,4 +1,5 @@
 // src/lib/api/api.ts
+
 import { API_URL } from './config';
 import ky from 'ky';
 import type { ErrorResponse } from './error/types';
