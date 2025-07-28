@@ -147,6 +147,19 @@ impl MigrationTrait for Migration {
                     .col(Posts::CreatedAt)
                     .to_owned(),
             )
+            .await?;
+
+        // 각 사용자에 대해 슬러그가 고유하도록 보장
+        manager
+            .create_index(
+                Index::create()
+                    .name("uq_posts_user_id_slug")
+                    .table(Posts::Table)
+                    .col(Posts::UserId)
+                    .col(Posts::Slug)
+                    .unique()
+                    .to_owned(),
+            )
             .await
     }
 
