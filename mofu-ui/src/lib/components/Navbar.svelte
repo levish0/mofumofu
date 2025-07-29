@@ -15,7 +15,6 @@
 	import { getMyProfile } from '$lib/api/user/userApi';
 	import { onMount } from 'svelte';
 	import { authStore } from '$lib/stores/auth.svelte';
-	import IconSkeleton from './skeleton/IconSkeleton.svelte';
 
 	interface UserInfoResponse {
 		handle: string;
@@ -68,11 +67,11 @@
 		<div class="flex items-center space-x-3">
 			{#if isLoading}
 				<!-- 스켈레톤: 고정 높이 36px -->
-				<IconSkeleton h={9} w={9}/>
-				<IconSkeleton h={9} w={9}/>
-				<IconSkeleton h={9} w={28}/>
-				<IconSkeleton/>
-				<IconSkeleton h={9} w={9}/>
+				<div class="h-9 w-9 animate-pulse rounded-full bg-white/10"></div>
+				<div class="h-9 w-9 animate-pulse rounded-full bg-white/10"></div>
+				<div class="h-9 w-28 animate-pulse rounded-full bg-white/10"></div>
+				<div class="h-9 w-9 animate-pulse rounded-full bg-white/10"></div>
+				<div class="h-9 w-5 animate-pulse rounded bg-white/10"></div>
 			{:else if userInfo}
 				<button class="h-9 w-9 rounded-full p-2 transition-colors hover:bg-white/10" aria-label="알림">
 					<Icon src={Bell} size="20" class="text-white" />
