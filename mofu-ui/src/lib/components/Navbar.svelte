@@ -71,7 +71,7 @@
 				<div class="h-9 w-9 animate-pulse rounded-full bg-white/10"></div>
 				<div class="h-9 w-28 animate-pulse rounded-full bg-white/10"></div>
 				<div class="h-9 w-9 animate-pulse rounded-full bg-white/10"></div>
-				<div class="h-9 w-5 animate-pulse rounded bg-white/10"></div>
+				<div class="h-9 w-9 animate-pulse rounded bg-white/10"></div>
 			{:else if userInfo}
 				<button class="h-9 w-9 rounded-full p-2 transition-colors hover:bg-white/10" aria-label="알림">
 					<Icon src={Bell} size="20" class="text-white" />
