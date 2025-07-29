@@ -1,4 +1,4 @@
-![banner](./assets/mofu.png)
+![banner](./assets/mofumofu_stroke.png)
 # Mofu
 
 > A cozy space for creators to write, share, and showcase their stories and art. 
