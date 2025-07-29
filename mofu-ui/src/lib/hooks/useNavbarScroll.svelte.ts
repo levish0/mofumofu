@@ -1,6 +1,6 @@
 // src/lib/hooks/useNavbarScroll.svelte.ts
 import { onMount, onDestroy } from 'svelte';
-import { browser } from '$app/environment';
+import { BROWSER } from 'esm-env';
 
 interface NavbarScrollOptions {
 	navbarHeight?: number;
@@ -16,7 +16,7 @@ export function useNavbarScroll(options: NavbarScrollOptions = {}): () => boolea
 
 	function updateScrollState() {
 		// 브라우저 환경 체크
-		if (!browser) return;
+		if (!BROWSER) return;
 
 		const currentScrollY = window.scrollY;
 		const scrollDelta = Math.abs(currentScrollY - lastScrollY);
@@ -48,7 +48,7 @@ export function useNavbarScroll(options: NavbarScrollOptions = {}): () => boolea
 	};
 
 	function cleanup() {
-		if (browser) {
+		if (BROWSER) {
 			window.removeEventListener('scroll', handleScroll);
 		}
 		if (rafId) {

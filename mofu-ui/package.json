@@ -64,5 +64,8 @@
 		"onlyBuiltDependencies": [
 			"esbuild"
 		]
+	},
+	"dependencies": {
+		"esm-env": "^1.2.2"
 	}
 }
