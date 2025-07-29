@@ -1,7 +1,7 @@
 ![banner](./assets/mofumofu_stroke.png)
 # Mofu
 
-> A cozy space for creators to write, share, and showcase their stories and art. 
+> A cozy space for creators to write and share their stories and art.
 
 Mofu is an open-source, minimalist blogging platform.  
 
