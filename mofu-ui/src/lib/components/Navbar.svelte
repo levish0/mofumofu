@@ -110,7 +110,7 @@
 
 				<a
 					href="/account/signin"
-					class="inline-flex h-9 items-center justify-center rounded-full border-2 border-white bg-white px-4 font-bold text-black transition-colors hover:bg-transparent hover:text-white"
+					class="inline-flex h-9 items-center justify-center rounded-full border-2 border-white bg-white px-4 font-bold text-black transition-colors hover:opacity-70"
 					aria-label="로그인"
 				>
 					로그인

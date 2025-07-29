@@ -20,7 +20,7 @@
 				<h2 class="mt-8 text-2xl/9 font-bold tracking-tight text-white">로그인</h2>
 				<p class="mt-2 text-sm/6 text-gray-400">
 					아직 계정이 없으신가요?
-					<a href="/account/signup" class="text-mofu hover:text-mofu/70 rounded-md font-semibold">가입하기</a>
+					<a href="/account/signup" class="text-mofu hover:opacity-70 rounded-md font-semibold">가입하기</a>
 				</p>
 			</div>
 
@@ -58,7 +58,7 @@
 
 					<div class="flex items-center justify-end">
 						<div class="text-sm/6">
-							<a href="/account/forgot-password" class="text-mofu hover:text-mofu/70 rounded-md font-semibold"
+							<a href="/account/forgot-password" class="text-mofu hover:opacity-70 rounded-md font-semibold"
 								>비밀번호를 잊으셨나요?</a
 							>
 						</div>
@@ -67,7 +67,7 @@
 					<div>
 						<button
 							type="submit"
-							class="bg-mofu text-mofu-dark-900 hover:bg-mofu/70 flex w-full justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold shadow-xs outline-none"
+							class="bg-mofu text-mofu-dark-900 hover:opacity-70 flex w-full justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold shadow-xs outline-none"
 						>
 							로그인하기
 						</button>
@@ -88,7 +88,7 @@
 				<div class="mt-6 grid grid-cols-2 gap-4">
 					<a
 						href="/"
-						class="bg-mofu-dark-800 hover:bg-mofu-dark-800/70 flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold"
+						class="bg-mofu-dark-800 hover:opacity-70 flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold"
 					>
 						<!-- Google 아이콘 -->
 						<svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5">
@@ -114,7 +114,7 @@
 
 					<a
 						href="/"
-						class="bg-mofu-dark-800 hover:bg-mofu-dark-800/70 flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold"
+						class="bg-mofu-dark-800 hover:opacity-70 flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold"
 					>
 						<!-- GitHub 아이콘 -->
 						<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5 fill-[#24292F]">
