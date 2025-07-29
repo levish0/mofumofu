@@ -18,6 +18,10 @@
 @theme {
 	--color-mofu-dark-800: #1e1e1e;
 	--color-mofu-dark-900: #111111;
+	--color-mofu-dark-700: #2a2a2a;
+	--color-mofu-dark-600: #3b3b3b;
+
+	--color-mofu: #fab69a;
 
 	--color-mofu-dark-100: #e1e1e1;
 }

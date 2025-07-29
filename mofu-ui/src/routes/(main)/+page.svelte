@@ -1,3 +1,1 @@
-<div class="max-w-7xl mx-auto px-4">
-    a.awefawef
-</div>
+<div class="mx-auto max-w-7xl px-4">a.awefawef</div>

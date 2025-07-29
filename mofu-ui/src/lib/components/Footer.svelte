@@ -1,6 +1,6 @@
 <!-- src/lib/components/Footer.svelte -->
 
-<footer class="bg-mofu-dark-900 relative pt-20 pb-20">
+<footer class="bg-mofu-dark-900 border-mofu-dark-700 relative border-t pt-20 pb-20">
 	<div class="custom-width container mx-auto max-w-7xl px-4">
 		<div class="grid grid-cols-2 gap-6 sm:grid-cols-3">
 			<!-- About Section -->

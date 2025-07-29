@@ -1,47 +1,31 @@
-<script lang="ts">
-	import { Sun, Moon, Icon } from 'svelte-hero-icons';
-
-	import { toggleMode } from 'mode-watcher';
-</script>
-
 <div class="flex min-h-full">
 	<!-- 왼쪽 이미지 영역 -->
-	<div class="relative hidden w-0 flex-1 overflow-hidden lg:block">
-		<img
-			src="https://pbs.twimg.com/media/Gw6yABabkAA6MXX?format=jpg&name=900x900"
-			alt="Background"
-			class="absolute inset-0 size-full rounded-l-lg object-cover"
-		/>
+	<div class="relative hidden w-0 flex-1 items-center justify-center overflow-hidden lg:flex">
+		<a href="/" class="block">
+			<img
+				src="https://github.com/levish0/mofumofu/raw/main/assets/mofumofu_stroke.png"
+				alt="Background"
+				class="h-auto w-[1000px] object-contain"
+			/>
+		</a>
 	</div>
 
 	<!-- 오른쪽 로그인 폼 영역 -->
 	<div
 		class="bg-mofu-dark-900 relative flex flex-1 flex-col justify-center px-4 py-12 shadow-lg sm:px-6 lg:flex-none lg:px-20 xl:px-24"
 	>
-		<!-- 우측 상단 테마 토글 버튼 -->
-		<div class="absolute top-4 right-4">
-			<button onclick={toggleMode} aria-label="Toggle theme">
-				<Icon src={Sun} class="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 !transition-all dark:scale-0 dark:-rotate-90" />
-				<Icon
-					src={Moon}
-					class="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 !transition-all dark:scale-100 dark:rotate-0"
-				/>
-				<span class="sr-only">Toggle theme</span>
-			</button>
-		</div>
-
 		<!-- 로그인 폼 콘텐츠 -->
 		<div class="mx-auto w-full max-w-sm lg:w-96">
 			<div>
 				<h2 class="mt-8 text-2xl/9 font-bold tracking-tight text-white">로그인</h2>
-				<p class="mt-2 text-sm/6 text-gray-500">
+				<p class="mt-2 text-sm/6 text-gray-400">
 					아직 계정이 없으신가요?
-					<a href="/account/signup" class="rounded-md font-semibold text-indigo-600 hover:text-indigo-500">가입하기</a>
+					<a href="/account/signup" class="text-mofu hover:text-mofu/70 rounded-md font-semibold">가입하기</a>
 				</p>
 			</div>
 
-			<div class="mt-10">
-				<form method="POST" class="space-y-6">
+			<div class="mt-6">
+				<form method="POST" class="space-y-4">
 					<div>
 						<label for="email" class="block text-sm/6 font-medium">Email address</label>
 						<div class="mt-2">
@@ -50,8 +34,9 @@
 								type="email"
 								name="email"
 								required
+								placeholder="email@mofu.com"
 								autocomplete="email"
-								class="block w-full rounded-md bg-white px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+								class="bg-mofu-dark-800 block w-full rounded-md px-3 py-1.5 text-base outline-none placeholder:text-gray-400 sm:text-sm/6"
 							/>
 						</div>
 					</div>
@@ -63,44 +48,18 @@
 								id="password"
 								type="password"
 								name="password"
+								placeholder="p4ssw@rd!"
 								required
 								autocomplete="current-password"
-								class="block w-full rounded-md bg-white px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+								class="bg-mofu-dark-800 block w-full rounded-md px-3 py-1.5 text-base outline-none placeholder:text-gray-400 sm:text-sm/6"
 							/>
 						</div>
 					</div>
 
-					<div class="flex items-center justify-between">
-						<div class="flex gap-3">
-							<div class="flex h-6 shrink-0 items-center">
-								<div class="group grid size-4 grid-cols-1">
-									<svg
-										viewBox="0 0 14 14"
-										fill="none"
-										class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25"
-									>
-										<path
-											d="M3 8L6 11L11 3.5"
-											stroke-width="2"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											class="opacity-0 group-has-checked:opacity-100"
-										/>
-										<path
-											d="M3 7H11"
-											stroke-width="2"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											class="opacity-0 group-has-indeterminate:opacity-100"
-										/>
-									</svg>
-								</div>
-							</div>
-						</div>
-
+					<div class="flex items-center justify-end">
 						<div class="text-sm/6">
-							<a href="/account/forgot-password" class="rounded-md font-semibold text-indigo-600 hover:text-indigo-500"
-								>Forgot password?</a
+							<a href="/account/forgot-password" class="text-mofu hover:text-mofu/70 rounded-md font-semibold"
+								>비밀번호를 잊으셨나요?</a
 							>
 						</div>
 					</div>
@@ -108,28 +67,28 @@
 					<div>
 						<button
 							type="submit"
-							class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+							class="bg-mofu text-mofu-dark-900 hover:bg-mofu/70 flex w-full justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold shadow-xs outline-none"
 						>
-							Sign in
+							로그인하기
 						</button>
 					</div>
 				</form>
 			</div>
 
-			<div class="mt-10">
+			<div class="mt-4">
 				<div class="relative">
 					<div aria-hidden="true" class="absolute inset-0 flex items-center">
-						<div class="border-mofu-dark-800 w-full border-t"></div>
+						<div class="border-mofu-dark-700 w-full border-t"></div>
 					</div>
 					<div class="relative flex justify-center text-sm/6 font-medium">
-						<span class="bg-mofu-dark-900 px-6">Or continue with</span>
+						<span class="bg-mofu-dark-900 px-6">또는</span>
 					</div>
 				</div>
 
 				<div class="mt-6 grid grid-cols-2 gap-4">
 					<a
 						href="/"
-						class="flex w-full items-center justify-center gap-3 rounded-md bg-white px-3 py-2 text-sm font-semibold shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus-visible:ring-transparent"
+						class="bg-mofu-dark-800 hover:bg-mofu-dark-800/70 flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold"
 					>
 						<!-- Google 아이콘 -->
 						<svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5">
@@ -155,7 +114,7 @@
 
 					<a
 						href="/"
-						class="flex w-full items-center justify-center gap-3 rounded-md bg-white px-3 py-2 text-sm font-semibold shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus-visible:ring-transparent"
+						class="bg-mofu-dark-800 hover:bg-mofu-dark-800/70 flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold"
 					>
 						<!-- GitHub 아이콘 -->
 						<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5 fill-[#24292F]">
