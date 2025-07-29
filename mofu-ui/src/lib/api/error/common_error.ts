@@ -3,39 +3,39 @@
 import type { ErrorResponse } from './types';
 
 export const ErrorCodes = {
-  // user module errors
-  UserInvalidPassword: 'user:invalid_password',
-  UserNotFound: 'user:not_found',
-  UserUnauthorized: 'user:unauthorized',
-  UserTokenExpired: 'user:token_expired',
-  UserInvalidToken: 'user:invalid_token',
+	// user module errors
+	UserInvalidPassword: 'user:invalid_password',
+	UserNotFound: 'user:not_found',
+	UserUnauthorized: 'user:unauthorized',
+	UserTokenExpired: 'user:token_expired',
+	UserInvalidToken: 'user:invalid_token',
 
-  // follow module errors
-  FollowCannotFollowSelf: 'follow:cannot_follow_self',
-  FollowAlreadyFollowing: 'follow:already_following',
-  FollowNotExist: 'follow:not_exist',
+	// follow module errors
+	FollowCannotFollowSelf: 'follow:cannot_follow_self',
+	FollowAlreadyFollowing: 'follow:already_following',
+	FollowNotExist: 'follow:not_exist',
 
-  // general module errors
-  BadRequest: 'general:bad_request',
-  ValidationError: 'general:validation_error',
+	// general module errors
+	BadRequest: 'general:bad_request',
+	ValidationError: 'general:validation_error',
 
-  // system module errors
-  SysHashingError: 'system:hashing_error',
-  SysNotFound: 'system:not_found',
-  SysTransactionError: 'system:transaction_error',
-  SysDatabaseError: 'system:database_error',
-  SysTokenCreationError: 'system:token_creation_error'
+	// system module errors
+	SysHashingError: 'system:hashing_error',
+	SysNotFound: 'system:not_found',
+	SysTransactionError: 'system:transaction_error',
+	SysDatabaseError: 'system:database_error',
+	SysTokenCreationError: 'system:token_creation_error'
 };
 
 export class ApiError extends Error {
-  status: number;
-  body: ErrorResponse | null;
+	status: number;
+	body: ErrorResponse | null;
 
-  constructor(code: string, status: number, body: ErrorResponse | null) {
-    super(code);
-    this.status = status;
-    this.body = body;
-  }
+	constructor(code: string, status: number, body: ErrorResponse | null) {
+		super(code);
+		this.status = status;
+		this.body = body;
+	}
 }
 
 export class UserInvalidPassword extends ApiError {}

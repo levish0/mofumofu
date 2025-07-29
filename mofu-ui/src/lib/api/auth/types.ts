@@ -1,3 +1,3 @@
 export interface RefreshAccessTokenResponse {
-  access_token: string;
+	access_token: string;
 }

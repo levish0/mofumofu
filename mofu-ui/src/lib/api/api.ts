@@ -9,64 +9,64 @@ import { ApiError, ErrorCodes } from './error/common_error';
 import { refreshAccessToken } from './auth/authApi';
 
 export const api = ky.create({
-  prefixUrl: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-    Accept: 'application/json'
-  },
-  credentials: 'include',
-  timeout: 10 * 1000,
-  retry: 2,
-  hooks: {
-    beforeRequest: [
-      (request) => {
-        const token = authStore.token;
-        if (token) {
-          request.headers.set('Authorization', `Bearer ${token}`);
-        }
-      }
-    ],
-    afterResponse: [
-      async (request, options, response) => {
-        if (!response.ok) {
-          let errorBody: ErrorResponse | null = null;
-          try {
-            errorBody = await response.json();
-          } catch (error) {
-            console.error('Failed to parse error response:', error);
-          }
+	prefixUrl: API_URL,
+	headers: {
+		'Content-Type': 'application/json',
+		Accept: 'application/json'
+	},
+	credentials: 'include',
+	timeout: 10 * 1000,
+	retry: 2,
+	hooks: {
+		beforeRequest: [
+			(request) => {
+				const token = authStore.token;
+				if (token) {
+					request.headers.set('Authorization', `Bearer ${token}`);
+				}
+			}
+		],
+		afterResponse: [
+			async (request, options, response) => {
+				if (!response.ok) {
+					let errorBody: ErrorResponse | null = null;
+					try {
+						errorBody = await response.json();
+					} catch (error) {
+						console.error('Failed to parse error response:', error);
+					}
 
-          if (errorBody?.code === ErrorCodes.UserTokenExpired && request.headers.has('Authorization')) {
-            try {
-              const refreshResponse = await refreshAccessToken();
-              authStore.setToken(refreshResponse.access_token);
+					if (errorBody?.code === ErrorCodes.UserTokenExpired && request.headers.has('Authorization')) {
+						try {
+							const refreshResponse = await refreshAccessToken();
+							authStore.setToken(refreshResponse.access_token);
 
-              const originalRequest = request.clone();
-              originalRequest.headers.set('Authorization', `Bearer ${refreshResponse.access_token}`);
+							const originalRequest = request.clone();
+							originalRequest.headers.set('Authorization', `Bearer ${refreshResponse.access_token}`);
 
-              return ky(originalRequest);
-            } catch (refreshError) {
-              console.error('Failed to refresh access token:', refreshError);
-              authStore.clearToken();
-              throw createApiError(errorBody);
-            }
-          }
+							return ky(originalRequest);
+						} catch (refreshError) {
+							console.error('Failed to refresh access token:', refreshError);
+							authStore.clearToken();
+							throw createApiError(errorBody);
+						}
+					}
 
-          if (errorBody?.code) {
-            throw createApiError(errorBody);
-          }
-          throw new ApiError('unknown_error', response.status, null);
-        }
-      }
-    ]
-  }
+					if (errorBody?.code) {
+						throw createApiError(errorBody);
+					}
+					throw new ApiError('unknown_error', response.status, null);
+				}
+			}
+		]
+	}
 });
 
 function createApiError(errorBody: ErrorResponse): ApiError {
-  const ErrorClass = ErrorClassMap[errorBody.code];
-  if (ErrorClass) {
-    return new ErrorClass(errorBody.code, errorBody.status, errorBody);
-  } else {
-    return new ApiError(errorBody.code, errorBody.status, errorBody);
-  }
+	const ErrorClass = ErrorClassMap[errorBody.code];
+	if (ErrorClass) {
+		return new ErrorClass(errorBody.code, errorBody.status, errorBody);
+	} else {
+		return new ApiError(errorBody.code, errorBody.status, errorBody);
+	}
 }

@@ -1,5 +1,13 @@
 export interface UserInfoResponse {
-  email: string;
-  handle: string;
-  name: string;
+	handle: string;
+	name: string;
+	profile_image?: string;
+	banner_image?: string;
+}
+
+export interface CreateUserRequest {
+	email: string;
+	handle: string;
+	name: string;
+	password: string;
 }
