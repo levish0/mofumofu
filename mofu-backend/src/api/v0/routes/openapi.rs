@@ -1,3 +1,4 @@
+use crate::dto::user::request::get_profile::GetUserProfileRequest;
 use crate::dto::auth::request::login::AuthLoginRequest;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
 use crate::dto::follow::request::create::CreateFollowRequest;
@@ -18,9 +19,9 @@ use utoipa::{
     paths(
         crate::api::v0::routes::auth::auth::login,
         crate::api::v0::routes::auth::auth::refresh,
-        crate::api::v0::routes::user::user::get_user,
-        crate::api::v0::routes::user::user::create_user,
-        crate::api::v0::routes::user::user::get_profile,
+        crate::api::v0::routes::user::get_my_profile::get_my_profile,
+        crate::api::v0::routes::user::create_user::create_user,
+        crate::api::v0::routes::user::get_profile::get_profile,
         crate::api::v0::routes::post::post::create_post,
         crate::api::v0::routes::follow::create_follow::api_create_follow,
         crate::api::v0::routes::follow::delete_follow::api_delete_follow,
@@ -36,6 +37,7 @@ use utoipa::{
             CreateFollowRequest,
             DeleteFollowRequest,
             FollowListResponse,
+            GetUserProfileRequest,
             UserInfoResponse,
             ErrorResponse
         )
