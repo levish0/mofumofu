@@ -7,15 +7,12 @@
 	import { authStore } from '$lib/stores/auth.svelte';
 	import type { UserInfoResponse } from '$lib/api/user/types';
 	import NavbarRightMenuSkeleton from './NavbarRightMenuSkeleton.svelte';
+	import { useNavbarScroll } from '$lib/hooks/useNavbarScroll.svelte';
 
-	let isVisible = $state(true);
-	let currentScrollY = $state(0);
-	let lastScrollY = $state(0);
-	const navbarHeight = 60;
-
-	function handleScroll() {
-		currentScrollY = window.scrollY;
-	}
+	const isVisible = useNavbarScroll({
+		navbarHeight: 60,
+		scrollThreshold: 10,
+	});
 
 	let userInfo: UserInfoResponse | null = $state(null);
 	let isLoading = $state(false);
@@ -37,15 +34,7 @@
 	}
 
 	onMount(() => {
-		// console.log('Navbar mounted, attempting to load user profile');
 		loadUserProfile();
-
-		// 스크롤 이벤트 리스너 추가
-		window.addEventListener('scroll', handleScroll, { passive: true });
-
-		return () => {
-			window.removeEventListener('scroll', handleScroll);
-		};
 	});
 
 	$effect(() => {
@@ -53,25 +42,11 @@
 			userInfo = null;
 		}
 	});
-
-	$effect(() => {
-		// 아래로 스크롤하고 헤더 초기 높이를 지나면 헤더 숨김
-		if (currentScrollY > lastScrollY && currentScrollY > navbarHeight) {
-			isVisible = false;
-		}
-		// 위로 스크롤하거나 페이지 최상단에 있으면 헤더 표시
-		else if (currentScrollY < lastScrollY || currentScrollY <= navbarHeight) {
-			isVisible = true;
-		}
-
-		lastScrollY = currentScrollY;
-	});
 </script>
 
 <nav
-	class="bg-mofu-dark-800 fixed top-0 right-0 left-0 z-50 max-h-60 w-full text-white transition-transform duration-100 ease-in-out {isVisible
-		? 'translate-y-0'
-		: '-translate-y-full'}"
+	class="bg-mofu-dark-800 fixed top-0 right-0 left-0 z-50 max-h-[60px] w-full text-white transition-transform duration-100 ease-out"
+	style="transform: translateY({isVisible() ? '0' : '-100%'});"
 >
 	<div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
 		<!-- 좌측 -->

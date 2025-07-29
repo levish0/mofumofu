@@ -6,6 +6,6 @@
 </script>
 
 <ModeWatcher defaultMode="dark" />
-<div class="font-pretendard  max-w-screen ">
+<div class="font-pretendard max-w-screen">
 	{@render children()}
 </div>

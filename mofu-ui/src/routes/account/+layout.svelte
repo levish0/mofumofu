@@ -4,6 +4,6 @@
 	let { children } = $props();
 </script>
 
-<div class="bg-mofu-dark-900 h-screen ">{@render children()}</div>
+<div class="bg-mofu-dark-900 h-screen">{@render children()}</div>
 
 <Footer />
