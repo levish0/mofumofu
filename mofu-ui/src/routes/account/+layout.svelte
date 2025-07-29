@@ -1,5 +1,9 @@
 <script lang="ts">
+	import Footer from '$lib/components/Footer.svelte';
+
 	let { children } = $props();
 </script>
 
-<div class="h-full bg-mofu-dark-900">{@render children()}</div>
+<div class="bg-mofu-dark-900 h-full">{@render children()}</div>
+
+<Footer />
