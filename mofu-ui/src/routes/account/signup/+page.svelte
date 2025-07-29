@@ -1,3 +1,9 @@
+<script lang="ts">
+	function goBack() {
+		history.back();
+	}
+</script>
+
 <div class="flex min-h-full">
 	<!-- 왼쪽 이미지 영역 -->
 	<div class="relative hidden w-0 flex-1 items-center justify-center overflow-hidden lg:flex">
@@ -16,11 +22,14 @@
 	>
 		<!-- 로그인 폼 콘텐츠 -->
 		<div class="mx-auto w-full max-w-sm lg:w-96">
+			<div class="flex justify-start text-center">
+				<button on:click={goBack} class="text-sm text-gray-400 hover:opacity-70"> ← 돌아가기 </button>
+			</div>
 			<div>
-				<h2 class="mt-8 text-2xl/9 font-bold tracking-tight text-white">가입하기</h2>
+				<h2 class="mt-6 text-2xl/9 font-bold tracking-tight text-white">가입하기</h2>
 				<p class="mt-2 text-sm/6 text-gray-400">
 					이미 계정이 있으신가요?
-					<a href="/account/signin" class="text-mofu hover:opacity-70 rounded-md font-semibold">로그인하기</a>
+					<a href="/account/signin" class="text-mofu rounded-md font-semibold hover:opacity-70">로그인하기</a>
 				</p>
 			</div>
 
@@ -58,7 +67,7 @@
 					<div>
 						<button
 							type="submit"
-							class="bg-mofu text-mofu-dark-900 hover:opacity-70 mt-6 flex w-full justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold shadow-xs outline-none"
+							class="bg-mofu text-mofu-dark-900 mt-6 flex w-full justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold shadow-xs outline-none hover:opacity-70"
 						>
 							가입하기
 						</button>
@@ -79,7 +88,7 @@
 				<div class="mt-6 grid grid-cols-2 gap-4">
 					<a
 						href="/"
-						class="bg-mofu-dark-800 hover:opacity-70 flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold"
+						class="bg-mofu-dark-800 flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold hover:opacity-70"
 					>
 						<!-- Google 아이콘 -->
 						<svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5">
@@ -105,7 +114,7 @@
 
 					<a
 						href="/"
-						class="bg-mofu-dark-800 hover:opacity-70 flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold"
+						class="bg-mofu-dark-800 flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold hover:opacity-70"
 					>
 						<!-- GitHub 아이콘 -->
 						<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5 fill-[#24292F]">

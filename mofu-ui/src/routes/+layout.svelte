@@ -6,6 +6,6 @@
 </script>
 
 <ModeWatcher defaultMode="dark" />
-<div class="font-pretendard bg-mofu-dark-900 h-screen w-screen text-white">
+<div class="font-pretendard  max-w-screen ">
 	{@render children()}
 </div>

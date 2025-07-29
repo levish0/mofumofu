@@ -1,77 +1,88 @@
 <!-- src/lib/components/Navbar.svelte -->
 <script lang="ts">
 	import { Icon } from 'svelte-hero-icons';
-	import {
-		ArrowTrendingUp,
-		Clock,
-		Rss,
-		Bookmark,
-		Bell,
-		MagnifyingGlass,
-		ChevronDown,
-		Pencil,
-		EllipsisVertical
-	} from 'svelte-hero-icons';
+	import { ArrowTrendingUp, Clock, Rss, Bell, MagnifyingGlass, ChevronDown } from 'svelte-hero-icons';
 	import { getMyProfile } from '$lib/api/user/userApi';
 	import { onMount } from 'svelte';
 	import { authStore } from '$lib/stores/auth.svelte';
+	import type { UserInfoResponse } from '$lib/api/user/types';
+	import NavbarRightMenuSkeleton from './NavbarRightMenuSkeleton.svelte';
 
-	interface UserInfoResponse {
-		handle: string;
-		profile_image?: string;
+	let isVisible = $state(true);
+	let currentScrollY = $state(0);
+	let lastScrollY = $state(0);
+	const navbarHeight = 60;
+
+	function handleScroll() {
+		currentScrollY = window.scrollY;
 	}
 
 	let userInfo: UserInfoResponse | null = $state(null);
 	let isLoading = $state(false);
-	let errorLoadingUser = $state(false);
 
 	async function loadUserProfile() {
 		if (isLoading || userInfo) return;
 
 		isLoading = true;
-		errorLoadingUser = false;
 
 		try {
 			userInfo = await getMyProfile();
 			console.log('User profile loaded:', userInfo);
 		} catch (error) {
 			console.error('Failed to fetch user profile:', error);
-			errorLoadingUser = true;
 			userInfo = null;
 		} finally {
 			isLoading = false;
 		}
 	}
 
-	onMount(async () => {
-		console.log('Navbar mounted, attempting to load user profile');
-		await loadUserProfile();
+	onMount(() => {
+		// console.log('Navbar mounted, attempting to load user profile');
+		loadUserProfile();
+
+		// 스크롤 이벤트 리스너 추가
+		window.addEventListener('scroll', handleScroll, { passive: true });
+
+		return () => {
+			window.removeEventListener('scroll', handleScroll);
+		};
 	});
 
 	$effect(() => {
 		if (!authStore.isAuthenticated && userInfo) {
 			userInfo = null;
-			errorLoadingUser = false;
 		}
+	});
+
+	$effect(() => {
+		// 아래로 스크롤하고 헤더 초기 높이를 지나면 헤더 숨김
+		if (currentScrollY > lastScrollY && currentScrollY > navbarHeight) {
+			isVisible = false;
+		}
+		// 위로 스크롤하거나 페이지 최상단에 있으면 헤더 표시
+		else if (currentScrollY < lastScrollY || currentScrollY <= navbarHeight) {
+			isVisible = true;
+		}
+
+		lastScrollY = currentScrollY;
 	});
 </script>
 
-<nav class="bg-mofu-dark-800 w-full text-white">
+<nav
+	class="bg-mofu-dark-800 fixed top-0 right-0 left-0 z-50 max-h-60 w-full text-white transition-transform duration-100 ease-in-out {isVisible
+		? 'translate-y-0'
+		: '-translate-y-full'}"
+>
 	<div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
 		<!-- 좌측 -->
 		<div class="flex items-center space-x-3">
-			<div class="text-3xl font-bold">もふもふ。</div>
+			<div class="text-3xl font-bold whitespace-nowrap">もふもふ。</div>
 		</div>
 
 		<!-- 우측 -->
 		<div class="flex items-center space-x-3">
 			{#if isLoading}
-				<!-- 스켈레톤: 고정 높이 36px -->
-				<div class="h-9 w-9 animate-pulse rounded-full bg-white/10"></div>
-				<div class="h-9 w-9 animate-pulse rounded-full bg-white/10"></div>
-				<div class="h-9 w-28 animate-pulse rounded-full bg-white/10"></div>
-				<div class="h-9 w-9 animate-pulse rounded-full bg-white/10"></div>
-				<div class="h-9 w-9 animate-pulse rounded bg-white/10"></div>
+				<NavbarRightMenuSkeleton />
 			{:else if userInfo}
 				<button class="h-9 w-9 rounded-full p-2 transition-colors hover:bg-white/10" aria-label="알림">
 					<Icon src={Bell} size="20" class="text-white" />
