@@ -1,8 +1,8 @@
 <!-- src/lib/components/Footer.svelte -->
 
 <footer class="bg-mofu-dark-900 relative pt-20 pb-20">
-	<div class="custom-width container mx-auto max-w-7xl px-8 py-8">
-		<div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+	<div class="custom-width container mx-auto max-w-7xl px-4">
+		<div class="grid grid-cols-2 gap-6 sm:grid-cols-3">
 			<!-- About Section -->
 			<div class="space-y-2">
 				<h3 class="text-xl font-semibold text-zinc-900 dark:text-zinc-100">もふもふ。</h3>

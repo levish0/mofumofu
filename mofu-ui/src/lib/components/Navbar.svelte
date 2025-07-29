@@ -15,6 +15,7 @@
 	import { getMyProfile } from '$lib/api/user/userApi';
 	import { onMount } from 'svelte';
 	import { authStore } from '$lib/stores/auth.svelte';
+	import IconSkeleton from './skeleton/IconSkeleton.svelte';
 
 	interface UserInfoResponse {
 		handle: string;
@@ -60,30 +61,18 @@
 	<div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
 		<!-- 좌측 -->
 		<div class="flex items-center space-x-3">
-			<div class="flex h-9 w-9 items-center justify-center rounded bg-white">
-				<span class="text-sm font-bold text-gray-900">v</span>
-			</div>
-
-			{#if isLoading}
-				<div class="h-5 w-20 animate-pulse rounded bg-white/10"></div>
-			{:else if userInfo}
-				<span class="text-sm text-gray-300">{userInfo.handle}</span>
-			{:else if errorLoadingUser}
-				<span class="text-sm text-red-400">오류 발생</span>
-			{:else}
-				<span class="text-sm text-gray-300">shiueo.log</span>
-			{/if}
+			<div class="text-3xl font-bold">もふもふ。</div>
 		</div>
 
 		<!-- 우측 -->
 		<div class="flex items-center space-x-3">
 			{#if isLoading}
 				<!-- 스켈레톤: 고정 높이 36px -->
-				<div class="h-9 w-9 animate-pulse rounded-full bg-white/10"></div>
-				<div class="h-9 w-9 animate-pulse rounded-full bg-white/10"></div>
-				<div class="h-9 w-28 animate-pulse rounded-full bg-white/10"></div>
-				<div class="h-9 w-9 animate-pulse rounded-full bg-white/10"></div>
-				<div class="h-9 w-5 animate-pulse rounded bg-white/10"></div>
+				<IconSkeleton h={9} w={9}/>
+				<IconSkeleton h={9} w={9}/>
+				<IconSkeleton h={9} w={28}/>
+				<IconSkeleton/>
+				<IconSkeleton h={9} w={9}/>
 			{:else if userInfo}
 				<button class="h-9 w-9 rounded-full p-2 transition-colors hover:bg-white/10" aria-label="알림">
 					<Icon src={Bell} size="20" class="text-white" />
