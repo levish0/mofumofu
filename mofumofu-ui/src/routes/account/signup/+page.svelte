@@ -8,14 +8,9 @@
 	<!-- 왼쪽 이미지 영역 -->
 	<div class="relative hidden w-0 flex-1 items-center justify-center overflow-hidden lg:flex">
 		<a href="/" class="block">
-			<img
-				src="https://github.com/levish0/mofumofu/raw/main/assets/mofumofu_stroke.png"
-				alt="Background"
-				class="h-auto w-[1000px] object-contain"
-			/>
+			<img src="/mofumofu_kawaii_mini.svg" alt="Background" class="h-auto w-[500px] object-contain" />
 		</a>
 	</div>
-
 	<!-- 오른쪽 로그인 폼 영역 -->
 	<div
 		class="bg-mofu-dark-900 relative flex flex-1 flex-col justify-center px-4 py-12 shadow-lg sm:px-6 lg:flex-none lg:px-20 xl:px-24"

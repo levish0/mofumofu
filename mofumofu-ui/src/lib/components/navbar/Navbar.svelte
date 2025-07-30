@@ -6,13 +6,9 @@
 	import { onMount } from 'svelte';
 	import { authStore } from '$lib/stores/auth.svelte';
 	import type { UserInfoResponse } from '$lib/api/user/types';
-	import { useNavbarScroll } from '$lib/hooks/useNavbarScroll.svelte';
 	import NavbarRightMenuSkeleton from './skeleton/NavbarRightMenuSkeleton.svelte';
 
-	const { isVisible, isAtTop } = useNavbarScroll({
-		navbarHeight: 60,
-		scrollThreshold: 10
-	});
+	let { isVisible, isAtTop } = $props();
 
 	let userInfo: UserInfoResponse | null = $state(null);
 	let isLoading = $state(false);

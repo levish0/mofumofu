@@ -1,11 +1,16 @@
-<!-- SearchPanel.svelte -->
+<!-- src/lib/components/search/SearchPanel.svelte -->
 <script lang="ts">
-	let keyword = '';
+	let { isVisible, isAtTop } = $props();
+
+	let keyword = $state('');
 	let tags = ['React', 'TypeScript', 'Next.js', 'Svelte', 'Zustand', 'UX'];
-	let selected: string[] = [];
+	let selected = $state<string[]>([]);
+
+	// Calculate the top position based on navbar state
+	const topPosition = $derived(isVisible() ? '68px' : '8px');
 </script>
 
-<div class="sticky top-[68px] w-full space-y-6">
+<div class="sticky w-full space-y-6 transition-all duration-100 ease-out" style="top: {topPosition}">
 	<h2 class="text-xl font-bold text-white">검색 & 필터</h2>
 
 	<!-- 검색창 -->
@@ -17,8 +22,8 @@
 			bind:value={keyword}
 			placeholder="제목 / 요약 검색"
 			class="border-mofu-dark-600 bg-mofu-dark-700 w-full rounded-sm
-		              border px-3 py-2 text-sm text-white
-		              placeholder-gray-400 focus:border-blue-500 focus:outline-none"
+		              px-3 py-2 text-sm text-white
+		              placeholder-mofu-dark-300 outline-none"
 		/>
 	</div>
 
@@ -28,7 +33,7 @@
 		<div class="flex flex-wrap gap-2">
 			{#each tags as tag}
 				<button
-					on:click={() => {
+					onclick={() => {
 						selected = selected.includes(tag) ? selected.filter((t) => t !== tag) : [...selected, tag];
 					}}
 					class="rounded-full px-3 py-1 text-xs transition-colors

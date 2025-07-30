@@ -8,11 +8,7 @@
 	<!-- 왼쪽 이미지 영역 -->
 	<div class="relative hidden w-0 flex-1 items-center justify-center overflow-hidden lg:flex">
 		<a href="/" class="block">
-			<img
-				src="https://github.com/levish0/mofumofu/raw/main/assets/mofumofu_stroke.png"
-				alt="Background"
-				class="h-auto w-[1000px] object-contain"
-			/>
+			<img src="/mofumofu_kawaii_mini.svg" alt="Background" class="h-auto w-[500px] object-contain" />
 		</a>
 	</div>
 
