@@ -44,7 +44,7 @@
 </script>
 
 <div class="min-h-screen">
-	<div class="grid grid-cols-1 gap-x-5 gap-y-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pb-20">
+	<div class="grid grid-cols-1 gap-x-5 gap-y-4 pb-20 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 		{#each cards as card (card.id)}
 			<PostCard
 				image={card.image}
@@ -69,11 +69,9 @@
 
 	<!-- 끝 -->
 	{#if !hasMore && !loading}
-		<div class="pb-20 text-center text-lg dark:text-mofu-dark-300 font-bold">
-			모든 포스트를 확인하셨습니다 ✨
-		</div>
+		<div class="dark:text-mofu-dark-300 pb-20 text-center text-lg font-bold">모든 포스트를 확인하셨습니다 ✨</div>
 	{:else if cards.length > 20 && !loading && hasMore}
-		<div class="pb-20 text-center text-lg dark:text-mofu-dark-300 font-bold">
+		<div class="dark:text-mofu-dark-300 pb-20 text-center text-lg font-bold">
 			스크롤하여 더 많은 포스트를 확인하세요 📜
 		</div>
 	{/if}

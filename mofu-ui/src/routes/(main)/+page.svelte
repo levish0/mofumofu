@@ -235,7 +235,7 @@
 	let currentPage = $state(1);
 	const PAGE_SIZE = 8;
 	const MAX_POSTS = 30; // 테스트를 위해 50개로 제한
-	const skeletonCount = PAGE_SIZE-4;
+	const skeletonCount = PAGE_SIZE - 4;
 	let hasMore = $state(true);
 
 	// 더 많은 포스트 로드 (50개 제한)
