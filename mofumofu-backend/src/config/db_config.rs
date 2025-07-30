@@ -12,6 +12,16 @@ pub struct DbConfig {
     pub auth_access_token_expire_time: i64,
     pub auth_refresh_token_expire_time: i64,
 
+    // Google
+    pub google_client_id: String,
+    pub google_client_secret: String,
+    pub google_redirect_uri: String,
+
+    // Github
+    pub github_client_id: String,
+    pub github_client_secret: String,
+    pub github_redirect_uri: String,
+
     pub db_user: String,
     pub db_password: String,
     pub db_host: String,
@@ -112,6 +122,16 @@ static CONFIG: LazyLock<DbConfig> = LazyLock::new(|| {
             .ok()
             .and_then(|v| v.parse().ok())
             .unwrap_or(14), // 기본값 14일 (일주일)
+
+        // Google
+        google_client_id: env::var("GOOGLE_CLIENT_ID").expect("GOOGLE_CLIENT_ID must be set"),
+        google_client_secret: env::var("GOOGLE_CLIENT_SECRET").expect("GOOGLE_CLIENT_SECRET must be set"),
+        google_redirect_uri: env::var("GOOGLE_REDIRECT_URI").expect("GOOGLE_REDIRECT_URI must be set"),
+
+        // Github
+        github_client_id: env::var("GITHUB_CLIENT_ID").expect("GITHUB_CLIENT_ID must be set"),
+        github_client_secret: env::var("GITHUB_CLIENT_SECRET").expect("GITHUB_CLIENT_SECRET must be set"),
+        github_redirect_uri: env::var("GITHUB_REDIRECT_URI").expect("GITHUB_REDIRECT_URI must be set"),
 
         db_user: env::var("POSTGRES_USER").expect("POSTGRES_USER must be set"),
         db_password: env::var("POSTGRES_PASSWORD").expect("POSTGRES_PASSWORD must be set"),

@@ -17,7 +17,7 @@ impl MigrationTrait for Migration {
         // - name: 유저 이름, 20자 제한, NOT NULL
         // - handle: 고유 핸들, 20자 제한, NOT NULL, UNIQUE (로그인/식별자)
         // - email: 이메일, 254자 제한, NOT NULL, UNIQUE
-        // - password: 비밀번호 해시, NOT NULL (plain-text 저장 금지)
+        // - password: 비밀번호 해시, NULL (plain-text 저장 금지)
         manager
             .create_table(
                 Table::create()
@@ -33,7 +33,7 @@ impl MigrationTrait for Migration {
                     .col(string_len(Users::Name, 20).not_null()) // 이름, 20자 제한
                     .col(string_len(Users::Handle, 20).not_null().unique_key()) // 핸들, UNIQUE
                     .col(string_len(Users::Email, 254).not_null().unique_key()) // 이메일, UNIQUE
-                    .col(ColumnDef::new(Users::Password).text().not_null()) // 비밀번호 해시
+                    .col(ColumnDef::new(Users::Password).text().null()) // 비밀번호 해시, OAUTH 지원 시 NULL 가능
                     .col(
                         ColumnDef::new(Users::IsVerified)
                             .boolean()

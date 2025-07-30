@@ -5,5 +5,6 @@ pub mod follows;
 mod hash_tags;
 mod post_hash_tags;
 pub mod posts;
+mod user_oauth_connections;
 pub mod user_refresh_tokens;
 pub mod users;

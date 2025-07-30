@@ -12,7 +12,7 @@ pub struct Model {
     pub handle: String, // Unique
     #[sea_orm(string_len = 254, not_null, unique)]
     pub email: String, // Unique
-    #[sea_orm(column_type = "Text", not_null)]
+    #[sea_orm(column_type = "Text", nullable)]
     pub password: String,
     #[sea_orm(column_type = "Boolean", not_null, default_value = "false")]
     pub is_verified: bool,

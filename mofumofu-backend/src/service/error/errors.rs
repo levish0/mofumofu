@@ -3,10 +3,7 @@ use crate::service::error::protocol::follow::{
     FOLLOW_ALREADY_FOLLOWING, FOLLOW_CANNOT_FOLLOW_SELF, FOLLOW_NOT_EXIST,
 };
 use crate::service::error::protocol::general::{BAD_REQUEST, VALIDATION_ERROR};
-use crate::service::error::protocol::system::{
-    SYS_DATABASE_ERROR, SYS_HASHING_ERROR, SYS_NOT_FOUND, SYS_TOKEN_CREATION_ERROR,
-    SYS_TRANSACTION_ERROR,
-};
+use crate::service::error::protocol::system::{SYS_DATABASE_ERROR, SYS_HASHING_ERROR, SYS_NOT_FOUND, SYS_OAUTH_PROVIDER_NOT_SUPPORTED, SYS_TOKEN_CREATION_ERROR, SYS_TRANSACTION_ERROR};
 use crate::service::error::protocol::user::{
     USER_INVALID_PASSWORD, USER_INVALID_TOKEN, USER_NOT_FOUND, USER_NOT_VERIFIED,
     USER_TOKEN_EXPIRED, USER_UNAUTHORIZED,
@@ -82,6 +79,7 @@ pub enum Errors {
 
     // 시스템 오류
     DatabaseError(String),      // 데이터베이스 오류 (추가 정보 포함)
+    SysOauthProviderNotSupported,
     TransactionError(String),   // 트랜잭션 오류 (추가 정보 포함)
     NotFound(String),           // 리소스를 찾을 수 없음 (추가 정보 포함)
     HashingError(String),       // 해싱 오류 (추가 정보 포함)
@@ -121,6 +119,7 @@ impl IntoResponse for Errors {
                 SYS_TRANSACTION_ERROR,
                 Some(msg),
             ),
+            Errors::SysOauthProviderNotSupported => (StatusCode::BAD_REQUEST, SYS_OAUTH_PROVIDER_NOT_SUPPORTED, None),
             Errors::DatabaseError(msg) => (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 SYS_DATABASE_ERROR,

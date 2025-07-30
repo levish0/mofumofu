@@ -2,6 +2,8 @@ pub use sea_orm_migration::prelude::*;
 mod common;
 mod m20250717_064916_create_users;
 mod m20250718_155828_user_refresh_tokens;
+mod m20250718_155829_oauth_providers;
+mod m20250718_155830_user_oauth_connections;
 mod m20250718_162056_hashtags;
 mod m20250718_162057_posts;
 mod m20250718_162058_drafts;
@@ -17,6 +19,8 @@ impl MigratorTrait for Migrator {
         vec![
             Box::new(m20250717_064916_create_users::Migration),
             Box::new(m20250718_155828_user_refresh_tokens::Migration),
+            Box::new(m20250718_155829_oauth_providers::Migration),
+            Box::new(m20250718_155830_user_oauth_connections::Migration),
             Box::new(m20250718_162056_hashtags::Migration),
             Box::new(m20250718_162057_posts::Migration),
             Box::new(m20250718_162058_drafts::Migration),

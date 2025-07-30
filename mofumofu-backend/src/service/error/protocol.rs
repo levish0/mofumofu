@@ -21,6 +21,8 @@ pub mod general {
 pub mod system {
     pub const SYS_HASHING_ERROR: &str = "system:hashing_error";
     pub const SYS_NOT_FOUND: &str = "system:not_found";
+
+    pub const SYS_OAUTH_PROVIDER_NOT_SUPPORTED: &str = "system:oauth_provider_not_supported";
     pub const SYS_TRANSACTION_ERROR: &str = "system:transaction_error";
     pub const SYS_DATABASE_ERROR: &str = "system:database_error";
     pub const SYS_TOKEN_CREATION_ERROR: &str = "system:token_creation_error";
