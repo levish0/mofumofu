@@ -23,8 +23,13 @@ This is a Rust-based social media backend API (mofu-backend) built with Axum web
 
 ### Task Runner (Python/FastAPI)
 Located in `tasks/` directory:
-- `cd tasks && uv run fastapi dev app/main.py` - Start task runner API
-- `cd tasks && uv run ruff check` - Run Python linter
+- `cd tasks && uv sync` - Install all dependencies including dev tools
+- `cd tasks && uv pip install .` - Install only essential dependencies
+- `cd tasks && uv run fastapi dev app/main.py` - Start task runner API (development)
+- `cd tasks && uvicorn app.main:app --host 0.0.0.0 --port 7000` - Start task runner API (production)
+- `cd tasks && uv run ruff check .` - Run Python linter
+- `cd tasks && uv run ruff check . --fix` - Fix auto-fixable linting issues
+- `cd tasks && uv run ruff format .` - Format Python code
 
 ## Architecture Overview
 
