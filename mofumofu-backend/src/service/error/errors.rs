@@ -8,8 +8,8 @@ use crate::service::error::protocol::system::{
     SYS_TRANSACTION_ERROR,
 };
 use crate::service::error::protocol::user::{
-    USER_INVALID_PASSWORD, USER_INVALID_TOKEN, USER_NOT_FOUND, USER_TOKEN_EXPIRED,
-    USER_UNAUTHORIZED,
+    USER_INVALID_PASSWORD, USER_INVALID_TOKEN, USER_NOT_FOUND, USER_NOT_VERIFIED,
+    USER_TOKEN_EXPIRED, USER_UNAUTHORIZED,
 };
 use axum::Json;
 use axum::extract::Request;
@@ -65,10 +65,11 @@ impl From<TransactionError<DbErr>> for Errors {
 pub enum Errors {
     // 사용자 관련 오류
     UserInvalidPassword, // 잘못된 비밀번호
-    UserNotFound,        // 사용자를 찾을 수 없음
-    UserUnauthorized,    // 인증되지 않은 사용자
-    UserTokenExpired,    // 만료된 토큰
-    UserInvalidToken,    // 유효하지 않은 토큰
+    UserNotVerified,
+    UserNotFound,     // 사용자를 찾을 수 없음
+    UserUnauthorized, // 인증되지 않은 사용자
+    UserTokenExpired, // 만료된 토큰
+    UserInvalidToken, // 유효하지 않은 토큰
 
     // follow 관련 오류
     FollowCannotFollowSelf,
@@ -95,6 +96,7 @@ impl IntoResponse for Errors {
         let (status, code, details) = match self {
             // 사용자 관련 오류 - 주로 401 Unauthorized 또는 404 Not Found
             Errors::UserInvalidPassword => (StatusCode::UNAUTHORIZED, USER_INVALID_PASSWORD, None),
+            Errors::UserNotVerified => (StatusCode::UNAUTHORIZED, USER_NOT_VERIFIED, None),
             Errors::UserNotFound => (StatusCode::NOT_FOUND, USER_NOT_FOUND, None),
             Errors::UserUnauthorized => (StatusCode::UNAUTHORIZED, USER_UNAUTHORIZED, None),
             Errors::UserTokenExpired => (StatusCode::UNAUTHORIZED, USER_TOKEN_EXPIRED, None),

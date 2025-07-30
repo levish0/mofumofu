@@ -43,6 +43,8 @@ pub async fn get_followers(
             name: user.name,
             handle: user.handle,
             email: user.email,
+            profile_image: user.profile_image,
+            banner_image: user.banner_image,
         })
         .collect();
 

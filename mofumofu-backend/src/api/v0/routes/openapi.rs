@@ -1,4 +1,3 @@
-use crate::dto::user::request::get_profile::GetUserProfileRequest;
 use crate::dto::auth::request::login::AuthLoginRequest;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
 use crate::dto::follow::request::create::CreateFollowRequest;
@@ -6,6 +5,7 @@ use crate::dto::follow::request::delete::DeleteFollowRequest;
 use crate::dto::follow::response::follow_list::FollowListResponse;
 use crate::dto::post::request::create::CreatePostRequest;
 use crate::dto::user::request::create::CreateUserRequest;
+use crate::dto::user::request::get_profile::GetUserProfileRequest;
 use crate::dto::user::response::info::UserInfoResponse;
 use crate::service::error::errors::ErrorResponse;
 use utoipa::openapi::security::{ApiKey, ApiKeyValue};

@@ -1,12 +1,12 @@
-use axum::extract::State;
-use axum::http::StatusCode;
-use axum::response::IntoResponse;
-use tracing::info;
 use crate::dto::user::request::create::CreateUserRequest;
 use crate::service::error::errors::Errors;
 use crate::service::user::service_create_user;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
+use axum::extract::State;
+use axum::http::StatusCode;
+use axum::response::IntoResponse;
+use tracing::info;
 
 // POST /user
 #[utoipa::path(

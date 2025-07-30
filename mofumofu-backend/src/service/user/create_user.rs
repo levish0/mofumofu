@@ -1,28 +1,15 @@
 use crate::dto::user::request::create::CreateUserRequest;
-use crate::entity::users::ActiveModel as UserActiveModel;
+use crate::repository::user::create_user::repository_create_user;
 use crate::service::error::errors::Errors;
-use crate::utils::crypto::hash_password;
-use sea_orm::{ActiveModelTrait, DatabaseConnection, Set, TransactionTrait};
+use sea_orm::{ConnectionTrait, TransactionTrait};
 
-pub async fn service_create_user(
-    conn: &DatabaseConnection,
-    payload: CreateUserRequest,
-) -> Result<(), Errors> {
-    let hashed_password = hash_password(&payload.password)?;
-
+pub async fn service_create_user<C>(conn: &C, payload: CreateUserRequest) -> Result<(), Errors>
+where
+    C: ConnectionTrait + TransactionTrait,
+{
     let txn = conn.begin().await?;
 
-    let new_user = UserActiveModel {
-        id: Default::default(),
-        name: Set(payload.name),
-        handle: Set(payload.handle),
-        email: Set(payload.email),
-        password: Set(hashed_password),
-        profile_image: Default::default(),
-        banner_image: Default::default(),
-    };
-
-    new_user.insert(&txn).await?;
+    repository_create_user(&txn, payload).await?;
 
     txn.commit().await?;
 

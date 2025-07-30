@@ -34,6 +34,12 @@ impl MigrationTrait for Migration {
                     .col(string_len(Users::Handle, 20).not_null().unique_key()) // 핸들, UNIQUE
                     .col(string_len(Users::Email, 254).not_null().unique_key()) // 이메일, UNIQUE
                     .col(ColumnDef::new(Users::Password).text().not_null()) // 비밀번호 해시
+                    .col(
+                        ColumnDef::new(Users::IsVerified)
+                            .boolean()
+                            .not_null()
+                            .default(false),
+                    )
                     .col(ColumnDef::new(Users::ProfileImage).text().null())
                     .col(ColumnDef::new(Users::BannerImage).text().null())
                     .to_owned(),
@@ -78,6 +84,7 @@ enum Users {
     Handle,
     Email,
     Password,
+    IsVerified,
     ProfileImage,
     BannerImage,
 }

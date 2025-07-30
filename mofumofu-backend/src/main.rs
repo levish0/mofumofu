@@ -15,6 +15,7 @@ mod database;
 mod dto;
 mod entity;
 mod middleware;
+mod repository;
 mod service;
 mod state;
 mod utils;

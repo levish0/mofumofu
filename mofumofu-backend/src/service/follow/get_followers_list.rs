@@ -1,7 +1,7 @@
 use crate::entity::users::Entity as UsersEntity;
 use crate::entity::users::{GetFollowersLink, Model as UsersModel};
+use crate::repository::user::get_user_by_handle::repository_get_user_by_handle;
 use crate::service::error::errors::Errors;
-use crate::service::user::get_user_by_handle;
 use sea_orm::ConnectionTrait;
 use sea_orm::EntityTrait;
 use sea_orm::QuerySelect;
@@ -16,7 +16,7 @@ pub async fn service_get_followers<C>(
 where
     C: ConnectionTrait + TransactionTrait,
 {
-    let user = get_user_by_handle(conn, user_handle).await?;
+    let user = repository_get_user_by_handle(conn, user_handle).await?;
 
     let followers_with_user = UsersEntity::find_by_id(user.id)
         .find_also_linked(GetFollowersLink)

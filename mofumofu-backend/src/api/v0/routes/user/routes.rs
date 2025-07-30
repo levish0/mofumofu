@@ -1,10 +1,10 @@
-use axum::Router;
-use axum::routing::{get, post};
 use crate::api::v0::routes::user::create_user::create_user;
 use crate::api::v0::routes::user::get_my_profile::get_my_profile;
 use crate::api::v0::routes::user::get_profile::get_profile;
 use crate::middleware::auth::access_jwt_auth;
 use crate::state::AppState;
+use axum::Router;
+use axum::routing::{get, post};
 
 pub fn user_routes() -> Router<AppState> {
     Router::new()

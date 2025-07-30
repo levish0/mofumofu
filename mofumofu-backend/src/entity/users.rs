@@ -14,6 +14,8 @@ pub struct Model {
     pub email: String, // Unique
     #[sea_orm(column_type = "Text", not_null)]
     pub password: String,
+    #[sea_orm(column_type = "Boolean", not_null, default_value = "false")]
+    pub is_verified: bool,
     #[sea_orm(column_type = "Text", nullable)]
     pub profile_image: Option<String>,
     #[sea_orm(column_type = "Text", nullable)]

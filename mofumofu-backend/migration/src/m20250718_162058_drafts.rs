@@ -67,7 +67,8 @@ impl MigrationTrait for Migration {
                     .table(Drafts::Table)
                     .col(Drafts::PostId)
                     .to_owned(),
-            ).await?;
+            )
+            .await?;
 
         // 생성일 기준 정렬
         manager

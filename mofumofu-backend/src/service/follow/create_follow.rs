@@ -2,8 +2,9 @@ use crate::dto::follow::internal::create::CreateFollow;
 use crate::entity::follows::ActiveModel as FollowsActiveModel;
 use crate::entity::follows::Column as FollowsColumn;
 use crate::entity::follows::Entity as FollowsEntity;
+use crate::repository::user::find_user_by_handle::repository_find_user_by_handle;
+use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
 use crate::service::error::errors::Errors;
-use crate::service::user::{get_user_by_handle, get_user_by_uuid};
 use sea_orm::TransactionTrait;
 use sea_orm::{ActiveModelTrait, ConnectionTrait, QueryFilter, Set};
 use sea_orm::{ColumnTrait, EntityTrait};
@@ -17,8 +18,12 @@ where
 {
     let txn = conn.begin().await?;
 
-    let follower = get_user_by_uuid(&txn, &payload.follower_id).await?;
-    let followee = get_user_by_handle(&txn, &payload.followee_handle).await?;
+    let follower = repository_find_user_by_uuid(&txn, &payload.follower_id)
+        .await?
+        .ok_or(Errors::UserNotFound)?;
+    let followee = repository_find_user_by_handle(&txn, &payload.followee_handle)
+        .await?
+        .ok_or(Errors::UserNotFound)?;
 
     if follower.handle == followee.handle {
         return Err(Errors::FollowCannotFollowSelf);
