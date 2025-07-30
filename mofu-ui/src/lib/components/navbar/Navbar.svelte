@@ -9,13 +9,14 @@
 	import NavbarRightMenuSkeleton from './NavbarRightMenuSkeleton.svelte';
 	import { useNavbarScroll } from '$lib/hooks/useNavbarScroll.svelte';
 
-	const isVisible = useNavbarScroll({
+	const { isVisible, isAtTop } = useNavbarScroll({
 		navbarHeight: 60,
-		scrollThreshold: 10,
+		scrollThreshold: 10
 	});
 
 	let userInfo: UserInfoResponse | null = $state(null);
 	let isLoading = $state(false);
+	let isMounted = $state(false);
 
 	async function loadUserProfile() {
 		if (isLoading || userInfo) return;
@@ -34,6 +35,7 @@
 	}
 
 	onMount(() => {
+		isMounted = true;
 		loadUserProfile();
 	});
 
@@ -45,7 +47,9 @@
 </script>
 
 <nav
-	class="bg-mofu-dark-800 fixed top-0 right-0 left-0 z-50 max-h-[60px] w-full text-white transition-transform duration-100 ease-out"
+	class="fixed top-0 right-0 left-0 z-50 max-h-[60px] w-full text-white transition-all duration-100 ease-out"
+	class:bg-mofu-dark-800={!isAtTop()}
+	class:bg-mofu-dark-900={isAtTop()}
 	style="transform: translateY({isVisible() ? '0' : '-100%'});"
 >
 	<div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
