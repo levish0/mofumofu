@@ -1,4 +1,7 @@
-![banner](./assets/mofumofu_stroke.png)
+<p align="center">
+  <img src="./assets/mofumofu_kawaii_mini.svg" alt="もふもふ" />
+</p>
+
 # Mofu
 
 > A cozy space for creators to write and share their stories and art.
