@@ -25,7 +25,7 @@
 			bind:value={keyword}
 			placeholder="제목 / 요약 검색"
 			class="border-mofu-dark-600 bg-mofu-dark-700 placeholder-mofu-dark-300 w-full
-		              rounded-sm px-3 py-2 text-sm
+		              rounded-lg px-3 py-2 text-sm
 		              text-white outline-none"
 		/>
 	</div>
@@ -53,7 +53,7 @@
 		<h3 class="text-mofu-dark-100 text-sm font-semibold">정렬 기준</h3>
 		<select
 			bind:value={sortBy}
-			class="border-mofu-dark-600 bg-mofu-dark-700 text-mofu-dark-300 w-full rounded-sm px-3 py-2 text-sm"
+			class="border-mofu-dark-600 bg-mofu-dark-700 text-mofu-dark-300 w-full rounded-lg px-3 py-2 text-sm"
 		>
 			<option value="recent">최신순</option>
 			<option value="oldest">오래된순</option>
@@ -65,7 +65,7 @@
 		<h3 class="text-mofu-dark-100 text-sm font-semibold">기간</h3>
 		<select
 			bind:value={timeRange}
-			class="border-mofu-dark-600 bg-mofu-dark-700 text-mofu-dark-300 w-full rounded-sm px-3 py-2 text-sm"
+			class="border-mofu-dark-600 bg-mofu-dark-700 text-mofu-dark-300 w-full rounded-lg px-3 py-2 text-sm"
 		>
 			<option value="all">전체</option>
 			<option value="today">오늘</option>

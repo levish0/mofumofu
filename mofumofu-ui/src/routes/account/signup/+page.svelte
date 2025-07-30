@@ -24,7 +24,7 @@
 				<h2 class="mt-6 text-2xl/9 font-bold tracking-tight text-white">가입하기</h2>
 				<p class="text-mofu-dark-300 mt-2 text-sm/6">
 					이미 계정이 있으신가요?
-					<a href="/account/signin" class="text-mofu rounded-md font-semibold hover:opacity-70">로그인하기</a>
+					<a href="/account/signin" class="text-mofu rounded-lg font-semibold hover:opacity-70">로그인하기</a>
 				</p>
 			</div>
 
@@ -40,7 +40,7 @@
 								required
 								placeholder="email@mofu.com"
 								autocomplete="email"
-								class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-md px-3 py-1.5 text-base outline-none sm:text-sm/6"
+								class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-lg px-3 py-1.5 text-base outline-none sm:text-sm/6"
 							/>
 						</div>
 					</div>
@@ -55,14 +55,14 @@
 								placeholder="p4ssw@rd!"
 								required
 								autocomplete="current-password"
-								class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-md px-3 py-1.5 text-base outline-none sm:text-sm/6"
+								class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-lg px-3 py-1.5 text-base outline-none sm:text-sm/6"
 							/>
 						</div>
 					</div>
 					<div>
 						<button
 							type="submit"
-							class="bg-mofu text-mofu-dark-900 mt-6 flex w-full justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold shadow-xs outline-none hover:opacity-70"
+							class="bg-mofu text-mofu-dark-900 mt-6 flex w-full justify-center rounded-lg px-3 py-1.5 text-sm/6 font-semibold shadow-xs outline-none hover:opacity-70"
 						>
 							가입하기
 						</button>
@@ -83,7 +83,7 @@
 				<div class="mt-6 grid grid-cols-2 gap-4">
 					<a
 						href="/"
-						class="bg-mofu-dark-800 flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold hover:opacity-70"
+						class="bg-mofu-dark-800 flex w-full items-center justify-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold hover:opacity-70"
 					>
 						<!-- Google 아이콘 -->
 						<svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5">
@@ -109,7 +109,7 @@
 
 					<a
 						href="/"
-						class="bg-mofu-dark-800 flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold hover:opacity-70"
+						class="bg-mofu-dark-800 flex w-full items-center justify-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold hover:opacity-70"
 					>
 						<!-- GitHub 아이콘 -->
 						<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5 fill-[#FFFFFF]">
