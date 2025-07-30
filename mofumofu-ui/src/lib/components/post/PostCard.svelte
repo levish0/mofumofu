@@ -21,7 +21,7 @@
 
 <!-- 카드 전체 -->
 <div
-	class="dark:bg-mofu-dark-800 dark:border-mofu-dark-800 group flex h-full cursor-pointer flex-col overflow-hidden rounded-sm border transition-all duration-200 hover:-translate-y-1 hover:shadow-xl md:min-h-[300px]"
+	class="hover:opacity-70 dark:bg-mofu-dark-800 dark:border-mofu-dark-800 group flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border transition-all duration-200 hover:-translate-y-1 hover:shadow-xl md:min-h-[300px]"
 >
 	<!-- 이미지 영역 (스켈레톤이거나 이미지가 있을 때만) -->
 	{#if isSkeleton || image}

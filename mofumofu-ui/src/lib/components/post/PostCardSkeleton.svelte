@@ -5,7 +5,7 @@
 </script>
 
 <div
-	class="bg-mofu-dark-800 border-mofu-dark-800 group flex h-full cursor-pointer flex-col overflow-hidden rounded-sm border transition-all duration-200 hover:-translate-y-1 hover:shadow-xl"
+	class="bg-mofu-dark-800 border-mofu-dark-800 group flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border transition-all duration-200 hover:-translate-y-1 hover:shadow-xl"
 >
 	<PostCardImage title="" isSkeleton={true} />
 
