@@ -6,7 +6,6 @@
 	import { onMount } from 'svelte';
 	import { authStore } from '$lib/stores/auth.svelte';
 	import type { UserInfoResponse } from '$lib/api/user/types';
-	import NavbarRightMenuSkeleton from './skeleton/NavbarRightMenuSkeleton.svelte';
 
 	let { isVisible, isAtTop } = $props();
 
@@ -55,7 +54,12 @@
 		<!-- 우측 -->
 		<div class="flex items-center space-x-3">
 			{#if isLoading}
-				<NavbarRightMenuSkeleton />
+				<div class="shimmer h-9 w-9 rounded-full"></div>
+				<div class="shimmer hidden h-9 w-9 rounded-full sm:block"></div>
+				<div class="shimmer h-9 w-18 rounded-full sm:hidden"></div>
+				<div class="shimmer hidden h-9 w-28 rounded-full sm:block"></div>
+				<div class="shimmer hidden h-9 w-9 rounded-full sm:block"></div>
+				<div class="shimmer hidden h-9 w-9 rounded-full sm:block"></div>
 			{:else if userInfo}
 				<button class="h-9 w-9 rounded-full p-2 transition-colors hover:bg-white/10" aria-label="알림">
 					<Icon src={Bell} size="20" class="text-white" />
@@ -100,38 +104,6 @@
 					로그인
 				</a>
 			{/if}
-		</div>
-	</div>
-
-	<!-- 모바일 하단 네비 -->
-	<div class="border-t border-gray-700 px-4 py-2 md:hidden">
-		<div class="flex space-x-4">
-			<a
-				href="/"
-				class="flex items-center space-x-1 text-sm transition-colors hover:text-orange-400"
-				aria-label="트렌딩 페이지로 이동"
-			>
-				<Icon src={ArrowTrendingUp} size="16" />
-				<span>트렌딩</span>
-			</a>
-
-			<a
-				href="/recent"
-				class="flex items-center space-x-1 text-sm transition-colors hover:text-orange-400"
-				aria-label="최신 페이지로 이동"
-			>
-				<Icon src={Clock} size="16" />
-				<span>최신</span>
-			</a>
-
-			<a
-				href="/feed"
-				class="flex items-center space-x-1 text-sm transition-colors hover:text-orange-400"
-				aria-label="피드 페이지로 이동"
-			>
-				<Icon src={Rss} size="16" />
-				<span>피드</span>
-			</a>
 		</div>
 	</div>
 </nav>
