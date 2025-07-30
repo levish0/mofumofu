@@ -1,34 +1,20 @@
-use crate::dto::post::internal::create::CreatePost;
-use crate::entity::posts::ActiveModel as PostActiveModel;
+use crate::dto::post::request::create::CreatePostRequest;
+use crate::repository::post::create_post::repository_create_post;
 use crate::service::error::errors::Errors;
-use chrono::Utc;
-use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
+use sea_orm::{ConnectionTrait, TransactionTrait};
+use uuid::Uuid;
 
-pub async fn service_create_post<C>(conn: &C, payload: CreatePost) -> anyhow::Result<(), Errors>
+pub async fn service_create_post<C>(
+    conn: &C,
+    payload: CreatePostRequest,
+    user_uuid: &Uuid,
+) -> anyhow::Result<(), Errors>
 where
     C: ConnectionTrait + TransactionTrait,
 {
     let txn = conn.begin().await?;
 
-    let new_post = PostActiveModel {
-        id: Default::default(),
-        title: Default::default(),
-        user_id: Set(payload.author_id),
-        content: Set(payload.content),
-        created_at: Set(Utc::now()),
-        updated_at: Set(Option::from(Utc::now())),
-        is_deleted: Default::default(),
-        status: Default::default(),
-        published_at: Default::default(),
-        like_count: Default::default(),
-        comment_count: Default::default(),
-        view_count: Default::default(),
-        summary: Default::default(),
-        slug: Default::default(),
-    };
-
-    // Insert the new post
-    new_post.insert(&txn).await?;
+    repository_create_post(&txn, payload, user_uuid).await?;
 
     // Commit the transaction
     txn.commit().await?;

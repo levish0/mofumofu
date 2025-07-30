@@ -1,5 +1,4 @@
 use crate::dto::auth::internal::access_token::AccessTokenClaims;
-use crate::dto::post::internal::create::CreatePost;
 use crate::dto::post::request::create::CreatePostRequest;
 use crate::middleware::auth::access_jwt_auth;
 use crate::service::error::errors::Errors;
@@ -30,6 +29,9 @@ pub fn post_routes() -> Router<AppState> {
         (status = StatusCode::BAD_REQUEST, description = "Invalid input"),
         (status = StatusCode::INTERNAL_SERVER_ERROR, description = "Internal Server Error")
     ),
+    security(
+        ("bearer_auth" = [])
+    ),
     tag = "Post"
 )]
 pub async fn create_post(
@@ -38,15 +40,17 @@ pub async fn create_post(
     ValidatedJson(payload): ValidatedJson<CreatePostRequest>,
 ) -> Result<impl IntoResponse, Errors> {
     info!("Received POST request to create post: {:?}", payload);
-
     let user_uuid = claims.sub.clone();
+
     service_create_post(
         &state.conn,
-        CreatePost {
+        CreatePostRequest {
+            title: payload.title,
+            summary: payload.summary,
             content: payload.content,
-            author_id: user_uuid,
-            reply_to_id: payload.reply_to_id,
+            slug: payload.slug,
         },
+        &user_uuid,
     )
     .await?;
 

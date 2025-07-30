@@ -1,4 +1,3 @@
-use crate::common::PostStatusEnums;
 use sea_orm_migration::prelude::*;
 use strum::IntoEnumIterator;
 

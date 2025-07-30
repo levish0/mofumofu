@@ -1,5 +1,5 @@
 // src/lib/stores/auth.svelte.ts
-// 메모리에만 저장되는 access token
+
 let _token = $state('');
 
 export const authStore = {

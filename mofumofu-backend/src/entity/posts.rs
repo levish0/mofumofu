@@ -1,4 +1,3 @@
-use crate::entity::common::PostStatusEnums;
 use sea_orm::prelude::*;
 use uuid::Uuid;
 
@@ -28,12 +27,6 @@ pub struct Model {
 
     #[sea_orm(column_type = "Boolean", not_null, default_value = "false")]
     pub is_deleted: bool,
-
-    #[sea_orm(column_name = "status", not_null)]
-    pub status: PostStatusEnums,
-
-    #[sea_orm(column_type = "TimestampWithTimeZone", nullable)]
-    pub published_at: Option<DateTimeUtc>,
 
     #[sea_orm(column_type = "Integer", not_null, default_value = "0")]
     pub like_count: i32,

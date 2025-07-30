@@ -1,4 +1,3 @@
-use crate::common::PostStatusEnums;
 use sea_orm_migration::prelude::*;
 use strum::IntoEnumIterator;
 
@@ -25,6 +24,12 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Posts::Content).text().not_null()) // 본문 (길이 제한 없음)
                     .col(ColumnDef::new(Posts::UserId).uuid().not_null())
                     .col(
+                        ColumnDef::new(Posts::IsDeleted)
+                            .boolean()
+                            .not_null()
+                            .default(false),
+                    )
+                    .col(
                         ColumnDef::new(Posts::CreatedAt)
                             .timestamp_with_time_zone()
                             .not_null()
@@ -36,26 +41,9 @@ impl MigrationTrait for Migration {
                             .null(),
                     )
                     .col(
-                        ColumnDef::new(Posts::IsDeleted)
-                            .boolean()
-                            .not_null()
-                            .default(false),
-                    )
-                    .col(
-                        ColumnDef::new(Posts::Status)
-                            .enumeration(
-                                PostStatusEnums::Table,
-                                PostStatusEnums::iter()
-                                    .filter(|p| !matches!(p, PostStatusEnums::Table))
-                                    .collect::<Vec<_>>(),
-                            )
-                            .not_null()
-                            .default("draft"),
-                    )
-                    .col(
-                        ColumnDef::new(Posts::PublishedAt)
+                        ColumnDef::new(Posts::DeletedAt)
                             .timestamp_with_time_zone()
-                            .null(), // 발행 시간
+                            .null(),
                     )
                     .col(
                         ColumnDef::new(Posts::LikeCount)
@@ -94,30 +82,6 @@ impl MigrationTrait for Migration {
                     .name("idx_posts_user_id")
                     .table(Posts::Table)
                     .col(Posts::UserId)
-                    .to_owned(),
-            )
-            .await?;
-
-        // 발행 상태별 조회 최적화
-        manager
-            .create_index(
-                Index::create()
-                    .name("idx_posts_status")
-                    .table(Posts::Table)
-                    .col(Posts::Status)
-                    .col(Posts::CreatedAt)
-                    .to_owned(),
-            )
-            .await?;
-
-        // 발행된 포스트만 조회 최적화
-        manager
-            .create_index(
-                Index::create()
-                    .name("idx_posts_published")
-                    .table(Posts::Table)
-                    .col(Posts::Status)
-                    .col(Posts::PublishedAt)
                     .to_owned(),
             )
             .await?;
@@ -176,8 +140,7 @@ enum Posts {
     CreatedAt,
     UpdatedAt,
     IsDeleted,
-    Status,
-    PublishedAt,
+    DeletedAt,
     LikeCount,
     CommentCount,
     ViewCount,
