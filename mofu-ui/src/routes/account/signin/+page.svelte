@@ -23,11 +23,11 @@
 		<!-- 로그인 폼 콘텐츠 -->
 		<div class="mx-auto w-full max-w-sm lg:w-96">
 			<div class="flex justify-start text-center">
-				<button on:click={goBack} class="text-sm text-gray-400 hover:opacity-70"> ← 돌아가기 </button>
+				<button on:click={goBack} class="text-mofu-dark-300 text-sm hover:opacity-70"> ← 돌아가기 </button>
 			</div>
 			<div>
 				<h2 class="mt-6 text-2xl/9 font-bold tracking-tight text-white">로그인</h2>
-				<p class="mt-2 text-sm/6 text-gray-400">
+				<p class="text-mofu-dark-300 mt-2 text-sm/6">
 					아직 계정이 없으신가요?
 					<a href="/account/signup" class="text-mofu rounded-md font-semibold hover:opacity-70">가입하기</a>
 				</p>
@@ -45,7 +45,7 @@
 								required
 								placeholder="email@mofu.com"
 								autocomplete="email"
-								class="bg-mofu-dark-800 block w-full rounded-md px-3 py-1.5 text-base outline-none placeholder:text-gray-400 sm:text-sm/6"
+								class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-md px-3 py-1.5 text-base outline-none sm:text-sm/6"
 							/>
 						</div>
 					</div>
@@ -60,7 +60,7 @@
 								placeholder="p4ssw@rd!"
 								required
 								autocomplete="current-password"
-								class="bg-mofu-dark-800 block w-full rounded-md px-3 py-1.5 text-base outline-none placeholder:text-gray-400 sm:text-sm/6"
+								class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-md px-3 py-1.5 text-base outline-none sm:text-sm/6"
 							/>
 						</div>
 					</div>

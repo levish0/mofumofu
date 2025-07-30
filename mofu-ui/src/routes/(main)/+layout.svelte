@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Footer from '$lib/components/Footer.svelte';
 	import Navbar from '$lib/components/navbar/Navbar.svelte';
 	import SearchPanel from '$lib/components/search/SearchPanel.svelte';
 
@@ -7,7 +8,7 @@
 
 <div class="bg-mofu-dark-900 min-h-screen">
 	<Navbar />
-	<main class="max-w-8xl mx-auto pt-[60px]">
+	<main class="max-w-8xl mx-auto pt-[60px] ">
 		<div class="flex flex-col gap-5 px-4 pt-2 lg:flex-row">
 			<div class="lg:w-4/5">
 				{@render children()}
@@ -17,4 +18,5 @@
 			</div>
 		</div>
 	</main>
+	<Footer />
 </div>

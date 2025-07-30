@@ -6,8 +6,8 @@
 	import { onMount } from 'svelte';
 	import { authStore } from '$lib/stores/auth.svelte';
 	import type { UserInfoResponse } from '$lib/api/user/types';
-	import NavbarRightMenuSkeleton from './NavbarRightMenuSkeleton.svelte';
 	import { useNavbarScroll } from '$lib/hooks/useNavbarScroll.svelte';
+	import NavbarRightMenuSkeleton from './skeleton/NavbarRightMenuSkeleton.svelte';
 
 	const { isVisible, isAtTop } = useNavbarScroll({
 		navbarHeight: 60,
@@ -52,11 +52,9 @@
 >
 	<div class="max-w-8xl mx-auto flex items-center justify-between px-4 py-3">
 		<!-- 좌측 -->
-<div class="flex items-center space-x-3">
-	<a href="/" class="flex items-center">
-		<img src="/mofumofu_kawaii_logo.png" alt="もふもふ。" class="h-14 w-auto" />
-	</a>
-</div>
+		<div class="flex items-center space-x-3">
+			<div class="text-3xl font-bold whitespace-nowrap text-white">もふもふ。</div>
+		</div>
 
 		<!-- 우측 -->
 		<div class="flex items-center space-x-3">

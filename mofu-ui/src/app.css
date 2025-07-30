@@ -23,8 +23,33 @@
 
 	--color-mofu: #fab69a;
 
-	--color-mofu-dark-100: #e1e1e1;
+	--color-mofu-dark-300: #9f9fa9;
+	--color-mofu-dark-200: #e1e1e1;
+	--color-mofu-dark-100: #f4f4f5;
 
 	--container-8xl: 88rem;
 	--max-width-8xl: 88rem;
+}
+
+@utility shimmer {
+	position: relative;
+	overflow: hidden;
+	background-color: rgba(255, 255, 255, 0.04);
+
+	&::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: -150%;
+		height: 100%;
+		width: 150%;
+		background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+		animation: shimmer 1.5s infinite;
+	}
+}
+
+@keyframes shimmer {
+	100% {
+		transform: translateX(100%);
+	}
 }
