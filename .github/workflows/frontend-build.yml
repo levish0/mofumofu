@@ -1,4 +1,4 @@
-name: Mofu Frontend
+name: mofumofu Frontend
 on:
   workflow_dispatch:
   push:
@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: mofu-ui
+        working-directory: mofumofu-ui
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version-file: 'mofu-ui/.nvmrc'
+          node-version-file: 'mofumofu-ui/.nvmrc'
       
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -48,11 +48,11 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            mofu-ui/node_modules
-            mofu-ui/.sveltekit
-          key: ${{ runner.os }}-sveltekit-${{ hashFiles('mofu-ui/pnpm-lock.yaml') }}-${{ hashFiles('mofu-ui/src/**/*') }}
+            mofumofu-ui/node_modules
+            mofumofu-ui/.sveltekit
+          key: ${{ runner.os }}-sveltekit-${{ hashFiles('mofumofu-ui/pnpm-lock.yaml') }}-${{ hashFiles('mofumofu-ui/src/**/*') }}
           restore-keys: |
-            ${{ runner.os }}-sveltekit-${{ hashFiles('mofu-ui/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-sveltekit-${{ hashFiles('mofumofu-ui/pnpm-lock.yaml') }}-
       
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

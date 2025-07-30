@@ -1,4 +1,4 @@
-name: Mofu Backend
+name: mofumofu Backend
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: mofu-backend
+        working-directory: mofumofu-backend
 
     steps:
       - uses: actions/checkout@v3
@@ -28,8 +28,8 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
-            mofu-backend/target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('mofu-backend/**/Cargo.lock') }}
+            mofumofu-backend/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('mofumofu-backend/**/Cargo.lock') }}
 
       - name: Release Build
         run: cargo build --release
