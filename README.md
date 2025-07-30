@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/mofumofu_kawaii_mini.svg" alt="もふもふ" />
+  <img src="./assets/mofumofu_kawaii_mini.svg" alt="もふもふ" width="500"/>
 </p>
 
 # Mofu
