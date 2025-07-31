@@ -1,4 +1,3 @@
-mod config;
-mod github;
-mod google;
+mod find_or_create_user;
+mod provider;
 mod sign_in;

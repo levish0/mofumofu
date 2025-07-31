@@ -1521,6 +1521,7 @@ dependencies = [
  "dotenvy",
  "jsonwebtoken",
  "oauth2",
+ "rand 0.8.5",
  "reqwest",
  "sea-orm",
  "serde",

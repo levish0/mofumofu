@@ -30,3 +30,4 @@ serde_json = "1.0.141"
 tracing-appender = "0.2.3"
 oauth2 = { version = "5.0.0", features = ["reqwest"] }
 reqwest = { version = "0.12.22", features = ["json"] }
+rand = "0.8.5"

@@ -5,14 +5,15 @@ use crate::service::error::protocol::follow::{
 use crate::service::error::protocol::general::{BAD_REQUEST, VALIDATION_ERROR};
 use crate::service::error::protocol::oauth::{
     OAUTH_INVALID_AUTH_URL, OAUTH_INVALID_REDIRECT_URL, OAUTH_INVALID_TOKEN_URL,
+    OAUTH_TOKEN_EXCHANGE_FAILED, OAUTH_USER_INFO_FETCH_FAILED, OAUTH_USER_INFO_PARSE_FAILED,
 };
 use crate::service::error::protocol::system::{
     SYS_DATABASE_ERROR, SYS_HASHING_ERROR, SYS_NOT_FOUND, SYS_TOKEN_CREATION_ERROR,
     SYS_TRANSACTION_ERROR,
 };
 use crate::service::error::protocol::user::{
-    USER_INVALID_PASSWORD, USER_INVALID_TOKEN, USER_NOT_FOUND, USER_NOT_VERIFIED,
-    USER_TOKEN_EXPIRED, USER_UNAUTHORIZED,
+    USER_HANDLE_GENERATION_FAILED, USER_INVALID_PASSWORD, USER_INVALID_TOKEN, USER_NOT_FOUND,
+    USER_NOT_VERIFIED, USER_TOKEN_EXPIRED, USER_UNAUTHORIZED,
 };
 use axum::Json;
 use axum::extract::Request;
@@ -71,6 +72,7 @@ pub enum Errors {
     UserNotVerified,
     UserNotFound,     // 사용자를 찾을 수 없음
     UserUnauthorized, // 인증되지 않은 사용자
+    UserHandleGenerationFailed,
     UserTokenExpired, // 만료된 토큰
     UserInvalidToken, // 유효하지 않은 토큰
 
@@ -83,6 +85,9 @@ pub enum Errors {
     OauthInvalidAuthUrl,
     OauthInvalidTokenUrl,
     OauthInvalidRedirectUrl,
+    OauthTokenExchangeFailed,
+    OauthUserInfoFetchFailed,
+    OauthUserInfoParseFailed,
 
     // 일반 오류
     BadRequestError(String), // 잘못된 요청 (추가 정보 포함)
@@ -107,6 +112,11 @@ impl IntoResponse for Errors {
             Errors::UserNotVerified => (StatusCode::UNAUTHORIZED, USER_NOT_VERIFIED, None),
             Errors::UserNotFound => (StatusCode::NOT_FOUND, USER_NOT_FOUND, None),
             Errors::UserUnauthorized => (StatusCode::UNAUTHORIZED, USER_UNAUTHORIZED, None),
+            Errors::UserHandleGenerationFailed => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                USER_HANDLE_GENERATION_FAILED,
+                None,
+            ),
             Errors::UserTokenExpired => (StatusCode::UNAUTHORIZED, USER_TOKEN_EXPIRED, None),
             Errors::UserInvalidToken => (StatusCode::UNAUTHORIZED, USER_INVALID_TOKEN, None),
 
@@ -127,6 +137,17 @@ impl IntoResponse for Errors {
             Errors::OauthInvalidRedirectUrl => {
                 (StatusCode::BAD_REQUEST, OAUTH_INVALID_REDIRECT_URL, None)
             }
+            Errors::OauthTokenExchangeFailed => {
+                (StatusCode::BAD_REQUEST, OAUTH_TOKEN_EXCHANGE_FAILED, None)
+            }
+            Errors::OauthUserInfoFetchFailed => {
+                (StatusCode::BAD_REQUEST, OAUTH_USER_INFO_FETCH_FAILED, None)
+            }
+            Errors::OauthUserInfoParseFailed => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                OAUTH_USER_INFO_PARSE_FAILED,
+                None,
+            ),
 
             // 일반 오류 - 400 Bad Request
             Errors::BadRequestError(msg) => (StatusCode::BAD_REQUEST, BAD_REQUEST, Some(msg)),

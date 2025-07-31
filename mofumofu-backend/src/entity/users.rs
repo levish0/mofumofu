@@ -63,6 +63,13 @@ pub enum Relation {
         to = "super::follows::Column::FollowerId"
     )]
     Following,
+
+    #[sea_orm(
+        has_many = "super::user_oauth_connections::Entity",
+        from = "Column::Id",
+        to = "super::user_oauth_connections::Column::UserId"
+    )]
+    OAuthConnections,
 }
 
 impl Related<super::posts::Entity> for Entity {

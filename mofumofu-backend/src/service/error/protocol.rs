@@ -4,6 +4,7 @@ pub mod user {
     pub const USER_NOT_VERIFIED: &str = "user:not_verified";
     pub const USER_NOT_FOUND: &str = "user:not_found";
     pub const USER_UNAUTHORIZED: &str = "user:unauthorized";
+    pub const USER_HANDLE_GENERATION_FAILED: &str = "user:handle_generation_failed";
     pub const USER_TOKEN_EXPIRED: &str = "user:token_expired";
     pub const USER_INVALID_TOKEN: &str = "user:invalid_token";
 }
@@ -18,6 +19,9 @@ pub mod oauth {
     pub const OAUTH_INVALID_AUTH_URL: &str = "oauth:invalid_auth_url";
     pub const OAUTH_INVALID_TOKEN_URL: &str = "oauth:invalid_token_url";
     pub const OAUTH_INVALID_REDIRECT_URL: &str = "oauth:invalid_redirect_url";
+    pub const OAUTH_TOKEN_EXCHANGE_FAILED: &str = "oauth:token_exchange_failed";
+    pub const OAUTH_USER_INFO_FETCH_FAILED: &str = "oauth:user_info_fetch failed";
+    pub const OAUTH_USER_INFO_PARSE_FAILED: &str = "oauth:user_info_parse failed";
 }
 pub mod general {
     pub const BAD_REQUEST: &str = "general:bad_request";
