@@ -6,6 +6,7 @@
 	import { goto } from '$app/navigation';
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { ApiError } from '$lib/api/error/common_error';
+	import { ExclamationTriangle, Icon } from 'svelte-hero-icons';
 
 	let loading = $state(true);
 	let error = $state<string | null>(null);
@@ -47,34 +48,25 @@
 	});
 </script>
 
-<div class="text-mofu-dark-200 bg-mofu-dark-900 flex min-h-screen items-center justify-center">
+<div class="flex min-h-screen items-center justify-center text-mofu-dark-200 bg-mofu-dark-900">
 	<div class="w-full max-w-md space-y-8 p-8">
 		<div class="text-center">
 			{#if loading}
 				<div class="space-y-4">
-					<div class="border-mofu-dark-100 mx-auto h-12 w-12 animate-spin rounded-full border-b-2"></div>
-					<h2 class="text-xl font-semibold">Processing Github login...</h2>
-					<p>Please wait while we sign you in</p>
+					<div class="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-mofu-dark-100"></div>
+					<h2 class="text-xl font-semibold ">Processing Github login...</h2>
+					<p >Please wait while we sign you in</p>
 				</div>
 			{:else if error}
 				<div class="space-y-4">
-					<div class="text-red-600">
-						<svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.962-.833-2.732 0L3.082 16.5c-.77.833.192 2.5 1.732 2.5z"
-							/>
-						</svg>
+					<div class="text-rose-600">
+						<Icon src={ExclamationTriangle} solid size="40" class="inline-block" />
 					</div>
-					<h2 class="text-xl font-semibold text-gray-900">Login Failed</h2>
-					<p class="text-red-600">{error}</p>
+					<h2 class="text-xl font-semibold ">Error occurred</h2>
 					<button
 						onclick={() => goto('/login')}
-						class="mt-4 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-					>
-						Back to Login
+						class=" rounded-md text-sm hover:opacity-70 text-mofu-dark-300"			>
+						← 돌아가기
 					</button>
 				</div>
 			{/if}
