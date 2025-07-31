@@ -47,14 +47,14 @@
 	});
 </script>
 
-<div class="flex min-h-screen items-center justify-center bg-gray-50">
+<div class="text-mofu-dark-200 bg-mofu-dark-900 flex min-h-screen items-center justify-center">
 	<div class="w-full max-w-md space-y-8 p-8">
 		<div class="text-center">
 			{#if loading}
 				<div class="space-y-4">
-					<div class="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
-					<h2 class="text-xl font-semibold text-gray-900">Processing Github login...</h2>
-					<p class="text-gray-600">Please wait while we sign you in</p>
+					<div class="border-mofu-dark-100 mx-auto h-12 w-12 animate-spin rounded-full border-b-2"></div>
+					<h2 class="text-xl font-semibold">Processing Github login...</h2>
+					<p>Please wait while we sign you in</p>
 				</div>
 			{:else if error}
 				<div class="space-y-4">

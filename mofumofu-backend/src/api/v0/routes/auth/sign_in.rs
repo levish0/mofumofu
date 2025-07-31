@@ -1,6 +1,6 @@
 use crate::dto::auth::request::login::AuthLoginRequest;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
-use crate::service::auth::auth::service_login;
+use crate::service::auth::auth::service_sign_in;
 use crate::service::error::errors::Errors;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
@@ -35,7 +35,7 @@ pub async fn sign_in(
     let ip_str = extract_ip_address(&headers, addr);
     let ua_str = extract_user_agent(user_agent);
 
-    let res = service_login(&state.conn, Some(ua_str), Some(ip_str), payload).await?;
+    let res = service_sign_in(&state.conn, Some(ua_str), Some(ip_str), payload).await?;
 
     Ok(AuthJWTResponse {
         access_token: res.access_token,

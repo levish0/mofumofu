@@ -20,7 +20,7 @@
 		<!-- 로그인 폼 콘텐츠 -->
 		<div class="mx-auto w-full max-w-sm lg:w-96">
 			<div class="flex justify-start text-center">
-				<button on:click={goBack} class="text-mofu-dark-300 text-sm hover:opacity-70"> ← 돌아가기 </button>
+				<button onclick={goBack} class="text-mofu-dark-300 text-sm hover:opacity-70"> ← 돌아가기 </button>
 			</div>
 			<div>
 				<h2 class="mt-6 text-2xl/9 font-bold tracking-tight text-white">가입하기</h2>

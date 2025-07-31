@@ -41,11 +41,7 @@ export const api = ky.create({
 						throw createApiError(errorBody);
 					}
 
-					const tokenRefreshNeededCodes = [
-						ErrorCodes.UserTokenExpired,
-						ErrorCodes.UserInvalidToken,
-						ErrorCodes.UserUnauthorized
-					];
+					const tokenRefreshNeededCodes = [ErrorCodes.UserTokenExpired, ErrorCodes.UserUnauthorized];
 
 					if (errorBody?.code && tokenRefreshNeededCodes.includes(errorBody.code)) {
 						try {

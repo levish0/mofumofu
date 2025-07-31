@@ -12,6 +12,15 @@ export async function refreshAccessToken(): Promise<RefreshAccessTokenResponse> 
 	}
 }
 
+export async function signOut(): Promise<void> {
+	try {
+		await api.post('v0/auth/sign_out', {});
+	} catch (error) {
+		console.error('Failed to sign out:', error);
+		throw error;
+	}
+}
+
 export async function googleSignIn(code: string): Promise<RefreshAccessTokenResponse> {
 	const payload: GoogleLoginRequest = { code };
 	return api.post('v0/auth/google', { json: payload }).json<RefreshAccessTokenResponse>();

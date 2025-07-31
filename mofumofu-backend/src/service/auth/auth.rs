@@ -17,7 +17,7 @@ use sea_orm::{
 };
 use tracing::error;
 
-pub async fn service_login<C>(
+pub async fn service_sign_in<C>(
     conn: &C,
     user_agent: Option<String>,
     ip_address: Option<String>,
@@ -72,6 +72,58 @@ where
             Err(Errors::DatabaseError(e.to_string()))
         }
     }
+}
+
+pub async fn service_sign_out<C>(
+    conn: &C,
+    user_agent: Option<String>,
+    ip_address: Option<String>,
+    refresh_token: String,
+    refresh_token_claims: RefreshTokenClaims,
+) -> Result<(), Errors>
+where
+    C: ConnectionTrait + TransactionTrait,
+{
+    let now = Utc::now().timestamp();
+    if refresh_token_claims.exp < now {
+        error!(
+            "Refresh token has expired: token_exp={}, now={}",
+            refresh_token_claims.exp, now
+        );
+        return Err(Errors::UserTokenExpired);
+    }
+
+    let stored_token = RefreshTokenEntity::find()
+        .filter(RefreshTokenColumn::Id.eq(refresh_token_claims.jti))
+        .filter(RefreshTokenColumn::RefreshToken.eq(refresh_token))
+        .filter(RefreshTokenColumn::RevokedAt.is_null()) // revoked 되지 않은 토큰만
+        .one(conn)
+        .await
+        .map_err(|e| {
+            error!("Database error while fetching refresh token: {:?}", e);
+            Errors::DatabaseError(e.to_string())
+        })?;
+
+    let stored_token = match stored_token {
+        Some(token) => token,
+        None => {
+            error!("Refresh token not found or already revoked");
+            return Err(Errors::UserInvalidToken);
+        }
+    };
+
+    let mut revoke_model: RefreshTokenActiveModel = stored_token.into();
+    revoke_model.revoked_at = Set(Some(Utc::now()));
+
+    revoke_model.ip_address = Set(ip_address);
+    revoke_model.user_agent = Set(user_agent);
+
+    revoke_model.update(conn).await.map_err(|e| {
+        error!("Failed to revoke refresh token: {:?}", e);
+        Errors::DatabaseError(e.to_string())
+    })?;
+
+    Ok(())
 }
 
 pub async fn service_refresh(

@@ -3,3 +3,4 @@ pub mod google;
 pub mod refresh;
 pub mod routes;
 pub mod sign_in;
+pub mod sign_out;
