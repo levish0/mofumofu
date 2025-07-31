@@ -12,7 +12,7 @@
 	});
 </script>
 
-<div class="bg-mofu-dark-900 min-h-screen">
+<div class=" min-h-screen">
 	<Navbar {isVisible} {isAtTop} />
 	<main class="max-w-8xl mx-auto pt-[60px]">
 		<div class="flex flex-col gap-5 px-4 pt-2 lg:flex-row">

@@ -150,7 +150,7 @@
 									마이페이지
 								</a>
 								<a
-									href="/profile/{userInfo.handle}"
+									href="/settings"
 									class="dark:text-mofu-dark-200 hover:text-mofu flex items-center px-4 py-2"
 								>
 									<Icon src={Cog6Tooth} solid size="16" class="mr-3" />

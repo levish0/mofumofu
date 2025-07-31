@@ -39,7 +39,7 @@
 			<div class="text-mofu-dark-300 flex items-center text-xs">
 				<span>{date}</span>
 				<span class="mx-1">·</span>
-				<span>{comments}개의 {views}</span>
+				<span>{comments}개의 댓글</span>
 			</div>
 		</div>
 	{/if}

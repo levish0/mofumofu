@@ -4,6 +4,6 @@
 	let { children } = $props();
 </script>
 
-<div class=" h-screen">{@render children()}</div>
+<div class="h-screen">{@render children()}</div>
 
 <Footer />
