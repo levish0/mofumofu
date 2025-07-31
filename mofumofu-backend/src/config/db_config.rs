@@ -125,13 +125,17 @@ static CONFIG: LazyLock<DbConfig> = LazyLock::new(|| {
 
         // Google
         google_client_id: env::var("GOOGLE_CLIENT_ID").expect("GOOGLE_CLIENT_ID must be set"),
-        google_client_secret: env::var("GOOGLE_CLIENT_SECRET").expect("GOOGLE_CLIENT_SECRET must be set"),
-        google_redirect_uri: env::var("GOOGLE_REDIRECT_URI").expect("GOOGLE_REDIRECT_URI must be set"),
+        google_client_secret: env::var("GOOGLE_CLIENT_SECRET")
+            .expect("GOOGLE_CLIENT_SECRET must be set"),
+        google_redirect_uri: env::var("GOOGLE_REDIRECT_URI")
+            .expect("GOOGLE_REDIRECT_URI must be set"),
 
         // Github
         github_client_id: env::var("GITHUB_CLIENT_ID").expect("GITHUB_CLIENT_ID must be set"),
-        github_client_secret: env::var("GITHUB_CLIENT_SECRET").expect("GITHUB_CLIENT_SECRET must be set"),
-        github_redirect_uri: env::var("GITHUB_REDIRECT_URI").expect("GITHUB_REDIRECT_URI must be set"),
+        github_client_secret: env::var("GITHUB_CLIENT_SECRET")
+            .expect("GITHUB_CLIENT_SECRET must be set"),
+        github_redirect_uri: env::var("GITHUB_REDIRECT_URI")
+            .expect("GITHUB_REDIRECT_URI must be set"),
 
         db_user: env::var("POSTGRES_USER").expect("POSTGRES_USER must be set"),
         db_password: env::var("POSTGRES_PASSWORD").expect("POSTGRES_PASSWORD must be set"),

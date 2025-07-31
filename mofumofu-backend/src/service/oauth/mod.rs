@@ -1,4 +1,4 @@
-mod sign_in;
+mod config;
 mod github;
 mod google;
-mod config;
+mod sign_in;

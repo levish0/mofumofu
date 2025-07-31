@@ -3,7 +3,13 @@ use crate::service::error::protocol::follow::{
     FOLLOW_ALREADY_FOLLOWING, FOLLOW_CANNOT_FOLLOW_SELF, FOLLOW_NOT_EXIST,
 };
 use crate::service::error::protocol::general::{BAD_REQUEST, VALIDATION_ERROR};
-use crate::service::error::protocol::system::{SYS_DATABASE_ERROR, SYS_HASHING_ERROR, SYS_NOT_FOUND, SYS_OAUTH_PROVIDER_NOT_SUPPORTED, SYS_TOKEN_CREATION_ERROR, SYS_TRANSACTION_ERROR};
+use crate::service::error::protocol::oauth::{
+    OAUTH_INVALID_AUTH_URL, OAUTH_INVALID_REDIRECT_URL, OAUTH_INVALID_TOKEN_URL,
+};
+use crate::service::error::protocol::system::{
+    SYS_DATABASE_ERROR, SYS_HASHING_ERROR, SYS_NOT_FOUND, SYS_TOKEN_CREATION_ERROR,
+    SYS_TRANSACTION_ERROR,
+};
 use crate::service::error::protocol::user::{
     USER_INVALID_PASSWORD, USER_INVALID_TOKEN, USER_NOT_FOUND, USER_NOT_VERIFIED,
     USER_TOKEN_EXPIRED, USER_UNAUTHORIZED,
@@ -73,13 +79,17 @@ pub enum Errors {
     FollowAlreadyFollowing,
     FollowNotExist,
 
+    // oauth
+    OauthInvalidAuthUrl,
+    OauthInvalidTokenUrl,
+    OauthInvalidRedirectUrl,
+
     // 일반 오류
     BadRequestError(String), // 잘못된 요청 (추가 정보 포함)
     ValidationError(String), // 유효성 검사 오류 (추가 정보 포함)
 
     // 시스템 오류
     DatabaseError(String),      // 데이터베이스 오류 (추가 정보 포함)
-    SysOauthProviderNotSupported,
     TransactionError(String),   // 트랜잭션 오류 (추가 정보 포함)
     NotFound(String),           // 리소스를 찾을 수 없음 (추가 정보 포함)
     HashingError(String),       // 해싱 오류 (추가 정보 포함)
@@ -109,6 +119,15 @@ impl IntoResponse for Errors {
             }
             Errors::FollowNotExist => (StatusCode::NOT_FOUND, FOLLOW_NOT_EXIST, None),
 
+            // Oauth
+            Errors::OauthInvalidAuthUrl => (StatusCode::BAD_REQUEST, OAUTH_INVALID_AUTH_URL, None),
+            Errors::OauthInvalidTokenUrl => {
+                (StatusCode::BAD_REQUEST, OAUTH_INVALID_TOKEN_URL, None)
+            }
+            Errors::OauthInvalidRedirectUrl => {
+                (StatusCode::BAD_REQUEST, OAUTH_INVALID_REDIRECT_URL, None)
+            }
+
             // 일반 오류 - 400 Bad Request
             Errors::BadRequestError(msg) => (StatusCode::BAD_REQUEST, BAD_REQUEST, Some(msg)),
             Errors::ValidationError(msg) => (StatusCode::BAD_REQUEST, VALIDATION_ERROR, Some(msg)),
@@ -119,7 +138,6 @@ impl IntoResponse for Errors {
                 SYS_TRANSACTION_ERROR,
                 Some(msg),
             ),
-            Errors::SysOauthProviderNotSupported => (StatusCode::BAD_REQUEST, SYS_OAUTH_PROVIDER_NOT_SUPPORTED, None),
             Errors::DatabaseError(msg) => (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 SYS_DATABASE_ERROR,

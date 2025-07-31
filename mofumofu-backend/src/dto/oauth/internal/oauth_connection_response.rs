@@ -1,5 +1,5 @@
-use uuid::Uuid;
 use crate::entity::common::OAuthProvider;
+use uuid::Uuid;
 
 pub struct OAuthConnectionResponse {
     pub id: Uuid,

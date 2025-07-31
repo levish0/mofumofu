@@ -13,6 +13,12 @@ pub mod follow {
     pub const FOLLOW_ALREADY_FOLLOWING: &str = "follow:already_following";
     pub const FOLLOW_NOT_EXIST: &str = "follow:not_exist";
 }
+
+pub mod oauth {
+    pub const OAUTH_INVALID_AUTH_URL: &str = "oauth:invalid_auth_url";
+    pub const OAUTH_INVALID_TOKEN_URL: &str = "oauth:invalid_token_url";
+    pub const OAUTH_INVALID_REDIRECT_URL: &str = "oauth:invalid_redirect_url";
+}
 pub mod general {
     pub const BAD_REQUEST: &str = "general:bad_request";
     pub const VALIDATION_ERROR: &str = "general:validation_error";
@@ -21,8 +27,6 @@ pub mod general {
 pub mod system {
     pub const SYS_HASHING_ERROR: &str = "system:hashing_error";
     pub const SYS_NOT_FOUND: &str = "system:not_found";
-
-    pub const SYS_OAUTH_PROVIDER_NOT_SUPPORTED: &str = "system:oauth_provider_not_supported";
     pub const SYS_TRANSACTION_ERROR: &str = "system:transaction_error";
     pub const SYS_DATABASE_ERROR: &str = "system:database_error";
     pub const SYS_TOKEN_CREATION_ERROR: &str = "system:token_creation_error";
