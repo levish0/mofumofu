@@ -16,6 +16,7 @@
 	import { authStore } from '$lib/stores/auth.svelte';
 	import type { UserInfoResponse } from '$lib/api/user/types';
 	import { signOut } from '$lib/api/auth/authApi';
+	import { fly, scale } from 'svelte/transition';
 
 	let { isVisible, isAtTop } = $props();
 
@@ -132,15 +133,14 @@
 								</span>
 							{/if}
 						</div>
-						<Icon
-							src={ChevronDown}
-							size="16"
-							class={`text-gray-400 transition-transform${isDropdownOpen ? ' rotate-180' : ''}`}
-						/>
 					</button>
 
 					{#if isDropdownOpen}
-						<div class="bg-mofu-dark-800 absolute top-14 right-0 z-50 w-48 rounded-lg text-sm font-bold shadow-lg">
+						<div
+							class="bg-mofu-dark-800 absolute top-14 right-0 z-50 w-48 rounded-lg text-sm font-bold shadow-lg"
+							transition:fly={{ y: -8, duration: 150 }}
+							style="transform-origin: top right;"
+						>
 							<div class="py-1">
 								<a
 									href="/profile/{userInfo.handle}"
