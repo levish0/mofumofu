@@ -57,10 +57,10 @@ pub async fn refresh_jwt_auth(mut req: Request<Body>, next: Next) -> Result<Resp
             None => return Err(Errors::UserUnauthorized),
         }
     } else {
-        return Err(Errors::UserUnauthorized);
+        return Err(Errors::UserNoRefreshToken);
     };
 
-    let token_data = decode_refresh_token(refresh_token).map_err(|_| Errors::UserUnauthorized)?;
+    let token_data = decode_refresh_token(refresh_token).map_err(|_| Errors::UserInvalidToken)?;
 
     let context = RefreshTokenContext {
         token: refresh_token.to_string(),

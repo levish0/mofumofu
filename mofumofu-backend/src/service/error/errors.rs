@@ -11,10 +11,7 @@ use crate::service::error::protocol::system::{
     SYS_DATABASE_ERROR, SYS_HASHING_ERROR, SYS_NOT_FOUND, SYS_TOKEN_CREATION_ERROR,
     SYS_TRANSACTION_ERROR,
 };
-use crate::service::error::protocol::user::{
-    USER_HANDLE_GENERATION_FAILED, USER_INVALID_PASSWORD, USER_INVALID_TOKEN, USER_NOT_FOUND,
-    USER_NOT_VERIFIED, USER_TOKEN_EXPIRED, USER_UNAUTHORIZED,
-};
+use crate::service::error::protocol::user::{USER_HANDLE_GENERATION_FAILED, USER_INVALID_PASSWORD, USER_INVALID_TOKEN, USER_NOT_FOUND, USER_NOT_VERIFIED, USER_NO_REFRESH_TOKEN, USER_TOKEN_EXPIRED, USER_UNAUTHORIZED};
 use axum::Json;
 use axum::extract::Request;
 use axum::http::StatusCode;
@@ -74,6 +71,7 @@ pub enum Errors {
     UserUnauthorized, // 인증되지 않은 사용자
     UserHandleGenerationFailed,
     UserTokenExpired, // 만료된 토큰
+    UserNoRefreshToken,
     UserInvalidToken, // 유효하지 않은 토큰
 
     // follow 관련 오류
@@ -118,6 +116,7 @@ impl IntoResponse for Errors {
                 None,
             ),
             Errors::UserTokenExpired => (StatusCode::UNAUTHORIZED, USER_TOKEN_EXPIRED, None),
+            Errors::UserNoRefreshToken => (StatusCode::UNAUTHORIZED, USER_NO_REFRESH_TOKEN, None),
             Errors::UserInvalidToken => (StatusCode::UNAUTHORIZED, USER_INVALID_TOKEN, None),
 
             // Follow

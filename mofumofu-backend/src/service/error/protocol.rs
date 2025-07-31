@@ -6,6 +6,7 @@ pub mod user {
     pub const USER_UNAUTHORIZED: &str = "user:unauthorized";
     pub const USER_HANDLE_GENERATION_FAILED: &str = "user:handle_generation_failed";
     pub const USER_TOKEN_EXPIRED: &str = "user:token_expired";
+    pub const USER_NO_REFRESH_TOKEN: &str = "user:no_refresh_token";
     pub const USER_INVALID_TOKEN: &str = "user:invalid_token";
 }
 

@@ -42,7 +42,7 @@ pub async fn exchange_google_code(code: &str) -> Result<AccessToken, Errors> {
 pub async fn get_google_user_info(access_token: &AccessToken) -> Result<GoogleUserInfo, Errors> {
     let client = reqwest::Client::new();
     let response = client
-        .get("https://accounts.google.com/o/oauth2/v3/userinfo")
+        .get("https://www.googleapis.com/oauth2/v3/userinfo")
         .bearer_auth(access_token.secret())
         .send()
         .await

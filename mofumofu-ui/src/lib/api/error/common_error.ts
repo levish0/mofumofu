@@ -8,6 +8,7 @@ export const ErrorCodes = {
 	UserNotFound: 'user:not_found',
 	UserUnauthorized: 'user:unauthorized',
 	UserTokenExpired: 'user:token_expired',
+	UserNoRefreshToken: 'user:no_refresh_token',
 	UserInvalidToken: 'user:invalid_token',
 
 	// follow module errors
@@ -42,6 +43,7 @@ export class UserInvalidPassword extends ApiError {}
 export class UserNotFound extends ApiError {}
 export class UserUnauthorized extends ApiError {}
 export class UserTokenExpired extends ApiError {}
+export class UserNoRefreshToken extends ApiError {}
 export class UserInvalidToken extends ApiError {}
 
 export class FollowCannotFollowSelf extends ApiError {}

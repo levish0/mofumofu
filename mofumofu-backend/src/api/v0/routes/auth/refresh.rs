@@ -17,9 +17,9 @@ use std::net::SocketAddr;
     path = "/v0/auth/refresh",
     responses(
         (status = StatusCode::OK, description = "Token refresh successful", body = AuthJWTResponse),
-        (status = StatusCode::UNAUTHORIZED, description = "Invalid or expired refresh token"),
+        (status = StatusCode::UNAUTHORIZED, description = "Refresh token cookie exists but is invalid or malformed"),
+        (status = StatusCode::BAD_REQUEST, description = "No refresh token cookie found"),
         (status = StatusCode::NOT_FOUND, description = "User not found"),
-        (status = StatusCode::BAD_REQUEST, description = "Invalid request"),
         (status = StatusCode::INTERNAL_SERVER_ERROR, description = "Internal server error")
     ),
     security(

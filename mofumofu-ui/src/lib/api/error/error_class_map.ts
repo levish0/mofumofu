@@ -8,6 +8,7 @@ import {
 	UserNotFound,
 	UserUnauthorized,
 	UserTokenExpired,
+	UserNoRefreshToken,
 	UserInvalidToken,
 	FollowCannotFollowSelf,
 	FollowAlreadyFollowing,
@@ -27,6 +28,7 @@ export const ErrorClassMap: Record<string, new (code: string, status: number, bo
 		[ErrorCodes.UserNotFound]: UserNotFound,
 		[ErrorCodes.UserUnauthorized]: UserUnauthorized,
 		[ErrorCodes.UserTokenExpired]: UserTokenExpired,
+		[ErrorCodes.UserNoRefreshToken]: UserNoRefreshToken,
 		[ErrorCodes.UserInvalidToken]: UserInvalidToken,
 
 		[ErrorCodes.FollowCannotFollowSelf]: FollowCannotFollowSelf,

@@ -1,29 +1,47 @@
 {
 	"openapi": "3.1.0",
 	"info": {
-		"title": "textura-backend",
+		"title": "mofumofu-backend",
 		"description": "",
 		"contact": { "name": "Levi Lim", "email": "shiueo.csh@gmail.com" },
 		"license": { "name": "" },
 		"version": "0.1.0"
 	},
 	"paths": {
-		"/v0/auth/login": {
+		"/v0/auth/github": {
 			"post": {
 				"tags": ["Auth"],
-				"operationId": "login",
+				"operationId": "github_sign_in",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthLoginRequest" } } },
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GithubLoginRequest" } } },
 					"required": true
 				},
 				"responses": {
 					"200": {
-						"description": "Login successful",
+						"description": "GitHub OAuth login successful",
 						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthJWTResponse" } } }
 					},
-					"400": { "description": "Invalid request" },
-					"401": { "description": "Invalid credentials" },
-					"404": { "description": "User not found" },
+					"400": { "description": "Invalid authorization code" },
+					"401": { "description": "OAuth authentication failed" },
+					"500": { "description": "Internal server error" }
+				}
+			}
+		},
+		"/v0/auth/google": {
+			"post": {
+				"tags": ["Auth"],
+				"operationId": "google_sign_in",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GoogleLoginRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Google OAuth login successful",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthJWTResponse" } } }
+					},
+					"400": { "description": "Invalid authorization code" },
+					"401": { "description": "OAuth authentication failed" },
 					"500": { "description": "Internal server error" }
 				}
 			}
@@ -43,6 +61,26 @@
 					"500": { "description": "Internal server error" }
 				},
 				"security": [{ "refresh_token_cookie": [] }]
+			}
+		},
+		"/v0/auth/sign_in": {
+			"post": {
+				"tags": ["Auth"],
+				"operationId": "sign_in",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthLoginRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Login successful",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthJWTResponse" } } }
+					},
+					"400": { "description": "Invalid request" },
+					"401": { "description": "Invalid credentials" },
+					"404": { "description": "User not found" },
+					"500": { "description": "Internal server error" }
+				}
 			}
 		},
 		"/v0/follow": {
@@ -145,7 +183,8 @@
 					"204": { "description": "Post created successfully" },
 					"400": { "description": "Invalid input" },
 					"500": { "description": "Internal Server Error" }
-				}
+				},
+				"security": [{ "bearer_auth": [] }]
 			}
 		},
 		"/v0/unfollow": {
@@ -179,10 +218,10 @@
 				}
 			}
 		},
-		"/v0/user/profile": {
+		"/v0/user/my_profile": {
 			"get": {
 				"tags": ["User"],
-				"operationId": "get_profile",
+				"operationId": "get_my_profile",
 				"responses": {
 					"200": {
 						"description": "Successfully retrieved user profile",
@@ -195,19 +234,14 @@
 				"security": [{ "bearer_auth": [] }]
 			}
 		},
-		"/v0/user/{handle}": {
-			"get": {
+		"/v0/user/profile": {
+			"post": {
 				"tags": ["User"],
-				"operationId": "get_user",
-				"parameters": [
-					{
-						"name": "handle",
-						"in": "path",
-						"description": "User handle",
-						"required": true,
-						"schema": { "type": "string" }
-					}
-				],
+				"operationId": "get_profile",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetUserProfileRequest" } } },
+					"required": true
+				},
 				"responses": {
 					"200": {
 						"description": "Successfully retrieved user information",
@@ -238,10 +272,12 @@
 			},
 			"CreatePostRequest": {
 				"type": "object",
-				"required": ["content"],
+				"required": ["title", "content"],
 				"properties": {
 					"content": { "type": "string" },
-					"reply_to_id": { "type": ["string", "null"], "format": "uuid" }
+					"slug": { "type": ["string", "null"] },
+					"summary": { "type": ["string", "null"] },
+					"title": { "type": "string" }
 				}
 			},
 			"CreateUserRequest": {
@@ -279,10 +315,23 @@
 					"users": { "type": "array", "items": { "$ref": "#/components/schemas/UserInfoResponse" } }
 				}
 			},
+			"GetUserProfileRequest": {
+				"type": "object",
+				"required": ["handle"],
+				"properties": { "handle": { "type": "string" } }
+			},
+			"GithubLoginRequest": { "type": "object", "required": ["code"], "properties": { "code": { "type": "string" } } },
+			"GoogleLoginRequest": { "type": "object", "required": ["code"], "properties": { "code": { "type": "string" } } },
 			"UserInfoResponse": {
 				"type": "object",
 				"required": ["name", "handle", "email"],
-				"properties": { "email": { "type": "string" }, "handle": { "type": "string" }, "name": { "type": "string" } }
+				"properties": {
+					"banner_image": { "type": ["string", "null"] },
+					"email": { "type": "string" },
+					"handle": { "type": "string" },
+					"name": { "type": "string" },
+					"profile_image": { "type": ["string", "null"] }
+				}
 			}
 		},
 		"securitySchemes": {
@@ -291,9 +340,9 @@
 		}
 	},
 	"tags": [
+		{ "name": "Auth", "description": "Authentication endpoints" },
 		{ "name": "User", "description": "User endpoints" },
 		{ "name": "Post", "description": "Post endpoints" },
-		{ "name": "Follow", "description": "Follow endpoints" },
-		{ "name": "Auth", "description": "Authentication endpoints" }
+		{ "name": "Follow", "description": "Follow endpoints" }
 	]
 }

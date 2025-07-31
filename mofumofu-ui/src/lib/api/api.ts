@@ -36,7 +36,18 @@ export const api = ky.create({
 						console.error('Failed to parse error response:', error);
 					}
 
-					if (errorBody?.code === ErrorCodes.UserTokenExpired && request.headers.has('Authorization')) {
+					if (errorBody?.code === ErrorCodes.UserNoRefreshToken) {
+						authStore.clearToken();
+						throw createApiError(errorBody);
+					}
+
+					const tokenRefreshNeededCodes = [
+						ErrorCodes.UserTokenExpired,
+						ErrorCodes.UserInvalidToken,
+						ErrorCodes.UserUnauthorized
+					];
+
+					if (errorBody?.code && tokenRefreshNeededCodes.includes(errorBody.code)) {
 						try {
 							const refreshResponse = await refreshAccessToken();
 							authStore.setToken(refreshResponse.access_token);

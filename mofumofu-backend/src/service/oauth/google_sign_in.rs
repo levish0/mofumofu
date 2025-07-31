@@ -22,12 +22,13 @@ where
     let access_token = exchange_google_code(auth_code).await?;
     // 2. 구글에서 유저 정보 획득
     let google_user = get_google_user_info(&access_token).await?;
+
     // 3. 유저 찾기 또는 생성
     let user = service_find_or_create_oauth_user(
         txn,
         &google_user.email,
         &google_user.name,
-        &google_user.id,
+        &google_user.sub,
         OAuthProvider::Google,
         google_user.picture,
     )

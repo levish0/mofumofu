@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { getGoogleOAuthUrl, getGitHubOAuthUrl } from '$lib/oauth/config';
+
 	function goBack() {
 		history.back();
 	}
@@ -82,7 +84,7 @@
 
 				<div class="mt-6 grid grid-cols-2 gap-4">
 					<a
-						href="/"
+						href={getGoogleOAuthUrl()}
 						class="bg-mofu-dark-800 flex w-full items-center justify-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold hover:opacity-70"
 					>
 						<!-- Google 아이콘 -->
@@ -108,7 +110,7 @@
 					</a>
 
 					<a
-						href="/"
+						href={getGitHubOAuthUrl()}
 						class="bg-mofu-dark-800 flex w-full items-center justify-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold hover:opacity-70"
 					>
 						<!-- GitHub 아이콘 -->
