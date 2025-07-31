@@ -10,7 +10,7 @@ use oauth2::basic::{
 use oauth2::{AccessToken, Client, EndpointNotSet, EndpointSet, StandardRevocableToken};
 use tracing::error;
 
-pub fn build_github_client() -> Result<
+fn build_github_client() -> Result<
     Client<
         BasicErrorResponse,
         BasicTokenResponse,
@@ -35,12 +35,12 @@ pub fn build_github_client() -> Result<
     )
 }
 
-async fn exchange_github_code(code: &str) -> Result<AccessToken, Errors> {
+pub async fn exchange_github_code(code: &str) -> Result<AccessToken, Errors> {
     let client = build_github_client()?;
     exchange_oauth_code(client, code, "GitHub").await
 }
 
-async fn get_github_user_info(access_token: &AccessToken) -> Result<GithubUserInfo, Errors> {
+pub async fn get_github_user_info(access_token: &AccessToken) -> Result<GithubUserInfo, Errors> {
     let client = reqwest::Client::new();
     let response = client
         .get("https://api.github.com/user")

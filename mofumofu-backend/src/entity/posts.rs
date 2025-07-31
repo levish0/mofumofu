@@ -28,6 +28,9 @@ pub struct Model {
     #[sea_orm(column_type = "Boolean", not_null, default_value = "false")]
     pub is_deleted: bool,
 
+    #[sea_orm(column_type = "TimestampWithTimeZone", nullable)]
+    pub deleted_at: Option<DateTimeUtc>,
+
     #[sea_orm(column_type = "Integer", not_null, default_value = "0")]
     pub like_count: i32,
 
@@ -64,6 +67,14 @@ pub enum Relation {
         to = "super::post_hash_tags::Column::PostId"
     )]
     PostHashTags,
+
+    // 관련된 임시저장들
+    #[sea_orm(
+        has_many = "super::drafts::Entity",
+        from = "Column::Id",
+        to = "super::drafts::Column::PostId"
+    )]
+    Drafts,
 }
 
 impl Related<super::users::Entity> for Entity {
@@ -81,6 +92,12 @@ impl Related<super::comments::Entity> for Entity {
 impl Related<super::post_hash_tags::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::PostHashTags.def()
+    }
+}
+
+impl Related<super::drafts::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Drafts.def()
     }
 }
 

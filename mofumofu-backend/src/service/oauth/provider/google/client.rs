@@ -9,7 +9,7 @@ use oauth2::basic::{
 use oauth2::{AccessToken, Client, EndpointNotSet, EndpointSet, StandardRevocableToken};
 use tracing::error;
 
-pub fn build_google_client() -> Result<
+fn build_google_client() -> Result<
     Client<
         BasicErrorResponse,
         BasicTokenResponse,
@@ -34,12 +34,12 @@ pub fn build_google_client() -> Result<
     )
 }
 
-async fn exchange_google_code(code: &str) -> Result<AccessToken, Errors> {
+pub async fn exchange_google_code(code: &str) -> Result<AccessToken, Errors> {
     let client = build_google_client()?;
     exchange_oauth_code(client, code, "Google").await
 }
 
-async fn get_google_user_info(access_token: &AccessToken) -> Result<GoogleUserInfo, Errors> {
+pub async fn get_google_user_info(access_token: &AccessToken) -> Result<GoogleUserInfo, Errors> {
     let client = reqwest::Client::new();
     let response = client
         .get("https://accounts.google.com/o/oauth2/v3/userinfo")

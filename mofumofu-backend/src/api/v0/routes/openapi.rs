@@ -17,8 +17,10 @@ use utoipa::{
 #[derive(OpenApi)]
 #[openapi(
     paths(
-        crate::api::v0::routes::auth::auth::login,
-        crate::api::v0::routes::auth::auth::refresh,
+        crate::api::v0::routes::auth::github::github_sign_in,
+        crate::api::v0::routes::auth::google::google_sign_in,
+        crate::api::v0::routes::auth::sign_in::sign_in,
+        crate::api::v0::routes::auth::refresh::refresh,
         crate::api::v0::routes::user::get_my_profile::get_my_profile,
         crate::api::v0::routes::user::create_user::create_user,
         crate::api::v0::routes::user::get_profile::get_profile,
@@ -43,10 +45,10 @@ use utoipa::{
         )
     ),
     tags(
+        (name = "Auth", description = "Authentication endpoints"),
         (name = "User", description = "User endpoints"),
         (name = "Post", description = "Post endpoints"),
-         (name = "Follow", description = "Follow endpoints"),
-        (name = "Auth", description = "Authentication endpoints")
+        (name = "Follow", description = "Follow endpoints")
     ),
     modifiers(&SecurityAddon) // 보안 스키마 등록
 )]

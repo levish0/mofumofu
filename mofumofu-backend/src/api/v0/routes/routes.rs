@@ -1,5 +1,5 @@
 use super::openapi::ApiDoc;
-use crate::api::v0::routes::auth::auth::auth_routes;
+use crate::api::v0::routes::auth::routes::auth_routes;
 use crate::api::v0::routes::follow::routes::follow_routes;
 use crate::api::v0::routes::post::post::post_routes;
 use crate::api::v0::routes::user::routes::user_routes;

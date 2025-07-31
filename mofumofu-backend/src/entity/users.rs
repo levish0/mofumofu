@@ -70,6 +70,14 @@ pub enum Relation {
         to = "super::user_oauth_connections::Column::UserId"
     )]
     OAuthConnections,
+
+    // 작성한 임시저장들
+    #[sea_orm(
+        has_many = "super::drafts::Entity",
+        from = "Column::Id",
+        to = "super::drafts::Column::UserId"
+    )]
+    Drafts,
 }
 
 impl Related<super::posts::Entity> for Entity {
@@ -93,6 +101,18 @@ impl Related<super::user_refresh_tokens::Entity> for Entity {
 impl Related<super::follows::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::Followers.def()
+    }
+}
+
+impl Related<super::user_oauth_connections::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::OAuthConnections.def()
+    }
+}
+
+impl Related<super::drafts::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Drafts.def()
     }
 }
 

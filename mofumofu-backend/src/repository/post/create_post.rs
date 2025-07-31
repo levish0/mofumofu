@@ -22,6 +22,7 @@ where
         created_at: Set(Utc::now()),
         updated_at: Set(Option::from(Utc::now())),
         is_deleted: Set(false),
+        deleted_at: Default::default(),
         like_count: Set(0),
         comment_count: Set(0),
         view_count: Set(0),

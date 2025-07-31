@@ -58,6 +58,10 @@ pub enum Relation {
         on_delete = "Cascade"
     )]
     ParentComment,
+
+    // 하위 댓글들 (대댓글)
+    #[sea_orm(has_many = "Entity", from = "Column::Id", to = "Column::ParentId")]
+    ChildComments,
 }
 
 impl Related<super::posts::Entity> for Entity {
@@ -69,6 +73,13 @@ impl Related<super::posts::Entity> for Entity {
 impl Related<super::users::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::User.def()
+    }
+}
+
+// 자기참조 관계를 위한 Related 구현
+impl Related<Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::ParentComment.def()
     }
 }
 
