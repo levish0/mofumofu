@@ -48,24 +48,22 @@
 	});
 </script>
 
-<div class="flex min-h-screen items-center justify-center text-mofu-dark-200 bg-mofu-dark-900">
+<div class="text-mofu-dark-200 bg-mofu-dark-900 flex min-h-screen items-center justify-center">
 	<div class="w-full max-w-md space-y-8 p-8">
 		<div class="text-center">
 			{#if loading}
 				<div class="space-y-4">
-					<div class="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-mofu-dark-100"></div>
-					<h2 class="text-xl font-semibold ">Processing Github login...</h2>
-					<p >Please wait while we sign you in</p>
+					<div class="border-mofu-dark-100 mx-auto h-12 w-12 animate-spin rounded-full border-b-2"></div>
+					<h2 class="text-xl font-semibold">Processing Github login...</h2>
+					<p>Please wait while we sign you in</p>
 				</div>
 			{:else if error}
 				<div class="space-y-4">
 					<div class="text-rose-600">
 						<Icon src={ExclamationTriangle} solid size="40" class="inline-block" />
 					</div>
-					<h2 class="text-xl font-semibold ">Error occurred</h2>
-					<button
-						onclick={() => goto('/login')}
-						class=" rounded-md text-sm hover:opacity-70 text-mofu-dark-300"			>
+					<h2 class="text-xl font-semibold">Error occurred</h2>
+					<button onclick={() => goto('/login')} class=" text-mofu-dark-300 rounded-md text-sm hover:opacity-70">
 						← 돌아가기
 					</button>
 				</div>

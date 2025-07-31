@@ -1,6 +1,6 @@
 <!-- src/lib/components/Navbar.svelte -->
 <script lang="ts">
-	import { Icon } from 'svelte-hero-icons';
+	import { Cog6Tooth, Icon } from 'svelte-hero-icons';
 	import {
 		ArrowTrendingUp,
 		Clock,
@@ -22,6 +22,7 @@
 	let userInfo: UserInfoResponse | null = $state(null);
 	let isLoading = $state(false);
 	let isDropdownOpen = $state(false);
+	let closeTimer: number | null = null;
 
 	async function loadUserProfile() {
 		if (isLoading || userInfo) return;
@@ -61,27 +62,20 @@
 		}
 	}
 
-	function toggleDropdown() {
-		isDropdownOpen = !isDropdownOpen;
-	}
-
-	function closeDropdown() {
-		isDropdownOpen = false;
-	}
-
-	function handleClickOutside(event: MouseEvent) {
-		const target = event.target as Element;
-		if (isDropdownOpen && !target.closest('.dropdown-container')) {
-			isDropdownOpen = false;
+	function openDropdown() {
+		if (closeTimer) {
+			clearTimeout(closeTimer);
+			closeTimer = null;
 		}
+		isDropdownOpen = true;
 	}
 
-	onMount(() => {
-		document.addEventListener('click', handleClickOutside);
-		return () => {
-			document.removeEventListener('click', handleClickOutside);
-		};
-	});
+	function scheduleClose() {
+		closeTimer = setTimeout(() => {
+			isDropdownOpen = false;
+			closeTimer = null;
+		}, 100);
+	}
 </script>
 
 <nav
@@ -121,12 +115,14 @@
 					새 글 작성하기
 				</button>
 
-				<div class="dropdown-container relative">
-					<button
-						class="flex h-9 items-center space-x-1 rounded-lg px-2 transition-colors hover:bg-white/10"
-						aria-label="프로필 메뉴"
-						onclick={toggleDropdown}
-					>
+				<div
+					class=" dropdown-container relative"
+					role="button"
+					tabindex="0"
+					onmouseenter={openDropdown}
+					onmouseleave={scheduleClose}
+				>
+					<button class="flex h-9 items-center space-x-1 rounded-lg" aria-label="profile_menu">
 						<div class="h-9 w-9 overflow-hidden rounded-full bg-red-500">
 							{#if userInfo.profile_image}
 								<img src={userInfo.profile_image} alt="{userInfo.handle}의 프로필" class="h-full w-full object-cover" />
@@ -144,21 +140,27 @@
 					</button>
 
 					{#if isDropdownOpen}
-						<div class="bg-mofu-dark-700 absolute top-12 right-0 z-50 w-48 rounded-lg border border-gray-600 shadow-lg">
-							<div class="py-2">
+						<div class="bg-mofu-dark-800 absolute top-14 right-0 z-50 w-48 rounded-lg text-sm font-bold shadow-lg">
+							<div class="py-1">
 								<a
 									href="/profile/{userInfo.handle}"
-									class="flex items-center px-4 py-2 text-sm text-white transition-colors hover:bg-white/10"
-									onclick={closeDropdown}
+									class="dark:text-mofu-dark-200 hover:text-mofu flex items-center px-4 py-2"
 								>
-									<Icon src={User} size="16" class="mr-3" />
+									<Icon src={User} solid size="16" class="mr-3" />
 									마이페이지
 								</a>
+								<a
+									href="/profile/{userInfo.handle}"
+									class="dark:text-mofu-dark-200 hover:text-mofu flex items-center px-4 py-2"
+								>
+									<Icon src={Cog6Tooth} solid size="16" class="mr-3" />
+									설정
+								</a>
 								<button
-									class="flex w-full items-center px-4 py-2 text-sm text-white transition-colors hover:bg-white/10"
+									class="dark:text-mofu-dark-200 hover:text-mofu flex w-full items-center px-4 py-2"
 									onclick={handleLogout}
 								>
-									<Icon src={ArrowRightOnRectangle} size="16" class="mr-3" />
+									<Icon src={ArrowRightOnRectangle} solid size="16" class="mr-3" />
 									로그아웃
 								</button>
 							</div>
