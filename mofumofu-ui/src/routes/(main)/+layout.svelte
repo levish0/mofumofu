@@ -1,28 +1,24 @@
 <script lang="ts">
-	import Footer from '$lib/components/Footer.svelte';
-	import Navbar from '$lib/components/navbar/Navbar.svelte';
 	import SearchPanel from '$lib/components/search/SearchPanel.svelte';
-	import { useNavbarScroll } from '$lib/hooks/useNavbarScroll.svelte';
+	import { getContext } from 'svelte';
 
 	let { children } = $props();
 
-	const { isVisible, isAtTop } = useNavbarScroll({
-		navbarHeight: 60,
-		scrollThreshold: 10
-	});
+	type NavbarContext = {
+		isVisible: () => boolean;
+		isAtTop: () => boolean;
+	};
+
+	const navbar = getContext<NavbarContext>('navbar');
 </script>
 
-<div class=" min-h-screen">
-	<Navbar {isVisible} {isAtTop} />
-	<main class="max-w-8xl mx-auto pt-[60px]">
-		<div class="flex flex-col gap-5 px-4 pt-2 lg:flex-row">
-			<div class="lg:w-4/5">
-				{@render children()}
-			</div>
-			<div class="lg:w-1/5">
-				<SearchPanel {isVisible} {isAtTop} />
-			</div>
+<div class="max-w-8xl mx-auto">
+	<div class="flex flex-col gap-5 px-4 pt-2 lg:flex-row">
+		<div class="lg:w-4/5">
+			{@render children()}
 		</div>
-	</main>
-	<Footer />
+		<div class="lg:w-1/5">
+			<SearchPanel isVisible={navbar.isVisible} isAtTop={navbar.isAtTop} />
+		</div>
+	</div>
 </div>

@@ -41,6 +41,7 @@
 		"@sveltejs/vite-plugin-svelte": "^6.1.0",
 		"@tailwindcss/typography": "^0.5.16",
 		"@tailwindcss/vite": "^4.1.11",
+		"bits-ui": "^2.9.0",
 		"clsx": "^2.1.1",
 		"color-thief": "^2.2.5",
 		"ky": "^1.8.2",
@@ -52,9 +53,10 @@
 		"svelte": "^5.37.1",
 		"svelte-check": "^4.3.0",
 		"svelte-hero-icons": "^5.2.0",
+		"tailwind-merge": "^3.3.1",
 		"tailwindcss": "^4.1.11",
 		"tw-animate-css": "^1.3.6",
-		"typescript": "^5.8.3",
+		"typescript": "^5.9.2",
 		"vite": "^7.0.6"
 	},
 	"keywords": [

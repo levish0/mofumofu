@@ -88,7 +88,7 @@
 	<div class="max-w-8xl mx-auto flex items-center justify-between px-4 py-3">
 		<!-- 좌측 -->
 		<div class="flex items-center space-x-3">
-			<div class="text-3xl font-bold whitespace-nowrap text-white">もふもふ。</div>
+			<a href="/" class="text-3xl font-bold whitespace-nowrap text-white">もふもふ。</a>
 		</div>
 
 		<!-- 우측 -->
@@ -149,10 +149,7 @@
 									<Icon src={User} solid size="16" class="mr-3" />
 									마이페이지
 								</a>
-								<a
-									href="/settings"
-									class="dark:text-mofu-dark-200 hover:text-mofu flex items-center px-4 py-2"
-								>
+								<a href="/settings" class="dark:text-mofu-dark-200 hover:text-mofu flex items-center px-4 py-2">
 									<Icon src={Cog6Tooth} solid size="16" class="mr-3" />
 									설정
 								</a>
