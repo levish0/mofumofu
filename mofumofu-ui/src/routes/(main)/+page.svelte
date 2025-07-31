@@ -234,7 +234,7 @@
 	let loading = $state(false);
 	let currentPage = $state(1);
 	const PAGE_SIZE = 8;
-	const MAX_POSTS = 30; // 테스트를 위해 50개로 제한
+	const MAX_POSTS = 80; // 테스트를 위해 50개로 제한
 	const skeletonCount = PAGE_SIZE - 4;
 	let hasMore = $state(true);
 

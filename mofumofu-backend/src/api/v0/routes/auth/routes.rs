@@ -9,7 +9,7 @@ use axum::routing::post;
 
 pub fn auth_routes() -> Router<AppState> {
     Router::new()
-        .route("/auth/login", post(sign_in))
+        .route("/auth/sign_in", post(sign_in))
         .route(
             "/auth/refresh",
             post(refresh).route_layer(axum::middleware::from_fn(refresh_jwt_auth)),

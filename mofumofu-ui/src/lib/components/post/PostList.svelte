@@ -39,7 +39,7 @@
 		onLoadMore,
 		isLoading: () => loading,
 		hasMore: () => hasMore,
-		threshold: 200
+		threshold: 50
 	});
 </script>
 

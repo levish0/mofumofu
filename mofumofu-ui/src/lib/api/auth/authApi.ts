@@ -1,5 +1,5 @@
 import { api } from '../api';
-import type { RefreshAccessTokenResponse } from './types';
+import type { GithubLoginRequest, GoogleLoginRequest, RefreshAccessTokenResponse } from './types';
 
 export async function refreshAccessToken(): Promise<RefreshAccessTokenResponse> {
 	try {
@@ -10,4 +10,14 @@ export async function refreshAccessToken(): Promise<RefreshAccessTokenResponse> 
 		console.error('Failed to refresh access token:', error);
 		throw error;
 	}
+}
+
+export async function googleSignIn(code: string): Promise<RefreshAccessTokenResponse> {
+	const payload: GoogleLoginRequest = { code };
+	return api.post('v0/auth/google', { json: payload }).json<RefreshAccessTokenResponse>();
+}
+
+export async function githubSignIn(code: string): Promise<RefreshAccessTokenResponse> {
+	const payload: GithubLoginRequest = { code };
+	return api.post('v0/auth/github', { json: payload }).json<RefreshAccessTokenResponse>();
 }
