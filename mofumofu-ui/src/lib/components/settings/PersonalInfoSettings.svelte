@@ -63,62 +63,61 @@
 
 	function validateForm(): boolean {
 		const newErrors: { handle?: string; name?: string } = {};
-		
+
 		const handleError = validateHandle(handle);
 		if (handleError) newErrors.handle = handleError;
-		
+
 		const nameError = validateName(name);
 		if (nameError) newErrors.name = nameError;
-		
+
 		errors = newErrors;
 		return Object.keys(newErrors).length === 0;
 	}
 
 	function saveProfile() {
 		if (!validateForm()) return;
-		
-		console.log('Saving profile:', { 
-			handle: handle.trim(), 
-			name: name.trim(), 
-			profileImageFile, 
-			bannerImageFile 
+
+		console.log('Saving profile:', {
+			handle: handle.trim(),
+			name: name.trim(),
+			profileImageFile,
+			bannerImageFile
 		});
 	}
 </script>
 
-<div class="min-h-screen p-6 text-gray-100 md:p-8 lg:p-10">
-	<div class="mx-auto max-w-3xl space-y-8">
+<div class="min-h-screen text-gray-100">
+	<div class=" space-y-8">
 		<!-- Banner Image Section -->
 		<div class="space-y-4">
 			<h2 class="text-xl font-semibold">Banner Image</h2>
 			<p class="text-sm text-gray-400">Upload a banner image for your profile.</p>
 			<div class="relative">
-				<div class="aspect-[3/1] w-full overflow-hidden rounded-lg border-2 border-dashed border-slate-700 bg-slate-800">
+				<div
+					class="aspect-[3/1] w-full overflow-hidden rounded-lg border-2 border-dashed border-slate-700 bg-slate-800"
+				>
 					{#if bannerImage}
 						<img src={bannerImage} alt="Banner preview" class="h-full w-full object-cover" />
 						<button
 							onclick={removeBannerImage}
-							class="absolute right-2 top-2 rounded-full bg-red-600 p-1 text-white hover:bg-red-700"
+							class="absolute top-2 right-2 rounded-full bg-red-600 p-1 text-white hover:bg-red-700"
 						>
 							<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
 							</svg>
 						</button>
 					{:else}
-						<label for="banner-upload" class="flex h-full cursor-pointer flex-col items-center justify-center space-y-2 text-gray-400 hover:text-gray-300">
+						<label
+							for="banner-upload"
+							class="flex h-full cursor-pointer flex-col items-center justify-center space-y-2 text-gray-400 hover:text-gray-300"
+						>
 							<Icon src={Photo} class="h-8 w-8" />
 							<span class="text-sm">Click to upload banner image</span>
 							<span class="text-xs">Recommended: 1200x400px</span>
 						</label>
 					{/if}
 				</div>
-				<input
-					id="banner-upload"
-					type="file"
-					accept="image/*"
-					class="hidden"
-					onchange={handleBannerImageChange}
-				/>
+				<input id="banner-upload" type="file" accept="image/*" class="hidden" onchange={handleBannerImageChange} />
 			</div>
 		</div>
 
@@ -133,25 +132,22 @@
 							<img src={profileImage} alt="Profile preview" class="h-full w-full object-cover" />
 							<button
 								onclick={removeProfileImage}
-								class="absolute -right-1 -top-1 rounded-full bg-red-600 p-1 text-white hover:bg-red-700"
+								class="absolute -top-1 -right-1 rounded-full bg-red-600 p-1 text-white hover:bg-red-700"
 							>
 								<svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
 								</svg>
 							</button>
 						{:else}
-							<label for="profile-upload" class="flex h-full cursor-pointer items-center justify-center text-gray-400 hover:text-gray-300">
+							<label
+								for="profile-upload"
+								class="flex h-full cursor-pointer items-center justify-center text-gray-400 hover:text-gray-300"
+							>
 								<Icon src={Camera} class="h-6 w-6" />
 							</label>
 						{/if}
 					</div>
-					<input
-						id="profile-upload"
-						type="file"
-						accept="image/*"
-						class="hidden"
-						onchange={handleProfileImageChange}
-					/>
+					<input id="profile-upload" type="file" accept="image/*" class="hidden" onchange={handleProfileImageChange} />
 				</div>
 				<div class="text-sm text-gray-400">
 					<p>Recommended: 400x400px</p>
@@ -166,19 +162,26 @@
 			<p class="text-sm text-gray-400">Your unique username that appears in your profile URL.</p>
 			<div class="space-y-2">
 				<div class="flex">
-					<span class="inline-flex items-center rounded-l-md border border-r-0 border-slate-700 bg-slate-800 px-3 text-sm text-gray-400">@</span>
+					<span
+						class="inline-flex items-center rounded-l-md border border-r-0 border-slate-700 bg-slate-800 px-3 text-sm text-gray-400"
+						>@</span
+					>
 					<Input
 						id="handle"
 						placeholder="username"
 						class="rounded-l-none border-slate-700 bg-slate-800 text-gray-100 {errors.handle ? 'border-red-500' : ''}"
 						bind:value={handle}
-						oninput={() => { if (errors.handle) errors.handle = undefined; }}
+						oninput={() => {
+							if (errors.handle) errors.handle = undefined;
+						}}
 					/>
 				</div>
 				{#if errors.handle}
 					<p class="text-xs text-red-400">{errors.handle}</p>
 				{:else}
-					<p class="text-xs text-gray-500">Handle must be unique and can only contain letters, numbers, and underscores.</p>
+					<p class="text-xs text-gray-500">
+						Handle must be unique and can only contain letters, numbers, and underscores.
+					</p>
 				{/if}
 			</div>
 		</div>
@@ -193,22 +196,14 @@
 					placeholder="Enter your display name"
 					class="w-full border-slate-700 bg-slate-800 text-gray-100 {errors.name ? 'border-red-500' : ''}"
 					bind:value={name}
-					oninput={() => { if (errors.name) errors.name = undefined; }}
+					oninput={() => {
+						if (errors.name) errors.name = undefined;
+					}}
 				/>
 				{#if errors.name}
 					<p class="text-xs text-red-400">{errors.name}</p>
 				{/if}
 			</div>
-		</div>
-
-		<!-- Save Button -->
-		<div class="border-t border-slate-700 pt-8">
-			<Button
-				onclick={saveProfile}
-				class="w-full bg-blue-600 text-white hover:bg-blue-700 md:w-auto"
-			>
-				Save Changes
-			</Button>
 		</div>
 	</div>
 </div>
