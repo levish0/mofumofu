@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Input } from '../ui/input';
 	import { Button } from '../ui/button';
-	import { Camera, Photo, Icon } from 'svelte-hero-icons';
+	import { Camera, Photo, Icon, Plus } from 'svelte-hero-icons';
 
 	let handle = $state('');
 	let name = $state('');
@@ -86,16 +86,13 @@
 	}
 </script>
 
-<div class="min-h-screen text-gray-100">
-	<div class=" space-y-8">
+<div class="text-mofu-dark-200 min-h-screen">
+	<div class=" space-y-4">
 		<!-- Banner Image Section -->
 		<div class="space-y-4">
-			<h2 class="text-xl font-semibold">Banner Image</h2>
-			<p class="text-sm text-gray-400">Upload a banner image for your profile.</p>
+			<h2 class="text-2xl font-semibold">Banner Image</h2>
 			<div class="relative">
-				<div
-					class="aspect-[3/1] w-full overflow-hidden rounded-lg border-2 border-dashed border-slate-700 bg-slate-800"
-				>
+				<div class="bg-mofu-dark-800 aspect-[3/1] w-full overflow-hidden rounded-lg">
 					{#if bannerImage}
 						<img src={bannerImage} alt="Banner preview" class="h-full w-full object-cover" />
 						<button
@@ -109,9 +106,9 @@
 					{:else}
 						<label
 							for="banner-upload"
-							class="flex h-full cursor-pointer flex-col items-center justify-center space-y-2 text-gray-400 hover:text-gray-300"
+							class="text-mofu-dark-300 flex h-full cursor-pointer flex-col items-center justify-center space-y-2"
 						>
-							<Icon src={Photo} class="h-8 w-8" />
+							<Icon src={Photo} class="h-10 w-10" />
 							<span class="text-sm">Click to upload banner image</span>
 							<span class="text-xs">Recommended: 1200x400px</span>
 						</label>
@@ -122,12 +119,11 @@
 		</div>
 
 		<!-- Profile Image Section -->
-		<div class="space-y-4 border-t border-slate-700 pt-8">
-			<h2 class="text-xl font-semibold">Profile Image</h2>
-			<p class="text-sm text-gray-400">Upload a profile picture.</p>
+		<div class="space-y-4">
+			<h2 class="text-2xl font-semibold">Profile Image</h2>
 			<div class="flex items-center space-x-4">
 				<div class="relative">
-					<div class="h-20 w-20 overflow-hidden rounded-full border-2 border-dashed border-slate-700 bg-slate-800">
+					<div class="bg-mofu-dark-800 h-24 w-24 overflow-hidden rounded-full">
 						{#if profileImage}
 							<img src={profileImage} alt="Profile preview" class="h-full w-full object-cover" />
 							<button
@@ -157,7 +153,7 @@
 		</div>
 
 		<!-- Handle Section -->
-		<div class="space-y-4 border-t border-slate-700 pt-8">
+		<div class="space-y-4">
 			<h2 class="text-xl font-semibold">Handle</h2>
 			<p class="text-sm text-gray-400">Your unique username that appears in your profile URL.</p>
 			<div class="space-y-2">
