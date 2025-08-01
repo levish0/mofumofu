@@ -161,17 +161,10 @@
 					{/if}
 				</div>
 			{:else}
-				<button class="h-9 w-9 rounded-full p-2 transition-colors hover:bg-white/10" aria-label="검색">
+				<Button href="/" variant="icon" aria-label="search">
 					<Icon src={MagnifyingGlass} size="20" class="text-white" />
-				</button>
-
-				<a
-					href="/account/signin"
-					class="inline-flex h-9 items-center justify-center rounded-full border-2 border-white bg-white px-4 font-bold text-black transition-colors hover:opacity-70"
-					aria-label="로그인"
-				>
-					로그인
-				</a>
+				</Button>
+				<Button href="/account/signup" class="py-0">로그인</Button>
 			{/if}
 		</div>
 	</div>
