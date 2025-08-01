@@ -1,159 +1,214 @@
 <script lang="ts">
-	import { Switch } from '../ui/switch';
 	import { Input } from '../ui/input';
 	import { Button } from '../ui/button';
-	import { Calendar } from '../ui/calendar';
-	import * as Popover from '../ui/popover';
-	import { CalendarDays, Icon } from 'svelte-hero-icons';
-	import { format } from 'date-fns';
-	import { cn } from '$lib/utils';
-	import { CalendarDate } from '@internationalized/date';
+	import { Camera, Photo, Icon } from 'svelte-hero-icons';
 
-	let selectedCountry = $state('germany');
-	let showCountryOnProfile = $state(true);
-	let nativeName = $state('');
-	let englishName = $state('');
-	let showNameOnProfile = $state(true);
-	import type { DateValue } from '@internationalized/date';
-	let birthday = $state<DateValue[] | undefined>(undefined);
-	let showBirthYearOnProfile = $state(true);
-	let showBirthdayOnProfile = $state(true);
-	let selectedGender = $state('unspecified');
-	let pronouns = $state('they/them');
-	let showPronounsOnProfile = $state(true);
+	let handle = $state('');
+	let name = $state('');
+	let profileImage = $state<string | null>(null);
+	let bannerImage = $state<string | null>(null);
+	let profileImageFile = $state<File | null>(null);
+	let bannerImageFile = $state<File | null>(null);
+	let errors = $state<{ handle?: string; name?: string }>({});
 
-	const countries = [
-		{ value: 'germany', label: 'Germany — Deutsch...', flag: '🇩🇪' },
-		{ value: 'usa', label: 'United States — English', flag: '🇺🇸' },
-		{ value: 'south-korea', label: 'South Korea — 한국어', flag: '🇰🇷' },
-		{ value: 'japan', label: 'Japan — 日本語', flag: '🇯🇵' },
-		{ value: 'france', label: 'France — Français', flag: '🇫🇷' },
-		{ value: 'uk', label: 'United Kingdom — English', flag: '🇬🇧' }
-	];
+	function handleProfileImageChange(event: Event) {
+		const target = event.target as HTMLInputElement;
+		const file = target.files?.[0];
+		if (file) {
+			profileImageFile = file;
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				profileImage = e.target?.result as string;
+			};
+			reader.readAsDataURL(file);
+		}
+	}
 
-	const genders = [
-		{ value: 'unspecified', label: 'Unspecified' },
-		{ value: 'male', label: 'Male' },
-		{ value: 'female', label: 'Female' },
-		{ value: 'non-binary', label: 'Non-binary' }
-	];
+	function handleBannerImageChange(event: Event) {
+		const target = event.target as HTMLInputElement;
+		const file = target.files?.[0];
+		if (file) {
+			bannerImageFile = file;
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				bannerImage = e.target?.result as string;
+			};
+			reader.readAsDataURL(file);
+		}
+	}
 
-	const selectedCountryData = $derived(countries.find((c) => c.value === selectedCountry) || countries[0]);
-	const selectedGenderData = $derived(genders.find((g) => g.value === selectedGender) || genders[0]);
+	function removeProfileImage() {
+		profileImage = null;
+		profileImageFile = null;
+	}
+
+	function removeBannerImage() {
+		bannerImage = null;
+		bannerImageFile = null;
+	}
+
+	function validateHandle(value: string): string | undefined {
+		if (!value.trim()) return 'Handle is required';
+		if (!/^[a-zA-Z0-9_]+$/.test(value)) return 'Handle can only contain letters, numbers, and underscores';
+		if (value.length < 3) return 'Handle must be at least 3 characters';
+		if (value.length > 20) return 'Handle cannot exceed 20 characters';
+		return undefined;
+	}
+
+	function validateName(value: string): string | undefined {
+		if (!value.trim()) return 'Display name is required';
+		if (value.length > 50) return 'Display name cannot exceed 50 characters';
+		return undefined;
+	}
+
+	function validateForm(): boolean {
+		const newErrors: { handle?: string; name?: string } = {};
+		
+		const handleError = validateHandle(handle);
+		if (handleError) newErrors.handle = handleError;
+		
+		const nameError = validateName(name);
+		if (nameError) newErrors.name = nameError;
+		
+		errors = newErrors;
+		return Object.keys(newErrors).length === 0;
+	}
+
+	function saveProfile() {
+		if (!validateForm()) return;
+		
+		console.log('Saving profile:', { 
+			handle: handle.trim(), 
+			name: name.trim(), 
+			profileImageFile, 
+			bannerImageFile 
+		});
+	}
 </script>
 
 <div class="min-h-screen p-6 text-gray-100 md:p-8 lg:p-10">
 	<div class="mx-auto max-w-3xl space-y-8">
-		<div class=" space-y-4 border-slate-700">
-			<h2 class="text-xl font-semibold">Name</h2>
-			<p class="text-sm text-gray-400">You can optionally display this on your profile.</p>
-			<div class="space-y-4 pt-4">
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-					<div>
-						<Input
-							id="name-native"
-							placeholder=""
-							class="w-full border-slate-700 bg-slate-800 text-gray-100"
-							bind:value={nativeName}
-						/>
-						<label for="name-native" class="mt-1 block text-xs text-gray-400"> in native language </label>
+		<!-- Banner Image Section -->
+		<div class="space-y-4">
+			<h2 class="text-xl font-semibold">Banner Image</h2>
+			<p class="text-sm text-gray-400">Upload a banner image for your profile.</p>
+			<div class="relative">
+				<div class="aspect-[3/1] w-full overflow-hidden rounded-lg border-2 border-dashed border-slate-700 bg-slate-800">
+					{#if bannerImage}
+						<img src={bannerImage} alt="Banner preview" class="h-full w-full object-cover" />
+						<button
+							onclick={removeBannerImage}
+							class="absolute right-2 top-2 rounded-full bg-red-600 p-1 text-white hover:bg-red-700"
+						>
+							<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+							</svg>
+						</button>
+					{:else}
+						<label for="banner-upload" class="flex h-full cursor-pointer flex-col items-center justify-center space-y-2 text-gray-400 hover:text-gray-300">
+							<Icon src={Photo} class="h-8 w-8" />
+							<span class="text-sm">Click to upload banner image</span>
+							<span class="text-xs">Recommended: 1200x400px</span>
+						</label>
+					{/if}
+				</div>
+				<input
+					id="banner-upload"
+					type="file"
+					accept="image/*"
+					class="hidden"
+					onchange={handleBannerImageChange}
+				/>
+			</div>
+		</div>
+
+		<!-- Profile Image Section -->
+		<div class="space-y-4 border-t border-slate-700 pt-8">
+			<h2 class="text-xl font-semibold">Profile Image</h2>
+			<p class="text-sm text-gray-400">Upload a profile picture.</p>
+			<div class="flex items-center space-x-4">
+				<div class="relative">
+					<div class="h-20 w-20 overflow-hidden rounded-full border-2 border-dashed border-slate-700 bg-slate-800">
+						{#if profileImage}
+							<img src={profileImage} alt="Profile preview" class="h-full w-full object-cover" />
+							<button
+								onclick={removeProfileImage}
+								class="absolute -right-1 -top-1 rounded-full bg-red-600 p-1 text-white hover:bg-red-700"
+							>
+								<svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+								</svg>
+							</button>
+						{:else}
+							<label for="profile-upload" class="flex h-full cursor-pointer items-center justify-center text-gray-400 hover:text-gray-300">
+								<Icon src={Camera} class="h-6 w-6" />
+							</label>
+						{/if}
 					</div>
-					<div>
-						<Input
-							id="name-english"
-							placeholder=""
-							class="w-full border-slate-700 bg-slate-800 text-gray-100"
-							bind:value={englishName}
-						/>
-						<label for="name-english" class="mt-1 block text-xs text-gray-400"> in English </label>
-					</div>
-				</div>
-				<div class="flex items-center justify-between">
-					<label for="show-name">Show name on profile</label>
-					<Switch
-						id="show-name"
-						bind:checked={showNameOnProfile}
-						class="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-gray-600"
+					<input
+						id="profile-upload"
+						type="file"
+						accept="image/*"
+						class="hidden"
+						onchange={handleProfileImageChange}
 					/>
+				</div>
+				<div class="text-sm text-gray-400">
+					<p>Recommended: 400x400px</p>
+					<p>Max file size: 5MB</p>
 				</div>
 			</div>
 		</div>
 
+		<!-- Handle Section -->
 		<div class="space-y-4 border-t border-slate-700 pt-8">
-			<h2 class="text-xl font-semibold">Birthday</h2>
-			<p class="text-sm text-gray-400">You can optionally display this on your profile.</p>
-			<div class="space-y-4 pt-4">
-				<Popover.Root>
-					<Popover.Trigger
-						class={cn(
-							'inline-flex w-full items-center justify-start rounded-md border border-slate-700 bg-slate-800 px-3 py-2 text-left text-sm font-normal text-gray-100 outline-none hover:bg-slate-700 focus:ring-2 focus:ring-blue-500',
-							!birthday && 'text-gray-400'
-						)}
-					>
-						<Icon src={CalendarDays} class="mr-2 h-4 w-4" />
-						{birthday && birthday.length > 0 ? format(birthday[0].toDate('UTC'), 'PPP') : 'mm / dd / yyyy'}
-					</Popover.Trigger>
-					<Popover.Content class="w-auto border-slate-700 bg-slate-800 p-0 text-gray-100">
-						<Calendar type="multiple" bind:value={birthday} class="text-gray-100" />
-					</Popover.Content>
-				</Popover.Root>
-				<div class="flex items-center justify-between">
-					<label for="show-birth-year">Show birth year on profile</label>
-					<Switch
-						id="show-birth-year"
-						bind:checked={showBirthYearOnProfile}
-						class="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-gray-600"
-					/>
-				</div>
-				<div class="flex items-center justify-between">
-					<label for="show-birthday">Show birthday on profile</label>
-					<Switch
-						id="show-birthday"
-						bind:checked={showBirthdayOnProfile}
-						class="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-gray-600"
-					/>
-				</div>
-			</div>
-		</div>
-
-		<div class="space-y-4 border-t border-slate-700 pt-8">
-			<h2 class="text-xl font-semibold">Gender</h2>
-			<p class="text-sm text-gray-400">You can optionally display this on your profile.</p>
-			<div class="space-y-4 pt-4">
-				<div>
-					<label for="gender" class="text-gray-300">Gender</label>
-					<select
-						id="gender"
-						class="mt-2 w-full rounded-md border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-gray-100 outline-none focus:ring-2 focus:ring-blue-500 md:ml-auto md:w-auto"
-						bind:value={selectedGender}
-					>
-						{#each genders as gender}
-							<option value={gender.value}>{gender.label}</option>
-						{/each}
-					</select>
-				</div>
-			</div>
-		</div>
-
-		<div class="space-y-4 border-t border-slate-700 pt-8">
-			<div class="space-y-4 pt-4">
-				<div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-					<label for="pronouns" class="text-gray-300 md:w-1/3">Pronouns</label>
+			<h2 class="text-xl font-semibold">Handle</h2>
+			<p class="text-sm text-gray-400">Your unique username that appears in your profile URL.</p>
+			<div class="space-y-2">
+				<div class="flex">
+					<span class="inline-flex items-center rounded-l-md border border-r-0 border-slate-700 bg-slate-800 px-3 text-sm text-gray-400">@</span>
 					<Input
-						id="pronouns"
-						bind:value={pronouns}
-						class="w-full border-slate-700 bg-slate-800 text-gray-100 md:w-2/3"
+						id="handle"
+						placeholder="username"
+						class="rounded-l-none border-slate-700 bg-slate-800 text-gray-100 {errors.handle ? 'border-red-500' : ''}"
+						bind:value={handle}
+						oninput={() => { if (errors.handle) errors.handle = undefined; }}
 					/>
 				</div>
-				<div class="flex items-center justify-between">
-					<label for="show-pronouns">Show pronouns on profile</label>
-					<Switch
-						id="show-pronouns"
-						bind:checked={showPronounsOnProfile}
-						class="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-gray-600"
-					/>
-				</div>
+				{#if errors.handle}
+					<p class="text-xs text-red-400">{errors.handle}</p>
+				{:else}
+					<p class="text-xs text-gray-500">Handle must be unique and can only contain letters, numbers, and underscores.</p>
+				{/if}
 			</div>
+		</div>
+
+		<!-- Name Section -->
+		<div class="space-y-4 border-t border-slate-700 pt-8">
+			<h2 class="text-xl font-semibold">Display Name</h2>
+			<p class="text-sm text-gray-400">Your name as it appears on your profile.</p>
+			<div class="space-y-2">
+				<Input
+					id="name"
+					placeholder="Enter your display name"
+					class="w-full border-slate-700 bg-slate-800 text-gray-100 {errors.name ? 'border-red-500' : ''}"
+					bind:value={name}
+					oninput={() => { if (errors.name) errors.name = undefined; }}
+				/>
+				{#if errors.name}
+					<p class="text-xs text-red-400">{errors.name}</p>
+				{/if}
+			</div>
+		</div>
+
+		<!-- Save Button -->
+		<div class="border-t border-slate-700 pt-8">
+			<Button
+				onclick={saveProfile}
+				class="w-full bg-blue-600 text-white hover:bg-blue-700 md:w-auto"
+			>
+				Save Changes
+			</Button>
 		</div>
 	</div>
 </div>
