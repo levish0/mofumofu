@@ -59,10 +59,10 @@ jobs:
       
       - name: Create .env file
         run: |
-          echo "PUBLIC_API_URL=${{ secrets.PUBLIC_API_URL }}" > .env
-          echo "PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.PUBLIC_GOOGLE_CLIENT_ID }}" > .env
-          echo "PUBLIC_GITHUB_CLIENT_ID=${{ secrets.PUBLIC_GITHUB_CLIENT_ID }}" > .env
-          echo "PUBLIC_APP_URL=${{ secrets.PUBLIC_APP_URL }}" > .env
+          echo "PUBLIC_API_URL=${{ secrets.PUBLIC_API_URL }}" >> .env
+          echo "PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.PUBLIC_GOOGLE_CLIENT_ID }}" >> .env
+          echo "PUBLIC_GITHUB_CLIENT_ID=${{ secrets.PUBLIC_GITHUB_CLIENT_ID }}" >> .env
+          echo "PUBLIC_APP_URL=${{ secrets.PUBLIC_APP_URL }}" >> .env
       
       - name: Build SvelteKit project
         run: pnpm build
