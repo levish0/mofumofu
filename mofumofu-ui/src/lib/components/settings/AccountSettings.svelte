@@ -10,7 +10,7 @@
 						<p class="font-medium">Current Plan</p>
 						<p class="text-sm text-gray-400">Free Plan</p>
 					</div>
-					<button class="rounded-lg bg-mofu px-4 py-2 text-sm font-medium text-white hover:opacity-80">
+					<button class="bg-mofu rounded-lg px-4 py-2 text-sm font-medium text-white hover:opacity-80">
 						Upgrade
 					</button>
 				</div>

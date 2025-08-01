@@ -41,7 +41,12 @@
 		{ id: 'personal', label: 'Personal Info', icon: User, description: 'Manage your profile information' },
 		{ id: 'account', label: 'Account', icon: CreditCard, description: 'Manage account settings and billing' },
 		{ id: 'display', label: 'Display', icon: ComputerDesktop, description: 'Customize your display preferences' },
-		{ id: 'writing', label: 'Writing & Publishing', icon: PencilSquare, description: 'Configure writing and publishing preferences' },
+		{
+			id: 'writing',
+			label: 'Writing & Publishing',
+			icon: PencilSquare,
+			description: 'Configure writing and publishing preferences'
+		},
 		{ id: 'notifications', label: 'Notifications', icon: Bell, description: 'Control notification settings' },
 		{
 			id: 'privacy',
