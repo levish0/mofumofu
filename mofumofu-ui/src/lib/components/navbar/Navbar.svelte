@@ -17,6 +17,7 @@
 	import type { UserInfoResponse } from '$lib/api/user/types';
 	import { signOut } from '$lib/api/auth/authApi';
 	import { fly, scale } from 'svelte/transition';
+	import { Button } from '../ui/button';
 
 	let { isVisible, isAtTop } = $props();
 
@@ -101,20 +102,15 @@
 				<div class="shimmer hidden h-9 w-9 rounded-full sm:block"></div>
 				<div class="shimmer hidden h-9 w-9 rounded-full sm:block"></div>
 			{:else if userInfo}
-				<button class="h-9 w-9 rounded-full p-2 transition-colors hover:bg-white/10" aria-label="알림">
+				<Button href="/" variant="icon" aria-label="notifications">
 					<Icon src={Bell} size="20" class="text-white" />
-				</button>
+				</Button>
 
-				<button class="h-9 w-9 rounded-full p-2 transition-colors hover:bg-white/10" aria-label="검색">
+				<Button href="/" variant="icon" aria-label="search">
 					<Icon src={MagnifyingGlass} size="20" class="text-white" />
-				</button>
+				</Button>
 
-				<button
-					class="h-9 rounded-full border-2 border-white px-3 font-bold transition-colors hover:bg-white hover:text-black"
-					aria-label="새 글 작성하기"
-				>
-					새 글 작성하기
-				</button>
+				<Button variant="outline" class="bg-transparent px-3 py-0">새 글 작성하기</Button>
 
 				<div
 					class=" dropdown-container relative"

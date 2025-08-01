@@ -1,183 +1,158 @@
 <script lang="ts">
-	let selectedCountry = $state('Germany — Deutsch...');
+	import { Switch } from '../ui/switch';
+	import { Input } from '../ui/input';
+	import { Button } from '../ui/button';
+	import { Calendar } from '../ui/calendar';
+	import * as Popover from '../ui/popover';
+	import { CalendarDays, Icon } from 'svelte-hero-icons';
+	import { format } from 'date-fns';
+	import { cn } from '$lib/utils';
+	import { CalendarDate } from '@internationalized/date';
+
+	let selectedCountry = $state('germany');
 	let showCountryOnProfile = $state(true);
 	let nativeName = $state('');
 	let englishName = $state('');
 	let showNameOnProfile = $state(true);
-	let birthday = $state('');
+	import type { DateValue } from '@internationalized/date';
+	let birthday = $state<DateValue[] | undefined>(undefined);
 	let showBirthYearOnProfile = $state(true);
 	let showBirthdayOnProfile = $state(true);
-	let selectedGender = $state('');
+	let selectedGender = $state('unspecified');
+	let pronouns = $state('they/them');
+	let showPronounsOnProfile = $state(true);
 
 	const countries = [
-		'Germany — Deutsch...',
-		'United States — English',
-		'South Korea — 한국어',
-		'Japan — 日本語',
-		'France — Français',
-		'United Kingdom — English'
+		{ value: 'germany', label: 'Germany — Deutsch...', flag: '🇩🇪' },
+		{ value: 'usa', label: 'United States — English', flag: '🇺🇸' },
+		{ value: 'south-korea', label: 'South Korea — 한국어', flag: '🇰🇷' },
+		{ value: 'japan', label: 'Japan — 日本語', flag: '🇯🇵' },
+		{ value: 'france', label: 'France — Français', flag: '🇫🇷' },
+		{ value: 'uk', label: 'United Kingdom — English', flag: '🇬🇧' }
 	];
 
-	const genders = ['Male', 'Female', 'Non-binary', 'Prefer not to say'];
+	const genders = [
+		{ value: 'unspecified', label: 'Unspecified' },
+		{ value: 'male', label: 'Male' },
+		{ value: 'female', label: 'Female' },
+		{ value: 'non-binary', label: 'Non-binary' }
+	];
+
+	const selectedCountryData = $derived(countries.find((c) => c.value === selectedCountry) || countries[0]);
+	const selectedGenderData = $derived(genders.find((g) => g.value === selectedGender) || genders[0]);
 </script>
 
-<div>
-	<h1 class="mb-2 text-3xl font-bold">Personal Info</h1>
-	<p class="text-muted-foreground mb-8">Manage your personal information and preferences.</p>
-
-	<div class="space-y-8">
-		<!-- Country/Region Section -->
-		<div class="border-mofu-dark-700 space-y-4  border-b pb-8">
-			<div>
-				<h3 class="mb-1 text-lg font-medium">Country/Region</h3>
-				<p class="text-muted-foreground mb-4 text-sm">You can optionally display this on your profile.</p>
+<div class="min-h-screen p-6 text-gray-100 md:p-8 lg:p-10">
+	<div class="mx-auto max-w-3xl space-y-8">
+		<div class=" space-y-4 border-slate-700">
+			<h2 class="text-xl font-semibold">Name</h2>
+			<p class="text-sm text-gray-400">You can optionally display this on your profile.</p>
+			<div class="space-y-4 pt-4">
+				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+					<div>
+						<Input
+							id="name-native"
+							placeholder=""
+							class="w-full border-slate-700 bg-slate-800 text-gray-100"
+							bind:value={nativeName}
+						/>
+						<label for="name-native" class="mt-1 block text-xs text-gray-400"> in native language </label>
+					</div>
+					<div>
+						<Input
+							id="name-english"
+							placeholder=""
+							class="w-full border-slate-700 bg-slate-800 text-gray-100"
+							bind:value={englishName}
+						/>
+						<label for="name-english" class="mt-1 block text-xs text-gray-400"> in English </label>
+					</div>
+				</div>
+				<div class="flex items-center justify-between">
+					<label for="show-name">Show name on profile</label>
+					<Switch
+						id="show-name"
+						bind:checked={showNameOnProfile}
+						class="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-gray-600"
+					/>
+				</div>
 			</div>
+		</div>
 
-			<div class="space-y-4">
-				<div>
-					<label class="mb-2 block text-sm font-medium">Country/Region</label>
-					<select
-						class="bg-background border-mofu-dark-700 focus:ring-primary w-full rounded-lg border px-3 py-2 focus:ring-2 focus:outline-none"
-						bind:value={selectedCountry}
+		<div class="space-y-4 border-t border-slate-700 pt-8">
+			<h2 class="text-xl font-semibold">Birthday</h2>
+			<p class="text-sm text-gray-400">You can optionally display this on your profile.</p>
+			<div class="space-y-4 pt-4">
+				<Popover.Root>
+					<Popover.Trigger
+						class={cn(
+							'inline-flex w-full items-center justify-start rounded-md border border-slate-700 bg-slate-800 px-3 py-2 text-left text-sm font-normal text-gray-100 outline-none hover:bg-slate-700 focus:ring-2 focus:ring-blue-500',
+							!birthday && 'text-gray-400'
+						)}
 					>
-						{#each countries as country}
-							<option value={country}>{country}</option>
+						<Icon src={CalendarDays} class="mr-2 h-4 w-4" />
+						{birthday && birthday.length > 0 ? format(birthday[0].toDate('UTC'), 'PPP') : 'mm / dd / yyyy'}
+					</Popover.Trigger>
+					<Popover.Content class="w-auto border-slate-700 bg-slate-800 p-0 text-gray-100">
+						<Calendar type="multiple" bind:value={birthday} class="text-gray-100" />
+					</Popover.Content>
+				</Popover.Root>
+				<div class="flex items-center justify-between">
+					<label for="show-birth-year">Show birth year on profile</label>
+					<Switch
+						id="show-birth-year"
+						bind:checked={showBirthYearOnProfile}
+						class="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-gray-600"
+					/>
+				</div>
+				<div class="flex items-center justify-between">
+					<label for="show-birthday">Show birthday on profile</label>
+					<Switch
+						id="show-birthday"
+						bind:checked={showBirthdayOnProfile}
+						class="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-gray-600"
+					/>
+				</div>
+			</div>
+		</div>
+
+		<div class="space-y-4 border-t border-slate-700 pt-8">
+			<h2 class="text-xl font-semibold">Gender</h2>
+			<p class="text-sm text-gray-400">You can optionally display this on your profile.</p>
+			<div class="space-y-4 pt-4">
+				<div>
+					<label for="gender" class="text-gray-300">Gender</label>
+					<select
+						id="gender"
+						class="mt-2 w-full rounded-md border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-gray-100 outline-none focus:ring-2 focus:ring-blue-500 md:ml-auto md:w-auto"
+						bind:value={selectedGender}
+					>
+						{#each genders as gender}
+							<option value={gender.value}>{gender.label}</option>
 						{/each}
 					</select>
 				</div>
-
-				<div class="flex items-center justify-between">
-					<span class="text-sm font-medium">Show country/region on profile</span>
-					<button
-						class="relative inline-flex h-6 w-11 items-center rounded-full bg-mofu-dark-800 transition-colors {showCountryOnProfile
-							? 'bg-primary'
-							: 'bg-muted'}"
-						onclick={() => (showCountryOnProfile = !showCountryOnProfile)}
-						aria-label="Toggle show country/region on profile"
-					>
-						<span
-							class="inline-block h-4 w-4 transform rounded-full bg-mofu-dark-200 transition-transform {showCountryOnProfile
-								? 'translate-x-6'
-								: 'translate-x-1'}"
-						></span>
-					</button>
-				</div>
 			</div>
 		</div>
 
-		<!-- Name Section -->
-		<div class="border-mofu-dark-700 space-y-4 border-b pb-8">
-			<div>
-				<h3 class="mb-1 text-lg font-medium">Name</h3>
-				<p class="text-muted-foreground mb-4 text-sm">You can optionally display this on your profile.</p>
-			</div>
-
-			<div class="grid grid-cols-2 gap-4">
-				<div>
-					<label class="text-muted-foreground mb-2 block text-sm">in native language</label>
-					<input
-						type="text"
-						class="bg-background border-mofu-dark-700 focus:ring-primary w-full rounded-lg border px-3 py-2 focus:ring-2 focus:outline-none"
-						bind:value={nativeName}
+		<div class="space-y-4 border-t border-slate-700 pt-8">
+			<div class="space-y-4 pt-4">
+				<div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+					<label for="pronouns" class="text-gray-300 md:w-1/3">Pronouns</label>
+					<Input
+						id="pronouns"
+						bind:value={pronouns}
+						class="w-full border-slate-700 bg-slate-800 text-gray-100 md:w-2/3"
 					/>
 				</div>
-				<div>
-					<label class="text-muted-foreground mb-2 block text-sm">in English</label>
-					<input
-						type="text"
-						class="bg-background border-mofu-dark-700 focus:ring-primary w-full rounded-lg border px-3 py-2 focus:ring-2 focus:outline-none"
-						bind:value={englishName}
+				<div class="flex items-center justify-between">
+					<label for="show-pronouns">Show pronouns on profile</label>
+					<Switch
+						id="show-pronouns"
+						bind:checked={showPronounsOnProfile}
+						class="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-gray-600"
 					/>
 				</div>
-			</div>
-
-			<div class="flex items-center justify-between">
-				<span class="text-sm font-medium">Show name on profile</span>
-				<button
-					class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors {showNameOnProfile
-						? 'bg-primary'
-						: 'bg-muted'}"
-					onclick={() => (showNameOnProfile = !showNameOnProfile)}
-				>
-					<span
-						class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform {showNameOnProfile
-							? 'translate-x-6'
-							: 'translate-x-1'}"
-					></span>
-				</button>
-			</div>
-		</div>
-
-		<!-- Birthday Section -->
-		<div class="border-mofu-dark-700 space-y-4 border-b pb-8">
-			<div>
-				<h3 class="mb-1 text-lg font-medium">Birthday</h3>
-				<p class="text-muted-foreground mb-4 text-sm">You can optionally display this on your profile.</p>
-			</div>
-
-			<div>
-				<input
-					type="date"
-					class="bg-background border-mofu-dark-700 focus:ring-primary w-full rounded-lg border px-3 py-2 focus:ring-2 focus:outline-none"
-					bind:value={birthday}
-					placeholder="mm / dd / yyyy"
-				/>
-			</div>
-
-			<div class="space-y-3">
-				<div class="flex items-center justify-between">
-					<span class="text-sm font-medium">Show birth year on profile</span>
-					<button
-						class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors {showBirthYearOnProfile
-							? 'bg-primary'
-							: 'bg-muted'}"
-						onclick={() => (showBirthYearOnProfile = !showBirthYearOnProfile)}
-					>
-						<span
-							class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform {showBirthYearOnProfile
-								? 'translate-x-6'
-								: 'translate-x-1'}"
-						></span>
-					</button>
-				</div>
-
-				<div class="flex items-center justify-between">
-					<span class="text-sm font-medium">Show birthday on profile</span>
-					<button
-						class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors {showBirthdayOnProfile
-							? 'bg-primary'
-							: 'bg-muted'}"
-						onclick={() => (showBirthdayOnProfile = !showBirthdayOnProfile)}
-					>
-						<span
-							class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform {showBirthdayOnProfile
-								? 'translate-x-6'
-								: 'translate-x-1'}"
-						></span>
-					</button>
-				</div>
-			</div>
-		</div>
-
-		<!-- Gender Section -->
-		<div class="space-y-4">
-			<div>
-				<h3 class="mb-1 text-lg font-medium">Gender</h3>
-			</div>
-
-			<div class="space-y-2">
-				{#each genders as gender}
-					<label class="flex cursor-pointer items-center gap-3">
-						<input
-							type="radio"
-							name="gender"
-							value={gender}
-							bind:group={selectedGender}
-							class="text-primary bg-background border-mofu-dark-700 focus:ring-primary h-4 w-4"
-						/>
-						<span class="text-sm">{gender}</span>
-					</label>
-				{/each}
 			</div>
 		</div>
 	</div>

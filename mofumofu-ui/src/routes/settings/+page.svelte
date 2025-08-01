@@ -1,7 +1,7 @@
 <script lang="ts">
 	import PersonalInfoSettings from '$lib/components/settings/PersonalInfoSettings.svelte';
 	import DisplaySettings from '$lib/components/settings/DisplaySettings.svelte';
-	import { User, ComputerDesktop,  Icon } from 'svelte-hero-icons';
+	import { User, ComputerDesktop, Icon } from 'svelte-hero-icons';
 
 	let selectedSection = $state('personal');
 
@@ -11,9 +11,9 @@
 	];
 </script>
 
-<div class="text-mofu-dark-200 flex min-h-screen gap-6">
+<div class="text-mofu-dark-200 flex min-h-screen w-full gap-6">
 	<!-- Sidebar -->
-	<div class="w-80">
+	<div class="w-1/4">
 		<div class="space-y-1">
 			{#each sections as section}
 				<button

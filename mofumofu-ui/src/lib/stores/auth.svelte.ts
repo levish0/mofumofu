@@ -12,7 +12,6 @@ export const authStore = {
 	},
 
 	setToken(token: string) {
-		console.log('Setting token:', token);
 		_token = token;
 	},
 

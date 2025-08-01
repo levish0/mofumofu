@@ -7,13 +7,14 @@
 		class: className,
 		children,
 		...restProps
-	}: WithElementRef<HTMLAttributes<HTMLElement>> = $props();
+	}: WithElementRef<HTMLAttributes<HTMLSpanElement>> = $props();
 </script>
 
-<nav
-	{...restProps}
+<span
 	bind:this={ref}
-	class={cn('absolute inset-x-0 top-0 flex w-full items-center justify-between gap-1', className)}
+	data-slot="command-shortcut"
+	class={cn('text-muted-foreground ml-auto text-xs tracking-widest', className)}
+	{...restProps}
 >
 	{@render children?.()}
-</nav>
+</span>
