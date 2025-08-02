@@ -1,5 +1,4 @@
 <script lang="ts">
-	import PersonalInfoSettings from '$lib/components/settings/PersonalInfoSettings.svelte';
 	import DisplaySettings from '$lib/components/settings/DisplaySettings.svelte';
 	import AccountSettings from '$lib/components/settings/AccountSettings.svelte';
 	import WritingSettings from '$lib/components/settings/WritingSettings.svelte';
@@ -19,9 +18,12 @@
 		CreditCard,
 		PencilSquare
 	} from 'svelte-hero-icons';
-	import { getContext } from 'svelte';
+	import { getContext, onMount } from 'svelte';
+	import { settingsStore } from '$lib/stores/settings.svelte.js';
+	import PersonalInfoSettings from '$lib/components/settings/PersonalInfoSettings.svelte';
 
 	let selectedSection = $state('personal');
+	let saveSuccess = $state(false);
 
 	type NavbarContext = {
 		isVisible: () => boolean;
@@ -33,8 +35,20 @@
 	// Calculate the top position based on navbar state
 	const topPosition = $derived(navbar.isVisible() ? '68px' : '8px');
 
-	function handleSave() {
-		console.log('Save Changes');
+	onMount(() => {
+		// Load settings when component mounts
+		settingsStore.loadSettings();
+	});
+
+	async function handleSave() {
+		const result = await settingsStore.saveChanges();
+		if (result.success) {
+			saveSuccess = true;
+			// Clear success message after 3 seconds
+			setTimeout(() => {
+				saveSuccess = false;
+			}, 3000);
+		}
 	}
 
 	const sections = [
@@ -85,13 +99,54 @@
 
 			<!-- Save Button -->
 			<button
-				class="dark:bg-mofu-dark-800 dark:border-mofu-dark-800 group flex w-full cursor-pointer flex-col overflow-hidden rounded-xl border p-4 text-left transition-all duration-200 hover:opacity-75 hover:shadow-xl"
+				class="dark:bg-mofu-dark-800 dark:border-mofu-dark-800 group flex w-full cursor-pointer flex-col overflow-hidden rounded-xl border p-4 text-left transition-all duration-200 hover:opacity-75 hover:shadow-xl {!settingsStore.hasChanges
+					? 'cursor-not-allowed opacity-50'
+					: ''}"
 				onclick={handleSave}
+				disabled={!settingsStore.hasChanges || settingsStore.isLoading}
 			>
-				<div class="flex items-center justify-center">
-					<h3 class="text-mofu-dark-200 text-md font-bold">Save Changes</h3>
+				<div class="flex items-center justify-center gap-2">
+					{#if settingsStore.isLoading}
+						<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+							<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+							<path
+								class="opacity-75"
+								fill="currentColor"
+								d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+							></path>
+						</svg>
+						<h3 class="text-mofu-dark-200 text-md font-bold">Saving...</h3>
+					{:else if saveSuccess}
+						<Icon src={CheckCircle} class="h-4 w-4 text-green-400" />
+						<h3 class="text-mofu-dark-200 text-md font-bold">Saved!</h3>
+					{:else}
+						<h3 class="text-mofu-dark-200 text-md font-bold">Save Changes</h3>
+						{#if settingsStore.hasChanges}
+							<span class="text-xs text-orange-400">•</span>
+						{/if}
+					{/if}
 				</div>
 			</button>
+
+			<!-- Reset Button (only show if there are changes) -->
+			{#if settingsStore.hasChanges}
+				<button
+					class="dark:bg-mofu-dark-800/50 dark:border-mofu-dark-800 group flex w-full cursor-pointer flex-col overflow-hidden rounded-xl border p-2 text-center transition-all duration-200 hover:opacity-75"
+					onclick={() => settingsStore.resetChanges()}
+				>
+					<div class="flex items-center justify-center gap-2">
+						<Icon src={ArrowUturnLeft} class="h-4 w-4" />
+						<span class="text-sm text-gray-400">Reset Changes</span>
+					</div>
+				</button>
+			{/if}
+
+			<!-- Error Message -->
+			{#if settingsStore.errors.general}
+				<div class="rounded-lg border border-red-500/20 bg-red-500/10 p-3">
+					<p class="text-xs text-red-400">{settingsStore.errors.general}</p>
+				</div>
+			{/if}
 		</div>
 	</div>
 
