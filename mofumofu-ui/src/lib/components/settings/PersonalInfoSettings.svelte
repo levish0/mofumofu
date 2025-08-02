@@ -334,7 +334,6 @@
 		imageSrc={tempImageSrc}
 		aspectRatio={4}
 		cropShape="rect"
-		title="Crop Banner Image"
 		onCrop={handleBannerCrop}
 		onCancel={handleCropCancel}
 	/>
@@ -345,7 +344,6 @@
 		imageSrc={tempImageSrc}
 		aspectRatio={1}
 		cropShape="round"
-		title="Crop Profile Image"
 		onCrop={handleProfileCrop}
 		onCancel={handleCropCancel}
 	/>

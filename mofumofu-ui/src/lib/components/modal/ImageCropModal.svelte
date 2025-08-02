@@ -1,12 +1,12 @@
 <script lang="ts">
 	import Cropper from 'svelte-easy-crop';
+	import { Button } from '../ui/button';
 
 	let {
 		isOpen = $bindable(false),
 		imageSrc,
 		aspectRatio = 1,
 		cropShape = 'rect' as 'rect' | 'round',
-		title = 'Crop Image',
 		onCrop,
 		onCancel
 	} = $props<{
@@ -14,7 +14,6 @@
 		imageSrc: string;
 		aspectRatio?: number;
 		cropShape?: 'rect' | 'round';
-		title?: string;
 		onCrop: (data: { croppedAreaPixels: any; croppedAreaPercentage: any }) => void;
 		onCancel: () => void;
 	}>();
@@ -38,10 +37,8 @@
 </script>
 
 {#if isOpen}
-	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
-		<div class="bg-mofu-dark-800 w-full max-w-2xl rounded-lg p-6">
-			<h2 class="text-mofu-dark-200 mb-4 text-xl font-semibold">{title}</h2>
-
+	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+		<div class="bg-mofu-dark-800 w-full max-w-2xl rounded-lg p-4">
 			<div class="relative h-96 w-full">
 				<Cropper
 					image={imageSrc}
@@ -50,23 +47,26 @@
 					aspect={aspectRatio}
 					{cropShape}
 					oncropcomplete={(e) => {
-						// 최신 크롭 데이터만 조용히 저장
+						// oncropcomplete인데 변할 때마다 호출됨
 						croppedAreaPixels = e.pixels;
 						croppedAreaPercentage = e.percent;
 					}}
 				/>
 			</div>
 
-			<div class="mt-6 flex justify-between">
-				<button
-					class="dark:bg-mofu-dark-700 text-mofu-dark-200 hover:bg-mofu-dark-600 rounded px-4 py-2 transition-colors"
+			<div class="mt-4 flex justify-between">
+				<Button
+					class="dark:bg-mofu-dark-700 dark:text-mofu-dark-200 hover:dark:bg-mofu-dark-600 rounded border-none px-4 py-2 transition-colors"
 					onclick={handleCancel}
 				>
 					Cancel
-				</button>
-				<button class="bg-mofu hover:bg-mofu/80 rounded px-4 py-2 text-white transition-colors" onclick={handleSave}>
-					Crop & Save
-				</button>
+				</Button>
+				<Button
+					class="dark:bg-mofu hover:bg-mofu/80 rounded border-none px-4 py-2 transition-colors dark:text-white"
+					onclick={handleSave}
+				>
+					Crop
+				</Button>
 			</div>
 		</div>
 	</div>
