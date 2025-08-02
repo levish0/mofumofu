@@ -1,5 +1,7 @@
 import { updateProfile } from '$lib/api/user/userApi';
 import type { UpdateProfileRequest } from '$lib/api/user/types';
+import { personalInfoSchema } from '$lib/schemas/personal-info';
+import { safeParse } from 'valibot';
 
 export type PersonalInfo = {
 	handle: string;
@@ -361,9 +363,6 @@ class SettingsStore {
 
 	// Validate all sections before saving
 	async validateAll(): Promise<boolean> {
-		// Import validation schemas
-		const { personalInfoSchema } = await import('$lib/schemas/personal-info');
-		const { safeParse } = await import('valibot');
 
 		let isValid = true;
 

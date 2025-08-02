@@ -7,6 +7,12 @@ export interface CroppedArea {
 	height: number;
 }
 
+export interface CropOptions {
+	maxFileSizeMB?: number;
+	resizeOptions?: { width: number; height: number };
+	quality?: number;
+}
+
 const pica = new Pica({
 	features: ['wasm', 'cib', 'js'] // js: JavaScript fallback, wasm: WebAssembly, cib: createImageBitmap
 });
@@ -17,73 +23,105 @@ const pica = new Pica({
 export async function getCroppedImg(
 	imageSrc: string,
 	pixelCrop: CroppedArea,
-	resizeOptions?: { width: number; height: number },
-	quality: number = 0.9
-): Promise<{ blob: Blob; url: string }> {
+	options: CropOptions = {}
+): Promise<{ blob: Blob; url: string; cleanup: () => void }> {
+	const { maxFileSizeMB = 10, resizeOptions, quality = 0.9 } = options;
 	const image = await createImage(imageSrc);
+	
+	let sourceCanvas: HTMLCanvasElement | null = null;
+	let destCanvas: HTMLCanvasElement | null = null;
+	let objectUrl: string | null = null;
 
-	// Create source canvas with cropped area
-	const sourceCanvas = document.createElement('canvas');
-	const sourceCtx = sourceCanvas.getContext('2d');
+	try {
+		// Create source canvas with cropped area
+		sourceCanvas = document.createElement('canvas');
+		const sourceCtx = sourceCanvas.getContext('2d');
 
-	if (!sourceCtx) {
-		throw new Error('No 2d context');
-	}
+		if (!sourceCtx) {
+			throw new Error('No 2d context');
+		}
 
-	// Set source canvas size to the crop area
-	sourceCanvas.width = pixelCrop.width;
-	sourceCanvas.height = pixelCrop.height;
+		// Set source canvas size to the crop area
+		sourceCanvas.width = pixelCrop.width;
+		sourceCanvas.height = pixelCrop.height;
 
-	// Draw the cropped image onto the source canvas
-	sourceCtx.drawImage(
-		image,
-		pixelCrop.x,
-		pixelCrop.y,
-		pixelCrop.width,
-		pixelCrop.height,
-		0,
-		0,
-		pixelCrop.width,
-		pixelCrop.height
-	);
-
-	// Create destination canvas
-	const destCanvas = document.createElement('canvas');
-
-	// Use resize options if provided, otherwise keep original crop size
-	if (resizeOptions) {
-		destCanvas.width = resizeOptions.width;
-		destCanvas.height = resizeOptions.height;
-	} else {
-		destCanvas.width = pixelCrop.width;
-		destCanvas.height = pixelCrop.height;
-	}
-
-	// Use pica to process the image (provides better quality)
-	await pica.resize(sourceCanvas, destCanvas, {
-		quality: 3
-	});
-
-	// Convert canvas to blob as WebP or JPEG fallback
-	return new Promise((resolve, reject) => {
-		const isWebPSupported = destCanvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
-
-		const mimeType = isWebPSupported ? 'image/webp' : 'image/jpeg';
-
-		destCanvas.toBlob(
-			(blob) => {
-				if (!blob) {
-					reject(new Error('Canvas is empty'));
-					return;
-				}
-				// console.log(`Resized image size: ${(blob.size / 1024).toFixed(2)} KB`);
-				const url = URL.createObjectURL(blob);
-				resolve({ blob, url });
-			},
-			mimeType,
-			quality
+		// Draw the cropped image onto the source canvas
+		sourceCtx.drawImage(
+			image,
+			pixelCrop.x,
+			pixelCrop.y,
+			pixelCrop.width,
+			pixelCrop.height,
+			0,
+			0,
+			pixelCrop.width,
+			pixelCrop.height
 		);
-	});
+
+		// Create destination canvas
+		destCanvas = document.createElement('canvas');
+
+		// Use resize options if provided, otherwise keep original crop size
+		if (resizeOptions) {
+			destCanvas.width = resizeOptions.width;
+			destCanvas.height = resizeOptions.height;
+		} else {
+			destCanvas.width = pixelCrop.width;
+			destCanvas.height = pixelCrop.height;
+		}
+
+		// Use pica to process the image (provides better quality)
+		await pica.resize(sourceCanvas, destCanvas, {
+			quality: 3
+		});
+
+		// Convert canvas to blob with file size validation
+		const result = await new Promise<{ blob: Blob; url: string }>((resolve, reject) => {
+			const isWebPSupported = destCanvas!.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+			const mimeType = isWebPSupported ? 'image/webp' : 'image/jpeg';
+
+			destCanvas!.toBlob(
+				(blob) => {
+					if (!blob) {
+						reject(new Error('Canvas is empty'));
+						return;
+					}
+
+					// Check file size limit
+					const fileSizeMB = blob.size / (1024 * 1024);
+					if (fileSizeMB > maxFileSizeMB) {
+						reject(new Error(`File size ${fileSizeMB.toFixed(2)}MB exceeds limit of ${maxFileSizeMB}MB`));
+						return;
+					}
+
+					objectUrl = URL.createObjectURL(blob);
+					resolve({ blob, url: objectUrl });
+				},
+				mimeType,
+				quality
+			);
+		});
+
+		// Cleanup function to revoke object URL and clear memory
+		const cleanup = () => {
+			if (objectUrl) {
+				URL.revokeObjectURL(objectUrl);
+				objectUrl = null;
+			}
+		};
+
+		return { ...result, cleanup };
+	} finally {
+		// Clean up canvases immediately
+		if (sourceCanvas) {
+			sourceCanvas.width = 0;
+			sourceCanvas.height = 0;
+		}
+		if (destCanvas) {
+			destCanvas.width = 0;
+			destCanvas.height = 0;
+		}
+	}
 }
 
 /**

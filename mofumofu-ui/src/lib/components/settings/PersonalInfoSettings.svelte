@@ -6,7 +6,7 @@
 	import { settingsStore } from '$lib/stores/settings.svelte.js';
 	import { onMount } from 'svelte';
 	import ImageCropModal from '../modal/ImageCropModal.svelte';
-	import { getCroppedImg } from '$lib/utils/imageCrop';
+	import { getCroppedImg } from '$lib/utils/imagecrop';
 
 	// Validation schemas are now imported from schemas/personal-info.ts
 
@@ -22,6 +22,10 @@
 	let showBannerCrop = $state(false);
 	let showProfileCrop = $state(false);
 	let tempImageSrc = $state('');
+
+	// Cleanup functions for memory management
+	let bannerCleanup: (() => void) | null = null;
+	let profileCleanup: (() => void) | null = null;
 
 	function handleProfileImageChange(event: Event) {
 		const target = event.target as HTMLInputElement;
@@ -100,17 +104,19 @@
 
 	async function handleBannerCrop(data: { croppedAreaPixels: any; croppedAreaPercentage: any }) {
 		try {
-			const { blob, url } = await getCroppedImg(
-				tempImageSrc,
-				data.croppedAreaPixels,
-				{ width: 1000, height: 250 }, // Standard banner size 4:1 ratio
-				0.9 // Quality set to 80%
-			);
+			const { blob, url, cleanup } = await getCroppedImg(tempImageSrc, data.croppedAreaPixels, {
+				maxFileSizeMB: 5,
+				resizeOptions: { width: 1000, height: 250 },
+				quality: 0.9
+			});
 
-			// Clean up old banner image URL if it exists
-			if (bannerImage && bannerImage.startsWith('blob:')) {
-				URL.revokeObjectURL(bannerImage);
+			// Clean up old banner image
+			if (bannerCleanup) {
+				bannerCleanup();
 			}
+
+			// Store new cleanup function
+			bannerCleanup = cleanup;
 
 			settingsStore.updatePersonal({
 				bannerImageFile: blob,
@@ -119,22 +125,27 @@
 			tempImageSrc = '';
 		} catch (error) {
 			console.error('Error cropping banner image:', error);
+			if (error instanceof Error) {
+				alert(`Banner crop failed: ${error.message}`);
+			}
 		}
 	}
 
 	async function handleProfileCrop(data: { croppedAreaPixels: any; croppedAreaPercentage: any }) {
 		try {
-			const { blob, url } = await getCroppedImg(
-				tempImageSrc,
-				data.croppedAreaPixels,
-				{ width: 400, height: 400 }, // Standard profile image size 1:1 ratio
-				0.9 // Quality set to 80%
-			);
+			const { blob, url, cleanup } = await getCroppedImg(tempImageSrc, data.croppedAreaPixels, {
+				maxFileSizeMB: 5,
+				resizeOptions: { width: 400, height: 400 },
+				quality: 0.9
+			});
 
-			// Clean up old profile image URL if it exists
-			if (profileImage && profileImage.startsWith('blob:')) {
-				URL.revokeObjectURL(profileImage);
+			// Clean up old profile image
+			if (profileCleanup) {
+				profileCleanup();
 			}
+
+			// Store new cleanup function
+			profileCleanup = cleanup;
 
 			settingsStore.updatePersonal({
 				profileImageFile: blob,
@@ -143,6 +154,9 @@
 			tempImageSrc = '';
 		} catch (error) {
 			console.error('Error cropping profile image:', error);
+			if (error instanceof Error) {
+				alert(`Profile crop failed: ${error.message}`);
+			}
 		}
 	}
 
