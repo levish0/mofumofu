@@ -55,8 +55,8 @@
 						"description": "Token refresh successful",
 						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthJWTResponse" } } }
 					},
-					"400": { "description": "Invalid request" },
-					"401": { "description": "Invalid or expired refresh token" },
+					"400": { "description": "No refresh token cookie found" },
+					"401": { "description": "Refresh token cookie exists but is invalid or malformed" },
 					"404": { "description": "User not found" },
 					"500": { "description": "Internal server error" }
 				},
@@ -81,6 +81,20 @@
 					"404": { "description": "User not found" },
 					"500": { "description": "Internal server error" }
 				}
+			}
+		},
+		"/v0/auth/sign_out": {
+			"post": {
+				"tags": ["Auth"],
+				"operationId": "sign_out",
+				"responses": {
+					"204": { "description": "Sign out Successful" },
+					"400": { "description": "No refresh token cookie found" },
+					"401": { "description": "Refresh token cookie exists but is invalid or malformed" },
+					"404": { "description": "User not found" },
+					"500": { "description": "Internal server error" }
+				},
+				"security": [{ "refresh_token_cookie": [] }]
 			}
 		},
 		"/v0/follow": {
@@ -235,6 +249,25 @@
 			}
 		},
 		"/v0/user/profile": {
+			"put": {
+				"tags": ["User"],
+				"operationId": "update_profile",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateProfileRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Profile updated successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserInfoResponse" } } }
+					},
+					"400": { "description": "Invalid input" },
+					"401": { "description": "Unauthorized" },
+					"404": { "description": "User not found" },
+					"500": { "description": "Internal Server Error" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			},
 			"post": {
 				"tags": ["User"],
 				"operationId": "get_profile",
@@ -322,6 +355,16 @@
 			},
 			"GithubLoginRequest": { "type": "object", "required": ["code"], "properties": { "code": { "type": "string" } } },
 			"GoogleLoginRequest": { "type": "object", "required": ["code"], "properties": { "code": { "type": "string" } } },
+			"UpdateProfileRequest": {
+				"type": "object",
+				"properties": {
+					"banner_image": { "type": ["string", "null"] },
+					"handle": { "type": ["string", "null"] },
+					"name": { "type": ["string", "null"] },
+					"password": { "type": ["string", "null"] },
+					"profile_image": { "type": ["string", "null"] }
+				}
+			},
 			"UserInfoResponse": {
 				"type": "object",
 				"required": ["name", "handle", "email"],

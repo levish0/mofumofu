@@ -1,9 +1,4 @@
 <script lang="ts">
-	import DisplaySettings from '$lib/components/settings/DisplaySettings.svelte';
-	import AccountSettings from '$lib/components/settings/AccountSettings.svelte';
-	import WritingSettings from '$lib/components/settings/WritingSettings.svelte';
-	import NotificationSettings from '$lib/components/settings/NotificationSettings.svelte';
-	import PrivacySettings from '$lib/components/settings/PrivacySettings.svelte';
 	import {
 		User,
 		ComputerDesktop,
@@ -21,7 +16,13 @@
 	import { getContext, onMount } from 'svelte';
 	import { settingsStore } from '$lib/stores/settings.svelte.js';
 	import PersonalInfoSettings from '$lib/components/settings/PersonalInfoSettings.svelte';
+	import AccountSettings from '$lib/components/settings/AccountSettings.svelte';
+	import DisplaySettings from '$lib/components/settings/DisplaySettings.svelte';
+	import NotificationSettings from '$lib/components/settings/NotificationSettings.svelte';
+	import PrivacySettings from '$lib/components/settings/PrivacySettings.svelte';
+	import WritingSettings from '$lib/components/settings/WritingSettings.svelte';
 
+	let { data } = $props();
 	let selectedSection = $state('personal');
 	let saveSuccess = $state(false);
 
@@ -36,8 +37,8 @@
 	const topPosition = $derived(navbar.isVisible() ? '68px' : '8px');
 
 	onMount(() => {
-		// Load settings when component mounts
-		settingsStore.loadSettings();
+		// Initialize settings with server data when component mounts
+		settingsStore.initializeSettings(data.settings);
 	});
 
 	async function handleSave() {
@@ -141,10 +142,26 @@
 				</button>
 			{/if}
 
-			<!-- Error Message -->
+			<!-- Error Messages -->
 			{#if settingsStore.errors.general}
 				<div class="rounded-lg border border-red-500/20 bg-red-500/10 p-3">
 					<p class="text-xs text-red-400">{settingsStore.errors.general}</p>
+				</div>
+			{/if}
+
+			<!-- Validation Errors -->
+			{#if settingsStore.hasValidationErrors()}
+				<div class="rounded-lg border border-orange-500/20 bg-orange-500/10 p-3">
+					<p class="text-xs font-medium text-orange-400">Validation Errors:</p>
+					{#each Object.entries(settingsStore.validationErrors) as [section, sectionErrors]}
+						{#if Object.keys(sectionErrors).length > 0}
+							<div class="mt-2">
+								{#each Object.entries(sectionErrors) as [field, error]}
+									<p class="text-xs text-orange-400">• {field}: {error}</p>
+								{/each}
+							</div>
+						{/if}
+					{/each}
 				</div>
 			{/if}
 		</div>

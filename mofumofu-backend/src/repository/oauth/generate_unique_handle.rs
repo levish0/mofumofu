@@ -2,7 +2,6 @@ use crate::repository::user::find_user_by_handle::repository_find_user_by_handle
 use crate::service::error::errors::Errors;
 use crate::utils::generate_random_string::generate_random_string;
 use rand::Rng;
-use rand::distributions::Alphanumeric;
 use sea_orm::ConnectionTrait;
 use tracing::warn;
 use uuid::Uuid;

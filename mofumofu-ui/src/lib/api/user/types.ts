@@ -16,3 +16,11 @@ export interface CreateUserRequest {
 export interface GetUserProfileRequest {
 	handle: string;
 }
+
+export interface UpdateProfileRequest {
+	banner_image?: string | null;
+	handle?: string | null;
+	name?: string | null;
+	password?: string | null;
+	profile_image?: string | null;
+}

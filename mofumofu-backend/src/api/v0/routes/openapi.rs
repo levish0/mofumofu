@@ -6,6 +6,7 @@ use crate::dto::follow::response::follow_list::FollowListResponse;
 use crate::dto::post::request::create::CreatePostRequest;
 use crate::dto::user::request::create::CreateUserRequest;
 use crate::dto::user::request::get_profile::GetUserProfileRequest;
+use crate::dto::user::request::update_profile::UpdateProfileRequest;
 use crate::dto::user::response::info::UserInfoResponse;
 use crate::service::error::errors::ErrorResponse;
 use utoipa::openapi::security::{ApiKey, ApiKeyValue};
@@ -25,6 +26,7 @@ use utoipa::{
         crate::api::v0::routes::user::get_my_profile::get_my_profile,
         crate::api::v0::routes::user::create_user::create_user,
         crate::api::v0::routes::user::get_profile::get_profile,
+        crate::api::v0::routes::user::update_profile::update_profile,
         crate::api::v0::routes::post::post::create_post,
         crate::api::v0::routes::follow::create_follow::api_create_follow,
         crate::api::v0::routes::follow::delete_follow::api_delete_follow,
@@ -41,6 +43,7 @@ use utoipa::{
             DeleteFollowRequest,
             FollowListResponse,
             GetUserProfileRequest,
+            UpdateProfileRequest,
             UserInfoResponse,
             ErrorResponse
         )

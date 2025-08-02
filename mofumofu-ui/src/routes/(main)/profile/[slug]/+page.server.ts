@@ -5,7 +5,7 @@ import { authStore } from '$lib/stores/auth.svelte';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
 	const { slug } = params;
-	
+
 	if (!slug) {
 		throw error(404, 'Profile not found');
 	}
@@ -13,11 +13,11 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
 	try {
 		// 프로필 정보 가져오기
 		const profile = await getUserProfile(slug);
-		
+
 		// 현재 로그인한 사용자가 있는지 확인
 		let currentUser = null;
 		let isOwnProfile = false;
-		
+
 		if (authStore.isAuthenticated) {
 			try {
 				currentUser = await getMyProfile();

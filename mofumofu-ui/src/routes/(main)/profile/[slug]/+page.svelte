@@ -33,7 +33,7 @@
 
 	<div class="mx-auto max-w-4xl">
 		<!-- Profile Header -->
-		<div class="border-b border-gray-100 dark:border-gray-800 relative z-10 bg-white dark:bg-gray-900">
+		<div class="relative z-10 border-b border-gray-100 bg-white dark:border-gray-800 dark:bg-gray-900">
 			<div class="-mt-12 px-6 pt-6 pb-6">
 				<div class="flex items-start space-x-6">
 					<!-- Profile Image -->
@@ -41,11 +41,11 @@
 						<img
 							src={data.profile.profile_image}
 							alt={data.profile.name}
-							class="h-24 w-24 rounded-full border-4 border-white object-cover dark:border-gray-900 relative z-10"
+							class="relative z-10 h-24 w-24 rounded-full border-4 border-white object-cover dark:border-gray-900"
 						/>
 					{:else}
 						<div
-							class="flex h-24 w-24 items-center justify-center rounded-full border-4 border-white bg-white dark:border-gray-900 dark:bg-gray-900 relative z-10"
+							class="relative z-10 flex h-24 w-24 items-center justify-center rounded-full border-4 border-white bg-white dark:border-gray-900 dark:bg-gray-900"
 						>
 							<span class="text-2xl font-medium text-gray-600 dark:text-gray-400">
 								{data.profile.name.charAt(0).toUpperCase()}
@@ -54,7 +54,7 @@
 					{/if}
 
 					<!-- Profile Info -->
-					<div class="min-w-0 flex-1 mt-12">
+					<div class="mt-12 min-w-0 flex-1">
 						<div class="flex items-center justify-between">
 							<div>
 								<h1 class="text-2xl font-semibold text-gray-900 dark:text-white">

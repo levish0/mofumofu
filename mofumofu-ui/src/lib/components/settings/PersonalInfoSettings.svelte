@@ -1,22 +1,14 @@
 <script lang="ts">
 	import { Input } from '../ui/input';
-	import { Button } from '../ui/button';
 	import { Camera, Photo, Icon, Plus } from 'svelte-hero-icons';
-	import { z } from 'zod';
+	import * as v from 'valibot';
+	import { personalInfoSchema } from '$lib/schemas/personal-info';
 	import { settingsStore } from '$lib/stores/settings.svelte.js';
+	import { onMount } from 'svelte';
+	import ImageCropModal from '../modal/ImageCropModal.svelte';
+	import { getCroppedImg } from '$lib/utils/imageCrop';
 
-	const handleSchema = z
-		.string()
-		.min(1, 'Handle is required')
-		.min(3, 'Handle must be at least 3 characters')
-		.max(20, 'Handle cannot exceed 20 characters')
-		.regex(/^[a-zA-Z0-9_]+$/, 'Handle can only contain letters, numbers, and underscores');
-
-	const nameSchema = z
-		.string()
-		.min(1, 'Display name is required')
-		.min(3, 'Display name must be at least 3 characters')
-		.max(20, 'Display name cannot exceed 20 characters');
+	// Validation schemas are now imported from schemas/personal-info.ts
 
 	// Use store values instead of local state
 	const personal = $derived(settingsStore.personal);
@@ -26,16 +18,26 @@
 	let isCheckingHandle = $state(false);
 	let handleAvailable = $state<boolean | null>(null);
 
+	// Crop modal states
+	let showBannerCrop = $state(false);
+	let showProfileCrop = $state(false);
+	let tempImageSrc = $state('');
+
 	function handleProfileImageChange(event: Event) {
 		const target = event.target as HTMLInputElement;
 		const file = target.files?.[0];
-		if (file) {
+		if (file && file.type.startsWith('image/')) {
 			const reader = new FileReader();
 			reader.onload = (e) => {
-				settingsStore.updatePersonal({
-					profileImageFile: file,
-					profileImage: e.target?.result as string
-				});
+				const result = e.target?.result;
+				if (typeof result === 'string') {
+					tempImageSrc = result;
+					showProfileCrop = true;
+				}
+			};
+			reader.onerror = () => {
+				console.error('Failed to read image file');
+				alert('Failed to read image file. Please try again.');
 			};
 			reader.readAsDataURL(file);
 		}
@@ -46,13 +48,18 @@
 	function handleBannerImageChange(event: Event) {
 		const target = event.target as HTMLInputElement;
 		const file = target.files?.[0];
-		if (file) {
+		if (file && file.type.startsWith('image/')) {
 			const reader = new FileReader();
 			reader.onload = (e) => {
-				settingsStore.updatePersonal({
-					bannerImageFile: file,
-					bannerImage: e.target?.result as string
-				});
+				const result = e.target?.result;
+				if (typeof result === 'string') {
+					tempImageSrc = result;
+					showBannerCrop = true;
+				}
+			};
+			reader.onerror = () => {
+				console.error('Failed to read image file');
+				alert('Failed to read image file. Please try again.');
 			};
 			reader.readAsDataURL(file);
 		}
@@ -61,13 +68,13 @@
 	}
 
 	function validateHandle(value: string): string | undefined {
-		const result = handleSchema.safeParse(value.trim());
-		return result.success ? undefined : result.error.issues[0]?.message;
+		const result = v.safeParse(personalInfoSchema.entries.handle, value.trim());
+		return result.success ? undefined : result.issues?.[0]?.message;
 	}
 
 	function validateName(value: string): string | undefined {
-		const result = nameSchema.safeParse(value.trim());
-		return result.success ? undefined : result.error.issues[0]?.message;
+		const result = v.safeParse(personalInfoSchema.entries.name, value.trim());
+		return result.success ? undefined : result.issues?.[0]?.message;
 	}
 
 	function validateForm(): boolean {
@@ -80,7 +87,71 @@
 		if (nameError) newErrors.name = nameError;
 
 		localErrors = newErrors;
+
+		// Also update the settings store validation errors
+		if (Object.keys(newErrors).length > 0) {
+			settingsStore.setValidationErrors('personal', newErrors);
+		} else {
+			settingsStore.clearValidationErrors('personal');
+		}
+
 		return Object.keys(newErrors).length === 0;
+	}
+
+	async function handleBannerCrop(data: { croppedAreaPixels: any; croppedAreaPercentage: any }) {
+		try {
+			const { blob, url } = await getCroppedImg(
+				tempImageSrc,
+				data.croppedAreaPixels,
+				{ width: 1000, height: 250 }, // Standard banner size 4:1 ratio
+				0.9 // Quality set to 80%
+			);
+
+			// Clean up old banner image URL if it exists
+			if (bannerImage && bannerImage.startsWith('blob:')) {
+				URL.revokeObjectURL(bannerImage);
+			}
+
+			settingsStore.updatePersonal({
+				bannerImageFile: blob,
+				bannerImage: url
+			});
+			tempImageSrc = '';
+		} catch (error) {
+			console.error('Error cropping banner image:', error);
+		}
+	}
+
+	async function handleProfileCrop(data: { croppedAreaPixels: any; croppedAreaPercentage: any }) {
+		try {
+			const { blob, url } = await getCroppedImg(
+				tempImageSrc,
+				data.croppedAreaPixels,
+				{ width: 400, height: 400 }, // Standard profile image size 1:1 ratio
+				0.9 // Quality set to 80%
+			);
+
+			// Clean up old profile image URL if it exists
+			if (profileImage && profileImage.startsWith('blob:')) {
+				URL.revokeObjectURL(profileImage);
+			}
+
+			settingsStore.updatePersonal({
+				profileImageFile: blob,
+				profileImage: url
+			});
+			tempImageSrc = '';
+		} catch (error) {
+			console.error('Error cropping profile image:', error);
+		}
+	}
+
+	function handleCropCancel() {
+		// Clean up temp image URL
+		if (tempImageSrc && tempImageSrc.startsWith('blob:')) {
+			URL.revokeObjectURL(tempImageSrc);
+		}
+		tempImageSrc = '';
 	}
 
 	async function checkHandleAvailability() {
@@ -100,6 +171,14 @@
 
 		isCheckingHandle = false;
 	}
+
+	// Initialize validation after data is loaded
+	onMount(() => {
+		// Wait for data to be initialized before validating
+		if (handle && name) {
+			validateForm();
+		}
+	});
 </script>
 
 <div class="text-mofu-dark-200 min-h-screen">
@@ -166,7 +245,7 @@
 
 		<!-- Handle Section -->
 		<div class="space-y-4">
-			<h2 class="text-xl font-semibold">Handle</h2>
+			<h2 class="text-2xl font-semibold">Handle</h2>
 			<div class="space-y-2">
 				<div class="flex">
 					<span class="dark:bg-mofu-dark-800/50 text-mofu-dark-200 inline-flex items-center rounded-l-md px-3 text-sm"
@@ -184,6 +263,8 @@
 							settingsStore.updatePersonal({ handle: value });
 							if (localErrors.handle) localErrors.handle = undefined;
 							handleAvailable = null;
+							// Trigger validation
+							validateForm();
 						}}
 					/>
 					<button
@@ -206,11 +287,11 @@
 					</button>
 				</div>
 				{#if localErrors.handle}
-					<p class="text-xs text-red-400">{localErrors.handle}</p>
+					<p class="text-xs text-rose-400">{localErrors.handle}</p>
 				{:else if handleAvailable === true}
 					<p class="text-xs text-green-400">✓ Handle is available</p>
 				{:else if handleAvailable === false}
-					<p class="text-xs text-red-400">✗ Handle is already taken</p>
+					<p class="text-xs text-rose-400">✗ Handle is already taken</p>
 				{:else}
 					<p class="text-xs text-gray-500">
 						Handle must be unique and can only contain letters, numbers, and underscores.
@@ -220,9 +301,8 @@
 		</div>
 
 		<!-- Name Section -->
-		<div class="space-y-4 border-t border-slate-700 pt-8">
-			<h2 class="text-xl font-semibold">Display Name</h2>
-			<p class="text-sm text-gray-400">Your name as it appears on your profile.</p>
+		<div class="space-y-4">
+			<h2 class="text-2xl font-semibold">Display Name</h2>
 			<div class="space-y-2">
 				<Input
 					id="name"
@@ -235,14 +315,38 @@
 						const value = (e.target as HTMLInputElement).value;
 						settingsStore.updatePersonal({ name: value });
 						if (localErrors.name) localErrors.name = undefined;
+						// Trigger validation
+						validateForm();
 					}}
 				/>
 				{#if localErrors.name}
-					<p class="text-xs text-red-400">{localErrors.name}</p>
+					<p class="text-xs text-rose-400">{localErrors.name}</p>
 				{:else}
-					<p class="text-xs text-gray-500">Display name must be between 3-20 characters.</p>
+					<p class="text-mofu-dark-300 text-xs">Display name must be between 3-20 characters.</p>
 				{/if}
 			</div>
 		</div>
 	</div>
+
+	<!-- Banner Crop Modal -->
+	<ImageCropModal
+		bind:isOpen={showBannerCrop}
+		imageSrc={tempImageSrc}
+		aspectRatio={4}
+		cropShape="rect"
+		title="Crop Banner Image"
+		onCrop={handleBannerCrop}
+		onCancel={handleCropCancel}
+	/>
+
+	<!-- Profile Crop Modal -->
+	<ImageCropModal
+		bind:isOpen={showProfileCrop}
+		imageSrc={tempImageSrc}
+		aspectRatio={1}
+		cropShape="round"
+		title="Crop Profile Image"
+		onCrop={handleProfileCrop}
+		onCancel={handleCropCancel}
+	/>
 </div>
