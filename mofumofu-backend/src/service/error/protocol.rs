@@ -30,6 +30,7 @@ pub mod general {
 }
 
 pub mod system {
+    pub const SYS_INTERNAL_ERROR: &str = "system:internal_error";
     pub const SYS_HASHING_ERROR: &str = "system:hashing_error";
     pub const SYS_NOT_FOUND: &str = "system:not_found";
     pub const SYS_TRANSACTION_ERROR: &str = "system:transaction_error";

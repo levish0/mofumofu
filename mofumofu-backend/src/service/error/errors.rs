@@ -7,10 +7,7 @@ use crate::service::error::protocol::oauth::{
     OAUTH_INVALID_AUTH_URL, OAUTH_INVALID_REDIRECT_URL, OAUTH_INVALID_TOKEN_URL,
     OAUTH_TOKEN_EXCHANGE_FAILED, OAUTH_USER_INFO_FETCH_FAILED, OAUTH_USER_INFO_PARSE_FAILED,
 };
-use crate::service::error::protocol::system::{
-    SYS_DATABASE_ERROR, SYS_HASHING_ERROR, SYS_NOT_FOUND, SYS_TOKEN_CREATION_ERROR,
-    SYS_TRANSACTION_ERROR,
-};
+use crate::service::error::protocol::system::{SYS_DATABASE_ERROR, SYS_HASHING_ERROR, SYS_INTERNAL_ERROR, SYS_NOT_FOUND, SYS_TOKEN_CREATION_ERROR, SYS_TRANSACTION_ERROR};
 use crate::service::error::protocol::user::{
     USER_HANDLE_GENERATION_FAILED, USER_INVALID_PASSWORD, USER_INVALID_TOKEN,
     USER_NO_REFRESH_TOKEN, USER_NOT_FOUND, USER_NOT_VERIFIED, USER_TOKEN_EXPIRED,
@@ -97,6 +94,7 @@ pub enum Errors {
     ValidationError(String), // 유효성 검사 오류 (추가 정보 포함)
 
     // 시스템 오류
+    SysInternalError(String),
     DatabaseError(String),      // 데이터베이스 오류 (추가 정보 포함)
     TransactionError(String),   // 트랜잭션 오류 (추가 정보 포함)
     NotFound(String),           // 리소스를 찾을 수 없음 (추가 정보 포함)
@@ -158,6 +156,7 @@ impl IntoResponse for Errors {
             Errors::ValidationError(msg) => (StatusCode::BAD_REQUEST, VALIDATION_ERROR, Some(msg)),
 
             // 시스템 오류 - 주로 500 Internal Server Error
+            Errors::SysInternalError(msg) => (StatusCode::BAD_REQUEST, SYS_INTERNAL_ERROR, Some(msg)),
             Errors::TransactionError(msg) => (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 SYS_TRANSACTION_ERROR,

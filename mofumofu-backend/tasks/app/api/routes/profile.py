@@ -1,7 +1,7 @@
-from fastapi import APIRouter, HTTPException, BackgroundTasks
+from fastapi import APIRouter, HTTPException, BackgroundTasks, UploadFile, File, Form
 from pydantic import BaseModel
 from celery.result import AsyncResult
-from app.tasks.profile_tasks import upload_profile_image_task, delete_profile_image_task
+from app.tasks.profile_tasks import upload_profile_image_task, delete_profile_image_task, upload_user_file_task
 from app.core.celery_app import celery_app
 import logging
 
@@ -97,6 +97,44 @@ async def get_task_status(task_id: str):
     except Exception as e:
         logger.error(f"태스크 상태 조회 실패: {str(e)}")
         raise HTTPException(status_code=500, detail=f"태스크 상태 조회 실패: {str(e)}")
+
+@router.post("/upload-file", response_model=TaskResponse)
+async def upload_user_file(
+    user_uuid: str = Form(...),
+    user_handle: str = Form(...),
+    file_type: str = Form(...),  # "profile" or "banner"
+    file: UploadFile = File(...)
+):
+    """
+    사용자가 업로드한 파일을 R2에 업로드하는 태스크를 실행
+    """
+    try:
+        # 파일 타입 검증
+        if file_type not in ["profile", "banner"]:
+            raise HTTPException(status_code=400, detail="file_type은 'profile' 또는 'banner'만 허용됩니다")
+        
+        # 파일 데이터 읽기
+        file_data = await file.read()
+        
+        # Content-Type 가져오기
+        content_type = file.content_type or "image/jpeg"
+        
+        # Celery 태스크 실행
+        task = upload_user_file_task.delay(user_uuid, user_handle, file_data, content_type, file_type)
+        
+        logger.info(f"{file_type} 이미지 업로드 태스크 시작: {task.id} (user_uuid: {user_uuid}, user_handle: {user_handle}, filename: {file.filename})")
+        
+        return TaskResponse(
+            task_id=task.id,
+            status="PENDING",
+            message=f"{file_type} 이미지 업로드 태스크가 시작되었습니다"
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"{file_type} 이미지 업로드 태스크 시작 실패: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"태스크 시작 실패: {str(e)}")
 
 @router.get("/health")
 async def health_check():

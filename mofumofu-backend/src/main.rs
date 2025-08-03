@@ -21,6 +21,7 @@ mod repository;
 mod service;
 mod state;
 mod utils;
+mod tasks_bridge;
 
 pub async fn run_server() -> anyhow::Result<()> {
     let conn = establish_connection().await;

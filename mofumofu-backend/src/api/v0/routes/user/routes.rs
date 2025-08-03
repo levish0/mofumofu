@@ -2,8 +2,11 @@ use crate::api::v0::routes::user::create_user::create_user;
 use crate::api::v0::routes::user::get_my_profile::get_my_profile;
 use crate::api::v0::routes::user::get_profile::get_profile;
 use crate::api::v0::routes::user::update_profile::update_profile;
+use crate::api::v0::routes::user::upload_profile_image::upload_profile_image;
+use crate::api::v0::routes::user::upload_banner_image::upload_banner_image;
 use crate::middleware::auth::access_jwt_auth;
 use crate::state::AppState;
+use axum::extract::DefaultBodyLimit;
 use axum::Router;
 use axum::routing::{get, post, put};
 
@@ -19,5 +22,18 @@ pub fn user_routes() -> Router<AppState> {
         .route(
             "/user/profile",
             put(update_profile).route_layer(axum::middleware::from_fn(access_jwt_auth)),
+        )
+        // 이미지 업로드 API (8MB 제한)
+        .route(
+            "/user/profile/image",
+            post(upload_profile_image)
+                .layer(DefaultBodyLimit::max(8 * 1024 * 1024)) // 8MB
+                .route_layer(axum::middleware::from_fn(access_jwt_auth)),
+        )
+        .route(
+            "/user/profile/banner",
+            post(upload_banner_image)
+                .layer(DefaultBodyLimit::max(8 * 1024 * 1024)) // 8MB
+                .route_layer(axum::middleware::from_fn(access_jwt_auth)),
         )
 }

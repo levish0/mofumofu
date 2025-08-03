@@ -27,6 +27,8 @@ use utoipa::{
         crate::api::v0::routes::user::create_user::create_user,
         crate::api::v0::routes::user::get_profile::get_profile,
         crate::api::v0::routes::user::update_profile::update_profile,
+        crate::api::v0::routes::user::upload_profile_image::upload_profile_image,
+        crate::api::v0::routes::user::upload_banner_image::upload_banner_image,
         crate::api::v0::routes::post::post::create_post,
         crate::api::v0::routes::follow::create_follow::api_create_follow,
         crate::api::v0::routes::follow::delete_follow::api_delete_follow,
@@ -45,7 +47,9 @@ use utoipa::{
             GetUserProfileRequest,
             UpdateProfileRequest,
             UserInfoResponse,
-            ErrorResponse
+            ErrorResponse,
+            crate::api::v0::routes::user::upload_profile_image::ProfileImageForm,
+            crate::api::v0::routes::user::upload_banner_image::BannerImageForm
         )
     ),
     tags(

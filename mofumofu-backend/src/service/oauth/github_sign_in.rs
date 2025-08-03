@@ -48,6 +48,7 @@ where
     if oauth_result.is_new_user {
         match queue_profile_image_upload(
             http_client,
+            &oauth_result.user.id,
             &oauth_result.user.handle,
             &github_user.avatar_url,
         )

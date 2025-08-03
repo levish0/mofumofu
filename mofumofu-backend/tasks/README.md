@@ -58,7 +58,7 @@ python start_worker.py
 ### Development Mode
 For development, use FastAPI's auto-reload:
 ```bash
-uv run fastapi dev app/main.py
+uv run fastapi dev app/main.py --port 7000
 ```
 
 ### Monitoring (Optional)

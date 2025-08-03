@@ -257,9 +257,26 @@ class SettingsStore {
 
 	// Check if current state differs from original
 	private checkForChanges() {
-		const current = JSON.stringify(this.state);
-		const original = JSON.stringify(this.originalState);
-		this.state.hasChanges = current !== original;
+		// Only compare actual setting values, not metadata like hasChanges, isLoading, errors
+		const currentSettings = {
+			personal: this.state.personal,
+			display: this.state.display,
+			notifications: this.state.notifications,
+			privacy: this.state.privacy,
+			account: this.state.account,
+			writing: this.state.writing
+		};
+		
+		const originalSettings = {
+			personal: this.originalState.personal,
+			display: this.originalState.display,
+			notifications: this.originalState.notifications,
+			privacy: this.originalState.privacy,
+			account: this.originalState.account,
+			writing: this.originalState.writing
+		};
+		
+		this.state.hasChanges = JSON.stringify(currentSettings) !== JSON.stringify(originalSettings);
 	}
 
 	// Check if personal info has changes
