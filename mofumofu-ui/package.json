@@ -52,6 +52,10 @@
 		"prettier-plugin-svelte": "^3.4.0",
 		"prettier-plugin-tailwindcss": "^0.6.14",
 		"publint": "^0.3.12",
+		"rehype-highlight": "^7.0.2",
+		"rehype-stringify": "^10.0.1",
+		"remark-parse": "^11.0.0",
+		"remark-rehype": "^11.1.2",
 		"svelte": "^5.37.2",
 		"svelte-check": "^4.3.0",
 		"svelte-easy-crop": "^4.0.1",
@@ -61,6 +65,7 @@
 		"tailwindcss": "^4.1.11",
 		"tw-animate-css": "^1.3.6",
 		"typescript": "^5.9.2",
+		"unified": "^11.0.5",
 		"valibot": "^1.1.0",
 		"vite": "^7.0.6"
 	},
@@ -69,11 +74,15 @@
 	],
 	"pnpm": {
 		"onlyBuiltDependencies": [
-			"esbuild"
+			"@tailwindcss/oxide",
+			"canvas",
+			"esbuild",
+			"sharp",
+			"workerd"
 		]
 	},
 	"dependencies": {
-		"esm-env": "^1.2.2",
-		"@sveltejs/kit": "^2.27.0"
+		"@sveltejs/kit": "^2.27.0",
+		"esm-env": "^1.2.2"
 	}
 }

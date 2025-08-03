@@ -31,7 +31,7 @@ pub async fn update_profile(
     State(state): State<AppState>,
     Extension(claims): Extension<AccessTokenClaims>,
     ValidatedJson(payload): ValidatedJson<UpdateProfileRequest>,
-) -> Result<UserInfoResponse, Errors> {
+) -> Result<impl IntoResponse, Errors> {
     info!(
         "Received PUT request to update profile for user: {}",
         claims.sub
@@ -39,5 +39,5 @@ pub async fn update_profile(
 
     let updated_user = service_update_user_profile(&state.conn, &claims.sub, payload).await?;
 
-    Ok(updated_user)
+    Ok(StatusCode::NO_CONTENT)
 }
