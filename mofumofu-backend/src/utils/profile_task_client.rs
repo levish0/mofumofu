@@ -17,9 +17,9 @@ struct TaskResponse {
     message: String,
 }
 
-/// 비동기적으로 프로필 이미지 업로드를 큐에 등록만 하고 즉시 반환
+/// 비동기적으로 OAuth 프로필 이미지 업로드를 큐에 등록만 하고 즉시 반환
 /// (실제 업로드는 백그라운드에서 처리되고, 재시도는 Celery가 담당)
-pub async fn queue_profile_image_upload(
+pub async fn queue_oauth_profile_image_upload(
     http_client: &Client,
     user_uuid: &Uuid,
     user_handle: &str,
@@ -32,7 +32,7 @@ pub async fn queue_profile_image_upload(
     );
 
     info!(
-        "Queuing async profile image upload task for user: {} ({})",
+        "Queuing async OAuth profile image upload task for user: {} ({})",
         user_uuid, user_handle
     );
 
@@ -42,7 +42,7 @@ pub async fn queue_profile_image_upload(
     };
 
     let response = http_client
-        .post(&format!("{}/tasks/profile/upload-image", task_server_url))
+        .post(&format!("{}/tasks/oauth/upload-profile-image", task_server_url))
         .json(&request)
         .send()
         .await?;
@@ -53,21 +53,20 @@ pub async fn queue_profile_image_upload(
 
     let task_response: TaskResponse = response.json().await?;
     info!(
-        "Profile image upload task queued asynchronously with ID: {}",
+        "OAuth profile image upload task queued asynchronously with ID: {}",
         task_response.task_id
     );
 
     Ok(task_response.task_id)
 }
 
-/// 사용자가 업로드한 파일을 태스크 서버에 전송
-pub async fn queue_user_profile_upload(
+/// 사용자가 업로드한 아바타 이미지를 태스크 서버에 전송
+pub async fn queue_user_avatar_upload(
     http_client: &Client,
     user_uuid: &Uuid,
     user_handle: &str,
     file_data: Vec<u8>,
     content_type: &str,
-    file_type: &str,
 ) -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
     let config = DbConfig::get();
     let task_server_url = format!(
@@ -76,21 +75,20 @@ pub async fn queue_user_profile_upload(
     );
 
     info!(
-        "Queuing async file upload task for user: {} ({}), file_type: {}, size: {} bytes",
-        user_uuid, user_handle, file_type, file_data.len()
+        "Queuing async avatar upload task for user: {} ({}), size: {} bytes",
+        user_uuid, user_handle, file_data.len()
     );
 
     // multipart form 생성
     let form = multipart::Form::new()
         .text("user_uuid", user_uuid.to_string())
         .text("user_handle", user_handle.to_string())
-        .text("file_type", file_type.to_string())
         .part("file", multipart::Part::bytes(file_data)
             .mime_str(content_type)?
-            .file_name("image"));
+            .file_name("avatar"));
 
     let response = http_client
-        .post(&format!("{}/tasks/profile/upload-file", task_server_url))
+        .post(&format!("{}/tasks/avatar/upload", task_server_url))
         .multipart(form)
         .send()
         .await?;
@@ -103,20 +101,20 @@ pub async fn queue_user_profile_upload(
 
     let task_response: TaskResponse = response.json().await?;
     info!(
-        "File upload task queued asynchronously with ID: {}",
+        "Avatar upload task queued asynchronously with ID: {}",
         task_response.task_id
     );
 
     Ok(task_response.task_id)
 }
 
+/// 사용자가 업로드한 배너 이미지를 태스크 서버에 전송  
 pub async fn queue_user_banner_upload(
     http_client: &Client,
     user_uuid: &Uuid,
     user_handle: &str,
     file_data: Vec<u8>,
     content_type: &str,
-    file_type: &str,
 ) -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
     let config = DbConfig::get();
     let task_server_url = format!(
@@ -125,21 +123,20 @@ pub async fn queue_user_banner_upload(
     );
 
     info!(
-        "Queuing async file upload task for user: {} ({}), file_type: {}, size: {} bytes",
-        user_uuid, user_handle, file_type, file_data.len()
+        "Queuing async banner upload task for user: {} ({}), size: {} bytes",
+        user_uuid, user_handle, file_data.len()
     );
 
     // multipart form 생성
     let form = multipart::Form::new()
         .text("user_uuid", user_uuid.to_string())
         .text("user_handle", user_handle.to_string())
-        .text("file_type", file_type.to_string())
         .part("file", multipart::Part::bytes(file_data)
             .mime_str(content_type)?
-            .file_name("image"));
+            .file_name("banner"));
 
     let response = http_client
-        .post(&format!("{}/tasks/profile/upload-file", task_server_url))
+        .post(&format!("{}/tasks/banner/upload", task_server_url))
         .multipart(form)
         .send()
         .await?;
@@ -152,7 +149,7 @@ pub async fn queue_user_banner_upload(
 
     let task_response: TaskResponse = response.json().await?;
     info!(
-        "File upload task queued asynchronously with ID: {}",
+        "Banner upload task queued asynchronously with ID: {}",
         task_response.task_id
     );
 

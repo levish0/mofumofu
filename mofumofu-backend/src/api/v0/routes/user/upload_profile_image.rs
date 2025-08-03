@@ -9,7 +9,7 @@ use axum::Extension;
 use serde::Deserialize;
 use tracing::info;
 use utoipa::ToSchema;
-use crate::service::user::upload_user_banner::service_upload_user_profile;
+use crate::service::user::upload_user_avatar::service_upload_user_avatar;
 
 /// Schema for profile image upload multipart form
 #[derive(Deserialize, ToSchema)]
@@ -41,7 +41,7 @@ pub async fn upload_profile_image(
 ) -> Result<impl IntoResponse, Errors> {
     info!("Received profile image upload request for user: {}", claims.sub);
 
-    service_upload_user_profile(&state.conn, &state.http_client, &claims.sub, multipart, "profile").await?;
+    service_upload_user_avatar(&state.conn, &state.http_client, &claims.sub, multipart).await?;
 
     Ok(StatusCode::NO_CONTENT)
 }

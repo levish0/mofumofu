@@ -40,7 +40,7 @@ pub async fn upload_banner_image(
 ) -> Result<impl IntoResponse, Errors> {
     info!("Received banner image upload request for user: {}", claims.sub);
 
-    service_upload_user_banner(&state.conn, &state.http_client, &claims.sub, multipart, "banner").await?;
+    service_upload_user_banner(&state.conn, &state.http_client, &claims.sub, multipart).await?;
 
     Ok(StatusCode::NO_CONTENT)
 }

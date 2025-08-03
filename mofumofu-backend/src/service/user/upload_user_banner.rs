@@ -1,6 +1,5 @@
 use crate::service::error::errors::Errors;
-use crate::service::user::get_user_by_uuid;
-use crate::utils::profile_task_client::{ queue_user_profile_upload};
+use crate::utils::profile_task_client::queue_user_banner_upload;
 use axum::extract::Multipart;
 use reqwest::Client;
 use sea_orm::ConnectionTrait;
@@ -8,17 +7,16 @@ use tracing::{error, info, warn};
 use uuid::Uuid;
 use crate::repository::user::get_user_by_uuid::repository_get_user_by_uuid;
 
-pub async fn service_upload_user_profile<C>(
+pub async fn service_upload_user_banner<C>(
     conn: &C,
     http_client: &Client,
     user_uuid: &Uuid,
     mut multipart: Multipart,
-    image_type: &str, // "profile" or "banner"
 ) -> Result<(), Errors> 
 where
     C: ConnectionTrait,
 {
-    info!("Processing {} image upload for user: {}", image_type, user_uuid);
+    info!("Processing banner image upload for user: {}", user_uuid);
 
     // UUID로 사용자 정보 조회
     let user = repository_get_user_by_uuid(conn, user_uuid).await?;
@@ -73,29 +71,27 @@ where
     let content_type = content_type.unwrap_or_else(|| "image/jpeg".to_string());
 
     info!(
-        "Processing {} image upload: user_uuid={}, content_type={}, size={} bytes",
-        image_type,
+        "Processing banner image upload: user_uuid={}, content_type={}, size={} bytes",
         user_uuid,
         content_type,
         file_data.len()
     );
 
     // 태스크 큐에 업로드 요청
-    queue_user_profile_upload(
+    queue_user_banner_upload(
         http_client,
         &user_uuid,
         &user.handle,
         file_data,
         &content_type,
-        image_type,
     )
     .await
     .map_err(|e| {
-        error!("Failed to queue {} image upload task: {}", image_type, e);
-        Errors::SysInternalError(format!("Failed to queue {} image upload task", image_type))
+        error!("Failed to queue banner image upload task: {}", e);
+        Errors::SysInternalError("Failed to queue banner image upload task".to_string())
     })?;
 
-    info!("{} image upload task queued for user: {}", image_type, user_uuid);
+    info!("Banner image upload task queued for user: {}", user_uuid);
 
     Ok(())
 }
