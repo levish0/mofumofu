@@ -7,7 +7,10 @@ use crate::service::error::protocol::oauth::{
     OAUTH_INVALID_AUTH_URL, OAUTH_INVALID_REDIRECT_URL, OAUTH_INVALID_TOKEN_URL,
     OAUTH_TOKEN_EXCHANGE_FAILED, OAUTH_USER_INFO_FETCH_FAILED, OAUTH_USER_INFO_PARSE_FAILED,
 };
-use crate::service::error::protocol::system::{SYS_DATABASE_ERROR, SYS_HASHING_ERROR, SYS_INTERNAL_ERROR, SYS_NOT_FOUND, SYS_TOKEN_CREATION_ERROR, SYS_TRANSACTION_ERROR};
+use crate::service::error::protocol::system::{
+    SYS_DATABASE_ERROR, SYS_HASHING_ERROR, SYS_INTERNAL_ERROR, SYS_NOT_FOUND,
+    SYS_TOKEN_CREATION_ERROR, SYS_TRANSACTION_ERROR,
+};
 use crate::service::error::protocol::user::{
     USER_HANDLE_GENERATION_FAILED, USER_INVALID_PASSWORD, USER_INVALID_TOKEN,
     USER_NO_REFRESH_TOKEN, USER_NOT_FOUND, USER_NOT_VERIFIED, USER_TOKEN_EXPIRED,
@@ -156,7 +159,9 @@ impl IntoResponse for Errors {
             Errors::ValidationError(msg) => (StatusCode::BAD_REQUEST, VALIDATION_ERROR, Some(msg)),
 
             // 시스템 오류 - 주로 500 Internal Server Error
-            Errors::SysInternalError(msg) => (StatusCode::BAD_REQUEST, SYS_INTERNAL_ERROR, Some(msg)),
+            Errors::SysInternalError(msg) => {
+                (StatusCode::BAD_REQUEST, SYS_INTERNAL_ERROR, Some(msg))
+            }
             Errors::TransactionError(msg) => (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 SYS_TRANSACTION_ERROR,

@@ -1,4 +1,3 @@
-use crate::connection::cloudflare_r2::R2Client;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
 use crate::entity::common::OAuthProvider;
 use crate::entity::user_refresh_tokens::ActiveModel as RefreshTokenActiveModel;
@@ -6,7 +5,7 @@ use crate::service::auth::jwt::{create_jwt_access_token, create_jwt_refresh_toke
 use crate::service::error::errors::Errors;
 use crate::service::oauth::find_or_create_oauth_user::service_find_or_create_oauth_user;
 use crate::service::oauth::provider::google::client::{exchange_google_code, get_google_user_info};
-use crate::utils::profile_task_client::{queue_oauth_profile_image_upload};
+use crate::tasks_bridge::profile_client::queue_oauth_avatar_upload;
 use reqwest::Client;
 use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
 use tracing::{error, info, warn};
@@ -39,7 +38,7 @@ where
 
     // 4. 프로필 이미지 처리 - 새로 생성된 유저에게만 적용
     if oauth_result.is_new_user {
-        match queue_oauth_profile_image_upload(
+        match queue_oauth_avatar_upload(
             http_client,
             &oauth_result.user.id,
             &oauth_result.user.handle,

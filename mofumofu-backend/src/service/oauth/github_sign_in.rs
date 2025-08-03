@@ -7,7 +7,7 @@ use crate::service::oauth::find_or_create_oauth_user::service_find_or_create_oau
 use crate::service::oauth::provider::common::exchange_oauth_code;
 use crate::service::oauth::provider::github::client::{exchange_github_code, get_github_user_info};
 use crate::service::oauth::provider::google::client::{exchange_google_code, get_google_user_info};
-use crate::utils::profile_task_client::{queue_oauth_profile_image_upload};
+use crate::tasks_bridge::profile_client::queue_oauth_avatar_upload;
 use reqwest::Client as ReqwestClient;
 use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
 use tracing::{error, info, warn};
@@ -26,7 +26,7 @@ where
     let access_token = exchange_github_code(auth_code).await?;
 
     // 2. GitHub에서 유저 정보 획득
-    let github_user = get_github_user_info(http_client,&access_token).await?;
+    let github_user = get_github_user_info(http_client, &access_token).await?;
     // 3. 이메일이 없으면 에러
     let email = github_user.email.ok_or_else(|| {
         error!("GitHub user has no email address");
@@ -46,7 +46,7 @@ where
 
     // 프로필 이미지 처리 - 새로 생성된 유저에게만 적용
     if oauth_result.is_new_user {
-        match queue_oauth_profile_image_upload(
+        match queue_oauth_avatar_upload(
             http_client,
             &oauth_result.user.id,
             &oauth_result.user.handle,

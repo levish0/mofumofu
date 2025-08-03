@@ -1,8 +1,8 @@
-use sea_orm::QueryFilter;
+use crate::service::error::errors::Errors;
 use sea_orm::ColumnTrait;
+use sea_orm::QueryFilter;
 use sea_orm::{ConnectionTrait, EntityTrait};
 use uuid::Uuid;
-use crate::service::error::errors::Errors;
 
 pub async fn repository_find_refresh_token_by_jti_and_token<C>(
     conn: &C,

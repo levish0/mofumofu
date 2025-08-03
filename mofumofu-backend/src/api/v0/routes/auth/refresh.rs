@@ -1,5 +1,6 @@
 use crate::dto::auth::internal::refresh_token::RefreshTokenContext;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
+use crate::service::auth::service_refresh;
 use crate::service::error::errors::Errors;
 use crate::state::AppState;
 use crate::utils::extract_ip_address::extract_ip_address;
@@ -10,7 +11,6 @@ use axum::http::HeaderMap;
 use axum_extra::TypedHeader;
 use axum_extra::headers::UserAgent;
 use std::net::SocketAddr;
-use crate::service::auth::service_refresh;
 
 #[utoipa::path(
     post,

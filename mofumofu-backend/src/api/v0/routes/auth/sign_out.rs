@@ -1,4 +1,5 @@
 use crate::dto::auth::internal::refresh_token::RefreshTokenContext;
+use crate::service::auth::service_sign_out;
 use crate::service::error::errors::Errors;
 use crate::state::AppState;
 use crate::utils::extract_ip_address::extract_ip_address;
@@ -10,7 +11,6 @@ use axum::response::IntoResponse;
 use axum_extra::TypedHeader;
 use axum_extra::headers::UserAgent;
 use std::net::SocketAddr;
-use crate::service::auth::service_sign_out;
 
 #[utoipa::path(
     post,

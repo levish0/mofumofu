@@ -1,15 +1,15 @@
 use crate::dto::auth::internal::access_token::AccessTokenClaims;
 use crate::dto::user::request::update_profile::UpdateProfileRequest;
+use crate::dto::user::response::info::UserInfoResponse;
 use crate::service::error::errors::Errors;
 use crate::service::user::service_update_user_profile;
+use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
-use axum::extract::{ State};
+use axum::Extension;
+use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use axum::Extension;
 use tracing::{error, info, warn};
-use crate::dto::user::response::info::UserInfoResponse;
-use crate::service::validator::json_validator::ValidatedJson;
 
 #[utoipa::path(
     put,

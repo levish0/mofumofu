@@ -1,15 +1,15 @@
 use crate::dto::auth::internal::refresh_token::RefreshTokenClaims;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
 use crate::entity::user_refresh_tokens::ActiveModel as RefreshTokenActiveModel;
+use crate::repository::auth::create_refresh_token::repository_create_refresh_token;
+use crate::repository::auth::find_refresh_token_by_jti_and_token::repository_find_refresh_token_by_jti_and_token;
+use crate::repository::auth::revoke_refresh_token::repository_revoke_refresh_token;
 use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
 use crate::service::auth::jwt::{create_jwt_access_token, create_jwt_refresh_token};
 use crate::service::error::errors::Errors;
 use chrono::Utc;
 use sea_orm::{ConnectionTrait, DatabaseConnection, Set, TransactionTrait};
 use tracing::error;
-use crate::repository::auth::create_refresh_token::repository_create_refresh_token;
-use crate::repository::auth::find_refresh_token_by_jti_and_token::repository_find_refresh_token_by_jti_and_token;
-use crate::repository::auth::revoke_refresh_token::repository_revoke_refresh_token;
 
 pub async fn service_refresh(
     conn: &DatabaseConnection,

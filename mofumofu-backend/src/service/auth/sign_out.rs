@@ -1,10 +1,10 @@
 use crate::dto::auth::internal::refresh_token::RefreshTokenClaims;
+use crate::repository::auth::find_refresh_token_by_jti_and_token::repository_find_refresh_token_by_jti_and_token;
+use crate::repository::auth::revoke_refresh_token::repository_revoke_refresh_token;
 use crate::service::error::errors::Errors;
 use chrono::Utc;
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use tracing::error;
-use crate::repository::auth::find_refresh_token_by_jti_and_token::repository_find_refresh_token_by_jti_and_token;
-use crate::repository::auth::revoke_refresh_token::repository_revoke_refresh_token;
 
 pub async fn service_sign_out<C>(
     conn: &C,

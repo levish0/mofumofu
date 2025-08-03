@@ -1,30 +1,22 @@
 use crate::dto::auth::internal::access_token::AccessTokenClaims;
+use crate::dto::user::request::banner_image::ProfileBannerForm;
 use crate::service::error::errors::Errors;
-
+use crate::service::user::service_upload_user_banner;
 use crate::state::AppState;
+use axum::Extension;
 use axum::extract::{Multipart, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use axum::Extension;
 use serde::Deserialize;
 use tracing::info;
 use utoipa::ToSchema;
-use crate::service::user::upload_user_avatar::service_upload_user_avatar;
-
-/// Schema for profile image upload multipart form
-#[derive(Deserialize, ToSchema)]
-#[allow(unused)]
-pub struct ProfileImageForm {
-    #[schema(format = Binary, content_media_type = "image/*")]
-    file: String,
-}
 
 #[utoipa::path(
     post,
-    path = "/v0/user/profile/image",
-    request_body(content = ProfileImageForm, content_type = "multipart/form-data"),
+    path = "/v0/user/profile/banner",
+    request_body(content = ProfileBannerForm, content_type = "multipart/form-data"),
     responses(
-        (status = 204, description = "Profile image upload queued successfully"),
+        (status = 204, description = "Banner image upload queued successfully"),
         (status = 400, description = "Invalid file or parameters"),
         (status = 401, description = "Unauthorized"),
         (status = 500, description = "Internal server error")
@@ -34,14 +26,17 @@ pub struct ProfileImageForm {
     ),
     tag = "User"
 )]
-pub async fn upload_profile_image(
+pub async fn upload_banner(
     State(state): State<AppState>,
     Extension(claims): Extension<AccessTokenClaims>,
     multipart: Multipart,
 ) -> Result<impl IntoResponse, Errors> {
-    info!("Received profile image upload request for user: {}", claims.sub);
+    info!(
+        "Received banner image upload request for user: {}",
+        claims.sub
+    );
 
-    service_upload_user_avatar(&state.conn, &state.http_client, &claims.sub, multipart).await?;
+    service_upload_user_banner(&state.conn, &state.http_client, &claims.sub, multipart).await?;
 
     Ok(StatusCode::NO_CONTENT)
 }

@@ -1,5 +1,5 @@
-use sea_orm::{ActiveModelTrait, ConnectionTrait};
 use crate::service::error::errors::Errors;
+use sea_orm::{ActiveModelTrait, ConnectionTrait};
 
 pub async fn repository_create_refresh_token<C>(
     conn: &C,
@@ -13,4 +13,3 @@ where
         .await
         .map_err(|e| Errors::DatabaseError(e.to_string()))
 }
-

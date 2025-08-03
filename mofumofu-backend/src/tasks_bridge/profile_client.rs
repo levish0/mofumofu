@@ -1,6 +1,7 @@
 use crate::config::db_config::DbConfig;
 use reqwest::{Client, multipart};
 use serde::{Deserialize, Serialize};
+use std::sync::LazyLock;
 use tracing::{error, info, warn};
 use uuid::Uuid;
 
@@ -17,19 +18,29 @@ struct TaskResponse {
     message: String,
 }
 
+/// 태스크 서버 URL을 캐시하는 정적 변수
+static TASK_SERVER_URL: LazyLock<String> = LazyLock::new(|| {
+    let config = DbConfig::get();
+    format!(
+        "http://{}:{}",
+        config.task_server_host, config.task_server_port
+    )
+});
+
+/// 태스크 서버 URL을 가져오는 함수
+fn get_task_server_url() -> &'static str {
+    &TASK_SERVER_URL
+}
+
 /// 비동기적으로 OAuth 프로필 이미지 업로드를 큐에 등록만 하고 즉시 반환
 /// (실제 업로드는 백그라운드에서 처리되고, 재시도는 Celery가 담당)
-pub async fn queue_oauth_profile_image_upload(
+pub async fn queue_oauth_avatar_upload(
     http_client: &Client,
     user_uuid: &Uuid,
     user_handle: &str,
     google_picture_url: &str,
 ) -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
-    let config = DbConfig::get();
-    let task_server_url = format!(
-        "http://{}:{}",
-        config.task_server_host, config.task_server_port
-    );
+    let task_server_url = get_task_server_url();
 
     info!(
         "Queuing async OAuth profile image upload task for user: {} ({})",
@@ -42,7 +53,7 @@ pub async fn queue_oauth_profile_image_upload(
     };
 
     let response = http_client
-        .post(&format!("{}/tasks/oauth/upload-profile-image", task_server_url))
+        .post(&format!("{}/tasks/oauth/upload-avatar", task_server_url))
         .json(&request)
         .send()
         .await?;
@@ -68,24 +79,25 @@ pub async fn queue_user_avatar_upload(
     file_data: Vec<u8>,
     content_type: &str,
 ) -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
-    let config = DbConfig::get();
-    let task_server_url = format!(
-        "http://{}:{}",
-        config.task_server_host, config.task_server_port
-    );
+    let task_server_url = get_task_server_url();
 
     info!(
         "Queuing async avatar upload task for user: {} ({}), size: {} bytes",
-        user_uuid, user_handle, file_data.len()
+        user_uuid,
+        user_handle,
+        file_data.len()
     );
 
     // multipart form 생성
     let form = multipart::Form::new()
         .text("user_uuid", user_uuid.to_string())
         .text("user_handle", user_handle.to_string())
-        .part("file", multipart::Part::bytes(file_data)
-            .mime_str(content_type)?
-            .file_name("avatar"));
+        .part(
+            "file",
+            multipart::Part::bytes(file_data)
+                .mime_str(content_type)?
+                .file_name("avatar"),
+        );
 
     let response = http_client
         .post(&format!("{}/tasks/avatar/upload", task_server_url))
@@ -95,7 +107,10 @@ pub async fn queue_user_avatar_upload(
 
     if !response.status().is_success() {
         let status = response.status();
-        let error_text = response.text().await.unwrap_or_else(|_| "Unknown error".to_string());
+        let error_text = response
+            .text()
+            .await
+            .unwrap_or_else(|_| "Unknown error".to_string());
         return Err(format!("Task queue request failed: {} - {}", status, error_text).into());
     }
 
@@ -116,24 +131,25 @@ pub async fn queue_user_banner_upload(
     file_data: Vec<u8>,
     content_type: &str,
 ) -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
-    let config = DbConfig::get();
-    let task_server_url = format!(
-        "http://{}:{}",
-        config.task_server_host, config.task_server_port
-    );
+    let task_server_url = get_task_server_url();
 
     info!(
         "Queuing async banner upload task for user: {} ({}), size: {} bytes",
-        user_uuid, user_handle, file_data.len()
+        user_uuid,
+        user_handle,
+        file_data.len()
     );
 
     // multipart form 생성
     let form = multipart::Form::new()
         .text("user_uuid", user_uuid.to_string())
         .text("user_handle", user_handle.to_string())
-        .part("file", multipart::Part::bytes(file_data)
-            .mime_str(content_type)?
-            .file_name("banner"));
+        .part(
+            "file",
+            multipart::Part::bytes(file_data)
+                .mime_str(content_type)?
+                .file_name("banner"),
+        );
 
     let response = http_client
         .post(&format!("{}/tasks/banner/upload", task_server_url))
@@ -143,7 +159,10 @@ pub async fn queue_user_banner_upload(
 
     if !response.status().is_success() {
         let status = response.status();
-        let error_text = response.text().await.unwrap_or_else(|_| "Unknown error".to_string());
+        let error_text = response
+            .text()
+            .await
+            .unwrap_or_else(|_| "Unknown error".to_string());
         return Err(format!("Task queue request failed: {} - {}", status, error_text).into());
     }
 

@@ -1,5 +1,5 @@
-use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
 use crate::service::error::errors::Errors;
+use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
 
 pub async fn repository_revoke_refresh_token<C>(
     conn: &C,
@@ -11,7 +11,8 @@ pub async fn repository_revoke_refresh_token<C>(
 where
     C: ConnectionTrait + TransactionTrait,
 {
-    let mut revoke_model: crate::entity::user_refresh_tokens::ActiveModel = refresh_token_model.into();
+    let mut revoke_model: crate::entity::user_refresh_tokens::ActiveModel =
+        refresh_token_model.into();
     revoke_model.revoked_at = Set(Some(revoked_at));
     revoke_model.ip_address = Set(ip_address);
     revoke_model.user_agent = Set(user_agent);

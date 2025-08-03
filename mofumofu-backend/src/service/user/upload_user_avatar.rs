@@ -1,18 +1,18 @@
+use crate::repository::user::get_user_by_uuid::repository_get_user_by_uuid;
 use crate::service::error::errors::Errors;
-use crate::utils::profile_task_client::queue_user_avatar_upload;
+use crate::tasks_bridge::profile_client::queue_user_avatar_upload;
 use axum::extract::Multipart;
 use reqwest::Client;
 use sea_orm::ConnectionTrait;
 use tracing::{error, info, warn};
 use uuid::Uuid;
-use crate::repository::user::get_user_by_uuid::repository_get_user_by_uuid;
 
 pub async fn service_upload_user_avatar<C>(
     conn: &C,
     http_client: &Client,
     user_uuid: &Uuid,
     mut multipart: Multipart,
-) -> Result<(), Errors> 
+) -> Result<(), Errors>
 where
     C: ConnectionTrait,
 {
@@ -64,7 +64,9 @@ where
     }
 
     if file_data.is_empty() {
-        return Err(Errors::BadRequestError("Empty file not allowed".to_string()));
+        return Err(Errors::BadRequestError(
+            "Empty file not allowed".to_string(),
+        ));
     }
 
     // Content-Type 설정 (기본값: image/jpeg)

@@ -10,7 +10,7 @@ use oauth2::{
     AccessToken, Client as OauthClient, EndpointNotSet, EndpointSet, StandardRevocableToken,
 };
 use reqwest::Client as ReqwestClient;
-use tracing::{error};
+use tracing::error;
 
 const GOOGLE_USERINFO_URL: &str = "https://www.googleapis.com/oauth2/v3/userinfo";
 const GOOGLE_AUTH_URL: &str = "https://accounts.google.com/o/oauth2/v2/auth";

@@ -46,7 +46,10 @@ pub async fn exchange_github_code(code: &str) -> Result<AccessToken, Errors> {
     exchange_oauth_code(client, code, "GitHub").await
 }
 
-pub async fn get_github_user_info(http_client: &ReqwestClient, access_token: &AccessToken) -> Result<GithubUserInfo, Errors> {
+pub async fn get_github_user_info(
+    http_client: &ReqwestClient,
+    access_token: &AccessToken,
+) -> Result<GithubUserInfo, Errors> {
     let response = http_client
         .get(GITHUB_USERINFO_URL)
         .bearer_auth(access_token.secret())

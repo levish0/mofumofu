@@ -20,8 +20,8 @@ mod middleware;
 mod repository;
 mod service;
 mod state;
-mod utils;
 mod tasks_bridge;
+mod utils;
 
 pub async fn run_server() -> anyhow::Result<()> {
     let conn = establish_connection().await;

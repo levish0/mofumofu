@@ -1,6 +1,7 @@
 use crate::dto::auth::request::login::AuthLoginRequest;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
 use crate::entity::user_refresh_tokens::ActiveModel as RefreshTokenActiveModel;
+use crate::repository::auth::create_refresh_token::repository_create_refresh_token;
 use crate::repository::user::find_user_by_handle::repository_find_user_by_handle;
 use crate::service::auth::jwt::{create_jwt_access_token, create_jwt_refresh_token};
 use crate::service::error::errors::Errors;
@@ -8,7 +9,6 @@ use crate::utils::crypto::verify_password;
 use anyhow::Result;
 use sea_orm::{ConnectionTrait, Set, TransactionTrait};
 use tracing::error;
-use crate::repository::auth::create_refresh_token::repository_create_refresh_token;
 
 pub async fn service_sign_in<C>(
     conn: &C,
@@ -32,7 +32,7 @@ where
         error!("Failed to create access token: {:?}", e);
         Errors::TokenCreationError(e.to_string())
     })?;
-    
+
     let refresh_token = create_jwt_refresh_token(&user.id).map_err(|e| {
         error!("Failed to create refresh token: {:?}", e);
         Errors::TokenCreationError(e.to_string())

@@ -19,7 +19,7 @@ class TaskResponse(BaseModel):
     status: str
     message: str
 
-@router.post("/upload-profile-image", response_model=TaskResponse)
+@router.post("/upload-avatar", response_model=TaskResponse)
 async def upload_oauth_profile_image(request: ProfileImageOauthUploadRequest):
     """
     Google OAuth 프로필 이미지를 R2에 업로드하는 태스크를 실행
@@ -40,7 +40,7 @@ async def upload_oauth_profile_image(request: ProfileImageOauthUploadRequest):
         logger.error(f"OAuth 프로필 이미지 업로드 태스크 시작 실패: {str(e)}")
         raise HTTPException(status_code=500, detail=f"태스크 시작 실패: {str(e)}")
 
-@router.delete("/delete-profile-image", response_model=TaskResponse)
+@router.delete("/delete-avatar", response_model=TaskResponse)
 async def delete_oauth_profile_image(request: ProfileImageDeleteRequest):
     """
     OAuth 프로필 이미지를 R2에서 삭제하는 태스크를 실행

@@ -4,6 +4,8 @@ use crate::dto::follow::request::create::CreateFollowRequest;
 use crate::dto::follow::request::delete::DeleteFollowRequest;
 use crate::dto::follow::response::follow_list::FollowListResponse;
 use crate::dto::post::request::create::CreatePostRequest;
+use crate::dto::user::request::avatar_image::ProfileAvatarForm;
+use crate::dto::user::request::banner_image::ProfileBannerForm;
 use crate::dto::user::request::create::CreateUserRequest;
 use crate::dto::user::request::get_profile::GetUserProfileRequest;
 use crate::dto::user::request::update_profile::UpdateProfileRequest;
@@ -27,8 +29,8 @@ use utoipa::{
         crate::api::v0::routes::user::create_user::create_user,
         crate::api::v0::routes::user::get_profile::get_profile,
         crate::api::v0::routes::user::update_profile::update_profile,
-        crate::api::v0::routes::user::upload_profile_image::upload_profile_image,
-        crate::api::v0::routes::user::upload_banner_image::upload_banner_image,
+        crate::api::v0::routes::user::upload_avatar::upload_avatar,
+        crate::api::v0::routes::user::upload_banner::upload_banner,
         crate::api::v0::routes::post::post::create_post,
         crate::api::v0::routes::follow::create_follow::api_create_follow,
         crate::api::v0::routes::follow::delete_follow::api_delete_follow,
@@ -48,8 +50,8 @@ use utoipa::{
             UpdateProfileRequest,
             UserInfoResponse,
             ErrorResponse,
-            crate::api::v0::routes::user::upload_profile_image::ProfileImageForm,
-            crate::api::v0::routes::user::upload_banner_image::BannerImageForm
+            ProfileAvatarForm,
+            ProfileBannerForm,
         )
     ),
     tags(
