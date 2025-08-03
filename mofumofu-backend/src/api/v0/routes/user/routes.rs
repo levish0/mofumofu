@@ -25,7 +25,7 @@ pub fn user_routes() -> Router<AppState> {
         )
         // 이미지 업로드 API (8MB 제한)
         .route(
-            "/user/profile/image",
+            "/user/profile/avatar",
             post(upload_avatar)
                 .layer(DefaultBodyLimit::max(8 * 1024 * 1024)) // 8MB
                 .route_layer(axum::middleware::from_fn(access_jwt_auth)),

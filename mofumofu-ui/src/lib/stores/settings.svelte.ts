@@ -1,4 +1,4 @@
-import { updateProfile } from '$lib/api/user/userApi';
+import { updateProfile, uploadAvatar, uploadBanner, getMyProfile } from '$lib/api/user/userApi';
 import type { UpdateProfileRequest } from '$lib/api/user/types';
 import { personalInfoSchema } from '$lib/schemas/personal-info';
 import { safeParse } from 'valibot';
@@ -266,7 +266,7 @@ class SettingsStore {
 			account: this.state.account,
 			writing: this.state.writing
 		};
-		
+
 		const originalSettings = {
 			personal: this.originalState.personal,
 			display: this.originalState.display,
@@ -275,7 +275,7 @@ class SettingsStore {
 			account: this.originalState.account,
 			writing: this.originalState.writing
 		};
-		
+
 		this.state.hasChanges = JSON.stringify(currentSettings) !== JSON.stringify(originalSettings);
 	}
 
@@ -289,7 +289,9 @@ class SettingsStore {
 			current.handle !== original.handle ||
 			current.name !== original.name ||
 			current.profileImage !== original.profileImage ||
-			current.bannerImage !== original.bannerImage
+			current.bannerImage !== original.bannerImage ||
+			current.profileImageFile !== null ||
+			current.bannerImageFile !== null
 		);
 	}
 
@@ -307,24 +309,61 @@ class SettingsStore {
 			}
 
 			// Save personal info using the profile API
-			if (this.hasPersonalChanges()) {
+			if (this.hasPersonalChanges() || (this.state.account.password && this.state.account.password.trim() !== '')) {
+				// Upload profile image if file exists
+				if (this.state.personal.profileImageFile) {
+					try {
+						await uploadAvatar(this.state.personal.profileImageFile as File);
+					} catch (error) {
+						console.error('Profile image upload failed:', error);
+						this.state.errors = { general: 'Failed to upload profile image.' };
+						return { success: false, error: 'Profile image upload failed' };
+					}
+				}
+
+				// Upload banner image if file exists
+				if (this.state.personal.bannerImageFile) {
+					try {
+						await uploadBanner(this.state.personal.bannerImageFile as File);
+					} catch (error) {
+						console.error('Banner image upload failed:', error);
+						this.state.errors = { general: 'Failed to upload banner image.' };
+						return { success: false, error: 'Banner image upload failed' };
+					}
+				}
+
+				// Update basic profile info (handle, name, password)
 				const personalData: UpdateProfileRequest = {
 					handle: this.state.personal.handle || null,
-					name: this.state.personal.name || null,
-					profile_image: this.state.personal.profileImage,
-					banner_image: this.state.personal.bannerImage
+					name: this.state.personal.name || null
 				};
 
-				const updatedProfile = await updateProfile(personalData);
+				// Add password if it has changed
+				if (this.state.account.password && this.state.account.password.trim() !== '') {
+					personalData.password = this.state.account.password;
+				}
+
+				await updateProfile(personalData);
+
+				// Fetch updated profile to get latest image URLs after upload
+				const updatedProfile = await getMyProfile();
 
 				// Update the personal info with the response from the API
+				// Keep the current blob URLs if they exist, otherwise use server URLs
 				this.state.personal = {
 					...this.state.personal,
 					handle: updatedProfile.handle,
 					name: updatedProfile.name,
-					profileImage: updatedProfile.profile_image || null,
-					bannerImage: updatedProfile.banner_image || null
+					profileImage: this.state.personal.profileImage || updatedProfile.profile_image || null,
+					bannerImage: this.state.personal.bannerImage || updatedProfile.banner_image || null,
+					profileImageFile: null, // Clear file after successful upload
+					bannerImageFile: null // Clear file after successful upload
 				};
+
+				// Clear password after successful update
+				if (this.state.account.password && this.state.account.password.trim() !== '') {
+					this.state.account.password = '';
+				}
 			}
 
 			// TODO: API calls to save other sections

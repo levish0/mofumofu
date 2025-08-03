@@ -33,3 +33,37 @@ export async function updateProfile(data: UpdateProfileRequest): Promise<UserInf
 		throw error;
 	}
 }
+
+export async function uploadAvatar(file: File): Promise<void> {
+	try {
+		const formData = new FormData();
+		formData.append('file', file);
+
+		await api.post('v0/user/profile/avatar', {
+			body: formData,
+			headers: {
+				'Content-Type': undefined // Remove default Content-Type header
+			}
+		});
+	} catch (error) {
+		console.error('Avatar upload failed:', error);
+		throw error;
+	}
+}
+
+export async function uploadBanner(file: File): Promise<void> {
+	try {
+		const formData = new FormData();
+		formData.append('file', file);
+
+		await api.post('v0/user/profile/banner', {
+			body: formData,
+			headers: {
+				'Content-Type': undefined // Remove default Content-Type header
+			}
+		});
+	} catch (error) {
+		console.error('Banner upload failed:', error);
+		throw error;
+	}
+}

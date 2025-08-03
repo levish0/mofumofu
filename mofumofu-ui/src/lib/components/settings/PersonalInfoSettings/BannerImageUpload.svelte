@@ -9,9 +9,12 @@
 	}
 
 	let { bannerImage, onUpdate }: Props = $props();
+	
+	// No cache-busting needed for blob URLs since they're already unique
 
 	let showCrop = $state(false);
 	let tempImageSrc = $state('');
+	let imageLoading = $state(true);
 
 	const { cropImage, cleanupTempImage, handleFileRead } = useImageCrop();
 
@@ -55,14 +58,41 @@
 		cleanupTempImage(tempImageSrc);
 		tempImageSrc = '';
 	}
+
+	function handleImageLoad() {
+		imageLoading = false;
+	}
+
+	function handleImageError() {
+		imageLoading = false;
+	}
+
+	// Reset loading state when image URL changes (only for non-blob URLs)
+	$effect(() => {
+		if (bannerImage && !bannerImage.startsWith('blob:')) {
+			imageLoading = true;
+		} else if (bannerImage && bannerImage.startsWith('blob:')) {
+			imageLoading = false; // Blob URLs load instantly
+		}
+	});
 </script>
 
 <div class="space-y-4">
 	<h2 class="text-2xl font-semibold">Banner Image</h2>
 	<div class="group relative transition-all">
-		<div class="bg-mofu-dark-800 aspect-[4/1] w-full overflow-hidden rounded-lg group-hover:opacity-75">
+		<div class="bg-mofu-dark-800 aspect-[4/1] w-full overflow-hidden rounded-lg group-hover:opacity-75 relative">
 			{#if bannerImage}
-				<img src={bannerImage} alt="Banner preview" class="h-full w-full object-cover" />
+				<!-- Skeleton shimmer while loading (only for server URLs) -->
+				{#if imageLoading && !bannerImage.startsWith('blob:')}
+					<div class="absolute inset-0 shimmer rounded-lg"></div>
+				{/if}
+				<img 
+					src={bannerImage} 
+					alt="Banner preview" 
+					class="h-full w-full object-cover {imageLoading && !bannerImage.startsWith('blob:') ? 'opacity-0' : 'opacity-100'} transition-opacity duration-200"
+					onload={handleImageLoad}
+					onerror={handleImageError}
+				/>
 				<label
 					for="banner-upload"
 					class="dark:text-mofu-dark-300 absolute inset-0 flex cursor-pointer items-center justify-center hover:text-gray-300"

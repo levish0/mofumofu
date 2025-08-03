@@ -1,4 +1,4 @@
-from fastapi import APIRouter, BackgroundTasks
+from fastapi import APIRouter
 from celery.result import AsyncResult
 from app.core.celery_app import celery_app
 from app.tasks.token_tasks import cleanup_expired_refresh_tokens

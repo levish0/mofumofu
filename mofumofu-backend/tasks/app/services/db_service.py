@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, select, update, delete, text
+from sqlalchemy import create_engine, select, update, text
 from sqlalchemy.orm import sessionmaker, Session
 from app.core.config import settings
 from app.models.user import User
@@ -157,6 +157,42 @@ class DatabaseService:
             except Exception as e:
                 logger.error(f"사용자 조회 실패: {str(e)}")
                 return None
+
+    def update_user_banner_image_by_uuid(self, user_uuid: str, banner_image_url: Optional[str]) -> bool:
+        """
+        사용자의 배너 이미지 URL을 UUID로 업데이트합니다.
+        
+        Args:
+            user_uuid: 사용자 UUID
+            banner_image_url: 새로운 배너 이미지 URL (None이면 배너 이미지 제거)
+            
+        Returns:
+            bool: 업데이트 성공 여부
+        """
+        with self.session_factory() as session:
+            try:
+                # UUID로 사용자 조회 후 banner_image 업데이트
+                stmt = (
+                    update(User)
+                    .where(User.id == user_uuid)
+                    .values(banner_image=banner_image_url)
+                )
+                
+                result = session.execute(stmt)
+                session.commit()
+                
+                if result.rowcount > 0:
+                    action = "제거" if banner_image_url is None else "업데이트"
+                    logger.info(f"사용자 배너 이미지 {action} 성공: uuid={user_uuid}, url={banner_image_url}")
+                    return True
+                else:
+                    logger.warning(f"사용자를 찾을 수 없음: uuid={user_uuid}")
+                    return False
+                    
+            except Exception as e:
+                logger.error(f"배너 이미지 업데이트 실패: {str(e)}")
+                session.rollback()
+                return False
     
     def cleanup_expired_refresh_tokens(self, current_time: datetime) -> dict:
         """

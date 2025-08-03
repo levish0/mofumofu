@@ -21,8 +21,6 @@ where
     let update_fields = UpdateUserFields {
         name: payload.name,
         handle: payload.handle,
-        profile_image: Some(payload.profile_image),
-        banner_image: Some(payload.banner_image),
         ..Default::default() // 나머지 필드는 None
     };
 

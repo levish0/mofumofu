@@ -22,9 +22,4 @@ pub struct UpdateProfileRequest {
         message = "Password must be between 6 and 20 characters."
     ))]
     pub password: Option<String>,
-    #[validate(url(message = "Profile image must be a valid URL"))]
-    pub profile_image: Option<String>,
-
-    #[validate(url(message = "Banner image must be a valid URL"))]
-    pub banner_image: Option<String>,
 }

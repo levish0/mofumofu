@@ -228,9 +228,7 @@ async def _upload_user_file(user_uuid: str, user_handle: str, file_data: bytes, 
     if file_type == "profile":
         db_success = db_service.update_user_profile_image_by_uuid(user_uuid, public_url)
     else:  # banner
-        # 배너 이미지 업데이트 로직 (DB 서비스에 추가 필요)
-        logger.info(f"배너 이미지 URL 업데이트는 아직 구현되지 않음: {public_url}")
-        db_success = True  # 임시로 성공으로 처리
+        db_success = db_service.update_user_banner_image_by_uuid(user_uuid, public_url)
     
     if db_success:
         logger.info(f"{file_type} 이미지 업로드 및 DB 업데이트 완료: {public_url}")
