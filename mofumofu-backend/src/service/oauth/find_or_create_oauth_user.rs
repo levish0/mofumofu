@@ -9,6 +9,12 @@ use crate::service::error::errors::Errors;
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use tracing::{error, info};
 
+#[derive(Debug)]
+pub struct OAuthUserResult {
+    pub user: UserModel,
+    pub is_new_user: bool,
+}
+
 pub async fn service_find_or_create_oauth_user<C>(
     txn: &C,
     email: &str,
@@ -16,7 +22,7 @@ pub async fn service_find_or_create_oauth_user<C>(
     provider_id: &str,
     provider: OAuthProvider,
     profile_image: Option<String>,
-) -> Result<UserModel, Errors>
+) -> Result<OAuthUserResult, Errors>
 where
     C: ConnectionTrait + TransactionTrait,
 {
@@ -27,7 +33,10 @@ where
             "Found existing user via OAuth: {} for provider: {:?}",
             existing_user.email, provider
         );
-        return Ok(existing_user);
+        return Ok(OAuthUserResult {
+            user: existing_user,
+            is_new_user: false,
+        });
     }
 
     // 2. 이메일로 기존 유저 찾기
@@ -40,7 +49,10 @@ where
         // 기존 유저에게 OAuth 연결 추가
         repository_create_oauth_connection(txn, &existing_user.id, provider, provider_id).await?;
 
-        return Ok(existing_user);
+        return Ok(OAuthUserResult {
+            user: existing_user,
+            is_new_user: false,
+        });
     }
     // 3. 새 유저 생성
     let handle = repository_generate_unique_handle(txn).await?;
@@ -61,5 +73,8 @@ where
         created_user.email, created_user.handle, provider, provider_id
     );
 
-    Ok(created_user)
+    Ok(OAuthUserResult {
+        user: created_user,
+        is_new_user: true,
+    })
 }

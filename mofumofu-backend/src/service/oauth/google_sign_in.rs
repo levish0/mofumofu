@@ -4,7 +4,7 @@ use crate::entity::common::OAuthProvider;
 use crate::entity::user_refresh_tokens::ActiveModel as RefreshTokenActiveModel;
 use crate::service::auth::jwt::{create_jwt_access_token, create_jwt_refresh_token};
 use crate::service::error::errors::Errors;
-use crate::service::oauth::find_or_create_oauth_user::service_find_or_create_oauth_user;
+use crate::service::oauth::find_or_create_oauth_user::{service_find_or_create_oauth_user, OAuthUserResult};
 use crate::service::oauth::provider::google::client::{exchange_google_code, get_google_user_info};
 use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
 use tracing::{error, info, warn};
@@ -28,7 +28,7 @@ where
     let google_user = get_google_user_info(http_client, r2_client, &access_token).await?;
 
     // 3. 유저 찾기 또는 생성
-    let user = service_find_or_create_oauth_user(
+    let oauth_result = service_find_or_create_oauth_user(
         txn,
         &google_user.email,
         &google_user.name,
@@ -38,29 +38,33 @@ where
     )
     .await?;
 
-    // 4. 프로필 이미지 처리 - Celery 큐에 비동기로 등록
-    match queue_profile_image_upload(http_client, &user.handle, &google_user.picture).await {
-        Ok(task_id) => {
-            info!("Profile image upload task queued for user {}: task_id={}", user.id, task_id);
+    // 4. 프로필 이미지 처리 - 새로 생성된 유저에게만 적용
+    if oauth_result.is_new_user {
+        match queue_profile_image_upload(http_client, &oauth_result.user.handle, &google_user.picture).await {
+            Ok(task_id) => {
+                info!("Profile image upload task queued for new user {}: task_id={}", oauth_result.user.id, task_id);
+            }
+            Err(e) => {
+                warn!("Failed to queue profile image upload task for new user {}: {:?}", oauth_result.user.id, e);
+            }
         }
-        Err(e) => {
-            warn!("Failed to queue profile image upload task for user {}: {:?}", user.id, e);
-        }
+    } else {
+        info!("Skipping profile image upload for existing user {}", oauth_result.user.id);
     }
 
     // 5. JWT 토큰 생성
-    let access_token = create_jwt_access_token(&user.id).map_err(|e| {
+    let access_token = create_jwt_access_token(&oauth_result.user.id).map_err(|e| {
         error!("Failed to create access token: {:?}", e);
         Errors::TokenCreationError(e.to_string())
     })?;
-    let refresh_token = create_jwt_refresh_token(&user.id).map_err(|e| {
+    let refresh_token = create_jwt_refresh_token(&oauth_result.user.id).map_err(|e| {
         error!("Failed to create refresh token: {:?}", e);
         Errors::TokenCreationError(e.to_string())
     })?;
 
     let refresh_model = RefreshTokenActiveModel {
         id: Set(refresh_token.jti),
-        user_id: Set(user.id),
+        user_id: Set(oauth_result.user.id),
         ip_address: Set(ip_address),
         user_agent: Set(user_agent),
         refresh_token: Set(refresh_token.token.clone()),
@@ -76,7 +80,7 @@ where
 
     info!(
         "Successfully logged in user via Google OAuth: {}",
-        user.email
+        oauth_result.user.email
     );
 
     Ok(AuthJWTResponse {
