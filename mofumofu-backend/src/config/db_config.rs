@@ -152,7 +152,8 @@ static CONFIG: LazyLock<DbConfig> = LazyLock::new(|| {
         r2_account_id: env::var("R2_ACCOUNT_ID").expect("R2_ACCOUNT_ID must be set"),
         r2_bucket_name: env::var("R2_BUCKET_NAME").expect("R2_BUCKET_NAME must be set"),
         r2_access_key_id: env::var("R2_ACCESS_KEY_ID").expect("R2_ACCESS_KEY_ID must be set"),
-        r2_secret_access_key: env::var("R2_SECRET_ACCESS_KEY").expect("R2_SECRET_ACCESS_KEY must be set"),
+        r2_secret_access_key: env::var("R2_SECRET_ACCESS_KEY")
+            .expect("R2_SECRET_ACCESS_KEY must be set"),
 
         db_user: env::var("POSTGRES_USER").expect("POSTGRES_USER must be set"),
         db_password: env::var("POSTGRES_PASSWORD").expect("POSTGRES_PASSWORD must be set"),
@@ -194,11 +195,11 @@ static CONFIG: LazyLock<DbConfig> = LazyLock::new(|| {
         */
         server_host: env::var("HOST").expect("HOST must be set in .env file"),
         server_port: env::var("PORT").expect("PORT must be set in .env file"),
-        
+
         // Task Server
         task_server_host: env::var("TASK_SERVER_HOST").unwrap_or_else(|_| "127.0.0.1".to_string()),
         task_server_port: env::var("TASK_SERVER_PORT").unwrap_or_else(|_| "7000".to_string()),
-        
+
         cors_allowed_origins: cors_origins,
         cors_allowed_headers: cors_headers,
         cors_max_age: env::var("CORS_MAX_AGE").ok().and_then(|v| v.parse().ok()),

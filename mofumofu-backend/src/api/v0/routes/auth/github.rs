@@ -35,8 +35,14 @@ pub async fn github_sign_in(
     let ip_str = extract_ip_address(&headers, addr);
     let ua_str = extract_user_agent(user_agent);
 
-    let res =
-        service_github_sign_in(&state.conn, &state.http_client, Some(ua_str), Some(ip_str), &payload.code).await?;
+    let res = service_github_sign_in(
+        &state.conn,
+        &state.http_client,
+        Some(ua_str),
+        Some(ip_str),
+        &payload.code,
+    )
+    .await?;
 
     Ok(AuthJWTResponse {
         access_token: res.access_token,

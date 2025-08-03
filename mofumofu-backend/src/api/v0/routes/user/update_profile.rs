@@ -1,13 +1,13 @@
 use crate::dto::auth::internal::access_token::AccessTokenClaims;
+use crate::dto::user::request::update_profile::UpdateProfileRequest;
 use crate::dto::user::response::info::UserInfoResponse;
 use crate::service::error::errors::Errors;
+use crate::service::user::service_update_user_profile;
+use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
 use axum::Extension;
 use axum::extract::State;
 use tracing::info;
-use crate::dto::user::request::update_profile::UpdateProfileRequest;
-use crate::service::user::service_update_user_profile;
-use crate::service::validator::json_validator::ValidatedJson;
 
 #[utoipa::path(
     put,
@@ -30,7 +30,10 @@ pub async fn update_profile(
     Extension(claims): Extension<AccessTokenClaims>,
     ValidatedJson(payload): ValidatedJson<UpdateProfileRequest>,
 ) -> Result<UserInfoResponse, Errors> {
-    info!("Received PUT request to update profile for user: {}", claims.sub);
+    info!(
+        "Received PUT request to update profile for user: {}",
+        claims.sub
+    );
 
     let updated_user = service_update_user_profile(&state.conn, &claims.sub, payload).await?;
 

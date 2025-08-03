@@ -1,8 +1,12 @@
-use crate::entity::users::{ActiveModel as UserActiveModel, Entity as UserEntity, Model as UserModel};
-use crate::service::error::errors::Errors;
-use sea_orm::{ActiveModelTrait, ConnectionTrait, EntityTrait, Set, TransactionTrait, NotSet, ActiveValue};
-use uuid::Uuid;
 use crate::dto::user::internal::update_user::UpdateUserFields;
+use crate::entity::users::{
+    ActiveModel as UserActiveModel, Entity as UserEntity, Model as UserModel,
+};
+use crate::service::error::errors::Errors;
+use sea_orm::{
+    ActiveModelTrait, ActiveValue, ConnectionTrait, EntityTrait, NotSet, Set, TransactionTrait,
+};
+use uuid::Uuid;
 
 pub async fn repository_update_user<C>(
     txn: &C,

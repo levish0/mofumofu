@@ -1,6 +1,8 @@
 use crate::api::v0::routes::routes::api_routes;
 use crate::config::db_config::DbConfig;
+use crate::connection::cloudflare_r2::establish_r2_connection;
 use crate::connection::database::establish_connection;
+use crate::connection::http::create_http_client;
 use crate::middleware::cors::cors_layer;
 use crate::state::AppState;
 use crate::utils::logger::init_tracing;
@@ -8,8 +10,6 @@ use axum::Router;
 use std::net::SocketAddr;
 use tower_http::compression::CompressionLayer;
 use tracing::{error, info};
-use crate::connection::cloudflare_r2::establish_r2_connection;
-use crate::connection::http::create_http_client;
 
 mod api;
 mod config;
@@ -32,7 +32,7 @@ pub async fn run_server() -> anyhow::Result<()> {
         error!("Failed to create HTTP client: {}", e);
         anyhow::anyhow!("HTTP client creation failed: {}", e)
     })?;
-    
+
     let server_url = format!(
         "{}:{}",
         &DbConfig::get().server_host,
@@ -42,7 +42,11 @@ pub async fn run_server() -> anyhow::Result<()> {
         .merge(api_routes())
         .layer(cors_layer())
         .layer(CompressionLayer::new())
-        .with_state(AppState { conn, cloudflare_r2, http_client });
+        .with_state(AppState {
+            conn,
+            cloudflare_r2,
+            http_client,
+        });
 
     info!("Starting server at: {}", server_url);
 

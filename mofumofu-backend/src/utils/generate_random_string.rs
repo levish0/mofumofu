@@ -1,6 +1,5 @@
-use rand::distr::Alphanumeric;
 use rand::Rng;
-
+use rand::distr::Alphanumeric;
 
 pub fn generate_random_string(len: usize) -> String {
     rand::rng()

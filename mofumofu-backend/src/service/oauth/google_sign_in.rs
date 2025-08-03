@@ -1,15 +1,17 @@
-use reqwest::Client;
+use crate::connection::cloudflare_r2::R2Client;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
 use crate::entity::common::OAuthProvider;
 use crate::entity::user_refresh_tokens::ActiveModel as RefreshTokenActiveModel;
 use crate::service::auth::jwt::{create_jwt_access_token, create_jwt_refresh_token};
 use crate::service::error::errors::Errors;
-use crate::service::oauth::find_or_create_oauth_user::{service_find_or_create_oauth_user, OAuthUserResult};
+use crate::service::oauth::find_or_create_oauth_user::{
+    OAuthUserResult, service_find_or_create_oauth_user,
+};
 use crate::service::oauth::provider::google::client::{exchange_google_code, get_google_user_info};
+use crate::utils::profile_task_client::queue_profile_image_upload;
+use reqwest::Client;
 use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
 use tracing::{error, info, warn};
-use crate::connection::cloudflare_r2::R2Client;
-use crate::utils::profile_task_client::queue_profile_image_upload;
 
 pub async fn service_google_sign_in<C>(
     txn: &C,
@@ -40,16 +42,31 @@ where
 
     // 4. 프로필 이미지 처리 - 새로 생성된 유저에게만 적용
     if oauth_result.is_new_user {
-        match queue_profile_image_upload(http_client, &oauth_result.user.handle, &google_user.picture).await {
+        match queue_profile_image_upload(
+            http_client,
+            &oauth_result.user.handle,
+            &google_user.picture,
+        )
+        .await
+        {
             Ok(task_id) => {
-                info!("Profile image upload task queued for new user {}: task_id={}", oauth_result.user.id, task_id);
+                info!(
+                    "Profile image upload task queued for new user {}: task_id={}",
+                    oauth_result.user.id, task_id
+                );
             }
             Err(e) => {
-                warn!("Failed to queue profile image upload task for new user {}: {:?}", oauth_result.user.id, e);
+                warn!(
+                    "Failed to queue profile image upload task for new user {}: {:?}",
+                    oauth_result.user.id, e
+                );
             }
         }
     } else {
-        info!("Skipping profile image upload for existing user {}", oauth_result.user.id);
+        info!(
+            "Skipping profile image upload for existing user {}",
+            oauth_result.user.id
+        );
     }
 
     // 5. JWT 토큰 생성

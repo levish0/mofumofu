@@ -1,11 +1,11 @@
 use crate::dto::user::request::update_profile::UpdateProfileRequest;
 use crate::dto::user::response::info::UserInfoResponse;
 
+use crate::dto::user::internal::update_user::UpdateUserFields;
+use crate::repository::user::update_user::repository_update_user;
 use crate::service::error::errors::Errors;
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use uuid::Uuid;
-use crate::dto::user::internal::update_user::UpdateUserFields;
-use crate::repository::user::update_user::{repository_update_user};
 
 pub async fn service_update_user_profile<C>(
     conn: &C,
