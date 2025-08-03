@@ -6,9 +6,6 @@ WORKDIR /app
 
 # 시스템 의존성 설치 (PostgreSQL 클라이언트 라이브러리 포함)
 RUN apt-get update && apt-get install -y \
-    gcc \
-    g++ \
-    libpq-dev \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
@@ -23,7 +20,7 @@ RUN uv sync --frozen
 
 # 애플리케이션 코드 복사
 COPY app/ ./app/
-COPY start_worker.py monitor_celery.py ./
+COPY start_worker.py start_beat.py monitor_celery.py ./
 
 # 환경 변수 설정
 ENV PYTHONPATH=/app

@@ -74,54 +74,76 @@ python monitor_celery.py
 
 ### Using Docker Compose (Recommended)
 
-1. **Copy environment file:**
+This project is designed to work with the main Rust backend. The complete deployment involves two docker-compose files:
+
+1. **Tasks services** (this directory)
+2. **Main Rust backend** (root directory)
+
+#### Step 1: Configure Environment
+The tasks system uses the main project's `docker.env` file:
 ```bash
-cp .env.example .env
+# Make sure docker.env exists in the root directory
+# ../docker.env should contain all required environment variables
 ```
 
-2. **Edit .env file with your actual values:**
+#### Step 2: Start Tasks Services First
 ```bash
-# Required: PostgreSQL connection (external database)
-POSTGRES_HOST=your_postgres_host
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=your_secure_password
-POSTGRES_NAME=mofumofu_db
-
-# Required: Fill in your Cloudflare R2 credentials
-R2_ACCOUNT_ID=your_account_id
-R2_ACCESS_KEY_ID=your_access_key
-R2_SECRET_ACCESS_KEY=your_secret_key
-R2_BUCKET_NAME=your_bucket_name
-R2_PUBLIC_DOMAIN=https://your-public-domain.r2.dev
-```
-
-3. **Start all services:**
-```bash
+# In the tasks/ directory
 docker-compose up -d
 ```
 
-4. **View logs:**
-```bash
-# All services
-docker-compose logs -f
-
-# Specific service
-docker-compose logs -f celery-worker
-docker-compose logs -f tasks-api
-```
-
-5. **Stop services:**
-```bash
-docker-compose down
-```
-
-### Services included:
+This starts:
+- **redis-celery**: Message broker (port 6380) with persistent volume
 - **tasks-api**: FastAPI server (port 7000)
 - **celery-worker**: Background task processor (2 replicas)
-- **redis-celery**: Celery message broker (port 6380)
+- **celery-beat**: Periodic task scheduler
 - **flower**: Celery monitoring web UI (port 5555)
 
-**Note**: PostgreSQL is expected to be running externally. Configure your database connection in the `.env` file.
+#### Step 3: Start Main Backend
+```bash
+# In the root directory
+cd ..
+docker-compose up -d
+```
+
+The main Rust backend will connect to the tasks network automatically.
+
+#### Monitoring and Logs
+```bash
+# View all task service logs
+docker-compose logs -f
+
+# View specific service logs
+docker-compose logs -f celery-worker
+docker-compose logs -f tasks-api
+docker-compose logs -f redis-celery
+
+# Monitor Celery tasks via Flower
+# Open http://localhost:5555 in your browser
+```
+
+#### Stopping Services
+```bash
+# Stop tasks services
+docker-compose down
+
+# Stop main backend (from root directory)
+cd .. && docker-compose down
+```
+
+### Services Overview:
+- **redis-celery**: Celery message broker with persistent storage
+- **tasks-api**: FastAPI server providing task management API
+- **celery-worker**: Background task processors (2 replicas for load balancing)
+- **celery-beat**: Handles scheduled/periodic tasks
+- **flower**: Web-based monitoring interface for Celery
+
+### Environment Configuration:
+All services use `../docker.env` file which should contain:
+- PostgreSQL connection details
+- Cloudflare R2 credentials
+- Celery broker settings (overridden for internal network communication)
+- Other application settings
 
 ### Manual Docker Build
 
