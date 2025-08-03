@@ -94,7 +94,7 @@ async def _download_and_upload_image(user_id: str, image_url: str) -> str:
         
         # 데이터베이스에 프로필 이미지 URL 업데이트
         logger.info(f"데이터베이스에 프로필 이미지 URL 업데이트 중 (user_id: {user_id})")
-        db_success = await db_service.update_user_profile_image(user_id, public_url)
+        db_success = db_service.update_user_profile_image(user_id, public_url)
         
         if db_success:
             logger.info(f"프로필 이미지 업로드 및 DB 업데이트 완료: {public_url}")
@@ -121,7 +121,7 @@ def delete_profile_image_task(user_id: str):
         r2_result = asyncio.run(r2_client.delete_file(r2_key))
         
         # 데이터베이스에서 프로필 이미지 URL 제거 (NULL로 설정)
-        db_result = asyncio.run(db_service.update_user_profile_image(user_id, None))
+        db_result = db_service.update_user_profile_image(user_id, None)
         
         if r2_result and db_result:
             return {

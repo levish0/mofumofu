@@ -34,19 +34,17 @@ where
         &google_user.name,
         &google_user.sub,
         OAuthProvider::Google,
-        google_user.picture.clone(),
+        Some(google_user.picture.clone()),
     )
     .await?;
 
     // 4. 프로필 이미지 처리 - Celery 큐에 비동기로 등록
-    if let Some(google_picture_url) = &google_user.picture {
-        match queue_profile_image_upload(http_client, &user.handle, google_picture_url).await {
-            Ok(task_id) => {
-                info!("Profile image upload task queued for user {}: task_id={}", user.id, task_id);
-            }
-            Err(e) => {
-                warn!("Failed to queue profile image upload task for user {}: {:?}", user.id, e);
-            }
+    match queue_profile_image_upload(http_client, &user.handle, &google_user.picture).await {
+        Ok(task_id) => {
+            info!("Profile image upload task queued for user {}: task_id={}", user.id, task_id);
+        }
+        Err(e) => {
+            warn!("Failed to queue profile image upload task for user {}: {:?}", user.id, e);
         }
     }
 

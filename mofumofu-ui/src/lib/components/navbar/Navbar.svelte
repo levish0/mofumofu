@@ -18,6 +18,7 @@
 	import { signOut } from '$lib/api/auth/authApi';
 	import { fly, scale } from 'svelte/transition';
 	import { Button } from '../ui/button';
+	import { goto, invalidateAll } from '$app/navigation';
 
 	let { isVisible, isAtTop } = $props();
 
@@ -54,6 +55,8 @@
 			authStore.clearToken();
 			userInfo = null;
 			isDropdownOpen = false;
+			await invalidateAll();
+			goto('/');
 		} catch (error) {
 			console.error('Logout failed:', error);
 			return;

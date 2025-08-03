@@ -16,22 +16,6 @@ struct TaskResponse {
     message: String,
 }
 
-#[derive(Deserialize)]
-struct TaskStatusResponse {
-    task_id: String,
-    status: String,
-    result: Option<serde_json::Value>,
-    error: Option<String>,
-}
-
-#[derive(Deserialize)]
-struct TaskResult {
-    status: String,
-    public_url: Option<String>,
-    message: Option<String>,
-    error: Option<String>,
-}
-
 /// 비동기적으로 프로필 이미지 업로드를 큐에 등록만 하고 즉시 반환
 /// (실제 업로드는 백그라운드에서 처리되고, 재시도는 Celery가 담당)
 pub async fn queue_profile_image_upload(

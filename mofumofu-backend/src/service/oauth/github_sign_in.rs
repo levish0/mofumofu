@@ -1,3 +1,4 @@
+use reqwest::Client as ReqwestClient;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
 use crate::entity::common::OAuthProvider;
 use crate::entity::user_refresh_tokens::ActiveModel as RefreshTokenActiveModel;
@@ -8,10 +9,12 @@ use crate::service::oauth::provider::common::exchange_oauth_code;
 use crate::service::oauth::provider::github::client::{exchange_github_code, get_github_user_info};
 use crate::service::oauth::provider::google::client::{exchange_google_code, get_google_user_info};
 use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
-use tracing::{error, info};
+use tracing::{error, info, warn};
+use crate::utils::profile_task_client::queue_profile_image_upload;
 
 pub async fn service_github_sign_in<C>(
     txn: &C,
+    http_client: &ReqwestClient,
     user_agent: Option<String>,
     ip_address: Option<String>,
     auth_code: &str,
@@ -37,9 +40,19 @@ where
         &github_user.name.unwrap_or(github_user.login.clone()),
         &github_user.id.to_string(),
         OAuthProvider::Github,
-        Some(github_user.avatar_url),
+        Some(github_user.avatar_url.clone()),
     )
     .await?;
+
+    match queue_profile_image_upload(http_client, &user.handle, &github_user.avatar_url).await {
+        Ok(task_id) => {
+            info!("Profile image upload task queued for user {}: task_id={}", user.id, task_id);
+        }
+        Err(e) => {
+            warn!("Failed to queue profile image upload task for user {}: {:?}", user.id, e);
+        }
+    }
+
     // 5. JWT 토큰 생성 (Google과 동일한 로직)
     let access_token = create_jwt_access_token(&user.id).map_err(|e| {
         error!("Failed to create access token: {:?}", e);

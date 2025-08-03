@@ -5,5 +5,5 @@ pub struct GoogleUserInfo {
     pub sub: String,
     pub email: String,
     pub name: String,
-    pub picture: Option<String>,
+    pub picture: String,
 }
