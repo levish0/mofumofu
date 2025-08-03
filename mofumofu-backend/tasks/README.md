@@ -26,12 +26,46 @@ The `uv sync` command synchronizes and installs all dependencies specified in `p
 
 ---
 
-## Running the FastAPI Server
+## Starting the Complete System
 
-To start the FastAPI server locally and make it accessible on all network interfaces at port **7000**, use the following command:
+To run the full background task system, you need to start **3 services** in this order:
 
+### 1. Redis Server (required for Celery)
+Make sure Redis is running on your system:
+```bash
+# On Windows (if using Windows Subsystem for Linux)
+sudo service redis-server start
+
+# On macOS (using Homebrew)
+brew services start redis
+
+# On Docker
+docker run -d -p 6379:6379 redis:alpine
+```
+
+### 2. FastAPI Task Server
+Start the FastAPI server that provides task management endpoints:
 ```bash
 uvicorn app.main:app --host 0.0.0.0 --port 7000
+```
+
+### 3. Celery Worker
+Start the Celery worker to process background tasks:
+```bash
+python start_worker.py
+```
+
+### Development Mode
+For development, use FastAPI's auto-reload:
+```bash
+uv run fastapi dev app/main.py
+```
+
+### Monitoring (Optional)
+To monitor Celery tasks with Flower web interface:
+```bash
+python monitor_celery.py
+# Then open http://localhost:5555 in your browser
 ```
 
 ---

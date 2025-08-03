@@ -52,6 +52,10 @@ pub struct DbConfig {
     pub server_host: String,
     pub server_port: String,
 
+    // Task Server
+    pub task_server_host: String,
+    pub task_server_port: String,
+
     pub cors_allowed_origins: Vec<HeaderValue>,
     pub cors_allowed_headers: Vec<HeaderName>,
     pub cors_max_age: Option<u64>,
@@ -190,6 +194,11 @@ static CONFIG: LazyLock<DbConfig> = LazyLock::new(|| {
         */
         server_host: env::var("HOST").expect("HOST must be set in .env file"),
         server_port: env::var("PORT").expect("PORT must be set in .env file"),
+        
+        // Task Server
+        task_server_host: env::var("TASK_SERVER_HOST").unwrap_or_else(|_| "127.0.0.1".to_string()),
+        task_server_port: env::var("TASK_SERVER_PORT").unwrap_or_else(|_| "7000".to_string()),
+        
         cors_allowed_origins: cors_origins,
         cors_allowed_headers: cors_headers,
         cors_max_age: env::var("CORS_MAX_AGE").ok().and_then(|v| v.parse().ok()),

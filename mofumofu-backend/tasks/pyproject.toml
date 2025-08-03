@@ -4,12 +4,19 @@ version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.10"
 dependencies = [
+    "asyncpg>=0.30.0",
     "bcrypt==4.3.0",
+    "boto3>=1.40.1",
+    "celery>=5.5.3",
     "fastapi[standard]>=0.116.1",
+    "flower>=2.0.1",
+    "httpx>=0.28.1",
     "jinja2>=3.1.6",
     "opensearch-py>=3.0.0",
     "passlib[bcrypt]>=1.7.4",
     "pydantic-settings>=2.10.1",
+    "redis>=6.2.0",
+    "sqlalchemy[asyncio]>=2.0.42",
 ]
 
 [tool.uv]

@@ -10,7 +10,7 @@ def custom_generate_unique_id(route: APIRoute) -> str:
 
 
 app = FastAPI(
-    title="textura_tasks",
+    title="mofumofu_tasks",
     openapi_url=f"{settings.API_STR}/openapi.json",
     generate_unique_id_function=custom_generate_unique_id,
 )

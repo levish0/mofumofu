@@ -5,14 +5,11 @@ use crate::entity::user_refresh_tokens::ActiveModel as RefreshTokenActiveModel;
 use crate::service::auth::jwt::{create_jwt_access_token, create_jwt_refresh_token};
 use crate::service::error::errors::Errors;
 use crate::service::oauth::find_or_create_oauth_user::service_find_or_create_oauth_user;
-use crate::service::oauth::provider::common::exchange_oauth_code;
 use crate::service::oauth::provider::google::client::{exchange_google_code, get_google_user_info};
 use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
 use tracing::{error, info, warn};
 use crate::connection::cloudflare_r2::R2Client;
-use crate::dto::user::internal::update_user::UpdateUserFields;
-use crate::repository::user::update_user::repository_update_user;
-use crate::utils::save_user_profile_to_r2::save_user_profile_to_r2;
+use crate::utils::profile_task_client::queue_profile_image_upload;
 
 pub async fn service_google_sign_in<C>(
     txn: &C,
@@ -41,20 +38,14 @@ where
     )
     .await?;
 
-    // 4. 프로필 이미지 처리 및 데이터베이스 업데이트
+    // 4. 프로필 이미지 처리 - Celery 큐에 비동기로 등록
     if let Some(google_picture_url) = &google_user.picture {
-        match save_user_profile_to_r2(http_client, r2_client, &user.handle, google_picture_url).await {
-            Ok(r2_url) => {
-                info!("Profile image saved to R2 for user {}: {}", user.id, r2_url);
-
-                let update_fields = UpdateUserFields {
-                    profile_image: Some(Some(r2_url.clone())),
-                    ..Default::default()
-                };
-                repository_update_user(txn, &user.id, update_fields).await?;
+        match queue_profile_image_upload(http_client, &user.handle, google_picture_url).await {
+            Ok(task_id) => {
+                info!("Profile image upload task queued for user {}: task_id={}", user.id, task_id);
             }
             Err(e) => {
-                warn!("Failed to save profile image to R2 for user {}: {:?}", user.id, e);
+                warn!("Failed to queue profile image upload task for user {}: {:?}", user.id, e);
             }
         }
     }
