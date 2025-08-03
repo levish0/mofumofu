@@ -392,7 +392,20 @@ class SettingsStore {
 	// Reset to original state
 	resetChanges() {
 		if (this.originalState) {
+			// Clean up blob URLs before resetting
+			if (this.state.personal.profileImage && this.state.personal.profileImage.startsWith('blob:')) {
+				URL.revokeObjectURL(this.state.personal.profileImage);
+			}
+			if (this.state.personal.bannerImage && this.state.personal.bannerImage.startsWith('blob:')) {
+				URL.revokeObjectURL(this.state.personal.bannerImage);
+			}
+
 			this.state = { ...this.state, ...JSON.parse(JSON.stringify(this.originalState)) };
+			
+			// Explicitly clear file objects since they're not in originalState
+			this.state.personal.profileImageFile = null;
+			this.state.personal.bannerImageFile = null;
+			
 			this.state.hasChanges = false;
 			this.state.errors = {};
 			this.state.validationErrors = {};
