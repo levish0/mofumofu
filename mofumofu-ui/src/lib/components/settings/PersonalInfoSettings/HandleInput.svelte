@@ -39,11 +39,11 @@
 	function handleInput(e: Event) {
 		const value = (e.target as HTMLInputElement).value;
 		onUpdate(value);
-		
+
 		const error = validateHandle(value);
 		localError = error;
 		onValidationChange(error);
-		
+
 		handleAvailable = null;
 	}
 </script>
@@ -52,11 +52,15 @@
 	<h2 class="text-2xl font-semibold">Handle</h2>
 	<div class="space-y-2">
 		<div class="flex">
-			<span class="dark:bg-mofu-dark-800/50 text-mofu-dark-200 inline-flex items-center rounded-l-md px-3 text-sm">@</span>
+			<span class="dark:bg-mofu-dark-800/50 text-mofu-dark-200 inline-flex items-center rounded-l-md px-3 text-sm"
+				>@</span
+			>
 			<Input
 				id="handle"
 				placeholder="username"
-				class="dark:bg-mofu-dark-800 text-mofu-dark-200 placeholder:text-mofu-dark-300 rounded-l-none rounded-r-none border-r-0 {localError ? 'border-red-500' : ''}"
+				class="dark:bg-mofu-dark-800 text-mofu-dark-200 placeholder:text-mofu-dark-300 rounded-l-none rounded-r-none border-r-0 {localError
+					? 'border-red-500'
+					: ''}"
 				value={handle || ''}
 				oninput={handleInput}
 			/>
@@ -86,9 +90,7 @@
 		{:else if handleAvailable === false}
 			<p class="text-xs text-rose-400">✗ Handle is already taken</p>
 		{:else}
-			<p class="text-xs text-gray-500">
-				Handle must be unique and can only contain letters, numbers, and underscores.
-			</p>
+			<p class="text-xs text-gray-500">Handle must be unique and can only contain letters, numbers, and underscores.</p>
 		{/if}
 	</div>
 </div>

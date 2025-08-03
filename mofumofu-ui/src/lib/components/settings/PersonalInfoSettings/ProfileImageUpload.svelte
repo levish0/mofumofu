@@ -30,9 +30,7 @@
 		target.value = '';
 	}
 
-	async function handleCrop(data: {
-		croppedAreaPixels: { x: number; y: number; width: number; height: number };
-	}) {
+	async function handleCrop(data: { croppedAreaPixels: { x: number; y: number; width: number; height: number } }) {
 		try {
 			const { blob, url } = await cropImage(tempImageSrc, data, {
 				maxFileSizeMB: 5,

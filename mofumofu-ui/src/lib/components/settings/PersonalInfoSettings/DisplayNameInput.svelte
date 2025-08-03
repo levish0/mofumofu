@@ -21,7 +21,7 @@
 	function handleInput(e: Event) {
 		const value = (e.target as HTMLInputElement).value;
 		onUpdate(value);
-		
+
 		const error = validateName(value);
 		localError = error;
 		onValidationChange(error);
@@ -34,7 +34,9 @@
 		<Input
 			id="name"
 			placeholder="Enter your display name"
-			class="dark:bg-mofu-dark-800 text-mofu-dark-200 placeholder:text-mofu-dark-300 {localError ? 'border-red-500' : ''}"
+			class="dark:bg-mofu-dark-800 text-mofu-dark-200 placeholder:text-mofu-dark-300 {localError
+				? 'border-red-500'
+				: ''}"
 			value={name || ''}
 			oninput={handleInput}
 		/>
