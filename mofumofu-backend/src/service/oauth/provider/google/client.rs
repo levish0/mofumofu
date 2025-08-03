@@ -1,3 +1,4 @@
+use std::time::Duration;
 use crate::config::db_config::DbConfig;
 use crate::dto::oauth::internal::google::GoogleUserInfo;
 use crate::service::error::errors::Errors;
@@ -6,11 +7,14 @@ use oauth2::basic::{
     BasicErrorResponse, BasicRevocationErrorResponse, BasicTokenIntrospectionResponse,
     BasicTokenResponse,
 };
-use oauth2::{AccessToken, Client, EndpointNotSet, EndpointSet, StandardRevocableToken};
-use tracing::error;
+use oauth2::{AccessToken, Client as OauthClient, EndpointNotSet, EndpointSet, StandardRevocableToken};
+use reqwest::{Client as ReqwestClient, };
+use sea_orm::Iden;
+use tracing::{error, info, warn};
+use crate::connection::cloudflare_r2::R2Client;
 
 fn build_google_client() -> Result<
-    Client<
+    OauthClient<
         BasicErrorResponse,
         BasicTokenResponse,
         BasicTokenIntrospectionResponse,
@@ -39,9 +43,8 @@ pub async fn exchange_google_code(code: &str) -> Result<AccessToken, Errors> {
     exchange_oauth_code(client, code, "Google").await
 }
 
-pub async fn get_google_user_info(access_token: &AccessToken) -> Result<GoogleUserInfo, Errors> {
-    let client = reqwest::Client::new();
-    let response = client
+pub async fn get_google_user_info(http_client: &ReqwestClient, r2_client: &R2Client,access_token: &AccessToken) -> Result<GoogleUserInfo, Errors> {
+    let response = http_client
         .get("https://www.googleapis.com/oauth2/v3/userinfo")
         .bearer_auth(access_token.secret())
         .send()
@@ -60,6 +63,7 @@ pub async fn get_google_user_info(access_token: &AccessToken) -> Result<GoogleUs
         error!("Failed to parse Google user info: {:?}", e);
         Errors::OauthUserInfoParseFailed
     })?;
+    
 
     Ok(user_info)
 }

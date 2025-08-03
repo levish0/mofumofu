@@ -116,7 +116,7 @@
 					onmouseleave={scheduleClose}
 				>
 					<button class="flex h-9 items-center space-x-1 rounded-lg" aria-label="profile_menu">
-						<div class="h-9 w-9 overflow-hidden rounded-full bg-red-500">
+						<div class="h-9 w-9 overflow-hidden rounded-full">
 							{#if userInfo.profile_image}
 								<img src={userInfo.profile_image} alt="{userInfo.handle}의 프로필" class="h-full w-full object-cover" />
 							{:else}

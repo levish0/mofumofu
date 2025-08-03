@@ -22,6 +22,13 @@ pub struct DbConfig {
     pub github_client_secret: String,
     pub github_redirect_uri: String,
 
+    // Cloudflare
+    pub r2_public_domain: String,
+    pub r2_account_id: String,
+    pub r2_bucket_name: String,
+    pub r2_access_key_id: String,
+    pub r2_secret_access_key: String,
+
     pub db_user: String,
     pub db_password: String,
     pub db_host: String,
@@ -135,6 +142,13 @@ static CONFIG: LazyLock<DbConfig> = LazyLock::new(|| {
             .expect("GITHUB_CLIENT_SECRET must be set"),
         github_redirect_uri: env::var("GITHUB_REDIRECT_URI")
             .expect("GITHUB_REDIRECT_URI must be set"),
+
+        // Cloudflare
+        r2_public_domain: env::var("R2_PUBLIC_DOMAIN").expect("R2_PUBLIC_DOMAIN must be set"),
+        r2_account_id: env::var("R2_ACCOUNT_ID").expect("R2_ACCOUNT_ID must be set"),
+        r2_bucket_name: env::var("R2_BUCKET_NAME").expect("R2_BUCKET_NAME must be set"),
+        r2_access_key_id: env::var("R2_ACCESS_KEY_ID").expect("R2_ACCESS_KEY_ID must be set"),
+        r2_secret_access_key: env::var("R2_SECRET_ACCESS_KEY").expect("R2_SECRET_ACCESS_KEY must be set"),
 
         db_user: env::var("POSTGRES_USER").expect("POSTGRES_USER must be set"),
         db_password: env::var("POSTGRES_PASSWORD").expect("POSTGRES_PASSWORD must be set"),

@@ -1,18 +1,15 @@
-use crate::dto::auth::internal::access_token::AccessTokenClaims;
 use crate::dto::auth::internal::refresh_token::RefreshTokenContext;
-use crate::dto::user::response::info::UserInfoResponse;
 use crate::service::auth::auth::service_sign_out;
 use crate::service::error::errors::Errors;
-use crate::service::user::service_get_user_by_uuid;
 use crate::state::AppState;
 use crate::utils::extract_ip_address::extract_ip_address;
 use crate::utils::extract_user_agent::extract_user_agent;
-use axum::Extension;
 use axum::extract::{ConnectInfo, State};
 use axum::http::{HeaderMap, StatusCode};
 use axum::response::IntoResponse;
-use axum_extra::TypedHeader;
+use axum::Extension;
 use axum_extra::headers::UserAgent;
+use axum_extra::TypedHeader;
 use std::net::SocketAddr;
 
 #[utoipa::path(

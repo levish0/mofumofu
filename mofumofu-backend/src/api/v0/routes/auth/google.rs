@@ -36,7 +36,7 @@ pub async fn google_sign_in(
     let ua_str = extract_user_agent(user_agent);
 
     let res =
-        service_google_sign_in(&state.conn, Some(ua_str), Some(ip_str), &payload.code).await?;
+        service_google_sign_in(&state.conn, &state.http_client, &state.cloudflare_r2, Some(ua_str), Some(ip_str), &payload.code).await?;
 
     Ok(AuthJWTResponse {
         access_token: res.access_token,

@@ -1,17 +1,19 @@
 use crate::api::v0::routes::routes::api_routes;
 use crate::config::db_config::DbConfig;
-use crate::database::connection::establish_connection;
+use crate::connection::database::establish_connection;
 use crate::middleware::cors::cors_layer;
 use crate::state::AppState;
 use crate::utils::logger::init_tracing;
 use axum::Router;
 use std::net::SocketAddr;
 use tower_http::compression::CompressionLayer;
-use tracing::info;
+use tracing::{error, info};
+use crate::connection::cloudflare_r2::establish_r2_connection;
+use crate::connection::http::create_http_client;
 
 mod api;
 mod config;
-mod database;
+mod connection;
 mod dto;
 mod entity;
 mod middleware;
@@ -22,6 +24,15 @@ mod utils;
 
 pub async fn run_server() -> anyhow::Result<()> {
     let conn = establish_connection().await;
+    let cloudflare_r2 = establish_r2_connection().await.map_err(|e| {
+        error!("Failed to establish cloudflare_r2 connection: {}", e);
+        anyhow::anyhow!("R2 connection failed: {}", e)
+    })?;
+    let http_client = create_http_client().await.map_err(|e| {
+        error!("Failed to create HTTP client: {}", e);
+        anyhow::anyhow!("HTTP client creation failed: {}", e)
+    })?;
+    
     let server_url = format!(
         "{}:{}",
         &DbConfig::get().server_host,
@@ -31,7 +42,7 @@ pub async fn run_server() -> anyhow::Result<()> {
         .merge(api_routes())
         .layer(cors_layer())
         .layer(CompressionLayer::new())
-        .with_state(AppState { conn });
+        .with_state(AppState { conn, cloudflare_r2, http_client });
 
     info!("Starting server at: {}", server_url);
 

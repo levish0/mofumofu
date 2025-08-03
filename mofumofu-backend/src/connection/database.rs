@@ -23,7 +23,7 @@ pub async fn establish_connection() -> DatabaseConnection {
         &DbConfig::get().db_port,
         &DbConfig::get().db_name
     );
-    info!("Attempting to connect to database: {}", database_url);
+    info!("Attempting to connect to connection: {}", database_url);
 
     // 연결 옵션 설정
     let mut options = ConnectOptions::new(database_url);
@@ -41,14 +41,14 @@ pub async fn establish_connection() -> DatabaseConnection {
     match Database::connect(options).await {
         Ok(connection) => {
             // 연결 성공 시 로그 출력 후 연결 객체 반환
-            info!("Successfully connected to the database.");
+            info!("Successfully connected to the connection.");
             connection
         }
         Err(err) => {
             // 연결 실패 시 에러 로그 출력 후 애플리케이션 종료
             // 데이터베이스 연결은 애플리케이션의 핵심 요구사항이므로 실패 시 계속 진행할 수 없음
-            error!("Failed to connect to database: {}", err);
-            panic!("Failed to connect to database");
+            error!("Failed to connect to connection: {}", err);
+            panic!("Failed to connect to connection");
         }
     }
 }
