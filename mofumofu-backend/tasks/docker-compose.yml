@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  # Redis (Celery 브로커) - 포트 6380으로 변경
+  redis-celery:
+    image: redis:alpine
+    ports:
+      - "6380:6379"  # 외부 포트 6380, 내부 포트 6379
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # FastAPI 태스크 서버
+  tasks-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "7000:7000"
+    environment:
+      # 외부 PostgreSQL 사용
+      - POSTGRES_HOST=${POSTGRES_HOST:-localhost}
+      - POSTGRES_PORT=${POSTGRES_PORT:-5432}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_NAME=${POSTGRES_NAME}
+      # Celery Redis (내부 네트워크에서는 redis-celery:6379)
+      - CELERY_BROKER_URL=redis://redis-celery:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis-celery:6379/0
+      # Cloudflare R2 설정
+      - R2_ACCOUNT_ID=${R2_ACCOUNT_ID}
+      - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID}
+      - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY}
+      - R2_BUCKET_NAME=${R2_BUCKET_NAME}
+      - R2_PUBLIC_DOMAIN=${R2_PUBLIC_DOMAIN}
+    depends_on:
+      redis-celery:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Celery Worker
+  celery-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    environment:
+      # 외부 PostgreSQL 사용
+      - POSTGRES_HOST=${POSTGRES_HOST:-localhost}
+      - POSTGRES_PORT=${POSTGRES_PORT:-5432}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_NAME=${POSTGRES_NAME}
+      # Celery Redis (내부 네트워크에서는 redis-celery:6379)
+      - CELERY_BROKER_URL=redis://redis-celery:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis-celery:6379/0
+      # Cloudflare R2 설정
+      - R2_ACCOUNT_ID=${R2_ACCOUNT_ID}
+      - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID}
+      - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY}
+      - R2_BUCKET_NAME=${R2_BUCKET_NAME}
+      - R2_PUBLIC_DOMAIN=${R2_PUBLIC_DOMAIN}
+    depends_on:
+      redis-celery:
+        condition: service_healthy
+      tasks-api:
+        condition: service_started
+    restart: unless-stopped
+    deploy:
+      replicas: 2  # 2개의 워커 실행
+
+  # Celery Flower (모니터링 - 선택사항)
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["uv", "run", "celery", "-A", "app.core.celery_app", "flower", "--port=5555", "--broker=redis://redis-celery:6379/0"]
+    ports:
+      - "5555:5555"
+    environment:
+      - CELERY_BROKER_URL=redis://redis-celery:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis-celery:6379/0
+    depends_on:
+      redis-celery:
+        condition: service_healthy
+    restart: unless-stopped

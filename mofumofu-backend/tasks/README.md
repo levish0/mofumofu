@@ -70,6 +70,79 @@ python monitor_celery.py
 
 ---
 
+## Docker Deployment
+
+### Using Docker Compose (Recommended)
+
+1. **Copy environment file:**
+```bash
+cp .env.example .env
+```
+
+2. **Edit .env file with your actual values:**
+```bash
+# Required: PostgreSQL connection (external database)
+POSTGRES_HOST=your_postgres_host
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=your_secure_password
+POSTGRES_NAME=mofumofu_db
+
+# Required: Fill in your Cloudflare R2 credentials
+R2_ACCOUNT_ID=your_account_id
+R2_ACCESS_KEY_ID=your_access_key
+R2_SECRET_ACCESS_KEY=your_secret_key
+R2_BUCKET_NAME=your_bucket_name
+R2_PUBLIC_DOMAIN=https://your-public-domain.r2.dev
+```
+
+3. **Start all services:**
+```bash
+docker-compose up -d
+```
+
+4. **View logs:**
+```bash
+# All services
+docker-compose logs -f
+
+# Specific service
+docker-compose logs -f celery-worker
+docker-compose logs -f tasks-api
+```
+
+5. **Stop services:**
+```bash
+docker-compose down
+```
+
+### Services included:
+- **tasks-api**: FastAPI server (port 7000)
+- **celery-worker**: Background task processor (2 replicas)
+- **redis-celery**: Celery message broker (port 6380)
+- **flower**: Celery monitoring web UI (port 5555)
+
+**Note**: PostgreSQL is expected to be running externally. Configure your database connection in the `.env` file.
+
+### Manual Docker Build
+
+If you prefer to build images manually:
+
+```bash
+# Build FastAPI server
+docker build -t tasks-api -f Dockerfile .
+
+# Build Celery worker
+docker build -t celery-worker -f Dockerfile.worker .
+
+# Run with external Redis and PostgreSQL
+docker run -d --name tasks-api -p 7000:7000 \
+  -e POSTGRES_HOST=your_db_host \
+  -e CELERY_BROKER_URL=redis://your_redis_host:6379/0 \
+  tasks-api
+```
+
+---
+
 ## Using Ruff
 
 **Ruff** is an fast Python linter and code formatter. Once you've installed your development dependencies (using `uv sync`), you can use Ruff to check and format your code.
