@@ -4,9 +4,7 @@ use crate::entity::common::OAuthProvider;
 use crate::entity::user_refresh_tokens::ActiveModel as RefreshTokenActiveModel;
 use crate::service::auth::jwt::{create_jwt_access_token, create_jwt_refresh_token};
 use crate::service::error::errors::Errors;
-use crate::service::oauth::find_or_create_oauth_user::{
-    OAuthUserResult, service_find_or_create_oauth_user,
-};
+use crate::service::oauth::find_or_create_oauth_user::service_find_or_create_oauth_user;
 use crate::service::oauth::provider::google::client::{exchange_google_code, get_google_user_info};
 use crate::utils::profile_task_client::queue_profile_image_upload;
 use reqwest::Client;
@@ -16,7 +14,6 @@ use tracing::{error, info, warn};
 pub async fn service_google_sign_in<C>(
     txn: &C,
     http_client: &Client,
-    r2_client: &R2Client,
     user_agent: Option<String>,
     ip_address: Option<String>,
     auth_code: &str,
@@ -27,7 +24,7 @@ where
     // 1. 구글에서 액세스 토큰 획득
     let access_token = exchange_google_code(auth_code).await?;
     // 2. 구글에서 유저 정보 획득
-    let google_user = get_google_user_info(http_client, r2_client, &access_token).await?;
+    let google_user = get_google_user_info(http_client, &access_token).await?;
 
     // 3. 유저 찾기 또는 생성
     let oauth_result = service_find_or_create_oauth_user(

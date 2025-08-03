@@ -3,9 +3,7 @@ use crate::entity::common::OAuthProvider;
 use crate::entity::user_refresh_tokens::ActiveModel as RefreshTokenActiveModel;
 use crate::service::auth::jwt::{create_jwt_access_token, create_jwt_refresh_token};
 use crate::service::error::errors::Errors;
-use crate::service::oauth::find_or_create_oauth_user::{
-    OAuthUserResult, service_find_or_create_oauth_user,
-};
+use crate::service::oauth::find_or_create_oauth_user::service_find_or_create_oauth_user;
 use crate::service::oauth::provider::common::exchange_oauth_code;
 use crate::service::oauth::provider::github::client::{exchange_github_code, get_github_user_info};
 use crate::service::oauth::provider::google::client::{exchange_google_code, get_google_user_info};
@@ -28,7 +26,7 @@ where
     let access_token = exchange_github_code(auth_code).await?;
 
     // 2. GitHub에서 유저 정보 획득
-    let github_user = get_github_user_info(&access_token).await?;
+    let github_user = get_github_user_info(http_client,&access_token).await?;
     // 3. 이메일이 없으면 에러
     let email = github_user.email.ok_or_else(|| {
         error!("GitHub user has no email address");

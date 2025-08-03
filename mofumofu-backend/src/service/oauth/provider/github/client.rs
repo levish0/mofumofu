@@ -1,6 +1,5 @@
 use crate::config::db_config::DbConfig;
 use crate::dto::oauth::internal::github::{GithubEmail, GithubUserInfo};
-use crate::dto::oauth::internal::google::GoogleUserInfo;
 use crate::service::error::errors::Errors;
 use crate::service::oauth::provider::common::{build_oauth_client, exchange_oauth_code};
 use oauth2::basic::{
@@ -8,7 +7,14 @@ use oauth2::basic::{
     BasicTokenResponse,
 };
 use oauth2::{AccessToken, Client, EndpointNotSet, EndpointSet, StandardRevocableToken};
+use reqwest::Client as ReqwestClient;
 use tracing::error;
+
+const GITHUB_AUTH_URL: &str = "https://github.com/login/oauth/authorize";
+const GITHUB_TOKEN_URL: &str = "https://github.com/login/oauth/access_token";
+const GITHUB_USERINFO_URL: &str = "https://api.github.com/user";
+const GITHUB_EMAILS_URL: &str = "https://api.github.com/user/emails";
+const GITHUB_USER_AGENT: &str = "mofumofu/1.0";
 
 fn build_github_client() -> Result<
     Client<
@@ -30,8 +36,8 @@ fn build_github_client() -> Result<
         &config.github_client_id,
         &config.github_client_secret,
         &config.github_redirect_uri,
-        "https://github.com/login/oauth/authorize",
-        "https://github.com/login/oauth/access_token",
+        GITHUB_AUTH_URL,
+        GITHUB_TOKEN_URL,
     )
 }
 
@@ -40,12 +46,11 @@ pub async fn exchange_github_code(code: &str) -> Result<AccessToken, Errors> {
     exchange_oauth_code(client, code, "GitHub").await
 }
 
-pub async fn get_github_user_info(access_token: &AccessToken) -> Result<GithubUserInfo, Errors> {
-    let client = reqwest::Client::new();
-    let response = client
-        .get("https://api.github.com/user")
+pub async fn get_github_user_info(http_client: &ReqwestClient, access_token: &AccessToken) -> Result<GithubUserInfo, Errors> {
+    let response = http_client
+        .get(GITHUB_USERINFO_URL)
         .bearer_auth(access_token.secret())
-        .header("User-Agent", "Mozilla/5.0")
+        .header("User-Agent", GITHUB_USER_AGENT)
         .send()
         .await
         .map_err(|e| {
@@ -59,8 +64,8 @@ pub async fn get_github_user_info(access_token: &AccessToken) -> Result<GithubUs
     })?;
 
     if user_info.email.is_none() {
-        let email_response = client
-            .get("https://api.github.com/user/emails")
+        let email_response = http_client
+            .get(GITHUB_EMAILS_URL)
             .bearer_auth(access_token.secret())
             .header("User-Agent", "Mozilla/5.0")
             .send()

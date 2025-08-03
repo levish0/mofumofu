@@ -38,7 +38,6 @@ pub async fn google_sign_in(
     let res = service_google_sign_in(
         &state.conn,
         &state.http_client,
-        &state.cloudflare_r2,
         Some(ua_str),
         Some(ip_str),
         &payload.code,

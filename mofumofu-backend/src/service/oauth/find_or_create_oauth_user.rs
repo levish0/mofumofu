@@ -1,3 +1,4 @@
+use crate::dto::oauth::internal::oauth_user_result::OAuthUserResult;
 use crate::entity::common::OAuthProvider;
 use crate::entity::users::Model as UserModel;
 use crate::repository::oauth::create_oauth_connection::repository_create_oauth_connection;
@@ -8,12 +9,6 @@ use crate::repository::user::find_user_by_email::repository_find_user_by_email;
 use crate::service::error::errors::Errors;
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use tracing::{error, info};
-
-#[derive(Debug)]
-pub struct OAuthUserResult {
-    pub user: UserModel,
-    pub is_new_user: bool,
-}
 
 pub async fn service_find_or_create_oauth_user<C>(
     txn: &C,

@@ -12,7 +12,7 @@ use crate::service::error::protocol::system::{
     SYS_TRANSACTION_ERROR,
 };
 use crate::service::error::protocol::user::{
-    USER_HANDLE_GENERATION_FAILED, USER_IMAGE_TOO_LARGE, USER_INVALID_PASSWORD, USER_INVALID_TOKEN,
+    USER_HANDLE_GENERATION_FAILED, USER_INVALID_PASSWORD, USER_INVALID_TOKEN,
     USER_NO_REFRESH_TOKEN, USER_NOT_FOUND, USER_NOT_VERIFIED, USER_TOKEN_EXPIRED,
     USER_UNAUTHORIZED,
 };
@@ -74,7 +74,6 @@ pub enum Errors {
     UserNotFound,     // 사용자를 찾을 수 없음
     UserUnauthorized, // 인증되지 않은 사용자
     UserHandleGenerationFailed,
-    UserImageTooLarge,
     UserTokenExpired, // 만료된 토큰
     UserNoRefreshToken,
     UserInvalidToken, // 유효하지 않은 토큰
@@ -120,7 +119,6 @@ impl IntoResponse for Errors {
                 USER_HANDLE_GENERATION_FAILED,
                 None,
             ),
-            Errors::UserImageTooLarge => (StatusCode::BAD_REQUEST, USER_IMAGE_TOO_LARGE, None),
             Errors::UserTokenExpired => (StatusCode::UNAUTHORIZED, USER_TOKEN_EXPIRED, None),
             Errors::UserNoRefreshToken => (StatusCode::UNAUTHORIZED, USER_NO_REFRESH_TOKEN, None),
             Errors::UserInvalidToken => (StatusCode::UNAUTHORIZED, USER_INVALID_TOKEN, None),

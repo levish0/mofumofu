@@ -1,5 +1,4 @@
 use crate::config::db_config::DbConfig;
-use crate::connection::cloudflare_r2::R2Client;
 use crate::dto::oauth::internal::google::GoogleUserInfo;
 use crate::service::error::errors::Errors;
 use crate::service::oauth::provider::common::{build_oauth_client, exchange_oauth_code};
@@ -11,9 +10,11 @@ use oauth2::{
     AccessToken, Client as OauthClient, EndpointNotSet, EndpointSet, StandardRevocableToken,
 };
 use reqwest::Client as ReqwestClient;
-use sea_orm::Iden;
-use std::time::Duration;
-use tracing::{error, info, warn};
+use tracing::{error};
+
+const GOOGLE_USERINFO_URL: &str = "https://www.googleapis.com/oauth2/v3/userinfo";
+const GOOGLE_AUTH_URL: &str = "https://accounts.google.com/o/oauth2/v2/auth";
+const GOOGLE_TOKEN_URL: &str = "https://oauth2.googleapis.com/token";
 
 fn build_google_client() -> Result<
     OauthClient<
@@ -35,8 +36,8 @@ fn build_google_client() -> Result<
         &config.google_client_id,
         &config.google_client_secret,
         &config.google_redirect_uri,
-        "https://accounts.google.com/o/oauth2/v2/auth",
-        "https://oauth2.googleapis.com/token",
+        GOOGLE_AUTH_URL,
+        GOOGLE_TOKEN_URL,
     )
 }
 
@@ -47,11 +48,10 @@ pub async fn exchange_google_code(code: &str) -> Result<AccessToken, Errors> {
 
 pub async fn get_google_user_info(
     http_client: &ReqwestClient,
-    r2_client: &R2Client,
     access_token: &AccessToken,
 ) -> Result<GoogleUserInfo, Errors> {
     let response = http_client
-        .get("https://www.googleapis.com/oauth2/v3/userinfo")
+        .get(GOOGLE_USERINFO_URL)
         .bearer_auth(access_token.secret())
         .send()
         .await
