@@ -1,0 +1,28 @@
+services:
+  mofumofu-backend:
+    build: .
+    container_name: mofumofu-backend
+    env_file:
+      - docker.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  redis:
+    image: redis:8.0.2
+    container_name: mofumofu-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  redis-data:
