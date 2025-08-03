@@ -31,7 +31,7 @@ fn build_google_client() -> Result<
     >,
     Errors,
 > {
-    let config = &DbConfig::get();
+    let config = DbConfig::get();
     build_oauth_client(
         &config.google_client_id,
         &config.google_client_secret,

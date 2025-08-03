@@ -109,7 +109,7 @@
 					<Icon src={MagnifyingGlass} size="20" class="text-white" />
 				</Button>
 
-				<Button variant="outline" class="bg-transparent px-3 py-0">새 글 작성하기</Button>
+				<Button href="/write" variant="outline" class="bg-transparent px-3 py-0">새 글 작성하기</Button>
 
 				<div
 					class=" dropdown-container relative"

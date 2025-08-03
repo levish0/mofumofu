@@ -71,6 +71,29 @@ services:
     deploy:
       replicas: 2  # 2개의 워커 실행
 
+  # Celery Beat (스케줄러) - 주기적 작업용
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["uv", "run", "celery", "-A", "app.core.celery_app", "beat", "--loglevel=info"]
+    environment:
+      # 외부 PostgreSQL 사용
+      - POSTGRES_HOST=${POSTGRES_HOST:-localhost}
+      - POSTGRES_PORT=${POSTGRES_PORT:-5432}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_NAME=${POSTGRES_NAME}
+      # Celery Redis (내부 네트워크에서는 redis-celery:6379)
+      - CELERY_BROKER_URL=redis://redis-celery:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis-celery:6379/0
+    depends_on:
+      redis-celery:
+        condition: service_healthy
+      tasks-api:
+        condition: service_started
+    restart: unless-stopped
+
   # Celery Flower (모니터링 - 선택사항)
   flower:
     build:

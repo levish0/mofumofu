@@ -5,7 +5,7 @@ celery_app = Celery(
     "tasks",
     broker=settings.CELERY_BROKER_URL,
     backend=settings.CELERY_RESULT_BACKEND,
-    include=["app.tasks.profile_tasks"]
+    include=["app.tasks.profile_tasks", "app.tasks.token_tasks"]
 )
 
 celery_app.conf.update(
@@ -18,4 +18,15 @@ celery_app.conf.update(
     task_time_limit=300,  # 5분 타임아웃
     worker_prefetch_multiplier=1,
     task_acks_late=True,
+    # 결과 만료 설정 (Redis 메모리 관리)
+    result_expires=3600,  # 1시간 후 결과 삭제
+    # 작업 결과 압축
+    result_compression='gzip',
+    # 주기적 작업 스케줄
+    beat_schedule={
+        'cleanup-expired-refresh-tokens': {
+            'task': 'cleanup_expired_refresh_tokens',
+            'schedule': 3600.0,  # 1시간마다 실행 (3600초)
+        },
+    },
 )

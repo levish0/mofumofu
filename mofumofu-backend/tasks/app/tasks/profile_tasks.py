@@ -150,3 +150,4 @@ def delete_profile_image_task(user_id: str):
             'status': 'FAILURE',
             'error': str(exc)
         }
+

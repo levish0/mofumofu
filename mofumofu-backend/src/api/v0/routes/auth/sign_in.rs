@@ -1,6 +1,5 @@
 use crate::dto::auth::request::login::AuthLoginRequest;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
-use crate::service::auth::auth::service_sign_in;
 use crate::service::error::errors::Errors;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
@@ -11,6 +10,7 @@ use axum::http::HeaderMap;
 use axum_extra::TypedHeader;
 use axum_extra::headers::UserAgent;
 use std::net::SocketAddr;
+use crate::service::auth::service_sign_in;
 
 #[utoipa::path(
     post,

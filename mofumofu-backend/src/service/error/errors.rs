@@ -67,6 +67,7 @@ impl From<TransactionError<DbErr>> for Errors {
 
 // 애플리케이션에서 발생할 수 있는 모든 오류 유형을 정의하는 열거형
 // 카테고리별로 구분되어 있으며, 일부 오류는 추가 정보를 포함할 수 있음
+#[derive(Debug)]
 pub enum Errors {
     // 사용자 관련 오류
     UserInvalidPassword, // 잘못된 비밀번호

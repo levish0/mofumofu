@@ -31,7 +31,7 @@ fn build_github_client() -> Result<
     >,
     Errors,
 > {
-    let config = &DbConfig::get();
+    let config = DbConfig::get();
     build_oauth_client(
         &config.github_client_id,
         &config.github_client_secret,
