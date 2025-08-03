@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Celery 모니터링 스크립트
 """
