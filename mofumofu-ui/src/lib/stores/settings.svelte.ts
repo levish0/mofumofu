@@ -380,7 +380,6 @@ class SettingsStore {
 
 	// Validate all sections before saving
 	async validateAll(): Promise<boolean> {
-
 		let isValid = true;
 
 		// Validate personal info

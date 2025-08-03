@@ -27,7 +27,7 @@ export async function getCroppedImg(
 ): Promise<{ blob: Blob; url: string; cleanup: () => void }> {
 	const { maxFileSizeMB = 10, resizeOptions, quality = 0.9 } = options;
 	const image = await createImage(imageSrc);
-	
+
 	let sourceCanvas: HTMLCanvasElement | null = null;
 	let destCanvas: HTMLCanvasElement | null = null;
 	let objectUrl: string | null = null;
