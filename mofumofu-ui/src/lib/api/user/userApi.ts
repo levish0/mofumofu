@@ -4,6 +4,7 @@ import type { UserInfoResponse, GetUserProfileRequest, UpdateProfileRequest } fr
 
 export async function getMyProfile(): Promise<UserInfoResponse> {
 	try {
+		console.log('Fetching user profile...');
 		const response = await api.get('v0/user/my_profile');
 		return await response.json<UserInfoResponse>();
 	} catch (error) {

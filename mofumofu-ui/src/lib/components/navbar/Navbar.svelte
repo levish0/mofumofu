@@ -32,8 +32,10 @@
 		isLoading = true;
 
 		try {
+			console.log('loading user profile from navbar');
 			userInfo = await getMyProfile();
-			console.log('User profile loaded:', userInfo);
+			// API 호출이 성공하면 토큰이 있다는 뜻이므로 authStore 업데이트
+			// (실제 토큰은 API 호출 과정에서 이미 설정됨)
 		} catch (error) {
 			console.error('Failed to fetch user profile:', error);
 			userInfo = null;
@@ -44,12 +46,6 @@
 
 	onMount(() => {
 		loadUserProfile();
-	});
-
-	$effect(() => {
-		if (!authStore.isAuthenticated && userInfo) {
-			userInfo = null;
-		}
 	});
 
 	async function handleLogout() {
@@ -163,6 +159,9 @@
 			{:else}
 				<Button href="/" variant="icon" aria-label="search">
 					<Icon src={MagnifyingGlass} size="20" class="text-white" />
+				</Button>
+				<Button href="/settings" variant="icon" aria-label="settings">
+					<Icon src={Cog6Tooth} solid size="20" class="text-white" />
 				</Button>
 				<Button href="/account/signup" class="py-0">로그인</Button>
 			{/if}

@@ -172,6 +172,12 @@ class SettingsStore {
 	}
 
 	// Initialize settings with server data
+	initializeWithDefaults() {
+		this.state.isLoading = false;
+		// State is already initialized with defaults, just mark as ready
+		this.originalState = JSON.parse(JSON.stringify(this.state));
+	}
+
 	initializeSettings(serverSettings: Partial<SettingsState>) {
 		this.state.isLoading = true;
 		try {
@@ -211,6 +217,17 @@ class SettingsStore {
 	updatePersonal(updates: Partial<PersonalInfo>) {
 		this.state.personal = { ...this.state.personal, ...updates };
 		this.checkForChanges();
+	}
+
+	// Update personal info without triggering change detection (for initial load)
+	updatePersonalSilent(updates: Partial<PersonalInfo>) {
+		this.state.personal = { ...this.state.personal, ...updates };
+		// Update original state too so it doesn't count as a change
+		if (this.originalState.personal) {
+			this.originalState.personal = { ...this.originalState.personal, ...updates };
+		} else {
+			this.originalState.personal = { ...this.state.personal };
+		}
 	}
 
 	updateDisplay(updates: Partial<DisplaySettings>) {

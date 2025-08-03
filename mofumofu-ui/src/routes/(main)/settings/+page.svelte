@@ -14,16 +14,17 @@
 		PencilSquare
 	} from 'svelte-hero-icons';
 	import { getContext, onMount } from 'svelte';
-	import { settingsStore } from '$lib/stores/settings.svelte.js';
-	import PersonalInfoSettings from '$lib/components/settings/PersonalInfoSettings.svelte';
+	import { settingsStore } from '$lib/stores/settings.svelte';
+	import { getMyProfile } from '$lib/api/user/userApi';
+	import { authStore } from '$lib/stores/auth.svelte';
+	import { PersonalInfoSettings } from '$lib/components/settings/PersonalInfoSettings';
 	import AccountSettings from '$lib/components/settings/AccountSettings.svelte';
 	import DisplaySettings from '$lib/components/settings/DisplaySettings.svelte';
-	import NotificationSettings from '$lib/components/settings/NotificationSettings.svelte';
-	import PrivacySettings from '$lib/components/settings/PrivacySettings.svelte';
 	import WritingSettings from '$lib/components/settings/WritingSettings.svelte';
+	import PrivacySettings from '$lib/components/settings/PrivacySettings.svelte';
+	import NotificationSettings from '$lib/components/settings/NotificationSettings.svelte';
 
-	let { data } = $props();
-	let selectedSection = $state('personal');
+	let selectedSection = $state(authStore.isAuthenticated ? 'personal' : 'display');
 	let saveSuccess = $state(false);
 
 	type NavbarContext = {
@@ -36,9 +37,27 @@
 	// Calculate the top position based on navbar state
 	const topPosition = $derived(navbar.isVisible() ? '68px' : '8px');
 
-	onMount(() => {
-		// Initialize settings with server data when component mounts
-		settingsStore.initializeSettings(data.settings);
+	onMount(async () => {
+		// Initialize settings with default data
+		settingsStore.initializeWithDefaults();
+
+		// Load user profile data from API
+		try {
+			const userProfile = await getMyProfile();
+			settingsStore.updatePersonalSilent({
+				handle: userProfile.handle,
+				name: userProfile.name,
+				profileImage: userProfile.profile_image || null,
+				bannerImage: userProfile.banner_image || null
+			});
+			// API 호출이 성공하면 인증된 상태이므로 personal 섹션으로 변경
+			if (selectedSection === 'display') {
+				selectedSection = 'personal';
+			}
+		} catch (error) {
+			console.error('Failed to load user profile:', error);
+			// Keep default data if API call fails
+		}
 	});
 
 	async function handleSave() {
@@ -53,21 +72,47 @@
 	}
 
 	const sections = [
-		{ id: 'personal', label: 'Personal Info', icon: User, description: 'Manage your profile information' },
-		{ id: 'account', label: 'Account', icon: CreditCard, description: 'Manage account settings and billing' },
-		{ id: 'display', label: 'Display', icon: ComputerDesktop, description: 'Customize your display preferences' },
+		{
+			id: 'personal',
+			label: 'Personal Info',
+			icon: User,
+			description: 'Manage your profile information',
+			requiresAuth: true
+		},
+		{
+			id: 'account',
+			label: 'Account',
+			icon: CreditCard,
+			description: 'Manage account settings and billing',
+			requiresAuth: true
+		},
+		{
+			id: 'display',
+			label: 'Display',
+			icon: ComputerDesktop,
+			description: 'Customize your display preferences',
+			requiresAuth: false
+		},
 		{
 			id: 'writing',
 			label: 'Writing & Publishing',
 			icon: PencilSquare,
-			description: 'Configure writing and publishing preferences'
+			description: 'Configure writing and publishing preferences',
+			requiresAuth: true
 		},
-		{ id: 'notifications', label: 'Notifications', icon: Bell, description: 'Control notification settings' },
+		{
+			id: 'notifications',
+			label: 'Notifications',
+			icon: Bell,
+			description: 'Control notification settings',
+			requiresAuth: true
+		},
 		{
 			id: 'privacy',
 			label: 'Privacy & Security',
 			icon: ShieldExclamation,
-			description: 'Manage privacy and security options'
+			description: 'Manage privacy and security options',
+			requiresAuth: true
 		}
 	];
 </script>
@@ -82,8 +127,12 @@
 						class="dark:bg-mofu-dark-800 dark:border-mofu-dark-800 group flex cursor-pointer flex-col overflow-hidden rounded-xl border p-4 text-left transition-all duration-200 hover:opacity-75 hover:shadow-xl {selectedSection ===
 						section.id
 							? 'opacity-70'
-							: ''}"
-						onclick={() => (selectedSection = section.id)}
+							: ''} {section.requiresAuth && !authStore.isAuthenticated ? 'cursor-not-allowed opacity-30' : ''}"
+						onclick={() => {
+							if (!section.requiresAuth || authStore.isAuthenticated) {
+								selectedSection = section.id;
+							}
+						}}
 					>
 						<div class="mb-3 flex items-center gap-3">
 							<div class="rounded-lg bg-white/10 p-2">

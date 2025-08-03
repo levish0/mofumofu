@@ -45,6 +45,7 @@ export const api = ky.create({
 
 					if (errorBody?.code && tokenRefreshNeededCodes.includes(errorBody.code)) {
 						try {
+							console.log('Attempting to refresh access token...');
 							const refreshResponse = await refreshAccessToken();
 							authStore.setToken(refreshResponse.access_token);
 
