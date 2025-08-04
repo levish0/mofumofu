@@ -1,11 +1,13 @@
 // src/lib/api/user/userApi.ts
-import { api } from '../api';
+
+import { privateApi } from '../private';
+import { publicApi } from '../public';
 import type { UserInfoResponse, GetUserProfileRequest, UpdateProfileRequest } from './types';
 
 export async function getMyProfile(): Promise<UserInfoResponse> {
 	try {
 		console.log('Fetching user profile...');
-		const response = await api.get('v0/user/my_profile');
+		const response = await privateApi.get('v0/user/my_profile');
 		return await response.json<UserInfoResponse>();
 	} catch (error) {
 		console.error(error);
@@ -16,7 +18,7 @@ export async function getMyProfile(): Promise<UserInfoResponse> {
 export async function getUserProfile(handle: string): Promise<UserInfoResponse> {
 	try {
 		const payload: GetUserProfileRequest = { handle };
-		const response = await api.post('v0/user/profile', { json: payload });
+		const response = await publicApi.post('v0/user/profile', { json: payload });
 		return await response.json<UserInfoResponse>();
 	} catch (error) {
 		console.error(error);
@@ -26,7 +28,7 @@ export async function getUserProfile(handle: string): Promise<UserInfoResponse> 
 
 export async function updateProfile(data: UpdateProfileRequest): Promise<void> {
 	try {
-		await api.put('v0/user/profile', { json: data });
+		await privateApi.put('v0/user/profile', { json: data });
 	} catch (error) {
 		console.error(error);
 		throw error;
@@ -38,7 +40,7 @@ export async function uploadAvatar(file: File): Promise<void> {
 		const formData = new FormData();
 		formData.append('file', file);
 
-		await api.post('v0/user/profile/avatar', {
+		await privateApi.post('v0/user/profile/avatar', {
 			body: formData,
 			headers: {
 				'Content-Type': undefined // Remove default Content-Type header
@@ -55,7 +57,7 @@ export async function uploadBanner(file: File): Promise<void> {
 		const formData = new FormData();
 		formData.append('file', file);
 
-		await api.post('v0/user/profile/banner', {
+		await privateApi.post('v0/user/profile/banner', {
 			body: formData,
 			headers: {
 				'Content-Type': undefined // Remove default Content-Type header

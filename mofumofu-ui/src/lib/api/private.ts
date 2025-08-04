@@ -8,7 +8,7 @@ import { authStore } from '$lib/stores/auth.svelte';
 import { ApiError, ErrorCodes } from './error/common_error';
 import { refreshAccessToken } from './auth/authApi';
 
-export const api = ky.create({
+export const privateApi = ky.create({
 	prefixUrl: API_URL,
 	headers: {
 		'Content-Type': 'application/json',

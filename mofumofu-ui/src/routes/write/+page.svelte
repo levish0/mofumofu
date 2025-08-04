@@ -93,10 +93,7 @@
 		rel="stylesheet"
 		href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/styles/github-dark.min.css"
 	/>
-	<link
-		rel="stylesheet"
-		href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css"
-	/>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css" />
 	<style>
 		.prose pre {
 			background-color: rgb(24, 24, 24) !important;
@@ -115,7 +112,7 @@
 	<!-- 메인 컨텐츠 영역 -->
 	<div class="flex flex-1 gap-8 overflow-hidden p-8">
 		<!-- 에디터 영역 -->
-		<div class="flex w-1/2 flex-col">
+		<div class="bg-mofu-dark-900 flex w-1/2 flex-col">
 			<!-- 제목 입력 -->
 			<div class="mb-6">
 				<input
@@ -236,7 +233,7 @@
 		</div>
 
 		<!-- 미리보기 영역 -->
-		<div class="flex w-1/2 flex-col border-l border-gray-700 pl-8">
+		<div class="bg-mofu-dark-800 flex w-1/2 flex-col pl-8">
 			<div class="mb-6">
 				<h1 class="text-4xl font-bold text-white" style="font-size: 2.5rem; line-height: 1.2;">
 					{title || '제목을 입력하세요'}

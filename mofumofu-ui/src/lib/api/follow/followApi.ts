@@ -1,4 +1,4 @@
-import { api } from '../api';
+import { api } from '../private';
 import type { CreateFollowRequest, DeleteFollowRequest } from './types';
 
 export async function createFollow(request: CreateFollowRequest) {

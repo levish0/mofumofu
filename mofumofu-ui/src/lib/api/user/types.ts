@@ -6,6 +6,7 @@ export interface UserInfoResponse {
 	banner_image?: string;
 }
 
+
 export interface CreateUserRequest {
 	email: string;
 	handle: string;

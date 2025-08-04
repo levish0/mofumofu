@@ -1,10 +1,28 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import type { UserInfoResponse } from '$lib/api/user/types';
 	import { authStore } from '$lib/stores/auth.svelte';
+	import { getMyProfile } from '$lib/api/user/userApi';
+	import { onMount } from 'svelte';
 
-	const { data }: { data: PageData } = $props();
+	let { data }: { data: PageData } = $props();
 
 	let activeTab = $state('posts');
+	let currentUser = $state<UserInfoResponse | null>(null);
+	let isOwnProfile = $state(false);
+	let isLoading = $state(true);
+
+	onMount(async () => {
+		if (authStore.isAuthenticated) {
+			try {
+				currentUser = await getMyProfile();
+				isOwnProfile = currentUser?.handle === data.slug;
+			} catch (err) {
+				console.warn('Failed to get current user profile:', err);
+			}
+		}
+		isLoading = false;
+	});
 
 	function handleEditProfile() {
 		console.log('Edit profile clicked');
@@ -22,7 +40,6 @@
 <svelte:head>
 	<title>{data.profile.name} (@{data.profile.handle}) - Mofu</title>
 </svelte:head>
-
 <div class="min-h-screen bg-white dark:bg-gray-900">
 	<!-- Banner -->
 	<div class="relative aspect-[4/1] bg-gray-100 dark:bg-gray-800">
@@ -63,16 +80,13 @@
 								<p class="mt-1 text-gray-500 dark:text-gray-400">
 									@{data.profile.handle}
 								</p>
-								{#if data.profile.bio}
-									<p class="mt-3 text-gray-700 dark:text-gray-300">
-										{data.profile.bio}
-									</p>
-								{/if}
 							</div>
 
 							<!-- Action Button -->
 							<div class="flex-shrink-0">
-								{#if data.isOwnProfile}
+								{#if isLoading}
+									<div class="shimmer h-10 w-24 rounded-lg bg-gray-200 dark:bg-gray-700"></div>
+								{:else if isOwnProfile}
 									<button
 										onclick={handleEditProfile}
 										class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
@@ -162,7 +176,7 @@
 					</div>
 					<h3 class="mb-1 text-lg font-medium text-gray-900 dark:text-white">No posts yet</h3>
 					<p class="text-gray-500 dark:text-gray-400">
-						{#if data.isOwnProfile}
+						{#if isOwnProfile}
 							When you post something, it'll show up here.
 						{:else}
 							{data.profile.name} hasn't posted anything yet.
@@ -185,7 +199,7 @@
 					</div>
 					<h3 class="mb-1 text-lg font-medium text-gray-900 dark:text-white">No replies yet</h3>
 					<p class="text-gray-500 dark:text-gray-400">
-						{#if data.isOwnProfile}
+						{#if isOwnProfile}
 							When you reply to someone, it'll show up here.
 						{:else}
 							{data.profile.name} hasn't replied to anything yet.
@@ -208,7 +222,7 @@
 					</div>
 					<h3 class="mb-1 text-lg font-medium text-gray-900 dark:text-white">No media yet</h3>
 					<p class="text-gray-500 dark:text-gray-400">
-						{#if data.isOwnProfile}
+						{#if isOwnProfile}
 							Photos and videos you post will appear here.
 						{:else}
 							{data.profile.name} hasn't shared any media yet.
@@ -231,7 +245,7 @@
 					</div>
 					<h3 class="mb-1 text-lg font-medium text-gray-900 dark:text-white">No likes yet</h3>
 					<p class="text-gray-500 dark:text-gray-400">
-						{#if data.isOwnProfile}
+						{#if isOwnProfile}
 							Posts you like will appear here.
 						{:else}
 							{data.profile.name} hasn't liked anything yet.

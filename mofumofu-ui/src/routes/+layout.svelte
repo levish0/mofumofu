@@ -11,5 +11,4 @@
 	<main>
 		{@render children()}
 	</main>
-	<Footer />
 </div>

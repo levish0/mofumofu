@@ -2,7 +2,7 @@
 
 import { browser } from '$app/environment';
 
-let _token = $state(browser ? localStorage.getItem('access_token') ?? '' : '');
+let _token = $state(browser ? (localStorage.getItem('access_token') ?? '') : '');
 
 export const authStore = {
 	get token() {
