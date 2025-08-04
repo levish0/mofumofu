@@ -8,7 +8,6 @@
 
 	const { data }: { data: PageData } = $props();
 
-	let activeTab = $state('posts');
 	let isLoading = $state(true);
 	let isOwnProfile = $state(false);
 
@@ -42,10 +41,6 @@
 
 		checkOwnership();
 	});
-
-	function setActiveTab(tab: string) {
-		activeTab = tab;
-	}
 
 	function handleEditProfile() {
 		goto('/settings');
