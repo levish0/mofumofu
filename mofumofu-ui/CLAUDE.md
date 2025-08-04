@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is **mofu-ui**, a Svelte 5 component library for a social media application called "mofu". The project is structured as a SvelteKit library that can be packaged and distributed, with a showcase/demo app in the routes directory.
+This is **mofumofu-ui**, a Svelte 5 component library for a social media application called "mofu". The project is structured as a SvelteKit library that can be packaged and distributed, with a showcase/demo app in the routes directory.
 
 ## Development Commands
 
@@ -24,53 +24,81 @@ Note: This project uses **pnpm** as the package manager.
 ### Library Structure (`src/lib/`)
 
 - **API Layer** (`src/lib/api/`) - HTTP client using `ky` with organized endpoints:
-  - `auth/` - Authentication APIs (signin, signup, etc.)
+  - `auth/` - Authentication APIs (signin, signup, OAuth)
   - `user/` - User management APIs
   - `post/` - Post/content APIs
   - `follow/` - Social following APIs
-  - `error/` - Error handling and mapping
+  - `error/` - Error handling with mapped error types
   - `config.ts` - API configuration using `PUBLIC_API_URL` environment variable
+  - `private.ts` and `public.ts` - Authenticated and public API clients
 
-- **Components** (`src/lib/components/`) - Reusable Svelte components:
-  - `navbar/` - Navigation components with scroll behavior
-  - `post/` - Post display components (PostCard)
+- **Components** (`src/lib/components/`) - Reusable Svelte 5 components:
+  - `navbar/` - Navigation with scroll-based visibility
+  - `post/` - Post display components (PostCard, PostList) with skeleton states
   - `search/` - Search interface components
-  - Includes skeleton loading states for components
+  - `settings/` - User settings panels with image upload/crop functionality
+  - `ui/` - Low-level UI components (button, input, modal, etc.)
+  - `modal/` - Image crop modal with canvas manipulation
+
+- **Hooks** (`src/lib/hooks/`) - Custom Svelte 5 hooks using runes:
+  - `useNavbarScroll.svelte.ts` - Navbar visibility on scroll with performance optimization
+  - `useInfiniteScroll.svelte.ts` - Infinite scrolling functionality
+  - `useResizable.svelte.ts` - Resizable component behavior
+  - `useTextareaToolbar.svelte.ts` - Rich text editing toolbar
 
 - **Stores** (`src/lib/stores/`) - Svelte 5 state management:
-  - `auth.svelte.ts` - Authentication state using runes (`$state`)
-  - Token stored in memory only, not persisted
+  - `auth.svelte.ts` - Authentication state with localStorage persistence
+  - `settings.svelte.ts` - User settings management
+  - `settings/personal.svelte.ts` - Personal information state
 
-- **Types** (`src/lib/types/`) - TypeScript type definitions
-- **Utils** (`src/lib/utils.ts`) - Utility functions
+- **Utils** (`src/lib/utils/`) - Utility functions:
+  - `utils.ts` - TailwindCSS class merging (`cn` function) and TypeScript helpers
+  - `imagecrop.ts` - Image processing and cropping utilities
+
+- **Schemas** (`src/lib/schemas/`) - Validation schemas using Valibot
+- **OAuth** (`src/lib/oauth/`) - OAuth configuration and flows
 
 ### Application Routes (`src/routes/`)
 
-- `(main)/` - Main application layout and homepage
-- `account/` - Authentication pages (signin, signup, forgot-password, verify-email)
+- `(main)/` - Main application layout with post feed
+- `account/` - Authentication pages (signin, signup, forgot-password, verify-email, OAuth callbacks)
+- `profile/[slug]/` - User profile pages with server-side data loading
+- `settings/` - User settings interface
+- `write/` - Content creation interface
 
-### Key Technologies
+### Key Technologies & Patterns
 
-- **Svelte 5** with runes (`$state`, `$props`)
-- **SvelteKit** for routing and SSR
-- **TailwindCSS 4** for styling with custom animations (`tw-animate-css`)
-- **TypeScript** for type safety
-- **ky** for HTTP requests
-- **mode-watcher** for dark/light theme switching
-- **Cloudflare** adapter for deployment
+- **Svelte 5** with runes (`$state`, `$props`, `$derived`) for reactive state
+- **SvelteKit** for routing, SSR, and server-side data loading
+- **TailwindCSS 4** with custom animations via `tw-animate-css`
+- **TypeScript** with strict configuration
+- **ky** for HTTP requests with error handling
+- **mode-watcher** for theme switching
+- **Cloudflare** adapter for edge deployment
+- **Valibot** for schema validation
+- **bits-ui** for accessible component primitives
 
-### Styling Approach
+### Component Architecture
 
-- Uses TailwindCSS with custom font (`font-pretendard`)
-- Dark mode enabled by default via `mode-watcher`
-- Component-specific skeleton states for loading UX
+- Components use Svelte 5 `$props()` destructuring pattern
+- Skeleton loading states are implemented via derived reactive variables (`$derived`)
+- Complex components are split into sub-components (e.g., PostCard → PostCardImage, PostCardContent, PostCardFooter)
+- Performance optimizations include `requestAnimationFrame` for scroll handlers
 
-### State Management
+### State Management Patterns
 
-- Authentication uses Svelte 5 runes pattern in `authStore`
-- Token management is memory-only (no persistence)
-- Custom hooks for UI behavior (e.g., `useNavbarScroll`)
+- Svelte 5 runes (`$state`) for local component state
+- Stores for global state with explicit getters/setters
+- Authentication tokens stored in localStorage with browser detection
+- Settings state management with nested store structure
 
-## Library Export
+### API Integration
 
-The `src/lib/index.ts` file is currently empty - components must be explicitly exported here to be available when the library is installed as a package.
+- Separate public/private API clients with automatic authentication
+- Error handling with mapped error types and user-friendly messages
+- OAuth integration for GitHub and Google authentication
+- RESTful API design with versioned endpoints (`v0/`)
+
+### Library Export System
+
+Components must be explicitly exported in `src/lib/index.ts` to be available when the library is installed as a package. The file is currently empty and needs exports added as components are finalized.

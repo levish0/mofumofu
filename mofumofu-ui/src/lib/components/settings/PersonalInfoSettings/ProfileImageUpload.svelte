@@ -9,7 +9,7 @@
 	}
 
 	let { profileImage, onUpdate }: Props = $props();
-	
+
 	// No cache-busting needed for blob URLs since they're already unique
 
 	let showCrop = $state(false);
@@ -81,16 +81,18 @@
 	<h2 class="text-2xl font-semibold">Profile Image</h2>
 	<div class="flex items-center space-x-4">
 		<div class="group relative transition-all">
-			<div class="bg-mofu-dark-800 h-24 w-24 overflow-hidden rounded-full group-hover:opacity-75 relative">
+			<div class="bg-mofu-dark-800 relative h-24 w-24 overflow-hidden rounded-full group-hover:opacity-75">
 				{#if profileImage}
 					<!-- Skeleton shimmer while loading (only for server URLs) -->
 					{#if imageLoading && !profileImage.startsWith('blob:')}
-						<div class="absolute inset-0 shimmer rounded-full"></div>
+						<div class="shimmer absolute inset-0 rounded-full"></div>
 					{/if}
-					<img 
-						src={profileImage} 
-						alt="Profile preview" 
-						class="h-full w-full object-cover {imageLoading && !profileImage.startsWith('blob:') ? 'opacity-0' : 'opacity-100'} transition-opacity duration-200"
+					<img
+						src={profileImage}
+						alt="Profile preview"
+						class="h-full w-full object-cover {imageLoading && !profileImage.startsWith('blob:')
+							? 'opacity-0'
+							: 'opacity-100'} transition-opacity duration-200"
 						onload={handleImageLoad}
 						onerror={handleImageError}
 					/>

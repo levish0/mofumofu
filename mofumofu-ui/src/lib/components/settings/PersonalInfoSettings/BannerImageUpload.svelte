@@ -9,7 +9,7 @@
 	}
 
 	let { bannerImage, onUpdate }: Props = $props();
-	
+
 	// No cache-busting needed for blob URLs since they're already unique
 
 	let showCrop = $state(false);
@@ -80,16 +80,18 @@
 <div class="space-y-4">
 	<h2 class="text-2xl font-semibold">Banner Image</h2>
 	<div class="group relative transition-all">
-		<div class="bg-mofu-dark-800 aspect-[4/1] w-full overflow-hidden rounded-lg group-hover:opacity-75 relative">
+		<div class="bg-mofu-dark-800 relative aspect-[4/1] w-full overflow-hidden rounded-lg group-hover:opacity-75">
 			{#if bannerImage}
 				<!-- Skeleton shimmer while loading (only for server URLs) -->
 				{#if imageLoading && !bannerImage.startsWith('blob:')}
-					<div class="absolute inset-0 shimmer rounded-lg"></div>
+					<div class="shimmer absolute inset-0 rounded-lg"></div>
 				{/if}
-				<img 
-					src={bannerImage} 
-					alt="Banner preview" 
-					class="h-full w-full object-cover {imageLoading && !bannerImage.startsWith('blob:') ? 'opacity-0' : 'opacity-100'} transition-opacity duration-200"
+				<img
+					src={bannerImage}
+					alt="Banner preview"
+					class="h-full w-full object-cover {imageLoading && !bannerImage.startsWith('blob:')
+						? 'opacity-0'
+						: 'opacity-100'} transition-opacity duration-200"
 					onload={handleImageLoad}
 					onerror={handleImageError}
 				/>

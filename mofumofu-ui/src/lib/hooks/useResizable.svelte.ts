@@ -4,7 +4,7 @@ import { BROWSER } from 'esm-env';
 
 interface ResizableOptions {
 	minWidth?: number;
-	maxWidth?: number;
+	maxWidthPercent?: number;
 	initialWidth?: number;
 }
 
@@ -17,7 +17,7 @@ export function useResizable(
 	isDragging: () => boolean;
 	handleMouseDown: (e: MouseEvent) => void;
 } {
-	const { minWidth = 300, maxWidth = 80, initialWidth = 50 } = options;
+	const { minWidth = 400, maxWidthPercent = 80, initialWidth = 50 } = options;
 
 	let leftWidth = $state(initialWidth); // percentage
 	let isDragging = $state(false);
@@ -26,11 +26,11 @@ export function useResizable(
 
 	const handleMouseDown = (e: MouseEvent) => {
 		if (!containerElement) return;
-		
+
 		isDragging = true;
 		startX = e.clientX;
 		startWidth = leftWidth;
-		
+
 		document.addEventListener('mousemove', handleMouseMove);
 		document.addEventListener('mouseup', handleMouseUp);
 		document.body.style.cursor = 'col-resize';
@@ -43,13 +43,13 @@ export function useResizable(
 		const containerRect = containerElement.getBoundingClientRect();
 		const deltaX = e.clientX - startX;
 		const deltaPercent = (deltaX / containerRect.width) * 100;
-		
+
 		let newWidth = startWidth + deltaPercent;
-		
+
 		// 최소/최대 너비 제한
 		const minPercent = (minWidth / containerRect.width) * 100;
-		const maxPercent = maxWidth;
-		
+		const maxPercent = maxWidthPercent;
+
 		newWidth = Math.max(minPercent, Math.min(maxPercent, newWidth));
 		leftWidth = newWidth;
 	};

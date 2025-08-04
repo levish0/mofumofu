@@ -10,7 +10,7 @@ export const load: PageServerLoad = async ({ params }) => {
 	try {
 		// Get profile data using public API
 		const profile = await getUserProfile(params.slug);
-		
+
 		return {
 			profile,
 			slug: params.slug

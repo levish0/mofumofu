@@ -1,9 +1,6 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(pnpm check:*)",
-      "Bash(mkdir:*)"
-    ],
-    "deny": []
-  }
+	"permissions": {
+		"allow": ["Bash(pnpm check:*)", "Bash(mkdir:*)"],
+		"deny": []
+	}
 }
