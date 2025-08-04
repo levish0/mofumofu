@@ -81,11 +81,7 @@
 	],
 	"pnpm": {
 		"onlyBuiltDependencies": [
-			"@tailwindcss/oxide",
-			"canvas",
-			"esbuild",
-			"sharp",
-			"workerd"
+			"esbuild"
 		]
 	},
 	"dependencies": {
