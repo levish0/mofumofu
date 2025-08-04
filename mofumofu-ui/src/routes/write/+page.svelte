@@ -11,6 +11,7 @@
 	import rehypeKatex from 'rehype-katex';
 	import rehypeHighlight from 'rehype-highlight';
 	import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+	import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 	import rehypeStringify from 'rehype-stringify';
 	import { Icon } from 'svelte-hero-icons';
 	import {
@@ -26,19 +27,81 @@
 		PaperAirplane
 	} from 'svelte-hero-icons';
 	import { useTextareaToolbar } from '$lib/hooks/useTextareaToolbar.svelte';
+	import { useResizable } from '$lib/hooks/useResizable.svelte';
 
 	let title = $state('');
 	let tags = $state('');
 	let content = $state('');
 	let htmlOutput = $state('');
 	let contentTextarea: HTMLTextAreaElement;
+	let containerElement: HTMLElement;
+
+	// Sanitize schema for GFM + KaTeX + Code highlighting
+	const sanitizeSchema = {
+		...defaultSchema,
+		tagNames: [
+			...(defaultSchema.tagNames || []),
+			// GFM extras
+			'input',
+			'details',
+			'summary',
+			'del',
+			'ins',
+			// KaTeX
+			'math',
+			'semantics',
+			'mrow',
+			'mi',
+			'mo',
+			'mn',
+			'msup',
+			'msub',
+			'mfrac',
+			'munder',
+			'mover',
+			'munderover',
+			'mtable',
+			'mtr',
+			'mtd',
+			'mspace',
+			'mtext',
+			'annotation'
+		],
+		attributes: {
+			...(defaultSchema.attributes || {}),
+			'*': ['className', 'id'],
+			// KaTeX classes
+			span: ['className', 'style'],
+			div: ['className', 'style'],
+			// GFM checkboxes
+			input: ['type', 'disabled', 'checked'],
+			// Code highlighting
+			pre: ['className', 'style'],
+			code: ['className', 'style'],
+			// Links
+			a: ['href', 'title', 'target', 'rel']
+		},
+		protocols: {
+			...(defaultSchema.protocols || {}),
+			href: ['http', 'https', 'mailto']
+		}
+	};
 
 	// Sticky toolbar hook - reactive to textarea binding
 	let toolbarHook = $state<ReturnType<typeof useTextareaToolbar> | null>(null);
 
+	// Resizable hook
+	let resizableHook = $state<ReturnType<typeof useResizable> | null>(null);
+
 	$effect(() => {
 		if (contentTextarea) {
 			toolbarHook = useTextareaToolbar(contentTextarea);
+		}
+	});
+
+	$effect(() => {
+		if (containerElement) {
+			resizableHook = useResizable(containerElement);
 		}
 	});
 
@@ -55,6 +118,7 @@
 				.use(rehypeKatex)
 				.use(rehypeHighlight)
 				.use(rehypeAutolinkHeadings)
+				.use(rehypeSanitize, sanitizeSchema)
 				.use(rehypeStringify, { allowDangerousHtml: true })
 				.process(markdown);
 
@@ -104,9 +168,9 @@
 
 <div class="bg-mofu-dark-900 flex h-full w-full break-all text-white">
 	<!-- 메인 컨텐츠 영역 -->
-	<div class="flex flex-1 overflow-hidden">
-		<!-- 에디터 영역 (왼쪽 절반) -->
-		<div class="bg-mofu-dark-900 flex h-full w-1/2 flex-col">
+	<div bind:this={containerElement} class="flex flex-1 overflow-hidden">
+		<!-- 에디터 영역 -->
+		<div class="bg-mofu-dark-900 flex h-full flex-col" style="width: {resizableHook?.leftWidth() ?? 50}%">
 			<!-- 헤더 영역 (sticky) -->
 			<div class="bg-mofu-dark-900 sticky top-0 z-10 overflow-hidden">
 				<!-- 제목/태그 영역 -->
@@ -266,8 +330,17 @@
 			</div>
 		</div>
 
+		<!-- Resizer (드래그 핸들) -->
+		<button
+			type="button"
+			aria-label="크기 조정"
+			class="bg-mofu-dark-700 w-1 flex-shrink-0 cursor-col-resize p-0 transition-colors"
+			onmousedown={resizableHook?.handleMouseDown}
+			class:bg-gray-400={resizableHook?.isDragging()}
+		></button>
+
 		<!-- 미리보기 영역 -->
-		<div class="bg-mofu-dark-950 flex w-1/2 flex-col pt-4 pl-8">
+		<div class="bg-mofu-dark-950 flex flex-col pt-4 pl-8" style="width: {resizableHook?.rightWidth() ?? 50}%">
 			<div class="mb-6">
 				<h1 class="text-4xl font-bold text-white" style="font-size: 2.5rem; line-height: 1.2;">
 					{title || '제목을 입력하세요'}
