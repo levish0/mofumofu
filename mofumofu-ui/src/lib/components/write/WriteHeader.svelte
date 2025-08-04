@@ -18,7 +18,7 @@
 	<div class="mb-6 px-6">
 		<input
 			value={title}
-			oninput={(e) => onTitleChange(e.target.value)}
+			oninput={(e) => onTitleChange((e.target as HTMLInputElement).value)}
 			placeholder="제목을 입력하세요"
 			class="placeholder:text-mofu-dark-300 h-auto w-full border-none bg-transparent p-0 text-4xl font-bold text-white outline-none"
 			style="font-size: 2.5rem; line-height: 1.2;"
@@ -29,7 +29,7 @@
 	<div class="mb-8 px-6">
 		<input
 			value={tags}
-			oninput={(e) => onTagsChange(e.target.value)}
+			oninput={(e) => onTagsChange((e.target as HTMLInputElement).value)}
 			placeholder="태그를 입력하세요"
 			class="h-auto w-full border-none bg-transparent p-0 text-lg text-gray-300 outline-none placeholder:text-gray-500"
 		/>

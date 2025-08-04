@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { Icon } from 'svelte-hero-icons';
-	import { Button } from '../ui/Button';
 	import {
 		Heading1,
 		Heading2,
@@ -13,11 +11,11 @@
 		Link,
 		Image,
 		Code,
-		SquareRadical,
 		Sigma,
 		ChevronUp,
 		ChevronDown
 	} from '@lucide/svelte';
+	import { Button } from '../ui/button';
 
 	interface Props {
 		onInsertText: (before: string, after?: string) => void;
@@ -123,7 +121,7 @@
 			</Button>
 			<Button
 				variant="ghost"
-				onclick={() => onInsertText('`', '`')}
+				onclick={() => onInsertText('```language', '\n```')}
 				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-300 hover:dark:text-mofu-dark-200 rounded p-2"
 				title="코드"
 			>

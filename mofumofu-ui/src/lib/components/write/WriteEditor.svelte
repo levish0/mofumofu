@@ -57,7 +57,7 @@
 		<textarea
 			bind:this={contentTextarea}
 			value={content}
-			oninput={(e) => onContentChange(e.target.value)}
+			oninput={(e) => onContentChange((e.target as HTMLInputElement).value)}
 			placeholder="당신의 이야기를 적어보세요..."
 			class="w-full flex-1 resize-none border-none bg-transparent px-6 py-0 text-lg leading-relaxed text-white outline-none placeholder:text-gray-500"
 			spellcheck="false"
