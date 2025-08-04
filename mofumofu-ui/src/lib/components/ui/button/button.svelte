@@ -11,7 +11,7 @@
 				destructive: 'bg-rose-600 text-white',
 				outline:
 					'bg-transparent border-black hover:bg-black hover:text-white text-black border-2 dark:border-white dark:hover:bg-white dark:hover:text-black dark:text-white',
-				ghost: 'dark:hover:bg-white/10 hover:bg-black/10 text-black dark:text-white',
+				ghost: 'hover:opacity-70 text-black dark:text-white',
 				link: 'text-black dark:text-white underline-offset-4 hover:underline',
 				icon: 'h-9 w-9 p-2 hover:bg-white/10 text-white'
 			}

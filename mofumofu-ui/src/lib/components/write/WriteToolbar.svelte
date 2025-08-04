@@ -32,28 +32,28 @@
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('# ')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-300 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
 			>
 				<Heading1 class="h-5 w-5" />
 			</Button>
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('## ')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-300 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
 			>
 				<Heading2 class="h-5 w-5" />
 			</Button>
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('### ')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-300 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
 			>
 				<Heading3 class="h-5 w-5" />
 			</Button>
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('#### ')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-300 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
 			>
 				<Heading4 class="h-5 w-5" />
 			</Button>
@@ -63,7 +63,7 @@
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('**', '**')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-300 hover:dark:text-mofu-dark-200 rounded p-2 "
+				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2 "
 				title="굵게"
 			>
 				<Bold class="h-5 w-5" />
@@ -71,7 +71,7 @@
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('*', '*')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-300 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
 				title="기울임"
 			>
 				<Italic class="h-5 w-5" />
@@ -79,7 +79,7 @@
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('~~', '~~')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-300 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
 				title="취소선"
 			>
 				<Strikethrough class="h-5 w-5" />
@@ -90,7 +90,7 @@
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('> ')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-300 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
 				title="인용"
 			>
 				<Quote class="h-5 w-5" />
@@ -98,7 +98,7 @@
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('[', '](url)')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-300 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
 				title="링크"
 			>
 				<Link class="h-5 w-5" />
@@ -106,7 +106,7 @@
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('![alt](', ')')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-300 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
 				title="이미지"
 			>
 				<Image class="h-5 w-5" />
@@ -114,15 +114,15 @@
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('$$\n', '\n$$')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-300 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
 				title="수식"
 			>
 				<Sigma class="h-5 w-5" />
 			</Button>
 			<Button
 				variant="ghost"
-				onclick={() => onInsertText('```language', '\n```')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-300 hover:dark:text-mofu-dark-200 rounded p-2"
+				onclick={() => onInsertText('```', '\n```')}
+				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
 				title="코드"
 			>
 				<Code class="h-5 w-5" />
@@ -133,7 +133,7 @@
 		<Button
 			variant="ghost"
 			onclick={onToggleHeader}
-			class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-300 hover:dark:text-mofu-dark-200 rounded p-2"
+			class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
 			title={showStickyToolbar ? '헤더 보이기' : '헤더 숨기기'}
 		>
 			{#if showStickyToolbar}

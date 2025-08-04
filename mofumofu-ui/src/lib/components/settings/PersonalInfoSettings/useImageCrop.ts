@@ -1,10 +1,4 @@
-import { getCroppedImg } from '$lib/utils/imagecrop';
-
-interface CropOptions {
-	maxFileSizeMB: number;
-	resizeOptions: { width: number; height: number };
-	quality: number;
-}
+import { getCroppedImg, type CropOptions } from '$lib/utils/imagecrop';
 
 interface CropData {
 	croppedAreaPixels: { x: number; y: number; width: number; height: number };

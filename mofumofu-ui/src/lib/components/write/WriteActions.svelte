@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { Icon } from 'svelte-hero-icons';
-	import { ArrowLeft, BookmarkSquare, PaperAirplane } from 'svelte-hero-icons';
+	import { BookmarkSquare, PaperAirplane, Icon, ClipboardDocumentList } from 'svelte-hero-icons';
+	import { Button } from '../ui/button';
+	import { ArrowLeft, Save, Send } from '@lucide/svelte';
 
 	interface Props {
 		onExit: () => void;
@@ -11,31 +12,34 @@
 	const { onExit, onSaveDraft, onPublish }: Props = $props();
 </script>
 
-<div class="bg-mofu-dark-700 p-4">
+<div class="bg-mofu-dark-950 p-4">
 	<div class="flex items-center justify-between">
-		<button
+		<Button
+			variant="ghost"
 			onclick={onExit}
-			class="flex items-center gap-2 rounded px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white"
+			class="dark:text-mofu-dark-200 flex items-center gap-2 rounded px-4 py-2 text-lg"
 		>
-			<Icon src={ArrowLeft} class="h-6 w-6" />
-			나가기
-		</button>
+			<ArrowLeft class="h-5 w-5" />
+			돌아가기
+		</Button>
 
 		<div class="flex items-center gap-3">
-			<button
+			<Button
+				variant="ghost"
 				onclick={onSaveDraft}
-				class="flex items-center gap-2 rounded border border-gray-600 bg-transparent px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white"
+				class=" dark:text-mofu-dark-200 flex items-center gap-2 rounded px-4 py-2 text-lg"
 			>
-				<Icon src={BookmarkSquare} class="h-6 w-6" />
+				<Icon src={ClipboardDocumentList} class="h-5 w-5" solid />
 				임시저장
-			</button>
-			<button
+			</Button>
+			<Button
+				variant="ghost"
 				onclick={onPublish}
-				class="flex items-center gap-2 rounded bg-teal-600 px-4 py-2 text-white hover:bg-teal-700"
+				class=" dark:text-mofu-dark-950 dark:hover:bg-mofu bg-mofu flex items-center gap-2 rounded px-4 py-2 text-lg "
 			>
-				<Icon src={PaperAirplane} class="h-6 w-6" />
-				Publish
-			</button>
+				<Icon src={PaperAirplane} class="h-5 w-5" solid />
+				출간하기
+			</Button>
 		</div>
 	</div>
 </div>

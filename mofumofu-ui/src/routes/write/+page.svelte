@@ -1,18 +1,5 @@
 <script lang="ts">
 	import '$lib/styles/markdown.css';
-	import { unified } from 'unified';
-	import remarkParse from 'remark-parse';
-	import remarkGfm from 'remark-gfm';
-	import remarkToc from 'remark-toc';
-	import remarkMath from 'remark-math';
-	import remarkEmoji from 'remark-emoji';
-	import remarkGithubBlockquoteAlert from 'remark-github-blockquote-alert';
-	import remarkRehype from 'remark-rehype';
-	import rehypeKatex from 'rehype-katex';
-	import rehypeHighlight from 'rehype-highlight';
-	import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-	import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
-	import rehypeStringify from 'rehype-stringify';
 	import { useResizable } from '$lib/hooks/useResizable.svelte';
 	import WriteEditor from '$lib/components/write/WriteEditor.svelte';
 	import WritePreview from '$lib/components/write/WritePreview.svelte';
@@ -22,57 +9,6 @@
 	let content = $state('');
 	let htmlOutput = $state('');
 	let containerElement: HTMLElement;
-
-	// Sanitize schema for GFM + KaTeX + Code highlighting
-	const sanitizeSchema = {
-		...defaultSchema,
-		tagNames: [
-			...(defaultSchema.tagNames || []),
-			// GFM extras
-			'input',
-			'details',
-			'summary',
-			'del',
-			'ins',
-			// KaTeX
-			'math',
-			'semantics',
-			'mrow',
-			'mi',
-			'mo',
-			'mn',
-			'msup',
-			'msub',
-			'mfrac',
-			'munder',
-			'mover',
-			'munderover',
-			'mtable',
-			'mtr',
-			'mtd',
-			'mspace',
-			'mtext',
-			'annotation'
-		],
-		attributes: {
-			...(defaultSchema.attributes || {}),
-			'*': ['className', 'id'],
-			// KaTeX classes
-			span: ['className', 'style'],
-			div: ['className', 'style'],
-			// GFM checkboxes
-			input: ['type', 'disabled', 'checked'],
-			// Code highlighting
-			pre: ['className', 'style'],
-			code: ['className', 'style'],
-			// Links
-			a: ['href', 'title', 'target', 'rel']
-		},
-		protocols: {
-			...(defaultSchema.protocols || {}),
-			href: ['http', 'https', 'mailto']
-		}
-	};
 
 	// Resizable hook
 	let resizableHook = $state<ReturnType<typeof useResizable> | null>(null);
@@ -85,9 +21,76 @@
 
 	async function processMarkdown(markdown: string) {
 		try {
+			const { unified } = await import('unified');
+			const { default: remarkParse } = await import('remark-parse');
+			const { default: remarkGfm } = await import('remark-gfm');
+			const { default: remarkBreaks } = await import('remark-breaks');
+			const { default: remarkToc } = await import('remark-toc');
+			const { default: remarkMath } = await import('remark-math');
+			const { default: remarkEmoji } = await import('remark-emoji');
+			const { default: remarkGithubBlockquoteAlert } = await import('remark-github-blockquote-alert');
+			const { default: remarkRehype } = await import('remark-rehype');
+			const { default: rehypeKatex } = await import('rehype-katex');
+			const { default: rehypeHighlight } = await import('rehype-highlight');
+			const { default: rehypeAutolinkHeadings } = await import('rehype-autolink-headings');
+			const { default: rehypeSanitize, defaultSchema } = await import('rehype-sanitize');
+			const { default: rehypeStringify } = await import('rehype-stringify');
+
+			// Sanitize schema for GFM + KaTeX + Code highlighting
+			const sanitizeSchema = {
+				...defaultSchema,
+				tagNames: [
+					...(defaultSchema.tagNames || []),
+					// GFM extras
+					'input',
+					'details',
+					'summary',
+					'del',
+					'ins',
+					// KaTeX
+					'math',
+					'semantics',
+					'mrow',
+					'mi',
+					'mo',
+					'mn',
+					'msup',
+					'msub',
+					'mfrac',
+					'munder',
+					'mover',
+					'munderover',
+					'mtable',
+					'mtr',
+					'mtd',
+					'mspace',
+					'mtext',
+					'annotation'
+				],
+				attributes: {
+					...(defaultSchema.attributes || {}),
+					'*': ['className', 'id'],
+					// KaTeX classes
+					span: ['className', 'style'],
+					div: ['className', 'style'],
+					// GFM checkboxes
+					input: ['type', 'disabled', 'checked'],
+					// Code highlighting
+					pre: ['className', 'style'],
+					code: ['className', 'style'],
+					// Links
+					a: ['href', 'title', 'target', 'rel']
+				},
+				protocols: {
+					...(defaultSchema.protocols || {}),
+					href: ['http', 'https', 'mailto']
+				}
+			};
+
 			const result = await unified()
 				.use(remarkParse)
 				.use(remarkGfm)
+				.use(remarkBreaks)
 				.use(remarkToc)
 				.use(remarkMath)
 				.use(remarkEmoji)
@@ -132,7 +135,7 @@
 	}
 
 	function handleExit() {
-		console.log('나가기');
+		history.back();
 	}
 </script>
 
@@ -169,7 +172,7 @@
 
 		<!-- 미리보기 영역 -->
 		<div style="width: {resizableHook?.rightWidth() ?? 50}%">
-			<WritePreview {title} {tags} {htmlOutput} />
+			<WritePreview {title} {htmlOutput} />
 		</div>
 	</div>
 </div>

@@ -38,7 +38,7 @@
 	}
 </script>
 
-<div class="bg-mofu-dark-900 flex h-full flex-col">
+<div class="bg-mofu-dark-900 text-mofu-dark-200 flex h-full flex-col">
 	<!-- 헤더 영역 (sticky) -->
 	<div class="bg-mofu-dark-900 sticky top-0 z-10 overflow-hidden">
 		<!-- 제목/태그 영역 -->
@@ -58,8 +58,8 @@
 			bind:this={contentTextarea}
 			value={content}
 			oninput={(e) => onContentChange((e.target as HTMLInputElement).value)}
-			placeholder="당신의 이야기를 적어보세요..."
-			class="w-full flex-1 resize-none border-none bg-transparent px-6 py-0 text-lg leading-relaxed text-white outline-none placeholder:text-gray-500"
+			placeholder="It's a beautiful day outside. Birds are singing, flowers are blooming..."
+			class="placeholder:text-mofu-dark-600 w-full flex-1 resize-none border-none bg-transparent px-6 py-0 text-lg leading-relaxed outline-none"
 			spellcheck="false"
 		></textarea>
 	</div>

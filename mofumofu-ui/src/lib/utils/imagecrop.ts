@@ -25,7 +25,7 @@ export async function getCroppedImg(
 	pixelCrop: CroppedArea,
 	options: CropOptions = {}
 ): Promise<{ blob: Blob; url: string; cleanup: () => void }> {
-	const { maxFileSizeMB = 10, resizeOptions, quality = 0.9 } = options;
+	const { maxFileSizeMB = 10, resizeOptions, quality = 1.0 } = options;
 	const image = await createImage(imageSrc);
 
 	let sourceCanvas: HTMLCanvasElement | null = null;
