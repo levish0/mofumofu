@@ -60,18 +60,22 @@
 	<title>{data.profile.name} (@{data.profile.handle}) - Mofu</title>
 </svelte:head>
 <div class="min-h-screen">
-	<div class="max-w-8xl mx-auto pt-2">
+	<div class="max-w-8xl mx-auto px-4 pt-2">
 		<!-- Two Column Layout -->
 		<div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
 			<!-- Left Column: Profile Info (Twitter Style) -->
 			<div class="lg:col-span-1">
 				<div class="sticky transition-all duration-100 ease-out" style="top: {topPosition}">
 					<!-- Banner Section -->
-					<div class="relative aspect-[3/1] w-full rounded-xl">
+					<div class="relative aspect-[3/1] w-full">
 						{#if data.profile.banner_image}
-							<img src={data.profile.banner_image} alt="Banner" class="h-full w-full rounded-xl object-cover" />
+							<img
+								src={data.profile.banner_image}
+								alt="Banner"
+								class="h-full w-full overflow-hidden rounded-xl object-cover"
+							/>
 						{:else}
-							<div class="h-full w-full rounded-xl bg-gradient-to-r from-blue-400 to-purple-500"></div>
+							<div class="h-full w-full overflow-hidden rounded-xl bg-gradient-to-r from-blue-400 to-purple-500"></div>
 						{/if}
 
 						<!-- Action Button (next to profile image) -->
