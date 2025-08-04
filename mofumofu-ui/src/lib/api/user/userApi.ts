@@ -24,10 +24,9 @@ export async function getUserProfile(handle: string): Promise<UserInfoResponse> 
 	}
 }
 
-export async function updateProfile(data: UpdateProfileRequest): Promise<UserInfoResponse> {
+export async function updateProfile(data: UpdateProfileRequest): Promise<void> {
 	try {
-		const response = await api.put('v0/user/profile', { json: data });
-		return await response.json<UserInfoResponse>();
+		await api.put('v0/user/profile', { json: data });
 	} catch (error) {
 		console.error(error);
 		throw error;

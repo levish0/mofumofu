@@ -1,12 +1,12 @@
 import { getMyProfile } from '$lib/api/user/userApi';
 import { personalSettingsStore } from './personal.svelte';
-import type { 
-	DisplaySettings, 
-	NotificationSettings, 
-	PrivacySettings, 
-	AccountSettings, 
+import type {
+	DisplaySettings,
+	NotificationSettings,
+	PrivacySettings,
+	AccountSettings,
 	WritingSettings,
-	SettingsState 
+	SettingsState
 } from './types';
 
 class SettingsStore {
@@ -132,7 +132,7 @@ class SettingsStore {
 		this.state.isLoading = false;
 		// State is already initialized with defaults, just mark as ready
 		this.originalState = JSON.parse(JSON.stringify(this.state));
-		
+
 		// Initialize personal settings store
 		personalSettingsStore.initializeWithDefaults();
 	}
@@ -214,7 +214,7 @@ class SettingsStore {
 			account: this.state.account,
 			writing: this.state.writing
 		};
-		
+
 		const originalSettings = {
 			display: this.originalState.display,
 			notifications: this.originalState.notifications,
@@ -222,7 +222,7 @@ class SettingsStore {
 			account: this.originalState.account,
 			writing: this.originalState.writing
 		};
-		
+
 		this.state.hasChanges = JSON.stringify(currentSettings) !== JSON.stringify(originalSettings);
 	}
 
@@ -321,8 +321,10 @@ class SettingsStore {
 
 	// Check if there are any validation errors
 	hasValidationErrors(): boolean {
-		return personalSettingsStore.hasValidationErrors() || 
-			Object.values(this.state.validationErrors).some((sectionErrors) => Object.keys(sectionErrors).length > 0);
+		return (
+			personalSettingsStore.hasValidationErrors() ||
+			Object.values(this.state.validationErrors).some((sectionErrors) => Object.keys(sectionErrors).length > 0)
+		);
 	}
 
 	// Validate all sections before saving

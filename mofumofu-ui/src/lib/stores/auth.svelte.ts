@@ -1,6 +1,8 @@
 // src/lib/stores/auth.svelte.ts
 
-let _token = $state('');
+import { browser } from '$app/environment';
+
+let _token = $state(browser ? localStorage.getItem('access_token') ?? '' : '');
 
 export const authStore = {
 	get token() {
@@ -13,9 +15,15 @@ export const authStore = {
 
 	setToken(token: string) {
 		_token = token;
+		if (browser) {
+			localStorage.setItem('access_token', token);
+		}
 	},
 
 	clearToken() {
 		_token = '';
+		if (browser) {
+			localStorage.removeItem('access_token');
+		}
 	}
 };
