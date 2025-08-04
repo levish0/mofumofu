@@ -79,11 +79,6 @@
 	"keywords": [
 		"svelte"
 	],
-	"pnpm": {
-		"onlyBuiltDependencies": [
-			"esbuild"
-		]
-	},
 	"dependencies": {
 		"@sveltejs/kit": "^2.27.0",
 		"esm-env": "^1.2.2"
