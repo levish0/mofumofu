@@ -1,0 +1,16 @@
+/* Markdown content styles */
+@import url('https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/styles/github-dark.min.css');
+@import url('https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css');
+@import url(remark-github-blockquote-alert/alert.css);
+
+.prose pre {
+	background-color: rgb(24, 24, 24) !important;
+	border-radius: 0.375rem;
+	padding: 1rem !important;
+}
+
+.prose code {
+	background-color: rgb(24, 24, 24) !important;
+	padding: 0.125rem 0.25rem !important;
+	border-radius: 0.25rem;
+}
