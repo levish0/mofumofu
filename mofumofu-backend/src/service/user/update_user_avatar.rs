@@ -1,14 +1,14 @@
-use crate::service::error::errors::Errors;
-
 use crate::repository::user::get_user_by_uuid::repository_get_user_by_uuid;
-use crate::tasks_bridge::profile_client::queue_user_banner_upload;
+use crate::service::error::errors::Errors;
+use crate::tasks_bridge::profile_client::queue_user_avatar_update;
 use axum::extract::Multipart;
+use chrono::Utc;
 use reqwest::Client;
 use sea_orm::ConnectionTrait;
 use tracing::{error, info, warn};
 use uuid::Uuid;
 
-pub async fn service_upload_user_banner<C>(
+pub async fn service_update_user_avatar<C>(
     conn: &C,
     http_client: &Client,
     user_uuid: &Uuid,
@@ -17,7 +17,7 @@ pub async fn service_upload_user_banner<C>(
 where
     C: ConnectionTrait,
 {
-    info!("Processing banner image upload for user: {}", user_uuid);
+    info!("Processing avatar image upload for user: {}", user_uuid);
 
     // UUID로 사용자 정보 조회
     let user = repository_get_user_by_uuid(conn, user_uuid).await?;
@@ -74,27 +74,31 @@ where
     let content_type = content_type.unwrap_or_else(|| "image/jpeg".to_string());
 
     info!(
-        "Processing banner image upload: user_uuid={}, content_type={}, size={} bytes",
+        "Processing avatar image upload: user_uuid={}, content_type={}, size={} bytes",
         user_uuid,
         content_type,
         file_data.len()
     );
 
-    // 태스크 큐에 업로드 요청
-    queue_user_banner_upload(
+    let timestamp = Utc::now().format("%Y%m%d_%H%M%S_%3f");
+    let filename = format!("avatar_{}", timestamp);
+
+    // 태스크 큐에 업데이트 요청 (기존 삭제 후 새 업로드)
+    queue_user_avatar_update(
         http_client,
         &user_uuid,
         &user.handle,
+        &filename,
         file_data,
         &content_type,
     )
     .await
     .map_err(|e| {
-        error!("Failed to queue banner image upload task: {}", e);
-        Errors::SysInternalError("Failed to queue banner image upload task".to_string())
+        error!("Failed to queue avatar image upload task: {}", e);
+        Errors::SysInternalError("Failed to queue avatar image upload task".to_string())
     })?;
 
-    info!("Banner image upload task queued for user: {}", user_uuid);
+    info!("Avatar image upload task queued for user: {}", user_uuid);
 
     Ok(())
 }

@@ -10,6 +10,8 @@
 
 	let isLoading = $state(true);
 	let isOwnProfile = $state(false);
+	let bannerLoaded = $state(false);
+	let profileImageLoaded = $state(false);
 
 	type NavbarContext = {
 		isVisible: () => boolean;
@@ -64,10 +66,18 @@
 					<!-- Banner Section -->
 					<div class="relative aspect-[3/1] w-full">
 						{#if data.profile.banner_image}
+							{#if !bannerLoaded}
+								<div class="shimmer bg-mofu-dark-900 absolute inset-0 overflow-hidden rounded-xl"></div>
+							{/if}
 							<img
 								src={data.profile.banner_image}
 								alt="Banner"
-								class="h-full w-full overflow-hidden rounded-xl object-cover"
+								class="absolute inset-0 h-full w-full overflow-hidden rounded-xl object-cover transition-opacity duration-300"
+								class:opacity-0={!bannerLoaded}
+								class:opacity-100={bannerLoaded}
+								loading="lazy"
+								onload={() => (bannerLoaded = true)}
+								onerror={() => (bannerLoaded = true)}
 							/>
 						{:else}
 							<div class="h-full w-full overflow-hidden rounded-xl bg-gradient-to-r from-blue-400 to-purple-500"></div>
@@ -96,21 +106,33 @@
 
 						<!-- Profile Image (overlapping banner) -->
 						<div class="absolute -bottom-12 left-4 z-10">
-							{#if data.profile.profile_image}
-								<img
-									src={data.profile.profile_image}
-									alt={data.profile.name}
-									class="border-mofu-dark-900 h-24 w-24 rounded-full border-4 object-cover"
-								/>
-							{:else}
-								<div
-									class="flex h-24 w-24 items-center justify-center rounded-full border-4 border-white bg-gray-100 dark:border-gray-900 dark:bg-gray-800"
-								>
-									<span class="text-2xl font-medium text-gray-600 dark:text-gray-400">
-										{data.profile.name.charAt(0).toUpperCase()}
-									</span>
-								</div>
-							{/if}
+							<div class="relative h-24 w-24">
+								{#if data.profile.profile_image}
+									{#if !profileImageLoaded}
+										<div
+											class="shimmer bg-mofu-dark-900 border-mofu-dark-900 absolute inset-0 rounded-full border-4"
+										></div>
+									{/if}
+									<img
+										src={data.profile.profile_image}
+										alt={data.profile.name}
+										class="border-mofu-dark-900 bg-mofu-dark-900 absolute inset-0 h-24 w-24 rounded-full border-4 object-cover transition-opacity duration-300"
+										class:opacity-0={!profileImageLoaded}
+										class:opacity-100={profileImageLoaded}
+										loading="lazy"
+										onload={() => (profileImageLoaded = true)}
+										onerror={() => (profileImageLoaded = true)}
+									/>
+								{:else}
+									<div
+										class="flex h-24 w-24 items-center justify-center rounded-full border-4 border-white bg-gray-100 dark:border-gray-900 dark:bg-gray-800"
+									>
+										<span class="text-2xl font-medium text-gray-600 dark:text-gray-400">
+											{data.profile.name.charAt(0).toUpperCase()}
+										</span>
+									</div>
+								{/if}
+							</div>
 						</div>
 					</div>
 

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from app.tasks.profile_tasks import upload_profile_image_task, delete_profile_image_task
+from app.tasks.profile_tasks import upload_oauth_profile_image_task, delete_oauth_profile_image_task
 import logging
 
 logger = logging.getLogger(__name__)
@@ -26,7 +26,7 @@ async def upload_oauth_profile_image(request: ProfileImageOauthUploadRequest):
     """
     try:
         # Celery 태스크 실행
-        task = upload_profile_image_task.delay(request.user_id, request.image_url)
+        task = upload_oauth_profile_image_task.delay(request.user_id, request.image_url)
         
         logger.info(f"OAuth 프로필 이미지 업로드 태스크 시작: {task.id} (user_id: {request.user_id})")
         
@@ -47,7 +47,7 @@ async def delete_oauth_profile_image(request: ProfileImageDeleteRequest):
     """
     try:
         # Celery 태스크 실행
-        task = delete_profile_image_task.delay(request.user_id)
+        task = delete_oauth_profile_image_task.delay(request.user_id)
         
         logger.info(f"OAuth 프로필 이미지 삭제 태스크 시작: {task.id} (user_id: {request.user_id})")
         

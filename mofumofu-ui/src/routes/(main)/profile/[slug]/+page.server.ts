@@ -9,17 +9,9 @@ export const load: PageServerLoad = async ({ params }) => {
 
 	try {
 		const profile = await getUserProfile(params.slug);
-		const timestamp = Date.now();
-
-		// Add timestamp to images to prevent caching
-		const profileWithTimestamp = {
-			...profile,
-			profile_image: profile.profile_image ? `${profile.profile_image}?t=${timestamp}` : null,
-			banner_image: profile.banner_image ? `${profile.banner_image}?t=${timestamp}` : null
-		};
 
 		return {
-			profile: profileWithTimestamp,
+			profile: profile,
 			slug: params.slug
 		};
 	} catch (err) {

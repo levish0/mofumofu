@@ -2,6 +2,7 @@ use crate::config::db_config::DbConfig;
 use reqwest::{Client, multipart};
 use serde::{Deserialize, Serialize};
 use std::sync::LazyLock;
+use sea_orm::Iden;
 use tracing::{error, info, warn};
 use uuid::Uuid;
 
@@ -76,6 +77,7 @@ pub async fn queue_user_avatar_upload(
     http_client: &Client,
     user_uuid: &Uuid,
     user_handle: &str,
+    filename: &str,
     file_data: Vec<u8>,
     content_type: &str,
 ) -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
@@ -92,11 +94,12 @@ pub async fn queue_user_avatar_upload(
     let form = multipart::Form::new()
         .text("user_uuid", user_uuid.to_string())
         .text("user_handle", user_handle.to_string())
+        .text("filename", filename.to_string())
         .part(
             "file",
             multipart::Part::bytes(file_data)
                 .mime_str(content_type)?
-                .file_name("avatar"),
+                .file_name(filename.to_string()),
         );
 
     let response = http_client
@@ -128,6 +131,7 @@ pub async fn queue_user_banner_upload(
     http_client: &Client,
     user_uuid: &Uuid,
     user_handle: &str,
+    filename: &str,
     file_data: Vec<u8>,
     content_type: &str,
 ) -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
@@ -144,11 +148,12 @@ pub async fn queue_user_banner_upload(
     let form = multipart::Form::new()
         .text("user_uuid", user_uuid.to_string())
         .text("user_handle", user_handle.to_string())
+        .text("filename", filename.to_string())
         .part(
             "file",
             multipart::Part::bytes(file_data)
                 .mime_str(content_type)?
-                .file_name("banner"),
+                .file_name(filename.to_string()),
         );
 
     let response = http_client
@@ -169,6 +174,198 @@ pub async fn queue_user_banner_upload(
     let task_response: TaskResponse = response.json().await?;
     info!(
         "Banner upload task queued asynchronously with ID: {}",
+        task_response.task_id
+    );
+
+    Ok(task_response.task_id)
+}
+
+/// 사용자 아바타 이미지 삭제를 태스크 서버에 요청
+pub async fn queue_user_avatar_delete(
+    http_client: &Client,
+    user_uuid: &Uuid,
+    user_handle: &str,
+) -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
+    let task_server_url = get_task_server_url();
+
+    info!(
+        "Queuing async avatar delete task for user: {} ({})",
+        user_uuid, user_handle
+    );
+
+    // multipart form 생성
+    let form = multipart::Form::new()
+        .text("user_uuid", user_uuid.to_string())
+        .text("user_handle", user_handle.to_string());
+
+    let response = http_client
+        .delete(&format!("{}/tasks/avatar/delete", task_server_url))
+        .multipart(form)
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status();
+        let error_text = response
+            .text()
+            .await
+            .unwrap_or_else(|_| "Unknown error".to_string());
+        return Err(format!("Task queue request failed: {} - {}", status, error_text).into());
+    }
+
+    let task_response: TaskResponse = response.json().await?;
+    info!(
+        "Avatar delete task queued asynchronously with ID: {}",
+        task_response.task_id
+    );
+
+    Ok(task_response.task_id)
+}
+
+/// 사용자 배너 이미지 삭제를 태스크 서버에 요청
+pub async fn queue_user_banner_delete(
+    http_client: &Client,
+    user_uuid: &Uuid,
+    user_handle: &str,
+) -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
+    let task_server_url = get_task_server_url();
+
+    info!(
+        "Queuing async banner delete task for user: {} ({})",
+        user_uuid, user_handle
+    );
+
+    // multipart form 생성
+    let form = multipart::Form::new()
+        .text("user_uuid", user_uuid.to_string())
+        .text("user_handle", user_handle.to_string());
+
+    let response = http_client
+        .delete(&format!("{}/tasks/banner/delete", task_server_url))
+        .multipart(form)
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status();
+        let error_text = response
+            .text()
+            .await
+            .unwrap_or_else(|_| "Unknown error".to_string());
+        return Err(format!("Task queue request failed: {} - {}", status, error_text).into());
+    }
+
+    let task_response: TaskResponse = response.json().await?;
+    info!(
+        "Banner delete task queued asynchronously with ID: {}",
+        task_response.task_id
+    );
+
+    Ok(task_response.task_id)
+}
+
+/// 사용자 아바타 이미지 업데이트를 태스크 서버에 요청 (기존 삭제 후 새 업로드)
+pub async fn queue_user_avatar_update(
+    http_client: &Client,
+    user_uuid: &Uuid,
+    user_handle: &str,
+    filename: &str,
+    file_data: Vec<u8>,
+    content_type: &str,
+) -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
+    let task_server_url = get_task_server_url();
+
+    info!(
+        "Queuing async avatar update task for user: {} ({}), size: {} bytes",
+        user_uuid,
+        user_handle,
+        file_data.len()
+    );
+
+    // multipart form 생성
+    let form = multipart::Form::new()
+        .text("user_uuid", user_uuid.to_string())
+        .text("user_handle", user_handle.to_string())
+        .text("filename", filename.to_string())
+        .part(
+            "file",
+            multipart::Part::bytes(file_data)
+                .mime_str(content_type)?
+                .file_name(filename.to_string()),
+        );
+
+    let response = http_client
+        .put(&format!("{}/tasks/avatar/update", task_server_url))
+        .multipart(form)
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status();
+        let error_text = response
+            .text()
+            .await
+            .unwrap_or_else(|_| "Unknown error".to_string());
+        return Err(format!("Task queue request failed: {} - {}", status, error_text).into());
+    }
+
+    let task_response: TaskResponse = response.json().await?;
+    info!(
+        "Avatar update task queued asynchronously with ID: {}",
+        task_response.task_id
+    );
+
+    Ok(task_response.task_id)
+}
+
+/// 사용자 배너 이미지 업데이트를 태스크 서버에 요청 (기존 삭제 후 새 업로드)
+pub async fn queue_user_banner_update(
+    http_client: &Client,
+    user_uuid: &Uuid,
+    user_handle: &str,
+    filename: &str,
+    file_data: Vec<u8>,
+    content_type: &str,
+) -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
+    let task_server_url = get_task_server_url();
+
+    info!(
+        "Queuing async banner update task for user: {} ({}), size: {} bytes",
+        user_uuid,
+        user_handle,
+        file_data.len()
+    );
+
+    // multipart form 생성
+    let form = multipart::Form::new()
+        .text("user_uuid", user_uuid.to_string())
+        .text("user_handle", user_handle.to_string())
+        .text("filename", filename.to_string())
+        .part(
+            "file",
+            multipart::Part::bytes(file_data)
+                .mime_str(content_type)?
+                .file_name(filename.to_string()),
+        );
+
+    let response = http_client
+        .put(&format!("{}/tasks/banner/update", task_server_url))
+        .multipart(form)
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status();
+        let error_text = response
+            .text()
+            .await
+            .unwrap_or_else(|_| "Unknown error".to_string());
+        return Err(format!("Task queue request failed: {} - {}", status, error_text).into());
+    }
+
+    let task_response: TaskResponse = response.json().await?;
+    info!(
+        "Banner update task queued asynchronously with ID: {}",
         task_response.task_id
     );
 
