@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
 	import { authStore } from '$lib/stores/auth.svelte.js';
 	import { getContext } from 'svelte';
 	import { getMyProfile } from '$lib/api/user/userApi';
