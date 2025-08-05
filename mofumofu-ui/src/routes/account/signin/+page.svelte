@@ -77,7 +77,7 @@
 							type="submit"
 							class="bg-mofu text-mofu-dark-900 flex w-full justify-center rounded-lg px-3 py-1.5 text-sm/6 font-semibold shadow-xs outline-none hover:opacity-70"
 						>
-{m.auth_sign_in_button()}
+							{m.auth_sign_in_button()}
 						</button>
 					</div>
 				</form>
