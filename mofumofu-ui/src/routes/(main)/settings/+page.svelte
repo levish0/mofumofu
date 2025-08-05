@@ -163,7 +163,7 @@
 								<Icon src={section.icon} size="20" solid class="text-mofu" />
 							</div>
 							<div class="flex-1">
-								<h3 class="text-mofu-dark-200 text-md font-bold">{section.label()}</h3>
+								<h3 class="text-mofu-dark-200 text-md font-bold break-all">{section.label()}</h3>
 							</div>
 						</div>
 						<p class="text-xs text-gray-400">{section.description()}</p>

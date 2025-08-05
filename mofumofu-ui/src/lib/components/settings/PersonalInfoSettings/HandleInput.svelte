@@ -80,7 +80,7 @@
 						></path>
 					</svg>
 				{:else}
-{m.settings_handle_check()}
+					{m.settings_handle_check()}
 				{/if}
 			</button>
 		</div>
