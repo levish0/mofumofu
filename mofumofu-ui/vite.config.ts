@@ -4,5 +4,9 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-	plugins: [paraglideVitePlugin({ project: './project.inlang', outdir: './src/paraglide' }), tailwindcss(), sveltekit()]
+	plugins: [
+		paraglideVitePlugin({ project: './project.inlang', outdir: './src/paraglide', disableAsyncLocalStorage: true }),
+		tailwindcss(),
+		sveltekit()
+	]
 });
