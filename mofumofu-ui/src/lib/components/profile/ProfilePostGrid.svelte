@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ProfilePostCard from './ProfilePostCard.svelte';
+	import PostCard from '../post/PostCard.svelte';
 
 	type Post = {
 		id: string;
@@ -56,6 +56,15 @@
 
 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 	{#each mockPosts as post (post.id)}
-		<ProfilePostCard {post} {profile} />
+		<PostCard 
+			image={post.image}
+			title={post.title}
+			summary={post.content}
+			date={post.timestamp}
+			comments={post.comments}
+			likes={post.likes}
+			author_name={profile.name}
+			author_avatar={profile.profile_image}
+		/>
 	{/each}
 </div>
