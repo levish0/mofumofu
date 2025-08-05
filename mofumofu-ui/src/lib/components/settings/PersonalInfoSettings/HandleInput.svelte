@@ -2,6 +2,7 @@
 	import { Input } from '../../ui/input';
 	import * as v from 'valibot';
 	import { personalInfoSchema } from '$lib/schemas/personal-info';
+	import * as m from '../../../../paraglide/messages';
 
 	interface Props {
 		handle: string | null;
@@ -49,7 +50,7 @@
 </script>
 
 <div class="space-y-4">
-	<h2 class="text-2xl font-semibold">Handle</h2>
+	<h2 class="text-2xl font-semibold">{m.settings_handle()}</h2>
 	<div class="space-y-2">
 		<div class="flex">
 			<span class="dark:bg-mofu-dark-800/50 text-mofu-dark-200 inline-flex items-center rounded-l-md px-3 text-sm"
@@ -57,7 +58,7 @@
 			>
 			<Input
 				id="handle"
-				placeholder="username"
+				placeholder={m.settings_handle_placeholder()}
 				class="dark:bg-mofu-dark-800 text-mofu-dark-200 placeholder:text-mofu-dark-300 rounded-l-none rounded-r-none border-r-0 {localError
 					? 'border-red-500'
 					: ''}"
@@ -79,18 +80,18 @@
 						></path>
 					</svg>
 				{:else}
-					Check
+{m.settings_handle_check()}
 				{/if}
 			</button>
 		</div>
 		{#if localError}
 			<p class="text-xs text-rose-400">{localError}</p>
 		{:else if handleAvailable === true}
-			<p class="text-xs text-green-400">✓ Handle is available</p>
+			<p class="text-xs text-green-400">{m.settings_handle_available()}</p>
 		{:else if handleAvailable === false}
-			<p class="text-xs text-rose-400">✗ Handle is already taken</p>
+			<p class="text-xs text-rose-400">{m.settings_handle_taken()}</p>
 		{:else}
-			<p class="text-xs text-gray-500">Handle must be unique and can only contain letters, numbers, and underscores.</p>
+			<p class="text-xs text-gray-500">{m.settings_handle_description()}</p>
 		{/if}
 	</div>
 </div>

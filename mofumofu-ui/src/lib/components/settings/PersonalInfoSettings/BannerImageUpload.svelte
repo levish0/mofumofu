@@ -2,6 +2,7 @@
 	import { Icon, Photo } from 'svelte-hero-icons';
 	import ImageCropModal from '../../modal/ImageCropModal.svelte';
 	import { useImageCrop } from './useImageCrop';
+	import * as m from '../../../../paraglide/messages';
 
 	interface Props {
 		bannerImage: string | null;
@@ -78,7 +79,7 @@
 </script>
 
 <div class="space-y-4">
-	<h2 class="text-2xl font-semibold">Banner Image</h2>
+	<h2 class="text-2xl font-semibold">{m.settings_banner_image()}</h2>
 	<div class="group relative transition-all">
 		<div class="bg-mofu-dark-800 relative aspect-[4/1] w-full overflow-hidden rounded-lg group-hover:opacity-75">
 			{#if bannerImage}
@@ -106,8 +107,8 @@
 					class="text-mofu-dark-300 flex h-full cursor-pointer flex-col items-center justify-center space-y-2"
 				>
 					<Icon src={Photo} class="h-10 w-10" />
-					<span class="text-sm">Click to upload banner image</span>
-					<span class="text-xs">Recommended: 1600x400px</span>
+					<span class="text-sm">{m.settings_banner_image_upload()}</span>
+					<span class="text-xs">{m.settings_banner_image_recommended()}</span>
 				</label>
 			{/if}
 		</div>

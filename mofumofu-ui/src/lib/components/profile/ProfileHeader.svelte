@@ -1,14 +1,12 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { authStore } from '$lib/stores/auth.svelte.js';
+	import { Button } from '../ui/button';
+	import type { UserInfoResponse } from '$lib/api/user/types';
+	import * as m from '../../../paraglide/messages';
 
 	type Props = {
-		profile: {
-			name: string;
-			handle: string;
-			banner_image?: string;
-			profile_image?: string;
-		};
+		profile: UserInfoResponse;
 		isOwnProfile: boolean;
 		isLoading: boolean;
 		topPosition: string;
@@ -54,19 +52,13 @@
 			{#if isLoading}
 				<div class="shimmer h-10 w-20 rounded-full"></div>
 			{:else if isOwnProfile}
-				<button
-					onclick={handleEditProfile}
-					class="rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
+				<Button variant="outline" onclick={handleEditProfile} class=" bg-transparent px-3 py-0"
+					>{m.profile_edit_profile()}</Button
 				>
-					Edit profile
-				</button>
-			{:else if authStore.isAuthenticated}
-				<button
-					onclick={handleFollow}
-					class="rounded-full bg-black px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-100"
-				>
-					Follow
-				</button>
+			{:else}
+				<Button onclick={handleFollow} disabled={!authStore.isAuthenticated} class="dark:text-mofu-dark-900 px-3 py-0">
+					{authStore.isAuthenticated ? m.profile_follow() : m.profile_sign_in_to_follow()}
+				</Button>
 			{/if}
 		</div>
 
@@ -75,9 +67,7 @@
 			<div class="relative h-24 w-24">
 				{#if profile.profile_image}
 					{#if !profileImageLoaded}
-						<div
-							class="shimmer bg-mofu-dark-900 border-mofu-dark-900 absolute inset-0 rounded-full border-4"
-						></div>
+						<div class="shimmer bg-mofu-dark-900 border-mofu-dark-900 absolute inset-0 rounded-full border-4"></div>
 					{/if}
 					<img
 						src={profile.profile_image}

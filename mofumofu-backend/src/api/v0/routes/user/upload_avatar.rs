@@ -2,7 +2,7 @@ use crate::dto::auth::internal::access_token::AccessTokenClaims;
 use crate::service::error::errors::Errors;
 
 use crate::dto::user::request::avatar_image::ProfileAvatarForm;
-use crate::service::user::update_user_avatar::{service_update_user_avatar};
+use crate::service::user::update_user_avatar::service_update_user_avatar;
 use crate::state::AppState;
 use axum::Extension;
 use axum::extract::{Multipart, State};

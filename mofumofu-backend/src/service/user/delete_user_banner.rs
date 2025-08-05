@@ -20,16 +20,12 @@ where
     let user = repository_get_user_by_uuid(conn, user_uuid).await?;
 
     // 태스크 큐에 삭제 요청
-    queue_user_banner_delete(
-        http_client,
-        &user_uuid,
-        &user.handle,
-    )
-    .await
-    .map_err(|e| {
-        error!("Failed to queue banner image delete task: {}", e);
-        Errors::SysInternalError("Failed to queue banner image delete task".to_string())
-    })?;
+    queue_user_banner_delete(http_client, &user_uuid, &user.handle)
+        .await
+        .map_err(|e| {
+            error!("Failed to queue banner image delete task: {}", e);
+            Errors::SysInternalError("Failed to queue banner image delete task".to_string())
+        })?;
 
     info!("Banner image delete task queued for user: {}", user_uuid);
 

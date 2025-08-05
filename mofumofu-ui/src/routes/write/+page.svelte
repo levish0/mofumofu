@@ -3,6 +3,7 @@
 	import { useResizable } from '$lib/hooks/useResizable.svelte';
 	import WriteEditor from '$lib/components/write/WriteEditor.svelte';
 	import WritePreview from '$lib/components/write/WritePreview.svelte';
+	import { processMarkdown } from '$lib/utils/markdown';
 
 	let title = $state('');
 	let tags = $state('');
@@ -19,99 +20,11 @@
 		}
 	});
 
-	async function processMarkdown(markdown: string) {
-		try {
-			const { unified } = await import('unified');
-			const { default: remarkParse } = await import('remark-parse');
-			const { default: remarkGfm } = await import('remark-gfm');
-			const { default: remarkBreaks } = await import('remark-breaks');
-			const { default: remarkToc } = await import('remark-toc');
-			const { default: remarkMath } = await import('remark-math');
-			const { default: remarkEmoji } = await import('remark-emoji');
-			const { default: remarkGithubBlockquoteAlert } = await import('remark-github-blockquote-alert');
-			const { default: remarkRehype } = await import('remark-rehype');
-			const { default: rehypeKatex } = await import('rehype-katex');
-			const { default: rehypeHighlight } = await import('rehype-highlight');
-			const { default: rehypeAutolinkHeadings } = await import('rehype-autolink-headings');
-			const { default: rehypeSanitize, defaultSchema } = await import('rehype-sanitize');
-			const { default: rehypeStringify } = await import('rehype-stringify');
-
-			// Sanitize schema for GFM + KaTeX + Code highlighting
-			const sanitizeSchema = {
-				...defaultSchema,
-				tagNames: [
-					...(defaultSchema.tagNames || []),
-					// GFM extras
-					'input',
-					'details',
-					'summary',
-					'del',
-					'ins',
-					// KaTeX
-					'math',
-					'semantics',
-					'mrow',
-					'mi',
-					'mo',
-					'mn',
-					'msup',
-					'msub',
-					'mfrac',
-					'munder',
-					'mover',
-					'munderover',
-					'mtable',
-					'mtr',
-					'mtd',
-					'mspace',
-					'mtext',
-					'annotation'
-				],
-				attributes: {
-					...(defaultSchema.attributes || {}),
-					'*': ['className', 'id'],
-					// KaTeX classes
-					span: ['className', 'style'],
-					div: ['className', 'style'],
-					// GFM checkboxes
-					input: ['type', 'disabled', 'checked'],
-					// Code highlighting
-					pre: ['className', 'style'],
-					code: ['className', 'style'],
-					// Links
-					a: ['href', 'title', 'target', 'rel']
-				},
-				protocols: {
-					...(defaultSchema.protocols || {}),
-					href: ['http', 'https', 'mailto']
-				}
-			};
-
-			const result = await unified()
-				.use(remarkParse)
-				.use(remarkGfm)
-				.use(remarkBreaks)
-				.use(remarkToc)
-				.use(remarkMath)
-				.use(remarkEmoji)
-				.use(remarkGithubBlockquoteAlert)
-				.use(remarkRehype, { allowDangerousHtml: true })
-				.use(rehypeKatex)
-				.use(rehypeHighlight)
-				.use(rehypeAutolinkHeadings)
-				.use(rehypeSanitize, sanitizeSchema)
-				.use(rehypeStringify, { allowDangerousHtml: true })
-				.process(markdown);
-
-			htmlOutput = String(result);
-		} catch (error) {
-			console.error('Markdown processing error:', error);
-			htmlOutput = '<p>마크다운 처리 중 오류가 발생했습니다.</p>';
-		}
-	}
-
 	$effect(() => {
-		processMarkdown(content);
+		(async () => {
+			const { htmlContent } = await processMarkdown(content);
+			htmlOutput = htmlContent;
+		})();
 	});
 
 	function handleTitleChange(value: string) {
@@ -140,7 +53,20 @@
 </script>
 
 <svelte:head>
-	<title>글 작성 - mofu</title>
+	<title>글 작성 - Mofu</title>
+	<meta name="description" content="Mofu에서 새로운 글을 작성하고 다른 사람들과 공유하세요." />
+	<meta name="robots" content="noindex, nofollow" />
+
+	<!-- Open Graph -->
+	<meta property="og:title" content="글 작성 - Mofu" />
+	<meta property="og:description" content="Mofu에서 새로운 글을 작성하고 다른 사람들과 공유하세요." />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="Mofu" />
+
+	<!-- Twitter Card -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="글 작성 - Mofu" />
+	<meta name="twitter:description" content="Mofu에서 새로운 글을 작성하고 다른 사람들과 공유하세요." />
 </svelte:head>
 
 <div class="bg-mofu-dark-900 flex h-full w-full break-all text-white">

@@ -14,3 +14,36 @@
 	padding: 0.125rem 0.25rem !important;
 	border-radius: 0.25rem;
 }
+
+/* Heading sizes and colors */
+.prose h1 {
+	font-size: 2rem !important;
+	line-height: 2.5rem !important;
+	color: inherit !important;
+}
+
+.prose h2 {
+	font-size: 1.75rem !important;
+	line-height: 2rem !important;
+	color: inherit !important;
+}
+
+.prose h3 {
+	font-size: 1.5rem !important;
+	line-height: 1.75rem !important;
+	color: inherit !important;
+}
+
+.prose h4 {
+	font-size: 1.25rem !important;
+	line-height: 1.5rem !important;
+	color: inherit !important;
+}
+
+.prose h5 {
+	color: inherit !important;
+}
+
+.prose h6 {
+	color: inherit !important;
+}

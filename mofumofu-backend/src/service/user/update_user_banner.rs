@@ -83,7 +83,7 @@ where
 
     let timestamp = Utc::now().format("%Y%m%d_%H%M%S_%3f");
     let filename = format!("banner_{}", timestamp);
-    
+
     // 태스크 큐에 업데이트 요청 (기존 삭제 후 새 업로드)
     queue_user_banner_update(
         http_client,

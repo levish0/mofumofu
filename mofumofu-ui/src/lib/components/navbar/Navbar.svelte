@@ -19,6 +19,7 @@
 	import { fly, scale } from 'svelte/transition';
 	import { Button } from '../ui/button';
 	import { goto, invalidateAll } from '$app/navigation';
+	import * as m from '../../../paraglide/messages';
 
 	let { isVisible, isAtTop } = $props();
 
@@ -107,7 +108,7 @@
 					<Icon src={MagnifyingGlass} size="20" class="text-white" />
 				</Button>
 
-				<Button href="/write" variant="outline" class="bg-transparent px-3 py-0">새 글 작성하기</Button>
+				<Button href="/write" variant="outline" class="bg-transparent px-3 py-0">{m.navbar_new_post()}</Button>
 
 				<div
 					class=" dropdown-container relative"
@@ -136,22 +137,22 @@
 						>
 							<div class="py-1">
 								<a
-									href="/profile/@{userInfo.handle}"
+									href="/@{userInfo.handle}/profile"
 									class="dark:text-mofu-dark-200 hover:text-mofu flex items-center px-4 py-2"
 								>
 									<Icon src={User} solid size="16" class="mr-3" />
-									마이페이지
+									{m.navbar_my_page()}
 								</a>
 								<a href="/settings" class="dark:text-mofu-dark-200 hover:text-mofu flex items-center px-4 py-2">
 									<Icon src={Cog6Tooth} solid size="16" class="mr-3" />
-									설정
+									{m.navbar_settings()}
 								</a>
 								<button
 									class="dark:text-mofu-dark-200 hover:text-mofu flex w-full items-center px-4 py-2"
 									onclick={handleLogout}
 								>
 									<Icon src={ArrowRightOnRectangle} solid size="16" class="mr-3" />
-									로그아웃
+									{m.navbar_sign_out()}
 								</button>
 							</div>
 						</div>
@@ -164,7 +165,7 @@
 				<Button href="/settings" variant="icon" aria-label="settings">
 					<Icon src={Cog6Tooth} solid size="20" class="text-white" />
 				</Button>
-				<Button href="/account/signup" class="py-0">로그인</Button>
+				<Button href="/account/signup" class="py-0">{m.navbar_sign_in()}</Button>
 			{/if}
 		</div>
 	</div>

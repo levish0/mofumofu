@@ -2,6 +2,7 @@
 	import { Icon, Camera } from 'svelte-hero-icons';
 	import ImageCropModal from '../../modal/ImageCropModal.svelte';
 	import { useImageCrop } from './useImageCrop';
+	import * as m from '../../../../paraglide/messages';
 
 	interface Props {
 		profileImage: string | null;
@@ -78,7 +79,7 @@
 </script>
 
 <div class="space-y-4">
-	<h2 class="text-2xl font-semibold">Profile Image</h2>
+	<h2 class="text-2xl font-semibold">{m.settings_profile_image()}</h2>
 	<div class="flex items-center space-x-4">
 		<div class="group relative transition-all">
 			<div class="bg-mofu-dark-800 relative h-24 w-24 overflow-hidden rounded-full group-hover:opacity-75">
@@ -113,8 +114,8 @@
 			<input id="profile-upload" type="file" accept="image/*" class="hidden" onchange={handleImageChange} />
 		</div>
 		<div class="text-mofu-dark-300 text-sm">
-			<p>Recommended: 400x400px</p>
-			<p>Max file size: 5MB</p>
+			<p>{m.settings_profile_image_recommended()}</p>
+			<p>{m.settings_profile_image_max_size()}</p>
 		</div>
 	</div>
 </div>

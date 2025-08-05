@@ -1,6 +1,7 @@
 use crate::dto::auth::internal::access_token::AccessTokenClaims;
 use crate::dto::user::request::banner_image::ProfileBannerForm;
 use crate::service::error::errors::Errors;
+use crate::service::user::service_update_user_banner;
 use crate::state::AppState;
 use axum::Extension;
 use axum::extract::{Multipart, State};
@@ -9,7 +10,6 @@ use axum::response::IntoResponse;
 use serde::Deserialize;
 use tracing::info;
 use utoipa::ToSchema;
-use crate::service::user::service_update_user_banner;
 
 #[utoipa::path(
     post,

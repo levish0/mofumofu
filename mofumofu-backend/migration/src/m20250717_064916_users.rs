@@ -32,6 +32,7 @@ impl MigrationTrait for Migration {
                     )
                     .col(string_len(Users::Name, 20).not_null()) // 이름, 20자 제한
                     .col(string_len(Users::Handle, 20).not_null().unique_key()) // 핸들, UNIQUE
+                    .col(ColumnDef::new(Users::Bio).text().null())
                     .col(string_len(Users::Email, 254).not_null().unique_key()) // 이메일, UNIQUE
                     .col(ColumnDef::new(Users::Password).text().null()) // 비밀번호 해시, OAUTH 지원 시 NULL 가능
                     .col(
@@ -82,6 +83,7 @@ enum Users {
     Id,
     Name,
     Handle,
+    Bio,
     Email,
     Password,
     IsVerified,

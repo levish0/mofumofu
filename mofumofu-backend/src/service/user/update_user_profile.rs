@@ -32,6 +32,7 @@ where
         name: updated_user.name,
         handle: updated_user.handle,
         email: updated_user.email,
+        bio: updated_user.bio,
         profile_image: updated_user.profile_image,
         banner_image: updated_user.banner_image,
     })

@@ -23,6 +23,7 @@
 	import WritingSettings from '$lib/components/settings/WritingSettings.svelte';
 	import PrivacySettings from '$lib/components/settings/PrivacySettings.svelte';
 	import NotificationSettings from '$lib/components/settings/NotificationSettings.svelte';
+	import * as m from '../../../paraglide/messages';
 
 	let selectedSection = $state(authStore.isAuthenticated ? 'personal' : 'display');
 	let saveSuccess = $state(false);
@@ -74,48 +75,71 @@
 	const sections = [
 		{
 			id: 'personal',
-			label: 'Personal Info',
+			label: () => m.settings_personal_info(),
 			icon: User,
-			description: 'Manage your profile information',
+			description: () => m.settings_personal_info_desc(),
 			requiresAuth: true
 		},
 		{
 			id: 'account',
-			label: 'Account',
+			label: () => m.settings_account(),
 			icon: CreditCard,
-			description: 'Manage account settings and billing',
+			description: () => m.settings_account_desc(),
 			requiresAuth: true
 		},
 		{
 			id: 'display',
-			label: 'Display',
+			label: () => m.settings_display(),
 			icon: ComputerDesktop,
-			description: 'Customize your display preferences',
+			description: () => m.settings_display_desc(),
 			requiresAuth: false
 		},
 		{
 			id: 'writing',
-			label: 'Writing & Publishing',
+			label: () => m.settings_writing(),
 			icon: PencilSquare,
-			description: 'Configure writing and publishing preferences',
+			description: () => m.settings_writing_desc(),
 			requiresAuth: true
 		},
 		{
 			id: 'notifications',
-			label: 'Notifications',
+			label: () => m.settings_notifications(),
 			icon: Bell,
-			description: 'Control notification settings',
+			description: () => m.settings_notifications_desc(),
 			requiresAuth: true
 		},
 		{
 			id: 'privacy',
-			label: 'Privacy & Security',
+			label: () => m.settings_privacy(),
 			icon: ShieldExclamation,
-			description: 'Manage privacy and security options',
+			description: () => m.settings_privacy_desc(),
 			requiresAuth: true
 		}
 	];
 </script>
+
+<svelte:head>
+	<title>설정 - Mofumofu</title>
+	<meta name="description" content="Mofumofu의 개인정보, 계정, 디스플레이, 알림, 개인정보 보호 설정을 관리하세요." />
+	<meta name="robots" content="noindex, nofollow" />
+
+	<!-- Open Graph -->
+	<meta property="og:title" content="설정 - Mofumofu" />
+	<meta
+		property="og:description"
+		content="Mofumofu의 개인정보, 계정, 디스플레이, 알림, 개인정보 보호 설정을 관리하세요."
+	/>
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="Mofumofu" />
+
+	<!-- Twitter Card -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="설정 - Mofumofu" />
+	<meta
+		name="twitter:description"
+		content="Mofumofu의 개인정보, 계정, 디스플레이, 알림, 개인정보 보호 설정을 관리하세요."
+	/>
+</svelte:head>
 
 <div class="text-mofu-dark-200 flex min-h-screen w-full gap-4">
 	<!-- Sidebar with Card Grid -->
@@ -139,10 +163,10 @@
 								<Icon src={section.icon} size="20" solid class="text-mofu" />
 							</div>
 							<div class="flex-1">
-								<h3 class="text-mofu-dark-200 text-md font-bold">{section.label}</h3>
+								<h3 class="text-mofu-dark-200 text-md font-bold">{section.label()}</h3>
 							</div>
 						</div>
-						<p class="text-xs text-gray-400">{section.description}</p>
+						<p class="text-xs text-gray-400">{section.description()}</p>
 					</button>
 				{/each}
 			</div>
@@ -165,12 +189,12 @@
 								d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
 							></path>
 						</svg>
-						<h3 class="text-mofu-dark-200 text-md font-bold">Saving...</h3>
+						<h3 class="text-mofu-dark-200 text-md font-bold">{m.settings_saving()}</h3>
 					{:else if saveSuccess}
 						<Icon src={CheckCircle} class="h-4 w-4 text-green-400" />
-						<h3 class="text-mofu-dark-200 text-md font-bold">Saved!</h3>
+						<h3 class="text-mofu-dark-200 text-md font-bold">{m.settings_saved()}</h3>
 					{:else}
-						<h3 class="text-mofu-dark-200 text-md font-bold">Save Changes</h3>
+						<h3 class="text-mofu-dark-200 text-md font-bold">{m.settings_save_changes()}</h3>
 						{#if settingsStore.hasChanges}
 							<span class="text-xs text-orange-400">•</span>
 						{/if}
@@ -186,7 +210,7 @@
 				>
 					<div class="flex items-center justify-center gap-2">
 						<Icon src={ArrowUturnLeft} class="h-4 w-4" />
-						<span class="text-sm text-gray-400">Reset Changes</span>
+						<span class="text-sm text-gray-400">{m.settings_reset_changes()}</span>
 					</div>
 				</button>
 			{/if}
@@ -201,7 +225,7 @@
 			<!-- Validation Errors -->
 			{#if settingsStore.hasValidationErrors()}
 				<div class="rounded-lg border border-orange-500/20 bg-orange-500/10 p-3">
-					<p class="text-xs font-medium text-orange-400">Validation Errors:</p>
+					<p class="text-xs font-medium text-orange-400">{m.settings_validation_errors()}</p>
 					{#each Object.entries(settingsStore.validationErrors) as [section, sectionErrors]}
 						{#if Object.keys(sectionErrors).length > 0}
 							<div class="mt-2">

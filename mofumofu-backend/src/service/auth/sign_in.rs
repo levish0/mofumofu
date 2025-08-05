@@ -26,7 +26,8 @@ where
             Errors::UserNotFound
         })?;
 
-    verify_password(&payload.password, &user.password)?;
+    let stored_password = user.password.as_ref().ok_or(Errors::UserInvalidPassword)?;
+    verify_password(&payload.password, stored_password)?;
 
     let access_token = create_jwt_access_token(&user.id).map_err(|e| {
         error!("Failed to create access token: {:?}", e);

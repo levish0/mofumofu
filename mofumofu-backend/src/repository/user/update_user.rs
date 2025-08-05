@@ -27,6 +27,7 @@ where
         id: Set(existing_user.id),
         name: fields.name.map_or(NotSet, Set),
         handle: fields.handle.map_or(NotSet, Set),
+        bio: fields.bio.map_or(NotSet, Set),
         email: fields.email.map_or(NotSet, Set),
         password: fields.password.map_or(NotSet, Set),
         is_verified: fields.is_verified.map_or(NotSet, Set),

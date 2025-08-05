@@ -20,16 +20,12 @@ where
     let user = repository_get_user_by_uuid(conn, user_uuid).await?;
 
     // 태스크 큐에 삭제 요청
-    queue_user_avatar_delete(
-        http_client,
-        &user_uuid,
-        &user.handle,
-    )
-    .await
-    .map_err(|e| {
-        error!("Failed to queue avatar image delete task: {}", e);
-        Errors::SysInternalError("Failed to queue avatar image delete task".to_string())
-    })?;
+    queue_user_avatar_delete(http_client, &user_uuid, &user.handle)
+        .await
+        .map_err(|e| {
+            error!("Failed to queue avatar image delete task: {}", e);
+            Errors::SysInternalError("Failed to queue avatar image delete task".to_string())
+        })?;
 
     info!("Avatar image delete task queued for user: {}", user_uuid);
 

@@ -2,6 +2,7 @@ export interface UserInfoResponse {
 	handle: string;
 	name: string;
 	email: string;
+	bio?: string;
 	profile_image?: string;
 	banner_image?: string;
 }

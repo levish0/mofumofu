@@ -43,6 +43,7 @@ pub async fn get_following(
             name: user.name,
             handle: user.handle,
             email: user.email,
+            bio: user.bio,
             profile_image: user.profile_image,
             banner_image: user.banner_image,
         })

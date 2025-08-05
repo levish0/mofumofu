@@ -43,10 +43,7 @@
 			id: '3',
 			title: 'lorem what',
 			content: 'lorem what',
-			images: [
-				'https://picsum.photos/250/150?random=2',
-				'https://picsum.photos/250/150?random=3'
-			],
+			images: ['https://picsum.photos/250/150?random=2', 'https://picsum.photos/250/150?random=3'],
 			timestamp: '3d',
 			comments: 3,
 			likes: 19
@@ -56,7 +53,7 @@
 
 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 	{#each mockPosts as post (post.id)}
-		<PostCard 
+		<PostCard
 			image={post.image}
 			title={post.title}
 			summary={post.content}

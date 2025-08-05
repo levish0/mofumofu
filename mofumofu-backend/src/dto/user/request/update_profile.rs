@@ -16,6 +16,8 @@ pub struct UpdateProfileRequest {
         message = "Handle must be between 3 and 20 characters."
     ))]
     pub handle: Option<String>,
+    #[validate(length(max = 200))]
+    pub bio: Option<String>,
     #[validate(length(
         min = 6,
         max = 20,

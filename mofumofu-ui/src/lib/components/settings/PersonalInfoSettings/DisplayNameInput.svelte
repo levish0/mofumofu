@@ -2,6 +2,7 @@
 	import { Input } from '../../ui/input';
 	import * as v from 'valibot';
 	import { personalInfoSchema } from '$lib/schemas/personal-info';
+	import * as m from '../../../../paraglide/messages';
 
 	interface Props {
 		name: string | null;
@@ -29,11 +30,11 @@
 </script>
 
 <div class="space-y-4">
-	<h2 class="text-2xl font-semibold">Display Name</h2>
+	<h2 class="text-2xl font-semibold">{m.settings_display_name()}</h2>
 	<div class="space-y-2">
 		<Input
 			id="name"
-			placeholder="Enter your display name"
+			placeholder={m.settings_display_name_placeholder()}
 			class="dark:bg-mofu-dark-800 text-mofu-dark-200 placeholder:text-mofu-dark-300 {localError
 				? 'border-red-500'
 				: ''}"
@@ -43,7 +44,7 @@
 		{#if localError}
 			<p class="text-xs text-rose-400">{localError}</p>
 		{:else}
-			<p class="text-mofu-dark-300 text-xs">Display name must be between 3-20 characters.</p>
+			<p class="text-mofu-dark-300 text-xs">{m.settings_display_name_description()}</p>
 		{/if}
 	</div>
 </div>

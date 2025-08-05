@@ -46,6 +46,30 @@
 
 <svelte:head>
 	<title>{data.profile.name} (@{data.profile.handle}) - Mofu</title>
+	<meta name="description" content={data.profile.bio || `${data.profile.name}의 프로필을 확인하세요.`} />
+
+	<!-- Open Graph -->
+	<meta property="og:title" content="{data.profile.name} (@{data.profile.handle}) - Mofu" />
+	<meta property="og:description" content={data.profile.bio || `${data.profile.name}의 프로필을 확인하세요.`} />
+	<meta property="og:type" content="profile" />
+	<meta property="og:url" content="https://mofumofu.ink/{data.profile.handle}/profile" />
+	{#if data.profile.profile_image}
+		<meta property="og:image" content={data.profile.profile_image} />
+	{:else}
+		<meta property="og:image" content="https://mofumofu.ink/og-default.png" />
+	{/if}
+	<meta property="og:site_name" content="Mofu" />
+	<meta property="profile:username" content={data.profile.handle} />
+
+	<!-- Twitter Card -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="{data.profile.name} (@{data.profile.handle}) - Mofu" />
+	<meta name="twitter:description" content={data.profile.bio || `${data.profile.name}의 프로필을 확인하세요.`} />
+	{#if data.profile.profile_image}
+		<meta name="twitter:image" content={data.profile.profile_image} />
+	{:else}
+		<meta name="twitter:image" content="https://mofumofu.ink/og-default.png" />
+	{/if}
 </svelte:head>
 <div class="min-h-screen">
 	<div class="max-w-8xl mx-auto px-4 pt-2">
@@ -54,12 +78,7 @@
 			<!-- Left Column: Profile Info -->
 			<div class="lg:col-span-1">
 				<div class="sticky transition-all duration-100 ease-out" style="top: {topPosition}">
-					<ProfileHeader 
-						profile={data.profile} 
-						{isOwnProfile} 
-						{isLoading} 
-						{topPosition} 
-					/>
+					<ProfileHeader profile={data.profile} {isOwnProfile} {isLoading} {topPosition} />
 					<ProfileInfo profile={data.profile} />
 				</div>
 			</div>

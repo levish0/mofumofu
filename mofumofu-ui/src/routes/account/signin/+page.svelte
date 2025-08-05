@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getGoogleOAuthUrl, getGitHubOAuthUrl } from '$lib/oauth/config';
+	import * as m from '../../../paraglide/messages';
 
 	function goBack() {
 		history.back();
@@ -21,20 +22,20 @@
 		<!-- 로그인 폼 콘텐츠 -->
 		<div class="mx-auto w-full max-w-sm lg:w-96">
 			<div class="flex justify-start text-center">
-				<button onclick={goBack} class="text-mofu-dark-300 text-sm hover:opacity-70"> ← 돌아가기 </button>
+				<button onclick={goBack} class="text-mofu-dark-300 text-sm hover:opacity-70">{m.auth_go_back()}</button>
 			</div>
 			<div>
-				<h2 class="mt-6 text-2xl/9 font-bold tracking-tight text-white">로그인</h2>
+				<h2 class="mt-6 text-2xl/9 font-bold tracking-tight text-white">{m.auth_sign_in()}</h2>
 				<p class="text-mofu-dark-300 mt-2 text-sm/6">
-					아직 계정이 없으신가요?
-					<a href="/account/signup" class="text-mofu rounded-lg font-semibold hover:opacity-70">가입하기</a>
+					{m.auth_no_account()}
+					<a href="/account/signup" class="text-mofu rounded-lg font-semibold hover:opacity-70">{m.auth_sign_up()}</a>
 				</p>
 			</div>
 
 			<div class="mt-6">
 				<form method="POST" class="space-y-4">
 					<div>
-						<label for="email" class="block text-sm/6 font-medium">Email address</label>
+						<label for="email" class="block text-sm/6 font-medium">{m.auth_email_address()}</label>
 						<div class="mt-2">
 							<input
 								id="email"
@@ -49,7 +50,7 @@
 					</div>
 
 					<div>
-						<label for="password" class="block text-sm/6 font-medium">Password</label>
+						<label for="password" class="block text-sm/6 font-medium">{m.auth_password()}</label>
 						<div class="mt-2">
 							<input
 								id="password"
@@ -66,7 +67,7 @@
 					<div class="flex items-center justify-end">
 						<div class="text-sm/6">
 							<a href="/account/forgot-password" class="text-mofu rounded-lg font-semibold hover:opacity-70"
-								>비밀번호를 잊으셨나요?</a
+								>{m.auth_forgot_password()}</a
 							>
 						</div>
 					</div>
@@ -76,7 +77,7 @@
 							type="submit"
 							class="bg-mofu text-mofu-dark-900 flex w-full justify-center rounded-lg px-3 py-1.5 text-sm/6 font-semibold shadow-xs outline-none hover:opacity-70"
 						>
-							로그인하기
+{m.auth_sign_in_button()}
 						</button>
 					</div>
 				</form>
@@ -88,7 +89,7 @@
 						<div class="border-mofu-dark-700 w-full border-t"></div>
 					</div>
 					<div class="relative flex justify-center text-sm/6 font-medium">
-						<span class="bg-mofu-dark-900 px-6">또는</span>
+						<span class="bg-mofu-dark-900 px-6">{m.auth_or()}</span>
 					</div>
 				</div>
 

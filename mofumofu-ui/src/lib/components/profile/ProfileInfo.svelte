@@ -1,9 +1,10 @@
 <script lang="ts">
+	import type { UserInfoResponse } from '$lib/api/user/types';
+	import { Briefcase, CalendarDays, Icon, MapPin } from 'svelte-hero-icons';
+	import * as m from '../../../paraglide/messages';
+
 	type Props = {
-		profile: {
-			name: string;
-			handle: string;
-		};
+		profile: UserInfoResponse;
 	};
 
 	const { profile }: Props = $props();
@@ -17,42 +18,30 @@
 			<h1 class="text-xl font-bold text-gray-900 dark:text-white">
 				{profile.name}
 			</h1>
-			<p class="text-sm text-gray-500 dark:text-gray-400">
+			<p class="dark:text-mofu-dark-300 text-sm">
 				@{profile.handle}
 			</p>
 		</div>
 
 		<!-- Bio -->
-		<p class="text-sm text-gray-700 dark:text-gray-300">
-			✨ 아 파이썬으로 백엔드 짤걸<br />
-			✨ 괜히 러스트로 짜가지고 <br />
-			⚠️ 아 자고 싶다
-		</p>
+		{#if profile.bio}
+			<p class="dark:text-mofu-dark-200 text-md text-gray-700">
+				{profile.bio}
+			</p>
+		{/if}
 
 		<!-- Location and Join Date -->
-		<div class="space-y-1 text-sm text-gray-500 dark:text-gray-400">
+		<div class="dark:text-mofu-dark-300 flex items-center gap-4 text-sm">
 			<div class="flex items-center gap-1">
-				<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-					></path>
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-					></path>
-				</svg>
+				<Icon src={MapPin} class="h-4 w-4" />
 				<span>tokyo</span>
 			</div>
 			<div class="flex items-center gap-1">
-				<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 4v10m6-10v10M6 21h12a2 2 0 002-2V9a2 2 0 00-2-2H6a2 2 0 00-2 2v10a2 2 0 002 2z"
-					></path>
-				</svg>
+				<Icon src={Briefcase} class="h-4 w-4" />
+				<span>mofumofu</span>
+			</div>
+			<div class="flex items-center gap-1">
+				<Icon src={CalendarDays} class="h-4 w-4" />
 				<span>Joined August 2017</span>
 			</div>
 		</div>
@@ -61,15 +50,12 @@
 		<div class="flex items-center space-x-4 text-sm">
 			<div>
 				<span class="font-bold text-gray-900 dark:text-white">427</span>
-				<span class="text-gray-500 dark:text-gray-400">Following</span>
+				<span class="dark:text-mofu-dark-300">{m.profile_following()}</span>
 			</div>
 			<div>
 				<span class="font-bold text-gray-900 dark:text-white">152.1K</span>
-				<span class="text-gray-500 dark:text-gray-400">Followers</span>
+				<span class="dark:text-mofu-dark-300">{m.profile_followers()}</span>
 			</div>
 		</div>
-
-		<!-- Additional Info -->
-		<p class="text-xs text-gray-500 dark:text-gray-400">Not followed by anyone you're following</p>
 	</div>
 </div>
