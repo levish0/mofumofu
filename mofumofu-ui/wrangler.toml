@@ -1,0 +1,7 @@
+# Cloudflare Pages Configuration
+name = "mofumofu-ui"
+compatibility_date = "2025-08-06"
+compatibility_flags = ["nodejs_compat"]
+
+# Pages build output directory
+pages_build_output_dir = ".svelte-kit/cloudflare"
