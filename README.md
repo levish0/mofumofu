@@ -4,7 +4,7 @@
 
 # Mofu
 
-> A cozy space for creators to write and share their stories and art.
+> A soft and simple blogging platform for everyone.
 
 Mofu is an open-source, minimalist blogging platform.  
 
