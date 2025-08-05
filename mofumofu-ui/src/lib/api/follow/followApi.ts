@@ -1,9 +1,9 @@
-import { api } from '../private';
+import { privateApi } from '../private';
 import type { CreateFollowRequest, DeleteFollowRequest } from './types';
 
 export async function createFollow(request: CreateFollowRequest) {
 	try {
-		await api.post('v0/follow', {
+		await privateApi.post('v0/follow', {
 			json: request
 		});
 	} catch (error) {
@@ -14,7 +14,7 @@ export async function createFollow(request: CreateFollowRequest) {
 
 export async function deleteFollow(request: DeleteFollowRequest) {
 	try {
-		await api.post('v0/unfollow', {
+		await privateApi.post('v0/unfollow', {
 			json: request
 		});
 	} catch (error) {
