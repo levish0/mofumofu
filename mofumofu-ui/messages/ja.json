@@ -74,7 +74,6 @@
 	"settings_bio_description": "あなたについての簡単な紹介を書いてください。最大200文字です。",
 	"settings_bio_too_long": "自己紹介は200文字以下で入力してください",
 	"settings_theme": "テーマ",
-	"settings_theme_description": "ウェブサイト全体の外観を変更します。",
 	"theme_system": "システム",
 	"theme_light": "ライト",
 	"theme_dark": "ダーク",

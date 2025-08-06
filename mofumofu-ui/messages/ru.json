@@ -74,7 +74,6 @@
 	"settings_bio_description": "Напишите короткую биографию о себе. Максимум 200 символов.",
 	"settings_bio_too_long": "Биография должна быть 200 символов или меньше",
 	"settings_theme": "Тема",
-	"settings_theme_description": "Измените общий внешний вид веб-сайта.",
 	"theme_system": "Система",
 	"theme_light": "Светлая",
 	"theme_dark": "Тёмная",

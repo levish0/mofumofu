@@ -74,7 +74,6 @@
 	"settings_bio_description": "Écrivez une courte biographie sur vous. Maximum 200 caractères.",
 	"settings_bio_too_long": "La biographie doit faire 200 caractères ou moins",
 	"settings_theme": "Thème",
-	"settings_theme_description": "Changez l'apparence générale du site web.",
 	"theme_system": "Système",
 	"theme_light": "Clair",
 	"theme_dark": "Sombre",

@@ -74,7 +74,6 @@
 	"settings_bio_description": "Write a short bio about yourself. Maximum 200 characters.",
 	"settings_bio_too_long": "Bio must be 200 characters or less",
 	"settings_theme": "Theme",
-	"settings_theme_description": "Change the overall look of the website.",
 	"theme_system": "System",
 	"theme_light": "Light",
 	"theme_dark": "Dark",

@@ -29,7 +29,6 @@
 
 <div class="space-y-4">
 	<h2 class="text-2xl font-semibold">{m.settings_theme()}</h2>
-	<p class="text-mofu-dark-400">{m.settings_theme_description()}</p>
 	<div class="space-y-2">
 		<Select.Root type="single" bind:value={selectedTheme} onValueChange={handleThemeChange}>
 			<Select.Trigger class="dark:bg-mofu-dark-800 text-mofu-dark-200 border-mofu-dark-700 w-64">
