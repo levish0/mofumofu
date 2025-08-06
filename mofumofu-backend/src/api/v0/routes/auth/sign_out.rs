@@ -1,4 +1,5 @@
 use crate::dto::auth::internal::refresh_token::RefreshTokenContext;
+use crate::dto::auth::response::sign_out::SignOutResponse;
 use crate::service::auth::service_sign_out;
 use crate::service::error::errors::Errors;
 use crate::state::AppState;
@@ -40,7 +41,7 @@ pub async fn sign_out(
     let refresh_token = ctx.token;
     let refresh_token_claims = ctx.claims;
 
-    let user = service_sign_out(
+    service_sign_out(
         &state.conn,
         Some(ua_str),
         Some(ip_str),
@@ -49,5 +50,5 @@ pub async fn sign_out(
     )
     .await?;
 
-    Ok(StatusCode::NO_CONTENT)
+    Ok(SignOutResponse)
 }

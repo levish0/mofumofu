@@ -38,40 +38,6 @@
 	// Calculate the top position based on navbar state
 	const topPosition = $derived(navbar.isVisible() ? '68px' : '8px');
 
-	onMount(async () => {
-		// Initialize settings with default data
-		settingsStore.initializeWithDefaults();
-
-		// Load user profile data from API
-		try {
-			const userProfile = await getMyProfile();
-			settingsStore.updatePersonalSilent({
-				handle: userProfile.handle,
-				name: userProfile.name,
-				profileImage: userProfile.profile_image || null,
-				bannerImage: userProfile.banner_image || null
-			});
-			// API 호출이 성공하면 인증된 상태이므로 personal 섹션으로 변경
-			if (selectedSection === 'display') {
-				selectedSection = 'personal';
-			}
-		} catch (error) {
-			console.error('Failed to load user profile:', error);
-			// Keep default data if API call fails
-		}
-	});
-
-	async function handleSave() {
-		const result = await settingsStore.saveChanges();
-		if (result.success) {
-			saveSuccess = true;
-			// Clear success message after 3 seconds
-			setTimeout(() => {
-				saveSuccess = false;
-			}, 3000);
-		}
-	}
-
 	const sections = [
 		{
 			id: 'personal',
@@ -116,6 +82,55 @@
 			requiresAuth: true
 		}
 	];
+
+	// URL 해시에서 섹션 읽기, 없으면 기본값 사용
+	const getInitialSection = () => {
+		if (typeof window !== 'undefined') {
+			const hash = window.location.hash.slice(1); // # 제거
+			if (hash && sections.some(s => s.id === hash)) {
+				return hash;
+			}
+		}
+		return authStore.isAuthenticated ? 'personal' : 'display';
+	};
+
+	onMount(async () => {
+		// URL 해시에서 초기 섹션 설정
+		selectedSection = getInitialSection();
+
+		// Initialize settings with default data
+		settingsStore.initializeWithDefaults();
+
+		// Load user profile data from API
+		try {
+			const userProfile = await getMyProfile();
+			settingsStore.updatePersonalSilent({
+				handle: userProfile.handle,
+				name: userProfile.name,
+				profileImage: userProfile.profile_image || null,
+				bannerImage: userProfile.banner_image || null
+			});
+			// API 호출이 성공하면 인증된 상태이므로 personal 섹션으로 변경 (단, 해시가 없는 경우만)
+			if (!window.location.hash && selectedSection === 'display') {
+				selectedSection = 'personal';
+				window.location.hash = 'personal';
+			}
+		} catch (error) {
+			console.error('Failed to load user profile:', error);
+			// Keep default data if API call fails
+		}
+	});
+
+	async function handleSave() {
+		const result = await settingsStore.saveChanges();
+		if (result.success) {
+			saveSuccess = true;
+			// Clear success message after 3 seconds
+			setTimeout(() => {
+				saveSuccess = false;
+			}, 3000);
+		}
+	}
 </script>
 
 <svelte:head>
@@ -155,6 +170,7 @@
 						onclick={() => {
 							if (!section.requiresAuth || authStore.isAuthenticated) {
 								selectedSection = section.id;
+								window.location.hash = section.id;
 							}
 						}}
 					>

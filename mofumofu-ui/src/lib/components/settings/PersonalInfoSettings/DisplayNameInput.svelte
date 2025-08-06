@@ -44,7 +44,7 @@
 		{#if localError}
 			<p class="text-xs text-rose-400">{localError}</p>
 		{:else}
-			<p class="text-mofu-dark-300 text-xs">{m.settings_display_name_description()}</p>
+			<p class="text-mofu-dark-400 text-xs">{m.settings_display_name_description()}</p>
 		{/if}
 	</div>
 </div>

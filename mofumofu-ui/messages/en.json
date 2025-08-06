@@ -53,5 +53,15 @@
 	"auth_forgot_password": "Forgot your password?",
 	"auth_sign_in_button": "Sign in",
 	"auth_sign_up_button": "Sign up",
-	"auth_or": "Or"
+	"auth_or": "Or",
+	"settings_language": "Language",
+	"settings_language_description": "Choose your preferred language for the interface.",
+	"language_english": "English",
+	"language_japanese": "Japanese",
+	"language_korean": "Korean",
+	"language_german": "German",
+	"language_spanish": "Spanish",
+	"language_spanish_mx": "Spanish (Mexico)",
+	"language_french": "French",
+	"language_russian": "Russian"
 }

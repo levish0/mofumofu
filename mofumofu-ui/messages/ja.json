@@ -53,5 +53,15 @@
 	"auth_forgot_password": "パスワードをお忘れですか？",
 	"auth_sign_in_button": "サインイン",
 	"auth_sign_up_button": "サインアップ",
-	"auth_or": "または"
+	"auth_or": "または",
+	"settings_language": "言語",
+	"settings_language_description": "インターフェイスの言語を選択してください。",
+	"language_english": "English",
+	"language_japanese": "日本語",
+	"language_korean": "한국어",
+	"language_german": "Deutsch",
+	"language_spanish": "Español",
+	"language_spanish_mx": "Español (México)",
+	"language_french": "Français",
+	"language_russian": "Русский"
 }

@@ -9,15 +9,15 @@
 	<title>Mofumofu - A soft and simple blogging platform for everyone.</title>
 	<meta
 		name="description"
-		content="Mofumofu는 새로운 소셜 미디어 플랫폼입니다. 다양한 사람들과 소통하고 콘텐츠를 공유하세요."
+		content="Mofumofu is a new social media platform. Connect with diverse people and share content."
 	/>
-	<meta name="keywords" content="소셜미디어, SNS, 커뮤니티, 소통, 콘텐츠" />
+	<meta name="keywords" content="social media, SNS, community, communication, content" />
 
 	<!-- Open Graph -->
-	<meta property="og:title" content="Mofumofu - 소셜 미디어 플랫폼" />
+	<meta property="og:title" content="Mofumofu - Social Media Platform" />
 	<meta
 		property="og:description"
-		content="Mofumofu는 새로운 소셜 미디어 플랫폼입니다. 다양한 사람들과 소통하고 콘텐츠를 공유하세요."
+		content="Mofumofu is a new social media platform. Connect with diverse people and share content."
 	/>
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://mofumofu.ink" />
@@ -26,10 +26,10 @@
 
 	<!-- Twitter Card -->
 	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:title" content="Mofumofu - 소셜 미디어 플랫폼" />
+	<meta name="twitter:title" content="Mofumofu - Social Media Platform" />
 	<meta
 		name="twitter:description"
-		content="Mofumofu는 새로운 소셜 미디어 플랫폼입니다. 다양한 사람들과 소통하고 콘텐츠를 공유하세요."
+		content="Mofumofu is a new social media platform. Connect with diverse people and share content."
 	/>
 	<meta name="twitter:image" content="https://mofumofu.ink/og-default.png" />
 

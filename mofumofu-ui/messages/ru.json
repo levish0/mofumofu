@@ -53,5 +53,15 @@
 	"auth_forgot_password": "Забыли пароль?",
 	"auth_sign_in_button": "Войти",
 	"auth_sign_up_button": "Зарегистрироваться",
-	"auth_or": "Или"
+	"auth_or": "Или",
+	"settings_language": "Язык",
+	"settings_language_description": "Выберите предпочитаемый язык для интерфейса.",
+	"language_english": "English",
+	"language_japanese": "日本語",
+	"language_korean": "한국어",
+	"language_german": "Deutsch",
+	"language_spanish": "Español",
+	"language_spanish_mx": "Español (México)",
+	"language_french": "Français",
+	"language_russian": "Русский"
 }

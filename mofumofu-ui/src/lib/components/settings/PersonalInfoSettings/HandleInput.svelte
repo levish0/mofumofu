@@ -91,7 +91,7 @@
 		{:else if handleAvailable === false}
 			<p class="text-xs text-rose-400">{m.settings_handle_taken()}</p>
 		{:else}
-			<p class="text-xs text-gray-500">{m.settings_handle_description()}</p>
+			<p class="text-mofu-dark-400 text-xs">{m.settings_handle_description()}</p>
 		{/if}
 	</div>
 </div>

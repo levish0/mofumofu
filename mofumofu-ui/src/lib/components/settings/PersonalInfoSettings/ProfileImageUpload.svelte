@@ -113,7 +113,7 @@
 			</div>
 			<input id="profile-upload" type="file" accept="image/*" class="hidden" onchange={handleImageChange} />
 		</div>
-		<div class="text-mofu-dark-300 text-sm">
+		<div class="text-mofu-dark-400 text-sm">
 			<p>{m.settings_profile_image_recommended()}</p>
 			<p>{m.settings_profile_image_max_size()}</p>
 		</div>

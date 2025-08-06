@@ -18,7 +18,7 @@
 	import { signOut } from '$lib/api/auth/authApi';
 	import { fly, scale } from 'svelte/transition';
 	import { Button } from '../ui/button';
-	import { goto, invalidateAll } from '$app/navigation';
+	import { invalidateAll } from '$app/navigation';
 	import * as m from '../../../paraglide/messages';
 
 	let { isVisible, isAtTop } = $props();
@@ -55,7 +55,7 @@
 			userInfo = null;
 			isDropdownOpen = false;
 			await invalidateAll();
-			goto('/');
+			window.location.reload();
 		} catch (error) {
 			console.error('Logout failed:', error);
 			return;
