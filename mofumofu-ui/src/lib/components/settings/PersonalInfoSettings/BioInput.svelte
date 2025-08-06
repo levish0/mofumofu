@@ -15,7 +15,7 @@
 	let localError = $state<string | undefined>();
 
 	function validateBio(value: string): string | undefined {
-		const schema = createPersonalInfoSchema(m);
+		const schema = createPersonalInfoSchema();
 		const result = v.safeParse(schema.entries.bio, value.trim());
 		return result.success ? undefined : result.issues?.[0]?.message;
 	}
@@ -40,7 +40,7 @@
 			<Textarea
 				id="bio"
 				placeholder={m.settings_bio_placeholder()}
-				class="dark:bg-mofu-dark-800 text-mofu-dark-200 placeholder:text-mofu-dark-300 min-h-[100px] resize-none {localError
+				class="dark:bg-mofu-dark-800 text-mofu-dark-200 placeholder:text-mofu-dark-300 min-h-[100px]  {localError
 					? 'border-red-500'
 					: ''}"
 				value={bio || ''}

@@ -15,7 +15,7 @@
 	let localError = $state<string | undefined>();
 
 	function validateLocation(value: string): string | undefined {
-		const schema = createPersonalInfoSchema(m);
+		const schema = createPersonalInfoSchema();
 		const result = v.safeParse(schema.entries.location, value.trim());
 		return result.success ? undefined : result.issues?.[0]?.message;
 	}

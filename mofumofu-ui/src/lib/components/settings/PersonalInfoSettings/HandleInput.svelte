@@ -17,7 +17,7 @@
 	let handleAvailable = $state<boolean | null>(null);
 
 	function validateHandle(value: string): string | undefined {
-		const schema = createPersonalInfoSchema(m);
+		const schema = createPersonalInfoSchema();
 		const result = v.safeParse(schema.entries.handle, value.trim());
 		return result.success ? undefined : result.issues?.[0]?.message;
 	}

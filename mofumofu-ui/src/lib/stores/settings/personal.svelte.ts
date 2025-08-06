@@ -1,6 +1,6 @@
 import { updateProfile, uploadAvatar, uploadBanner, getMyProfile } from '$lib/api/user/userApi';
 import type { UpdateProfileRequest } from '$lib/api/user/types';
-import { personalInfoSchema } from '$lib/schemas/personal-info';
+import { createPersonalInfoSchema } from '$lib/schemas/personal-info';
 import { safeParse } from 'valibot';
 import type { PersonalInfo } from './types';
 
@@ -128,7 +128,7 @@ export class PersonalSettingsStore {
 
 	// Validate personal info
 	async validate(): Promise<boolean> {
-		const result = safeParse(personalInfoSchema, this.state);
+		const result = safeParse(createPersonalInfoSchema(), this.state);
 		if (!result.success) {
 			const errors: Record<string, string> = {};
 			for (const issue of result.issues) {

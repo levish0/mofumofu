@@ -108,6 +108,8 @@
 				handle: userProfile.handle,
 				name: userProfile.name,
 				bio: userProfile.bio || '',
+				location: userProfile.location || '',
+				website: userProfile.website || '',
 				profileImage: userProfile.profile_image || null,
 				bannerImage: userProfile.banner_image || null
 			});
