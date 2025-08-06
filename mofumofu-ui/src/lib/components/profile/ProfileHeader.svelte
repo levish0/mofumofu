@@ -31,7 +31,7 @@
 	<div class="relative aspect-[3/1] w-full">
 		{#if profile.banner_image}
 			{#if !bannerLoaded}
-				<div class="shimmer bg-mofu-dark-900 absolute inset-0 overflow-hidden rounded-xl"></div>
+				<div class="shimmer dark:bg-mofu-dark-900 bg-mofu-light-100 absolute inset-0 overflow-hidden rounded-xl"></div>
 			{/if}
 			<img
 				src={profile.banner_image}
@@ -67,12 +67,14 @@
 			<div class="relative h-24 w-24">
 				{#if profile.profile_image}
 					{#if !profileImageLoaded}
-						<div class="shimmer bg-mofu-dark-900 border-mofu-dark-900 absolute inset-0 rounded-full border-4"></div>
+						<div
+							class="shimmer dark:border-mofu-dark-900 dark:bg-mofu-dark-900 bg-mofu-light-100 border-mofu-light-100 absolute inset-0 rounded-full border-4"
+						></div>
 					{/if}
 					<img
 						src={profile.profile_image}
 						alt={profile.name}
-						class="border-mofu-dark-900 bg-mofu-dark-900 absolute inset-0 h-24 w-24 rounded-full border-4 object-cover transition-opacity duration-300"
+						class="dark:border-mofu-dark-900 dark:bg-mofu-dark-900 bg-mofu-light-100 border-mofu-light-100 absolute inset-0 h-24 w-24 rounded-full border-4 object-cover transition-opacity duration-300"
 						class:opacity-0={!profileImageLoaded}
 						class:opacity-100={profileImageLoaded}
 						loading="lazy"

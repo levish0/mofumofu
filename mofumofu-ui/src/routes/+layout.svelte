@@ -40,7 +40,7 @@
 </svelte:head>
 
 <ModeWatcher defaultMode="system" />
-<div class="dark:bg-mofu-dark-900 font-pretendard bg-mofu-light-300 min-h-screen max-w-screen">
+<div class="dark:bg-mofu-dark-900 font-pretendard bg-mofu-light-100 min-h-screen max-w-screen">
 	<main>
 		{@render children()}
 	</main>
