@@ -17,6 +17,8 @@ where
         handle: user.handle,
         email: user.email,
         bio: user.bio,
+        location: user.location,
+        website: user.website,
         profile_image: user.profile_image,
         banner_image: user.banner_image,
     })

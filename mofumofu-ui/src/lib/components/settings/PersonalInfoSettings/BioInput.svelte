@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { Textarea } from '../../ui/textarea';
+	import * as v from 'valibot';
+	import { createPersonalInfoSchema } from '$lib/schemas/personal-info';
 	import * as m from '../../../../paraglide/messages';
 
 	interface Props {
@@ -13,10 +15,9 @@
 	let localError = $state<string | undefined>();
 
 	function validateBio(value: string): string | undefined {
-		if (value.length > 200) {
-			return m.settings_bio_too_long();
-		}
-		return undefined;
+		const schema = createPersonalInfoSchema(m);
+		const result = v.safeParse(schema.entries.bio, value.trim());
+		return result.success ? undefined : result.issues?.[0]?.message;
 	}
 
 	function handleInput(e: Event) {

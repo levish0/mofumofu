@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { UserInfoResponse } from '$lib/api/user/types';
-	import { Briefcase, CalendarDays, Icon, MapPin } from 'svelte-hero-icons';
+	import { Briefcase, CalendarDays, Icon, Link, MapPin } from 'svelte-hero-icons';
 	import * as m from '../../../paraglide/messages';
 	import Autolinker from 'autolinker';
+	import escapeHtml from 'escape-html';
 
 	type Props = {
 		profile: UserInfoResponse;
@@ -11,7 +12,14 @@
 	const { profile }: Props = $props();
 
 	function linkifyBio(text: string): string {
-		return Autolinker.link(text, {
+		// 1. First escape HTML
+		const escapedText = escapeHtml(text);
+
+		// 2. Convert line breaks to <br> tags
+		const textWithBreaks = escapedText.replace(/\n/g, '<br>');
+
+		// Then apply autolinker
+		return Autolinker.link(textWithBreaks, {
 			urls: true,
 			email: true,
 			phone: false,
@@ -45,10 +53,25 @@
 
 		<!-- Location and Join Date -->
 		<div class="dark:text-mofu-dark-300 flex items-center gap-4 text-sm">
-			<div class="flex items-center gap-1">
-				<Icon src={MapPin} class="h-4 w-4" />
-				<span>tokyo</span>
-			</div>
+			{#if profile.location}
+				<div class="flex items-center gap-1">
+					<Icon src={MapPin} class="h-4 w-4" />
+					<span>{profile.location}</span>
+				</div>
+			{/if}
+			{#if profile.website}
+				<div class="flex items-center gap-1">
+					<Icon src={Link} class="h-4 w-4" />
+					<a
+						href={profile.website}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-mofu underline transition-colors hover:opacity-70"
+					>
+						{profile.website.replace(/^https?:\/\//, '')}
+					</a>
+				</div>
+			{/if}
 			<div class="flex items-center gap-1">
 				<Icon src={Briefcase} class="h-4 w-4" />
 				<span>mofumofu</span>

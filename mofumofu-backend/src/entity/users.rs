@@ -12,6 +12,10 @@ pub struct Model {
     pub handle: String, // Unique
     #[sea_orm(string_len = 200, nullable)]
     pub bio: Option<String>,
+    #[sea_orm(string_len = 30, nullable)]
+    pub location: Option<String>,
+    #[sea_orm(string_len = 50, nullable)]
+    pub website: Option<String>,
     #[sea_orm(string_len = 254, not_null, unique)]
     pub email: String, // Unique
     #[sea_orm(column_type = "Text", nullable)]

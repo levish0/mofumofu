@@ -11,6 +11,11 @@ pub struct UserInfoResponse {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub bio: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub location: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub website: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub profile_image: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub banner_image: Option<String>,

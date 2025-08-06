@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Input } from '../../ui/input';
 	import * as v from 'valibot';
-	import { personalInfoSchema } from '$lib/schemas/personal-info';
+	import { createPersonalInfoSchema } from '$lib/schemas/personal-info';
 	import * as m from '../../../../paraglide/messages';
 
 	interface Props {
@@ -17,7 +17,8 @@
 	let handleAvailable = $state<boolean | null>(null);
 
 	function validateHandle(value: string): string | undefined {
-		const result = v.safeParse(personalInfoSchema.entries.handle, value.trim());
+		const schema = createPersonalInfoSchema(m);
+		const result = v.safeParse(schema.entries.handle, value.trim());
 		return result.success ? undefined : result.issues?.[0]?.message;
 	}
 

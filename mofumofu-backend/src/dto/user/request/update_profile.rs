@@ -18,6 +18,10 @@ pub struct UpdateProfileRequest {
     pub handle: Option<String>,
     #[validate(length(max = 200))]
     pub bio: Option<String>,
+    #[validate(length(max = 30))]
+    pub location: Option<String>,
+    #[validate(length(max = 50))]
+    pub website: Option<String>,
     #[validate(length(
         min = 6,
         max = 20,

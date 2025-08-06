@@ -3,6 +3,8 @@ export interface UserInfoResponse {
 	name: string;
 	email: string;
 	bio?: string;
+	location?: string;
+	website?: string;
 	profile_image?: string;
 	banner_image?: string;
 }
@@ -22,5 +24,7 @@ export interface UpdateProfileRequest {
 	handle?: string | null;
 	name?: string | null;
 	bio?: string | null;
+	location?: string | null;
+	website?: string | null;
 	password?: string | null;
 }

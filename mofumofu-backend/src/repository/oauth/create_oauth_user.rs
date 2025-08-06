@@ -19,6 +19,8 @@ where
         name: Set(name.to_string()),
         handle: Set(handle.to_string()),
         bio: Set(None),
+        location: Set(None),
+        website: Set(None),
         email: Set(email.to_string()),
         password: Set(None),
         is_verified: Set(true),

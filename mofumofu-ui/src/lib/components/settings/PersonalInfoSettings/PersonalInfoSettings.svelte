@@ -6,11 +6,13 @@
 	import HandleInput from './HandleInput.svelte';
 	import DisplayNameInput from './DisplayNameInput.svelte';
 	import BioInput from './BioInput.svelte';
+	import LocationInput from './LocationInput.svelte';
+	import WebsiteInput from './WebsiteInput.svelte';
 
 	const personal = $derived(settingsStore.personal);
-	const { handle, name, profileImage, bannerImage, bio } = $derived(personal);
+	const { handle, name, profileImage, bannerImage, bio, location, website } = $derived(personal);
 
-	let localErrors = $state<{ handle?: string; name?: string; bio?: string }>({});
+	let localErrors = $state<{ handle?: string; name?: string; bio?: string; location?: string; website?: string }>({});
 
 	function validateForm(): boolean {
 		const hasErrors = Object.keys(localErrors).length > 0;
@@ -44,6 +46,14 @@
 		settingsStore.updatePersonal({ bio: newBio });
 	}
 
+	function handleLocationUpdate(newLocation: string) {
+		settingsStore.updatePersonal({ location: newLocation });
+	}
+
+	function handleWebsiteUpdate(newWebsite: string) {
+		settingsStore.updatePersonal({ website: newWebsite });
+	}
+
 	function handleHandleValidation(error?: string) {
 		if (error) {
 			localErrors.handle = error;
@@ -74,6 +84,26 @@
 		validateForm();
 	}
 
+	function handleLocationValidation(error?: string) {
+		if (error) {
+			localErrors.location = error;
+		} else {
+			delete localErrors.location;
+		}
+		localErrors = { ...localErrors };
+		validateForm();
+	}
+
+	function handleWebsiteValidation(error?: string) {
+		if (error) {
+			localErrors.website = error;
+		} else {
+			delete localErrors.website;
+		}
+		localErrors = { ...localErrors };
+		validateForm();
+	}
+
 	onMount(() => {
 		if (handle && name) {
 			validateForm();
@@ -92,5 +122,9 @@
 		<DisplayNameInput {name} onUpdate={handleNameUpdate} onValidationChange={handleNameValidation} />
 
 		<BioInput {bio} onUpdate={handleBioUpdate} onValidationChange={handleBioValidation} />
+
+		<LocationInput {location} onUpdate={handleLocationUpdate} onValidationChange={handleLocationValidation} />
+
+		<WebsiteInput {website} onUpdate={handleWebsiteUpdate} onValidationChange={handleWebsiteValidation} />
 	</div>
 </div>

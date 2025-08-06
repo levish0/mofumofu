@@ -3,6 +3,8 @@ pub struct UpdateUserFields {
     pub name: Option<String>,
     pub handle: Option<String>,
     pub bio: Option<Option<String>>,
+    pub location: Option<Option<String>>,
+    pub website: Option<Option<String>>,
     pub email: Option<String>,
     pub password: Option<Option<String>>,
     pub is_verified: Option<bool>,

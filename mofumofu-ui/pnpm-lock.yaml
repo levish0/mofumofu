@@ -39,6 +39,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.1.11
         version: 4.1.11(vite@7.0.6(jiti@2.5.1)(lightningcss@1.30.1))
+      '@types/escape-html':
+        specifier: ^1.0.4
+        version: 1.0.4
       '@types/pica':
         specifier: ^9.0.5
         version: 9.0.5
@@ -57,6 +60,9 @@ importers:
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
+      escape-html:
+        specifier: ^1.0.3
+        version: 1.0.3
       ky:
         specifier: ^1.8.2
         version: 1.8.2
@@ -968,6 +974,9 @@ packages:
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
 
+  '@types/escape-html@1.0.4':
+    resolution: {integrity: sha512-qZ72SFTgUAZ5a7Tj6kf2SHLetiH5S6f8G5frB2SPQ3EyF02kxdyBFf4Tz4banE3xCgGnKgWLt//a6VuYHKYJTg==}
+
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
@@ -1251,6 +1260,9 @@ packages:
     resolution: {integrity: sha512-vVC0USHGtMi8+R4Kz8rt6JhEWLxsv9Rnu/lGYbPR8u47B+DCBksq9JarW0zOO7bs37hyOK1l2/oqtbciutL5+Q==}
     engines: {node: '>=18'}
     hasBin: true
+
+  escape-html@1.0.3:
+    resolution: {integrity: sha512-NiSupZ4OeuGwr68lGIeym/ksIZMJodUGOSCZ/FSnTxcrekbvqrgdUxlJOMpijaKZVjAJrWrGs/6Jy8OMuyj9ow==}
 
   escape-string-regexp@5.0.0:
     resolution: {integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==}
@@ -2984,6 +2996,8 @@ snapshots:
     dependencies:
       '@types/ms': 2.1.0
 
+  '@types/escape-html@1.0.4': {}
+
   '@types/estree@1.0.8': {}
 
   '@types/hast@3.0.4':
@@ -3246,6 +3260,8 @@ snapshots:
       '@esbuild/win32-arm64': 0.25.8
       '@esbuild/win32-ia32': 0.25.8
       '@esbuild/win32-x64': 0.25.8
+
+  escape-html@1.0.3: {}
 
   escape-string-regexp@5.0.0: {}
 

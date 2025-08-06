@@ -9,6 +9,7 @@ name = "migration"
 path = "src/lib.rs"
 
 [dependencies]
+ammonia = "4.1.1"
 async-std = { version = "1", features = ["attributes", "tokio1"] }
 dotenvy = "0.15.7"
 strum = { version = "0.27.2", features = ["derive"] }

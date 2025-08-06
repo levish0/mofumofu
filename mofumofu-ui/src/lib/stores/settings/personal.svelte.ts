@@ -9,6 +9,8 @@ export class PersonalSettingsStore {
 		handle: '',
 		name: '',
 		bio: '',
+		location: '',
+		website: '',
 		profileImage: null,
 		bannerImage: null,
 		profileImageFile: null,
@@ -19,6 +21,8 @@ export class PersonalSettingsStore {
 		handle: '',
 		name: '',
 		bio: '',
+		location: '',
+		website: '',
 		profileImage: null,
 		bannerImage: null,
 		profileImageFile: null,
@@ -45,6 +49,14 @@ export class PersonalSettingsStore {
 		return this.state.bio;
 	}
 
+	get location() {
+		return this.state.location;
+	}
+
+	get website() {
+		return this.state.website;
+	}
+
 	get profileImage() {
 		return this.state.profileImage;
 	}
@@ -66,6 +78,8 @@ export class PersonalSettingsStore {
 			handle: this.state.handle,
 			name: this.state.name,
 			bio: this.state.bio,
+			location: this.state.location,
+			website: this.state.website,
 			profileImage: this.state.profileImage,
 			bannerImage: this.state.bannerImage
 		});
@@ -73,6 +87,8 @@ export class PersonalSettingsStore {
 			handle: this.originalState.handle,
 			name: this.originalState.name,
 			bio: this.originalState.bio,
+			location: this.originalState.location,
+			website: this.originalState.website,
 			profileImage: this.originalState.profileImage,
 			bannerImage: this.originalState.bannerImage
 		});
@@ -138,6 +154,8 @@ export class PersonalSettingsStore {
 			current.handle !== original.handle ||
 			current.name !== original.name ||
 			current.bio !== original.bio ||
+			current.location !== original.location ||
+			current.website !== original.website ||
 			current.profileImage !== original.profileImage ||
 			current.bannerImage !== original.bannerImage ||
 			current.profileImageFile !== null ||
@@ -178,11 +196,13 @@ export class PersonalSettingsStore {
 					}
 				}
 
-				// Update basic profile info (handle, name, bio, password)
+				// Update basic profile info (handle, name, bio, location, website, password)
 				const personalData: UpdateProfileRequest = {
 					handle: this.state.handle || null,
 					name: this.state.name || null,
-					bio: this.state.bio || null
+					bio: this.state.bio || null,
+					location: this.state.location || null,
+					website: this.state.website || null
 				};
 
 				// Add password if provided
@@ -202,6 +222,8 @@ export class PersonalSettingsStore {
 					handle: updatedProfile.handle,
 					name: updatedProfile.name,
 					bio: updatedProfile.bio || '',
+					location: updatedProfile.location || '',
+					website: updatedProfile.website || '',
 					profileImage: this.state.profileImage || updatedProfile.profile_image || null,
 					bannerImage: this.state.bannerImage || updatedProfile.banner_image || null,
 					profileImageFile: null, // Clear file after successful upload

@@ -22,6 +22,8 @@ where
         name: payload.name,
         handle: payload.handle,
         bio: Some(payload.bio),
+        location: Some(payload.location),
+        website: Some(payload.website),
         ..Default::default() // 나머지 필드는 None
     };
 
@@ -34,6 +36,8 @@ where
         handle: updated_user.handle,
         email: updated_user.email,
         bio: updated_user.bio,
+        location: updated_user.location,
+        website: updated_user.website,
         profile_image: updated_user.profile_image,
         banner_image: updated_user.banner_image,
     })
