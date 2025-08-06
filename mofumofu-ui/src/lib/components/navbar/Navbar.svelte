@@ -20,6 +20,7 @@
 	import { Button } from '../ui/button';
 	import { invalidateAll } from '$app/navigation';
 	import * as m from '../../../paraglide/messages';
+	import { cn } from '$lib/utils';
 
 	let { isVisible, isAtTop } = $props();
 
@@ -79,15 +80,16 @@
 </script>
 
 <nav
-	class="fixed top-0 right-0 left-0 z-50 max-h-[60px] w-full transition-all duration-100 ease-out"
-	class:bg-mofu-dark-800={!isAtTop()}
-	class:bg-mofu-dark-900={isAtTop()}
+	class={cn(
+		'fixed top-0 right-0 left-0 z-50 max-h-[60px] w-full transition-all duration-100 ease-out',
+		isAtTop() ? 'dark:bg-mofu-dark-900 bg-white' : 'dark:bg-mofu-dark-800 bg-white'
+	)}
 	style="transform: translateY({isVisible() ? '0' : '-100%'});"
 >
 	<div class="max-w-8xl mx-auto flex items-center justify-between px-4 py-3">
 		<!-- 좌측 -->
 		<div class="flex items-center space-x-3">
-			<a href="/" class="text-3xl font-bold whitespace-nowrap text-white">もふもふ。</a>
+			<a href="/" class="text-3xl font-bold whitespace-nowrap text-black dark:dark:text-white">もふもふ。</a>
 		</div>
 
 		<!-- 우측 -->
@@ -101,11 +103,11 @@
 				<div class="shimmer hidden h-9 w-9 rounded-full sm:block"></div>
 			{:else if userInfo}
 				<Button href="/" variant="icon" aria-label="notifications">
-					<Icon src={Bell} size="20" class="text-white" />
+					<Icon src={Bell} size="20" class="text-black dark:text-white" />
 				</Button>
 
 				<Button href="/" variant="icon" aria-label="search">
-					<Icon src={MagnifyingGlass} size="20" class="text-white" />
+					<Icon src={MagnifyingGlass} size="20" class="text-black dark:text-white" />
 				</Button>
 
 				<Button href="/write" variant="outline" class="bg-transparent px-3 py-0">{m.navbar_new_post()}</Button>
@@ -122,7 +124,9 @@
 							{#if userInfo.profile_image}
 								<img src={userInfo.profile_image} alt="{userInfo.handle}의 프로필" class="h-full w-full object-cover" />
 							{:else}
-								<span class="flex h-full w-full items-center justify-center text-sm font-medium text-white">
+								<span
+									class="flex h-full w-full items-center justify-center text-sm font-medium text-black dark:text-white"
+								>
 									{userInfo.handle.charAt(0).toUpperCase()}
 								</span>
 							{/if}
@@ -131,24 +135,27 @@
 
 					{#if isDropdownOpen}
 						<div
-							class="bg-mofu-dark-800 absolute top-14 right-0 z-50 w-48 rounded-lg text-sm font-bold shadow-lg"
+							class="dark:bg-mofu-dark-800 absolute top-14 right-0 z-50 w-48 rounded-lg bg-white text-sm font-bold shadow-lg"
 							transition:fly={{ y: -8, duration: 150 }}
 							style="transform-origin: top right;"
 						>
 							<div class="py-1">
 								<a
 									href="/@{userInfo.handle}/profile"
-									class="dark:text-mofu-dark-200 hover:text-mofu flex items-center px-4 py-2"
+									class="dark:text-mofu-dark-200 text-mofu-light-800 hover:text-mofu flex items-center px-4 py-2"
 								>
 									<Icon src={User} solid size="16" class="mr-3" />
 									{m.navbar_my_page()}
 								</a>
-								<a href="/settings" class="dark:text-mofu-dark-200 hover:text-mofu flex items-center px-4 py-2">
+								<a
+									href="/settings"
+									class="dark:text-mofu-dark-200 text-mofu-light-800 hover:text-mofu flex items-center px-4 py-2"
+								>
 									<Icon src={Cog6Tooth} solid size="16" class="mr-3" />
 									{m.navbar_settings()}
 								</a>
 								<button
-									class="dark:text-mofu-dark-200 hover:text-mofu flex w-full items-center px-4 py-2"
+									class="dark:text-mofu-dark-200 text-mofu-light-800 hover:text-mofu flex w-full items-center px-4 py-2"
 									onclick={handleLogout}
 								>
 									<Icon src={ArrowRightOnRectangle} solid size="16" class="mr-3" />
@@ -160,10 +167,10 @@
 				</div>
 			{:else}
 				<Button href="/" variant="icon" aria-label="search">
-					<Icon src={MagnifyingGlass} size="20" class="text-white" />
+					<Icon src={MagnifyingGlass} size="20" class="dark:text-white" />
 				</Button>
 				<Button href="/settings" variant="icon" aria-label="settings">
-					<Icon src={Cog6Tooth} solid size="20" class="text-white" />
+					<Icon src={Cog6Tooth} solid size="20" class="dark:text-white" />
 				</Button>
 				<Button href="/account/signup" class="py-0">{m.navbar_sign_in()}</Button>
 			{/if}

@@ -32,8 +32,8 @@
 			</div>
 		</div>
 	{:else}
-		<h3 class="text-mofu-dark-100 mb-3 line-clamp-1 text-lg font-bold">{title}</h3>
-		<p class="text-mofu-dark-300 mb-4 line-clamp-3 text-sm">{summary}</p>
+		<h3 class="dark:text-mofu-dark-100 text-mofu-light-800 mb-3 line-clamp-1 text-lg font-bold">{title}</h3>
+		<p class="dark:text-mofu-dark-300 text-mofu-light-700 mb-4 line-clamp-3 text-sm">{summary}</p>
 
 		<div class="mt-auto py-2">
 			<div class="text-mofu-dark-300 flex items-center text-xs">

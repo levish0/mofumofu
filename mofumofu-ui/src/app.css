@@ -117,18 +117,27 @@
 }
 
 @theme {
-	--color-mofu-dark-800: #1e1e1e;
-	--color-mofu-dark-900: #111111;
+	--color-mofu: #fab69a;
+
 	--color-mofu-dark-950: #0c0c0c;
+	--color-mofu-dark-900: #111111;
+	--color-mofu-dark-800: #1e1e1e;
 	--color-mofu-dark-700: #2a2a2a;
 	--color-mofu-dark-600: #3b3b3b;
-
-	--color-mofu: #fab69a;
 
 	--color-mofu-dark-400: #6b6b6b;
 	--color-mofu-dark-300: #9f9fa9;
 	--color-mofu-dark-200: #e1e1e1;
 	--color-mofu-dark-100: #f4f4f5;
+
+	--color-mofu-light-900: #1e1e1e;
+	--color-mofu-light-800: #2a2a2a;
+	--color-mofu-light-700: #3b3b3b;
+	--color-mofu-light-500: #e4e4e7;
+	--color-mofu-light-400: #e7e7e9;
+	--color-mofu-light-300: #f7f7f7;
+	--color-mofu-light-200: #f3f3f4;
+	--color-mofu-light-100: #fbfbfb;
 
 	--container-8xl: 88rem;
 	--max-width-8xl: 88rem;
@@ -137,7 +146,7 @@
 @utility shimmer {
 	position: relative;
 	overflow: hidden;
-	background-color: rgba(255, 255, 255, 0.04);
+	background-color: rgba(0, 0, 0, 0.04);
 
 	&::after {
 		content: '';
@@ -146,8 +155,16 @@
 		left: -150%;
 		height: 100%;
 		width: 150%;
-		background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+		background: linear-gradient(110deg, transparent 0%, rgba(0, 0, 0, 0.1) 50%, transparent 100%);
 		animation: shimmer 1.5s infinite;
+	}
+
+	:is(.dark &) {
+		background-color: rgba(255, 255, 255, 0.04);
+
+		&::after {
+			background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+		}
 	}
 }
 

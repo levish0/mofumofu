@@ -55,7 +55,7 @@
 <div class="space-y-4">
 	<h2 class="text-2xl font-semibold">{m.settings_handle()}</h2>
 	<div class="space-y-2">
-		<div class="flex relative">
+		<div class="relative flex">
 			<span class="dark:bg-mofu-dark-800/50 text-mofu-dark-200 inline-flex items-center rounded-l-md px-3 text-sm"
 				>@</span
 			>
@@ -69,7 +69,11 @@
 					value={handle || ''}
 					oninput={handleInput}
 				/>
-				<div class="absolute right-3 top-1/2 -translate-y-1/2 text-xs {isOverLimit ? 'text-red-400' : 'text-mofu-dark-400'}">
+				<div
+					class="absolute top-1/2 right-3 -translate-y-1/2 text-xs {isOverLimit
+						? 'text-red-400'
+						: 'text-mofu-dark-400'}"
+				>
 					{characterCount}/20
 				</div>
 			</div>
