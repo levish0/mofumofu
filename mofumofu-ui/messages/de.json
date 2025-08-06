@@ -72,5 +72,11 @@
 	"settings_bio": "Biografie",
 	"settings_bio_placeholder": "Erzählen Sie uns von sich...",
 	"settings_bio_description": "Schreiben Sie eine kurze Biografie über sich. Maximal 200 Zeichen.",
-	"settings_bio_too_long": "Biografie muss 200 Zeichen oder weniger haben"
+	"settings_bio_too_long": "Biografie muss 200 Zeichen oder weniger haben",
+	"settings_theme": "Design",
+	"settings_theme_description": "Ändern Sie das gesamte Erscheinungsbild der Website.",
+	"theme_system": "System",
+	"theme_light": "Hell",
+	"theme_dark": "Dunkel",
+	"select_theme": "Design auswählen"
 }

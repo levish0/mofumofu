@@ -2,12 +2,25 @@
 	import type { UserInfoResponse } from '$lib/api/user/types';
 	import { Briefcase, CalendarDays, Icon, MapPin } from 'svelte-hero-icons';
 	import * as m from '../../../paraglide/messages';
+	import Autolinker from 'autolinker';
 
 	type Props = {
 		profile: UserInfoResponse;
 	};
 
 	const { profile }: Props = $props();
+
+	function linkifyBio(text: string): string {
+		return Autolinker.link(text, {
+			urls: true,
+			email: true,
+			phone: false,
+			mention: false,
+			hashtag: false,
+			newWindow: true,
+			className: 'text-mofu hover:opacity-70 underline transition-colors'
+		});
+	}
 </script>
 
 <!-- Profile Content -->
@@ -26,7 +39,7 @@
 		<!-- Bio -->
 		{#if profile.bio}
 			<p class="dark:text-mofu-dark-200 text-md text-gray-700">
-				{profile.bio}
+				{@html linkifyBio(profile.bio)}
 			</p>
 		{/if}
 

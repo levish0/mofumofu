@@ -39,7 +39,7 @@
 	<link rel="canonical" href="https://mofumofu.ink" />
 </svelte:head>
 
-<ModeWatcher defaultMode="dark" />
+<ModeWatcher defaultMode="system" />
 <div class="dark:bg-mofu-dark-900 font-pretendard min-h-screen max-w-screen">
 	<main>
 		{@render children()}

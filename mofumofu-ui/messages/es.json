@@ -72,5 +72,11 @@
 	"settings_bio": "Biografía",
 	"settings_bio_placeholder": "Cuéntanos sobre ti...",
 	"settings_bio_description": "Escribe una breve biografía sobre ti. Máximo 200 caracteres.",
-	"settings_bio_too_long": "La biografía debe tener 200 caracteres o menos"
+	"settings_bio_too_long": "La biografía debe tener 200 caracteres o menos",
+	"settings_theme": "Tema",
+	"settings_theme_description": "Cambia la apariencia general del sitio web.",
+	"theme_system": "Sistema",
+	"theme_light": "Claro",
+	"theme_dark": "Oscuro",
+	"select_theme": "Seleccionar tema"
 }

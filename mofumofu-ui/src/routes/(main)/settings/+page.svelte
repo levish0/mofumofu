@@ -87,7 +87,7 @@
 	const getInitialSection = () => {
 		if (typeof window !== 'undefined') {
 			const hash = window.location.hash.slice(1); // # 제거
-			if (hash && sections.some(s => s.id === hash)) {
+			if (hash && sections.some((s) => s.id === hash)) {
 				return hash;
 			}
 		}
@@ -107,6 +107,7 @@
 			settingsStore.updatePersonalSilent({
 				handle: userProfile.handle,
 				name: userProfile.name,
+				bio: userProfile.bio || '',
 				profileImage: userProfile.profile_image || null,
 				bannerImage: userProfile.banner_image || null
 			});
