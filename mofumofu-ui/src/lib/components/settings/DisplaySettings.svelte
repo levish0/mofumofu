@@ -7,17 +7,20 @@
 	let selectedLanguage = $state('en');
 
 	const languages = [
-		{ value: 'en', label: m.language_english },
-		{ value: 'ja', label: m.language_japanese },
-		{ value: 'ko', label: m.language_korean },
-		{ value: 'de', label: m.language_german },
-		{ value: 'es', label: m.language_spanish },
-		{ value: 'es-MX', label: m.language_spanish_mx },
-		{ value: 'fr', label: m.language_french },
-		{ value: 'ru', label: m.language_russian }
+		{ value: 'en', label: m.language_english, flag: '🇺🇸' },
+		{ value: 'ja', label: m.language_japanese, flag: '🇯🇵' },
+		{ value: 'ko', label: m.language_korean, flag: '🇰🇷' },
+		{ value: 'de', label: m.language_german, flag: '🇩🇪' },
+		{ value: 'es', label: m.language_spanish, flag: '🇪🇸' },
+		{ value: 'es-MX', label: m.language_spanish_mx, flag: '🇲🇽' },
+		{ value: 'fr', label: m.language_french, flag: '🇫🇷' },
+		{ value: 'ru', label: m.language_russian, flag: '🇷🇺' }
 	];
 
-	const triggerContent = $derived(languages.find((l) => l.value === selectedLanguage)?.label() ?? 'Select language');
+	const selectedLang = $derived(languages.find((l) => l.value === selectedLanguage));
+	const triggerContent = $derived(
+		selectedLang ? `${selectedLang.flag} ${selectedLang.label()}` : 'Select language'
+	);
 
 	onMount(() => {
 		selectedLanguage = getLocale();
@@ -46,7 +49,7 @@
 				<Select.Content class="dark:bg-mofu-dark-800 border-mofu-dark-700">
 					{#each languages as language}
 						<Select.Item value={language.value} class="text-mofu-dark-200 hover:bg-mofu-dark-700">
-							{language.label()}
+							{language.flag} {language.label()}
 						</Select.Item>
 					{/each}
 				</Select.Content>

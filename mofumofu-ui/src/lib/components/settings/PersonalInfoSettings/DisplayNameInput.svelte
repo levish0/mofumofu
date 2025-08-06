@@ -27,20 +27,28 @@
 		localError = error;
 		onValidationChange(error);
 	}
+
+	const characterCount = $derived((name || '').length);
+	const isOverLimit = $derived(characterCount > 20);
 </script>
 
 <div class="space-y-4">
 	<h2 class="text-2xl font-semibold">{m.settings_display_name()}</h2>
 	<div class="space-y-2">
-		<Input
-			id="name"
-			placeholder={m.settings_display_name_placeholder()}
-			class="dark:bg-mofu-dark-800 text-mofu-dark-200 placeholder:text-mofu-dark-300 {localError
-				? 'border-red-500'
-				: ''}"
-			value={name || ''}
-			oninput={handleInput}
-		/>
+		<div class="relative">
+			<Input
+				id="name"
+				placeholder={m.settings_display_name_placeholder()}
+				class="dark:bg-mofu-dark-800 text-mofu-dark-200 placeholder:text-mofu-dark-300 pr-12 {localError
+					? 'border-red-500'
+					: ''}"
+				value={name || ''}
+				oninput={handleInput}
+			/>
+			<div class="absolute right-3 top-1/2 -translate-y-1/2 text-xs {isOverLimit ? 'text-red-400' : 'text-mofu-dark-400'}">
+				{characterCount}/20
+			</div>
+		</div>
 		{#if localError}
 			<p class="text-xs text-rose-400">{localError}</p>
 		{:else}

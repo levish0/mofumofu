@@ -21,5 +21,6 @@ export interface GetUserProfileRequest {
 export interface UpdateProfileRequest {
 	handle?: string | null;
 	name?: string | null;
+	bio?: string | null;
 	password?: string | null;
 }

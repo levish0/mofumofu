@@ -47,24 +47,32 @@
 
 		handleAvailable = null;
 	}
+
+	const characterCount = $derived((handle || '').length);
+	const isOverLimit = $derived(characterCount > 20);
 </script>
 
 <div class="space-y-4">
 	<h2 class="text-2xl font-semibold">{m.settings_handle()}</h2>
 	<div class="space-y-2">
-		<div class="flex">
+		<div class="flex relative">
 			<span class="dark:bg-mofu-dark-800/50 text-mofu-dark-200 inline-flex items-center rounded-l-md px-3 text-sm"
 				>@</span
 			>
-			<Input
-				id="handle"
-				placeholder={m.settings_handle_placeholder()}
-				class="dark:bg-mofu-dark-800 text-mofu-dark-200 placeholder:text-mofu-dark-300 rounded-l-none rounded-r-none border-r-0 {localError
-					? 'border-red-500'
-					: ''}"
-				value={handle || ''}
-				oninput={handleInput}
-			/>
+			<div class="relative flex-1">
+				<Input
+					id="handle"
+					placeholder={m.settings_handle_placeholder()}
+					class="dark:bg-mofu-dark-800 text-mofu-dark-200 placeholder:text-mofu-dark-300 rounded-l-none rounded-r-none border-r-0 pr-12 {localError
+						? 'border-red-500'
+						: ''}"
+					value={handle || ''}
+					oninput={handleInput}
+				/>
+				<div class="absolute right-3 top-1/2 -translate-y-1/2 text-xs {isOverLimit ? 'text-red-400' : 'text-mofu-dark-400'}">
+					{characterCount}/20
+				</div>
+			</div>
 			<button
 				onclick={checkHandleAvailability}
 				disabled={isChecking || !handle?.trim() || !!validateHandle(handle || '')}

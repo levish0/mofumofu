@@ -1,6 +1,7 @@
 export type PersonalInfo = {
 	handle: string;
 	name: string;
+	bio: string;
 	profileImage: string | null;
 	bannerImage: string | null;
 	profileImageFile: Blob | null;

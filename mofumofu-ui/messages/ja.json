@@ -63,5 +63,14 @@
 	"language_spanish": "Español",
 	"language_spanish_mx": "Español (México)",
 	"language_french": "Français",
-	"language_russian": "Русский"
+	"language_russian": "Русский",
+	"oauth_processing_google": "Googleログインを処理中...",
+	"oauth_processing_github": "GitHubログインを処理中...",
+	"oauth_please_wait": "ログイン処理中です。少々お待ちください",
+	"oauth_error_occurred": "エラーが発生しました",
+	"oauth_go_back": "戻る",
+	"settings_bio": "自己紹介",
+	"settings_bio_placeholder": "ご自身について教えてください...",
+	"settings_bio_description": "あなたについての簡単な紹介を書いてください。最大200文字です。",
+	"settings_bio_too_long": "自己紹介は200文字以下で入力してください"
 }

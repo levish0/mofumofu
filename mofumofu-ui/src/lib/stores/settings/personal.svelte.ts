@@ -8,6 +8,7 @@ export class PersonalSettingsStore {
 	private state = $state<PersonalInfo>({
 		handle: '',
 		name: '',
+		bio: '',
 		profileImage: null,
 		bannerImage: null,
 		profileImageFile: null,
@@ -17,6 +18,7 @@ export class PersonalSettingsStore {
 	private originalState = $state<PersonalInfo>({
 		handle: '',
 		name: '',
+		bio: '',
 		profileImage: null,
 		bannerImage: null,
 		profileImageFile: null,
@@ -39,6 +41,10 @@ export class PersonalSettingsStore {
 		return this.state.name;
 	}
 
+	get bio() {
+		return this.state.bio;
+	}
+
 	get profileImage() {
 		return this.state.profileImage;
 	}
@@ -59,12 +65,14 @@ export class PersonalSettingsStore {
 		const current = JSON.stringify({
 			handle: this.state.handle,
 			name: this.state.name,
+			bio: this.state.bio,
 			profileImage: this.state.profileImage,
 			bannerImage: this.state.bannerImage
 		});
 		const original = JSON.stringify({
 			handle: this.originalState.handle,
 			name: this.originalState.name,
+			bio: this.originalState.bio,
 			profileImage: this.originalState.profileImage,
 			bannerImage: this.originalState.bannerImage
 		});
@@ -129,6 +137,7 @@ export class PersonalSettingsStore {
 		return (
 			current.handle !== original.handle ||
 			current.name !== original.name ||
+			current.bio !== original.bio ||
 			current.profileImage !== original.profileImage ||
 			current.bannerImage !== original.bannerImage ||
 			current.profileImageFile !== null ||
@@ -169,10 +178,11 @@ export class PersonalSettingsStore {
 					}
 				}
 
-				// Update basic profile info (handle, name, password)
+				// Update basic profile info (handle, name, bio, password)
 				const personalData: UpdateProfileRequest = {
 					handle: this.state.handle || null,
-					name: this.state.name || null
+					name: this.state.name || null,
+					bio: this.state.bio || null
 				};
 
 				// Add password if provided
@@ -191,6 +201,7 @@ export class PersonalSettingsStore {
 					...this.state,
 					handle: updatedProfile.handle,
 					name: updatedProfile.name,
+					bio: updatedProfile.bio || '',
 					profileImage: this.state.profileImage || updatedProfile.profile_image || null,
 					bannerImage: this.state.bannerImage || updatedProfile.banner_image || null,
 					profileImageFile: null, // Clear file after successful upload

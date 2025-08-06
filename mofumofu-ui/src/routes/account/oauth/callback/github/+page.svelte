@@ -7,6 +7,8 @@
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { ApiError } from '$lib/api/error/common_error';
 	import { ExclamationTriangle, Icon } from 'svelte-hero-icons';
+	import * as m from '../../../../../paraglide/messages';
+	import { Button } from '$lib/components/ui/button';
 
 	let loading = $state(true);
 	let error = $state<string | null>(null);
@@ -54,18 +56,22 @@
 			{#if loading}
 				<div class="space-y-4">
 					<div class="border-mofu-dark-100 mx-auto h-12 w-12 animate-spin rounded-full border-b-2"></div>
-					<h2 class="text-xl font-semibold">Processing Github login...</h2>
-					<p>Please wait while we sign you in</p>
+					<h2 class="text-xl font-semibold">{m.oauth_processing_github()}</h2>
+					<p>{m.oauth_please_wait()}</p>
 				</div>
 			{:else if error}
 				<div class="space-y-4">
 					<div class="text-rose-600">
 						<Icon src={ExclamationTriangle} solid size="40" class="inline-block" />
 					</div>
-					<h2 class="text-xl font-semibold">Error occurred</h2>
-					<button onclick={() => goto('/login')} class=" text-mofu-dark-300 rounded-md text-sm hover:opacity-70">
-						← 돌아가기
-					</button>
+					<h2 class="text-xl font-semibold">{m.oauth_error_occurred()}</h2>
+					<Button
+						onclick={() => goto('/account/signin')}
+						variant="ghost"
+						class=" dark:text-mofu-dark-300 rounded-md text-sm hover:opacity-70"
+					>
+						← {m.oauth_go_back()}
+					</Button>
 				</div>
 			{/if}
 		</div>

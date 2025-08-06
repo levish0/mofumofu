@@ -63,5 +63,14 @@
 	"language_spanish": "Español",
 	"language_spanish_mx": "Español (México)",
 	"language_french": "Français",
-	"language_russian": "Русский"
+	"language_russian": "Русский",
+	"oauth_processing_google": "Обработка входа через Google...",
+	"oauth_processing_github": "Обработка входа через GitHub...",
+	"oauth_please_wait": "Пожалуйста, подождите, пока мы выполняем вход",
+	"oauth_error_occurred": "Произошла ошибка",
+	"oauth_go_back": "Назад",
+	"settings_bio": "Биография",
+	"settings_bio_placeholder": "Расскажите о себе...",
+	"settings_bio_description": "Напишите короткую биографию о себе. Максимум 200 символов.",
+	"settings_bio_too_long": "Биография должна быть 200 символов или меньше"
 }

@@ -63,5 +63,14 @@
 	"language_spanish": "Español",
 	"language_spanish_mx": "Español (México)",
 	"language_french": "Français",
-	"language_russian": "Русский"
+	"language_russian": "Русский",
+	"oauth_processing_google": "Google-Anmeldung wird verarbeitet...",
+	"oauth_processing_github": "GitHub-Anmeldung wird verarbeitet...",
+	"oauth_please_wait": "Bitte warten Sie, während wir Sie anmelden",
+	"oauth_error_occurred": "Ein Fehler ist aufgetreten",
+	"oauth_go_back": "Zurück",
+	"settings_bio": "Biografie",
+	"settings_bio_placeholder": "Erzählen Sie uns von sich...",
+	"settings_bio_description": "Schreiben Sie eine kurze Biografie über sich. Maximal 200 Zeichen.",
+	"settings_bio_too_long": "Biografie muss 200 Zeichen oder weniger haben"
 }

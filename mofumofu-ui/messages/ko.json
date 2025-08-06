@@ -63,5 +63,14 @@
 	"language_spanish": "Español",
 	"language_spanish_mx": "Español (México)",
 	"language_french": "Français",
-	"language_russian": "Русский"
+	"language_russian": "Русский",
+	"oauth_processing_google": "Google 로그인 처리 중...",
+	"oauth_processing_github": "GitHub 로그인 처리 중...",
+	"oauth_please_wait": "로그인을 처리하는 동안 잠시 기다려 주세요",
+	"oauth_error_occurred": "오류가 발생했습니다",
+	"oauth_go_back": "돌아가기",
+	"settings_bio": "자기소개",
+	"settings_bio_placeholder": "자신에 대해 소개해주세요...",
+	"settings_bio_description": "자신에 대한 간단한 소개를 작성하세요. 최대 200자입니다.",
+	"settings_bio_too_long": "자기소개는 200자 이하로 작성해야 합니다"
 }
