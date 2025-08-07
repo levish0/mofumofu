@@ -1,4 +1,4 @@
-import { updateProfile, uploadAvatar, uploadBanner, getMyProfile } from '$lib/api/user/userApi';
+import { updateProfile, uploadAvatar, uploadBanner, getMyProfile, checkHandleAvailability } from '$lib/api/user/userApi';
 import type { UpdateProfileRequest } from '$lib/api/user/types';
 import { createPersonalInfoSchema } from '$lib/schemas/personal-info';
 import { safeParse } from 'valibot';
@@ -31,6 +31,7 @@ export class PersonalSettingsStore {
 
 	private errors = $state<Record<string, string>>({});
 	private validationErrors = $state<Record<string, string>>({});
+	private handleVerificationState = $state<'verified' | 'unverified' | 'checking' | 'unavailable'>('verified');
 
 	// Getters
 	get data() {
@@ -107,6 +108,16 @@ export class PersonalSettingsStore {
 		return this.originalState;
 	}
 
+	get handleNeedsVerification() {
+		return this.state.handle !== this.originalState.handle && 
+			   this.state.handle.trim() !== '' &&
+			   this.handleVerificationState === 'unverified';
+	}
+
+	get handleVerificationStatus() {
+		return this.handleVerificationState;
+	}
+
 	// Initialize with server data
 	initialize(data: Partial<PersonalInfo>) {
 		this.state = { ...this.state, ...data };
@@ -127,26 +138,53 @@ export class PersonalSettingsStore {
 
 	// Update with change detection
 	update(updates: Partial<PersonalInfo>) {
+		const oldHandle = this.state.handle;
 		this.state = { ...this.state, ...updates };
+		
+		// 핸들이 변경되었으면 검증 상태 리셋
+		if (updates.handle !== undefined && updates.handle !== oldHandle) {
+			const isBackToOriginal = updates.handle === this.originalState.handle;
+			this.handleVerificationState = isBackToOriginal ? 'verified' : 'unverified';
+		}
 	}
 
-	// Validate personal info
+	// Check handle availability
+	async checkHandleAvailability(): Promise<void> {
+		if (!this.state.handle || this.state.handle.trim() === '') return;
+		
+		this.handleVerificationState = 'checking';
+		try {
+			const result = await checkHandleAvailability(this.state.handle.trim());
+			this.handleVerificationState = result.is_available ? 'verified' : 'unavailable';
+		} catch (error) {
+			console.error('Handle availability check failed:', error);
+			this.handleVerificationState = 'unverified';
+		}
+	}
+
+	// Validate personal info (including handle verification)
 	async validate(): Promise<boolean> {
 		const result = safeParse(createPersonalInfoSchema(), this.state);
+		const errors: Record<string, string> = {};
+		
 		if (!result.success) {
-			const errors: Record<string, string> = {};
 			for (const issue of result.issues) {
 				if (issue.path && issue.path.length > 0) {
 					const field = issue.path[0].key as string;
 					errors[field] = issue.message;
 				}
 			}
-			this.validationErrors = errors;
-			return false;
-		} else {
-			this.validationErrors = {};
-			return true;
 		}
+		
+		// 핸들 검증 확인 (메시지는 컴포넌트에서 처리하므로 키만 설정)
+		if (this.handleNeedsVerification) {
+			errors.handle = 'HANDLE_VERIFICATION_REQUIRED';
+		} else if (this.handleVerificationStatus === 'unavailable') {
+			errors.handle = 'HANDLE_UNAVAILABLE';
+		}
+		
+		this.validationErrors = errors;
+		return Object.keys(errors).length === 0;
 	}
 
 	// Check if personal info has changes including files

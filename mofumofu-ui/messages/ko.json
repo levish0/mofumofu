@@ -97,5 +97,6 @@
 	"validation_bio_max_length": "자기소개는 200자 이하여야 합니다",
 	"validation_location_max_length": "위치는 30자 이하여야 합니다",
 	"validation_website_max_length": "웹사이트는 50자 이하여야 합니다",
-	"validation_website_invalid_url": "유효한 URL을 입력하세요"
+	"validation_website_invalid_url": "유효한 URL을 입력하세요",
+	"settings_handle_verification_required": "핸들 중복 확인이 필요합니다"
 }

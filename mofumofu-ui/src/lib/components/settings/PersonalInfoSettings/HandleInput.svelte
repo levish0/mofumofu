@@ -3,20 +3,21 @@
 	import * as v from 'valibot';
 	import { createPersonalInfoSchema } from '$lib/schemas/personal-info';
 	import * as m from '../../../../paraglide/messages';
-	import { checkHandleAvailability as apiCheckHandleAvailability } from '$lib/api/user';
+	import { personalSettingsStore } from '$lib/stores/settings.svelte';
 
 	interface Props {
 		handle: string | null;
 		onUpdate: (handle: string) => void;
 		onValidationChange: (error?: string) => void;
-		onAvailabilityChange?: (isAvailable: boolean | null) => void;
 	}
 
-	let { handle, onUpdate, onValidationChange, onAvailabilityChange }: Props = $props();
+	let { handle, onUpdate, onValidationChange }: Props = $props();
 
 	let localError = $state<string | undefined>();
-	let isChecking = $state(false);
-	let handleAvailable = $state<boolean | null>(null);
+
+	// 스토어에서 핸들 검증 상태 가져오기
+	const handleVerificationState = $derived(personalSettingsStore.handleVerificationStatus);
+	const needsVerification = $derived(personalSettingsStore.handleNeedsVerification);
 
 	function validateHandle(value: string): string | undefined {
 		const schema = createPersonalInfoSchema();
@@ -29,20 +30,7 @@
 			return;
 		}
 
-		isChecking = true;
-		handleAvailable = null;
-
-		try {
-			const result = await apiCheckHandleAvailability(handle.trim());
-			handleAvailable = result.is_available;
-			onAvailabilityChange?.(result.is_available);
-		} catch (error) {
-			console.error('Handle availability check failed:', error);
-			handleAvailable = null;
-			onAvailabilityChange?.(null);
-		} finally {
-			isChecking = false;
-		}
+		await personalSettingsStore.checkHandleAvailability();
 	}
 
 	function handleInput(e: Event) {
@@ -52,9 +40,6 @@
 		const error = validateHandle(value);
 		localError = error;
 		onValidationChange(error);
-
-		handleAvailable = null;
-		onAvailabilityChange?.(null);
 	}
 
 	const characterCount = $derived((handle || '').length);
@@ -88,10 +73,10 @@
 			</div>
 			<button
 				onclick={checkHandleAvailability}
-				disabled={isChecking || !handle?.trim() || !!validateHandle(handle || '')}
+				disabled={handleVerificationState === 'checking' || !handle?.trim() || !!validateHandle(handle || '')}
 				class="dark:bg-mofu-dark-800/50 text-mofu-dark-200 disabled:dark:bg-mofu-dark-800/50 hover:bg-mofu-dark-700 inline-flex min-w-20 items-center justify-center rounded-r-md px-3 py-2 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
 			>
-				{#if isChecking}
+				{#if handleVerificationState === 'checking'}
 					<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
 						<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
 						<path
@@ -107,10 +92,12 @@
 		</div>
 		{#if localError}
 			<p class="text-xs text-rose-400">{localError}</p>
-		{:else if handleAvailable === true}
+		{:else if handleVerificationState === 'verified' && !needsVerification}
 			<p class="text-xs text-green-400">{m.settings_handle_available()}</p>
-		{:else if handleAvailable === false}
+		{:else if handleVerificationState === 'unavailable'}
 			<p class="text-xs text-rose-400">{m.settings_handle_taken()}</p>
+		{:else if needsVerification}
+			<p class="text-xs text-orange-400">{m.settings_handle_verification_required()}</p>
 		{:else}
 			<p class="text-mofu-dark-400 text-xs">{m.settings_handle_description()}</p>
 		{/if}

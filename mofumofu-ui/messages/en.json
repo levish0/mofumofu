@@ -97,5 +97,6 @@
 	"validation_bio_max_length": "Bio must be 200 characters or less",
 	"validation_location_max_length": "Location must be 30 characters or less",
 	"validation_website_max_length": "Website must be 50 characters or less",
-	"validation_website_invalid_url": "Please enter a valid URL"
+	"validation_website_invalid_url": "Please enter a valid URL",
+	"settings_handle_verification_required": "Handle verification required"
 }

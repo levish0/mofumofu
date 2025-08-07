@@ -97,5 +97,6 @@
 	"validation_bio_max_length": "自己紹介は200文字以下である必要があります",
 	"validation_location_max_length": "所在地は30文字以下である必要があります",
 	"validation_website_max_length": "ウェブサイトは50文字以下である必要があります",
-	"validation_website_invalid_url": "有効なURLを入力してください"
+	"validation_website_invalid_url": "有効なURLを入力してください",
+	"settings_handle_verification_required": "ハンドルの重複確認が必要です"
 }

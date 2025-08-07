@@ -128,10 +128,10 @@
 		const result = await settingsStore.saveChanges();
 		if (result.success) {
 			saveSuccess = true;
-			// Clear success message after 3 seconds
+			// Show success message briefly then reload
 			setTimeout(() => {
-				saveSuccess = false;
-			}, 3000);
+				window.location.reload();
+			}, 1000);
 		}
 	}
 </script>

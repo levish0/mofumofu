@@ -1,4 +1,3 @@
-import { getMyProfile } from '$lib/api/user/userApi';
 import { personalSettingsStore } from './personal.svelte';
 import type {
 	DisplaySettings,

@@ -31,8 +31,8 @@
 		}
 	}
 
-	function isValidLocale(value: string): value is 'ja' | 'en' | 'ko' | 'de' | 'es' | 'es-MX' | 'fr' | 'ru' {
-		return ['ja', 'en', 'ko', 'de', 'es', 'es-MX', 'fr', 'ru'].includes(value);
+	function isValidLocale(value: string): value is 'en' | 'ko' | 'ja' | 'de' | 'es' | 'es-MX' | 'fr' | 'ru' {
+		return ['en', 'ko', 'ja', 'de', 'es', 'es-MX', 'fr', 'ru'].includes(value);
 	}
 </script>
 
