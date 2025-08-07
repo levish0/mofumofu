@@ -103,6 +103,10 @@ export class PersonalSettingsStore {
 		return this.validationErrors;
 	}
 
+	get originalData() {
+		return this.originalState;
+	}
+
 	// Initialize with server data
 	initialize(data: Partial<PersonalInfo>) {
 		this.state = { ...this.state, ...data };

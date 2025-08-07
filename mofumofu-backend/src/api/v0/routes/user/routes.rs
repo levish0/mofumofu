@@ -1,3 +1,4 @@
+use crate::api::v0::routes::user::check_handle::check_handle_availability;
 use crate::api::v0::routes::user::create_user::create_user;
 use crate::api::v0::routes::user::get_my_profile::get_my_profile;
 use crate::api::v0::routes::user::get_profile::get_profile;
@@ -12,6 +13,7 @@ use axum::routing::{get, post, put};
 
 pub fn user_routes() -> Router<AppState> {
     Router::new()
+        .route("/user/check-handle", post(check_handle_availability))
         .route("/user/profile", post(get_profile))
         .route("/user", post(create_user))
         // 보호된 사용자 프로필 API

@@ -9,6 +9,7 @@ use crate::dto::user::request::banner_image::ProfileBannerForm;
 use crate::dto::user::request::create::CreateUserRequest;
 use crate::dto::user::request::get_profile::GetUserProfileRequest;
 use crate::dto::user::request::update_profile::UpdateProfileRequest;
+use crate::dto::user::response::handle_check::HandleCheckResponse;
 use crate::dto::user::response::info::UserInfoResponse;
 use crate::service::error::errors::ErrorResponse;
 use utoipa::openapi::security::{ApiKey, ApiKeyValue};
@@ -27,6 +28,7 @@ use utoipa::{
         crate::api::v0::routes::auth::refresh::refresh,
         crate::api::v0::routes::user::get_my_profile::get_my_profile,
         crate::api::v0::routes::user::create_user::create_user,
+        crate::api::v0::routes::user::check_handle::check_handle_availability,
         crate::api::v0::routes::user::get_profile::get_profile,
         crate::api::v0::routes::user::update_profile::update_profile,
         crate::api::v0::routes::user::upload_avatar::upload_avatar,
@@ -48,6 +50,7 @@ use utoipa::{
             FollowListResponse,
             GetUserProfileRequest,
             UpdateProfileRequest,
+            HandleCheckResponse,
             UserInfoResponse,
             ErrorResponse,
             ProfileAvatarForm,

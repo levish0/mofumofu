@@ -69,6 +69,10 @@ class SettingsStore {
 		return personalSettingsStore.data;
 	}
 
+	get originalPersonal() {
+		return personalSettingsStore.originalData;
+	}
+
 	get display() {
 		return this.state.display;
 	}

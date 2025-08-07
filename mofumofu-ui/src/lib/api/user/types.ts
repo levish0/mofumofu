@@ -9,6 +9,10 @@ export interface UserInfoResponse {
 	banner_image?: string;
 }
 
+export interface HandleCheckResponse {
+	is_available: boolean;
+}
+
 export interface CreateUserRequest {
 	email: string;
 	handle: string;

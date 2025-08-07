@@ -2,7 +2,7 @@
 
 import { privateApi } from '../private';
 import { publicApi } from '../public';
-import type { UserInfoResponse, GetUserProfileRequest, UpdateProfileRequest } from './types';
+import type { UserInfoResponse, GetUserProfileRequest, UpdateProfileRequest, HandleCheckResponse } from './types';
 
 export async function getMyProfile(): Promise<UserInfoResponse> {
 	try {
@@ -65,6 +65,17 @@ export async function uploadBanner(file: File): Promise<void> {
 		});
 	} catch (error) {
 		console.error('Banner upload failed:', error);
+		throw error;
+	}
+}
+
+export async function checkHandleAvailability(handle: string): Promise<HandleCheckResponse> {
+	try {
+		const payload: GetUserProfileRequest = { handle };
+		const response = await publicApi.post('v0/user/check-handle', { json: payload });
+		return await response.json<HandleCheckResponse>();
+	} catch (error) {
+		console.error('Handle check failed:', error);
 		throw error;
 	}
 }

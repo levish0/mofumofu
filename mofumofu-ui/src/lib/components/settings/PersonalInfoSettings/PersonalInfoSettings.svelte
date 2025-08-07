@@ -13,17 +13,25 @@
 	const { handle, name, profileImage, bannerImage, bio, location, website } = $derived(personal);
 
 	let localErrors = $state<{ handle?: string; name?: string; bio?: string; location?: string; website?: string }>({});
+	let handleAvailable = $state<boolean | null>(null);
 
 	function validateForm(): boolean {
 		const hasErrors = Object.keys(localErrors).length > 0;
+		const originalHandle = settingsStore.originalPersonal.handle; // 서버에서 가져온 원래 핸들값
+		const handleChanged = handle !== originalHandle;
+		const handleNeedsCheck = handleChanged && handle && handleAvailable !== true;
 
-		if (hasErrors) {
-			settingsStore.setValidationErrors('personal', localErrors);
+		if (hasErrors || handleNeedsCheck) {
+			const errors = { ...localErrors };
+			if (handleNeedsCheck) {
+				errors.handle = errors.handle || '핸들 중복 확인이 필요합니다';
+			}
+			settingsStore.setValidationErrors('personal', errors);
 		} else {
 			settingsStore.clearValidationErrors('personal');
 		}
 
-		return !hasErrors;
+		return !hasErrors && !handleNeedsCheck;
 	}
 
 	function handleBannerUpdate(data: { bannerImageFile: Blob; bannerImage: string }) {
@@ -36,6 +44,10 @@
 
 	function handleHandleUpdate(newHandle: string) {
 		settingsStore.updatePersonal({ handle: newHandle });
+		const originalHandle = settingsStore.originalPersonal.handle;
+		// 원래 핸들과 같으면 검증 필요없음, 다르면 검증 필요
+		handleAvailable = newHandle === originalHandle ? true : null;
+		validateForm();
 	}
 
 	function handleNameUpdate(newName: string) {
@@ -61,6 +73,11 @@
 			delete localErrors.handle;
 		}
 		localErrors = { ...localErrors };
+		validateForm();
+	}
+
+	function handleHandleAvailabilityChange(isAvailable: boolean | null) {
+		handleAvailable = isAvailable;
 		validateForm();
 	}
 
@@ -106,6 +123,9 @@
 
 	onMount(() => {
 		if (handle && name) {
+			// 초기 로드 시 핸들이 원래값과 같으면 검증 상태를 true로 설정
+			const originalHandle = settingsStore.originalPersonal.handle;
+			handleAvailable = handle === originalHandle ? true : null;
 			validateForm();
 		}
 	});
@@ -117,7 +137,7 @@
 
 		<ProfileImageUpload {profileImage} onUpdate={handleProfileUpdate} />
 
-		<HandleInput {handle} onUpdate={handleHandleUpdate} onValidationChange={handleHandleValidation} />
+		<HandleInput {handle} onUpdate={handleHandleUpdate} onValidationChange={handleHandleValidation} onAvailabilityChange={handleHandleAvailabilityChange} />
 
 		<DisplayNameInput {name} onUpdate={handleNameUpdate} onValidationChange={handleNameValidation} />
 

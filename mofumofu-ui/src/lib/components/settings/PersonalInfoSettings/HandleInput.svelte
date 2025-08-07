@@ -3,14 +3,16 @@
 	import * as v from 'valibot';
 	import { createPersonalInfoSchema } from '$lib/schemas/personal-info';
 	import * as m from '../../../../paraglide/messages';
+	import { checkHandleAvailability as apiCheckHandleAvailability } from '$lib/api/user';
 
 	interface Props {
 		handle: string | null;
 		onUpdate: (handle: string) => void;
 		onValidationChange: (error?: string) => void;
+		onAvailabilityChange?: (isAvailable: boolean | null) => void;
 	}
 
-	let { handle, onUpdate, onValidationChange }: Props = $props();
+	let { handle, onUpdate, onValidationChange, onAvailabilityChange }: Props = $props();
 
 	let localError = $state<string | undefined>();
 	let isChecking = $state(false);
@@ -30,12 +32,17 @@
 		isChecking = true;
 		handleAvailable = null;
 
-		await new Promise((resolve) => setTimeout(resolve, 1000));
-
-		const unavailableHandles = ['admin', 'test', 'user', 'mofu'];
-		handleAvailable = !unavailableHandles.includes((handle || '').toLowerCase());
-
-		isChecking = false;
+		try {
+			const result = await apiCheckHandleAvailability(handle.trim());
+			handleAvailable = result.is_available;
+			onAvailabilityChange?.(result.is_available);
+		} catch (error) {
+			console.error('Handle availability check failed:', error);
+			handleAvailable = null;
+			onAvailabilityChange?.(null);
+		} finally {
+			isChecking = false;
+		}
 	}
 
 	function handleInput(e: Event) {
@@ -47,6 +54,7 @@
 		onValidationChange(error);
 
 		handleAvailable = null;
+		onAvailabilityChange?.(null);
 	}
 
 	const characterCount = $derived((handle || '').length);
