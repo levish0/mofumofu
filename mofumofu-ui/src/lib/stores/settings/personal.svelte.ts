@@ -3,6 +3,7 @@ import type { UpdateProfileRequest } from '$lib/api/user/types';
 import { createPersonalInfoSchema } from '$lib/schemas/personal-info';
 import { safeParse } from 'valibot';
 import type { PersonalInfo } from './types';
+import { userStore } from '../user.svelte';
 
 export class PersonalSettingsStore {
 	private state = $state<PersonalInfo>({
@@ -254,26 +255,30 @@ export class PersonalSettingsStore {
 
 				await updateProfile(personalData);
 
-				// Fetch updated profile to get latest image URLs after upload
-				const updatedProfile = await getMyProfile();
+				// Refresh user store to get updated profile data
+				await userStore.refresh();
 
-				// Update the personal info with the response from the API
-				// Keep the current blob URLs if they exist, otherwise use server URLs
-				this.state = {
-					...this.state,
-					handle: updatedProfile.handle,
-					name: updatedProfile.name,
-					bio: updatedProfile.bio || '',
-					location: updatedProfile.location || '',
-					website: updatedProfile.website || '',
-					profileImage: this.state.profileImage || updatedProfile.profile_image || null,
-					bannerImage: this.state.bannerImage || updatedProfile.banner_image || null,
-					profileImageFile: null, // Clear file after successful upload
-					bannerImageFile: null // Clear file after successful upload
-				};
+				// Get the updated profile from user store
+				const updatedProfile = userStore.user;
+				if (updatedProfile) {
+					// Update the personal info with the response from the API
+					// Keep the current blob URLs if they exist, otherwise use server URLs
+					this.state = {
+						...this.state,
+						handle: updatedProfile.handle,
+						name: updatedProfile.name,
+						bio: updatedProfile.bio || '',
+						location: updatedProfile.location || '',
+						website: updatedProfile.website || '',
+						profileImage: this.state.profileImage || updatedProfile.profile_image || null,
+						bannerImage: this.state.bannerImage || updatedProfile.banner_image || null,
+						profileImageFile: null, // Clear file after successful upload
+						bannerImageFile: null // Clear file after successful upload
+					};
 
-				// Update original state
-				this.originalState = JSON.parse(JSON.stringify(this.state));
+					// Update original state
+					this.originalState = JSON.parse(JSON.stringify(this.state));
+				}
 				this.errors = {};
 			}
 

@@ -11,10 +11,9 @@
 		User,
 		ArrowRightOnRectangle
 	} from 'svelte-hero-icons';
-	import { getMyProfile } from '$lib/api/user/userApi';
 	import { onMount } from 'svelte';
 	import { authStore } from '$lib/stores/auth.svelte';
-	import type { UserInfoResponse } from '$lib/api/user/types';
+	import { userStore } from '$lib/stores/user.svelte';
 	import { signOut } from '$lib/api/auth/authApi';
 	import { fly, scale } from 'svelte/transition';
 	import { Button } from '../ui/button';
@@ -24,36 +23,21 @@
 
 	let { isVisible, isAtTop } = $props();
 
-	let userInfo: UserInfoResponse | null = $state(null);
-	let isLoading = $state(false);
 	let isDropdownOpen = $state(false);
 	let closeTimer: number | null = null;
 
-	async function loadUserProfile() {
-		if (isLoading || userInfo) return;
-
-		isLoading = true;
-
-		try {
-			console.log('loading user profile from navbar');
-			userInfo = await getMyProfile();
-		} catch (error) {
-			console.error('Failed to fetch user profile:', error);
-			userInfo = null;
-		} finally {
-			isLoading = false;
-		}
-	}
+	const userInfo = $derived(userStore.user);
+	const isLoading = $derived(userStore.isLoading);
 
 	onMount(() => {
-		loadUserProfile();
+		userStore.loadProfile();
 	});
 
 	async function handleLogout() {
 		try {
 			await signOut();
 			authStore.clearToken();
-			userInfo = null;
+			userStore.clear();
 			isDropdownOpen = false;
 			await invalidateAll();
 			window.location.reload();

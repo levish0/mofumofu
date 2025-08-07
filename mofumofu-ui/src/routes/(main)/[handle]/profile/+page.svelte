@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
-	import { getMyProfile } from '$lib/api/user/userApi';
 	import { authStore } from '$lib/stores/auth.svelte.js';
+	import { userStore } from '$lib/stores/user.svelte';
 	import ProfileHeader from '$lib/components/profile/ProfileHeader.svelte';
 	import ProfileInfo from '$lib/components/profile/ProfileInfo.svelte';
 	import ProfilePostGrid from '$lib/components/profile/ProfilePostGrid.svelte';
@@ -28,8 +28,16 @@
 			if (authStore.isAuthenticated && data.profile.handle) {
 				isLoading = true;
 				try {
-					const currentUser = await getMyProfile();
-					isOwnProfile = currentUser.handle === data.profile.handle;
+					// Ensure user profile is loaded
+					if (!userStore.user) {
+						await userStore.loadProfile();
+					}
+
+					if (userStore.user) {
+						isOwnProfile = userStore.user.handle === data.profile.handle;
+					} else {
+						isOwnProfile = false;
+					}
 				} catch (err) {
 					console.warn('Failed to get current user profile:', err);
 					isOwnProfile = false;

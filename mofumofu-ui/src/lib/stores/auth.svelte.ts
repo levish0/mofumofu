@@ -17,6 +17,11 @@ export const authStore = {
 		_token = token;
 		if (browser) {
 			localStorage.setItem('access_token', token);
+			if (token) {
+				import('./user.svelte').then(({ userStore }) => {
+					userStore.loadProfile();
+				});
+			}
 		}
 	},
 
@@ -24,6 +29,9 @@ export const authStore = {
 		_token = '';
 		if (browser) {
 			localStorage.removeItem('access_token');
+			import('./user.svelte').then(({ userStore }) => {
+				userStore.clear();
+			});
 		}
 	}
 };
