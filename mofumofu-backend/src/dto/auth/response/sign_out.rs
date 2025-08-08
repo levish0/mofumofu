@@ -1,17 +1,17 @@
-use axum::response::{IntoResponse, Response};
-use axum::http::HeaderValue;
-use axum::http::header::SET_COOKIE;
-use axum::http::StatusCode;
-use cookie::{Cookie, SameSite};
-use cookie::time::Duration;
 use crate::config::db_config::DbConfig;
+use axum::http::HeaderValue;
+use axum::http::StatusCode;
+use axum::http::header::SET_COOKIE;
+use axum::response::{IntoResponse, Response};
+use cookie::time::Duration;
+use cookie::{Cookie, SameSite};
 
 pub struct SignOutResponse;
 
 impl IntoResponse for SignOutResponse {
     fn into_response(self) -> Response {
         let is_dev = DbConfig::get().is_dev;
-        
+
         let same_site_attribute = if is_dev {
             SameSite::None
         } else {
@@ -28,7 +28,7 @@ impl IntoResponse for SignOutResponse {
             .build();
 
         let mut response = StatusCode::NO_CONTENT.into_response();
-        
+
         response.headers_mut().insert(
             SET_COOKIE,
             HeaderValue::from_str(&expired_cookie.to_string()).unwrap(),

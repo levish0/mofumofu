@@ -1,7 +1,7 @@
 use super::openapi::ApiDoc;
 use crate::api::v0::routes::auth::routes::auth_routes;
 use crate::api::v0::routes::follow::routes::follow_routes;
-use crate::api::v0::routes::post::post::post_routes;
+use crate::api::v0::routes::post::create_post::post_routes;
 use crate::api::v0::routes::user::routes::user_routes;
 use crate::service::error::errors::handler_404;
 use crate::state::AppState;

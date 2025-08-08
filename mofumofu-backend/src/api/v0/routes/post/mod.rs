@@ -1,1 +1,2 @@
-pub mod post;
+pub mod create_post;
+mod get_post;

@@ -33,7 +33,7 @@ use utoipa::{
         crate::api::v0::routes::user::update_profile::update_profile,
         crate::api::v0::routes::user::upload_avatar::upload_avatar,
         crate::api::v0::routes::user::upload_banner::upload_banner,
-        crate::api::v0::routes::post::post::create_post,
+        crate::api::v0::routes::post::create_post::create_post,
         crate::api::v0::routes::follow::create_follow::api_create_follow,
         crate::api::v0::routes::follow::delete_follow::api_delete_follow,
         crate::api::v0::routes::follow::get_followers_list::get_followers,

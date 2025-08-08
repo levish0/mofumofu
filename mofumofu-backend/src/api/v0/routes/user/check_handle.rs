@@ -23,7 +23,10 @@ pub async fn check_handle_availability(
     State(state): State<AppState>,
     ValidatedJson(payload): ValidatedJson<GetUserProfileRequest>,
 ) -> Result<HandleCheckResponse, Errors> {
-    info!("Received POST request to check handle availability: {}", payload.handle);
+    info!(
+        "Received POST request to check handle availability: {}",
+        payload.handle
+    );
 
     let is_available = service_check_handle_availability(&state.conn, &payload.handle).await?;
     Ok(HandleCheckResponse { is_available })

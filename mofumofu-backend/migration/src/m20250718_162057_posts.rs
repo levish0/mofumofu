@@ -63,7 +63,12 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .default(0), // 조회수
                     )
-                    .col(ColumnDef::new(Posts::Slug).string_len(255).null()) // URL 슬러그
+                    .col(
+                        ColumnDef::new(Posts::Slug)
+                            .string_len(255)
+                            .not_null()
+                            .unique_key(),
+                    ) // URL 슬러그
                     // 작성자와의 외래키
                     .foreign_key(
                         ForeignKey::create()
