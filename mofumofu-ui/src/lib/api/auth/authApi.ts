@@ -1,9 +1,5 @@
 import { privateApi } from '../private';
-import type { 
-	GithubAuthRequest, 
-	GoogleAuthRequest, 
-	RefreshAccessTokenResponse 
-} from './types';
+import type { GithubAuthRequest, GoogleAuthRequest, RefreshAccessTokenResponse } from './types';
 
 export async function refreshAccessToken(): Promise<RefreshAccessTokenResponse> {
 	try {
