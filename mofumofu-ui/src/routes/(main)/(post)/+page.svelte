@@ -29,7 +29,7 @@
 			const now = new Date();
 			const diff = now.getTime() - date.getTime();
 			const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-			
+
 			if (days === 0) {
 				const hours = Math.floor(diff / (1000 * 60 * 60));
 				return hours === 0 ? '방금 전' : `${hours}시간 전`;

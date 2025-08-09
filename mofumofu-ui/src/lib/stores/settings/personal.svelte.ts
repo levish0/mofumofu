@@ -1,4 +1,10 @@
-import { updateProfile, uploadAvatar, uploadBanner, getMyProfile, checkHandleAvailability } from '$lib/api/user/userApi';
+import {
+	updateProfile,
+	uploadAvatar,
+	uploadBanner,
+	getMyProfile,
+	checkHandleAvailability
+} from '$lib/api/user/userApi';
 import type { UpdateProfileRequest } from '$lib/api/user/types';
 import { createPersonalInfoSchema } from '$lib/schemas/personal-info';
 import { safeParse } from 'valibot';
@@ -110,9 +116,11 @@ export class PersonalSettingsStore {
 	}
 
 	get handleNeedsVerification() {
-		return this.state.handle !== this.originalState.handle && 
-			   this.state.handle.trim() !== '' &&
-			   this.handleVerificationState === 'unverified';
+		return (
+			this.state.handle !== this.originalState.handle &&
+			this.state.handle.trim() !== '' &&
+			this.handleVerificationState === 'unverified'
+		);
 	}
 
 	get handleVerificationStatus() {
@@ -141,7 +149,7 @@ export class PersonalSettingsStore {
 	update(updates: Partial<PersonalInfo>) {
 		const oldHandle = this.state.handle;
 		this.state = { ...this.state, ...updates };
-		
+
 		// 핸들이 변경되었으면 검증 상태 리셋
 		if (updates.handle !== undefined && updates.handle !== oldHandle) {
 			const isBackToOriginal = updates.handle === this.originalState.handle;
@@ -152,7 +160,7 @@ export class PersonalSettingsStore {
 	// Check handle availability
 	async checkHandleAvailability(): Promise<void> {
 		if (!this.state.handle || this.state.handle.trim() === '') return;
-		
+
 		this.handleVerificationState = 'checking';
 		try {
 			const result = await checkHandleAvailability(this.state.handle.trim());
@@ -167,7 +175,7 @@ export class PersonalSettingsStore {
 	async validate(): Promise<boolean> {
 		const result = safeParse(createPersonalInfoSchema(), this.state);
 		const errors: Record<string, string> = {};
-		
+
 		if (!result.success) {
 			for (const issue of result.issues) {
 				if (issue.path && issue.path.length > 0) {
@@ -176,14 +184,14 @@ export class PersonalSettingsStore {
 				}
 			}
 		}
-		
+
 		// 핸들 검증 확인 (메시지는 컴포넌트에서 처리하므로 키만 설정)
 		if (this.handleNeedsVerification) {
 			errors.handle = 'HANDLE_VERIFICATION_REQUIRED';
 		} else if (this.handleVerificationStatus === 'unavailable') {
 			errors.handle = 'HANDLE_UNAVAILABLE';
 		}
-		
+
 		this.validationErrors = errors;
 		return Object.keys(errors).length === 0;
 	}

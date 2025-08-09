@@ -119,7 +119,7 @@
 					profileImage: userStore.user.profile_image || null,
 					bannerImage: userStore.user.banner_image || null
 				});
-				
+
 				// API 호출이 성공하면 인증된 상태이므로 personal 섹션으로 변경 (단, 해시가 없는 경우만)
 				if (!window.location.hash && selectedSection === 'display') {
 					selectedSection = 'personal';

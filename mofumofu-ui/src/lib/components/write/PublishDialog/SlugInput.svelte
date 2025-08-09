@@ -16,14 +16,16 @@
 	const slugCount = $derived(value.length);
 
 	function generateSlug(text: string): string {
-		return text
-			.trim()
-			// URL에 안전하지 않은 문자들만 제거 (공백, /, ?, #, [, ], @, !, $, &, ', (, ), *, +, ,, ;, =)
-			.replace(/[\s\/\?#\[\]@!$&'()*+,;=]+/g, '-')
-			// 연속된 하이픈을 하나로
-			.replace(/-+/g, '-')
-			// 앞뒤 하이픈 제거
-			.replace(/^-+|-+$/g, '');
+		return (
+			text
+				.trim()
+				// URL에 안전하지 않은 문자들만 제거 (공백, /, ?, #, [, ], @, !, $, &, ', (, ), *, +, ,, ;, =)
+				.replace(/[\s\/\?#\[\]@!$&'()*+,;=]+/g, '-')
+				// 연속된 하이픈을 하나로
+				.replace(/-+/g, '-')
+				// 앞뒤 하이픈 제거
+				.replace(/^-+|-+$/g, '')
+		);
 	}
 
 	function validateSlug(slugValue: string) {
@@ -37,14 +39,12 @@
 		};
 
 		const result = v.safeParse(schema, dataToValidate);
-		
+
 		if (result.success) {
 			validationError = '';
 			onValidationChange();
 		} else {
-			const slugError = result.issues.find(issue => 
-				issue.path?.[0]?.key === 'slug'
-			);
+			const slugError = result.issues.find((issue) => issue.path?.[0]?.key === 'slug');
 			if (slugError) {
 				validationError = slugError.message;
 				onValidationChange(slugError.message);
@@ -68,9 +68,15 @@
 			{value}
 			oninput={handleInput}
 			placeholder="URL에 사용될 슬러그"
-			class="dark:bg-mofu-dark-700 border-mofu-dark-600 placeholder:text-mofu-dark-400 pr-12 text-white {validationError ? 'border-red-500' : ''}"
+			class="dark:bg-mofu-dark-700 border-mofu-dark-600 placeholder:text-mofu-dark-400 pr-12 text-white {validationError
+				? 'border-red-500'
+				: ''}"
 		/>
-		<div class="absolute top-1/2 right-3 -translate-y-1/2 text-xs {validationError ? 'text-red-400' : 'text-mofu-dark-400'}">
+		<div
+			class="absolute top-1/2 right-3 -translate-y-1/2 text-xs {validationError
+				? 'text-red-400'
+				: 'text-mofu-dark-400'}"
+		>
 			{slugCount}/80
 		</div>
 	</div>

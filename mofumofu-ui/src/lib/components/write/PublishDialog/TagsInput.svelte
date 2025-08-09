@@ -19,8 +19,8 @@
 		...new Set(
 			value
 				.split(/[,\n]/)
-				.map(tag => tag.trim())
-				.filter(tag => tag.length > 0)
+				.map((tag) => tag.trim())
+				.filter((tag) => tag.length > 0)
 		)
 	]);
 	const tagCount = $derived(tagArray.length);
@@ -36,14 +36,12 @@
 		};
 
 		const result = v.safeParse(schema, dataToValidate);
-		
+
 		if (result.success) {
 			validationError = '';
 			onValidationChange();
 		} else {
-			const tagsError = result.issues.find(issue => 
-				issue.path?.[0]?.key === 'tags'
-			);
+			const tagsError = result.issues.find((issue) => issue.path?.[0]?.key === 'tags');
 			if (tagsError) {
 				validationError = tagsError.message;
 				onValidationChange(tagsError.message);
@@ -63,7 +61,7 @@
 	}
 
 	function removeTag(tagToRemove: string) {
-		const newTags = tagArray.filter(tag => tag !== tagToRemove);
+		const newTags = tagArray.filter((tag) => tag !== tagToRemove);
 		const newValue = newTags.join(',');
 		onUpdate(newValue);
 		validateTags(newValue);
@@ -94,7 +92,7 @@
 				{/each}
 			</div>
 		{/if}
-		
+
 		<!-- 태그가 5개 미만일 때만 입력 필드 표시 -->
 		{#if tagArray.length < 5}
 			<div class="relative">
@@ -104,7 +102,11 @@
 					placeholder="태그를 입력하고 Enter 또는 쉼표를 누르세요"
 					class="dark:bg-mofu-dark-700 border-mofu-dark-600 placeholder:text-mofu-dark-400 pr-12 text-white"
 				/>
-				<div class="absolute top-1/2 right-3 -translate-y-1/2 text-xs {validationError ? 'text-red-400' : 'text-mofu-dark-400'}">
+				<div
+					class="absolute top-1/2 right-3 -translate-y-1/2 text-xs {validationError
+						? 'text-red-400'
+						: 'text-mofu-dark-400'}"
+				>
 					{tagCount}/5
 				</div>
 			</div>
@@ -118,8 +120,6 @@
 	{#if validationError}
 		<p class="mt-1 text-xs text-rose-400">{validationError}</p>
 	{:else}
-		<p class="text-mofu-dark-400 mt-1 text-xs">
-			태그를 클릭하면 삭제됩니다. Enter 또는 쉼표로 구분하여 입력하세요.
-		</p>
+		<p class="text-mofu-dark-400 mt-1 text-xs">태그를 클릭하면 삭제됩니다. Enter 또는 쉼표로 구분하여 입력하세요.</p>
 	{/if}
 </div>

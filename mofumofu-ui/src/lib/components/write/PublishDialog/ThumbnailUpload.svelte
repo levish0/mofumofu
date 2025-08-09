@@ -85,7 +85,9 @@
 <div>
 	<label class="text-mofu-dark-100 mb-2 block text-sm font-medium">썸네일 (선택사항)</label>
 	<div class="group relative transition-all">
-		<div class="bg-mofu-dark-700 border-mofu-dark-600 relative aspect-video w-full overflow-hidden rounded-lg border group-hover:opacity-75">
+		<div
+			class="bg-mofu-dark-700 border-mofu-dark-600 relative aspect-video w-full overflow-hidden rounded-lg border group-hover:opacity-75"
+		>
 			{#if thumbnail}
 				<!-- Loading shimmer -->
 				{#if imageLoading && !thumbnail.startsWith('blob:')}
@@ -100,18 +102,17 @@
 					onload={handleImageLoad}
 					onerror={handleImageError}
 				/>
-				<div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 flex items-center justify-center">
-					<div class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex gap-2">
+				<div
+					class="bg-opacity-0 group-hover:bg-opacity-30 absolute inset-0 flex items-center justify-center bg-black transition-all duration-200"
+				>
+					<div class="flex gap-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
 						<label
 							for="thumbnail-upload"
-							class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm cursor-pointer"
+							class="cursor-pointer rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
 						>
 							변경
 						</label>
-						<button
-							onclick={removeThumbnail}
-							class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm"
-						>
+						<button onclick={removeThumbnail} class="rounded bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700">
 							제거
 						</button>
 					</div>
@@ -119,11 +120,11 @@
 			{:else}
 				<label
 					for="thumbnail-upload"
-					class="text-mofu-dark-300 flex h-full cursor-pointer flex-col items-center justify-center space-y-2 hover:text-mofu-dark-200 transition-colors"
+					class="text-mofu-dark-300 hover:text-mofu-dark-200 flex h-full cursor-pointer flex-col items-center justify-center space-y-2 transition-colors"
 				>
 					<Icon src={Photo} class="h-12 w-12" />
 					<span class="text-sm">썸네일 이미지 추가</span>
-					<span class="text-xs text-mofu-dark-400">16:9 비율 권장, 최대 3MB</span>
+					<span class="text-mofu-dark-400 text-xs">16:9 비율 권장, 최대 3MB</span>
 				</label>
 			{/if}
 		</div>
@@ -137,7 +138,7 @@
 <ImageCropModal
 	bind:isOpen={showCrop}
 	imageSrc={tempImageSrc}
-	aspectRatio={16/9}
+	aspectRatio={16 / 9}
 	cropShape="rect"
 	onCrop={handleCrop}
 	onCancel={handleCropCancel}

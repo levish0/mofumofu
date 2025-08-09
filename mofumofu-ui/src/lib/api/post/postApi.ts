@@ -1,11 +1,11 @@
 import { privateApi } from '../private';
 import { publicApi } from '../public';
-import type { 
-	CreatePostRequest, 
-	GetPostByHandleAndSlugRequest, 
-	PostInfoResponse, 
-	GetPostsRequest, 
-	GetPostsResponse 
+import type {
+	CreatePostRequest,
+	GetPostByHandleAndSlugRequest,
+	PostInfoResponse,
+	GetPostsRequest,
+	GetPostsResponse
 } from './types';
 
 export async function createPost(postData: CreatePostRequest): Promise<void> {

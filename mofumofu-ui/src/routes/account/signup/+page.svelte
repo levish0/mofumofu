@@ -9,7 +9,7 @@
 	let email = $state('');
 	let handle = $state('');
 	let password = $state('');
-	
+
 	let emailValidationError = $state<string | undefined>();
 	let handleValidationError = $state<string | undefined>();
 	let passwordValidationError = $state<string | undefined>();
@@ -34,7 +34,7 @@
 		const value = (e.target as HTMLInputElement).value;
 		handle = value;
 		handleValidationError = validateField('handle', value);
-		
+
 		// Reset verification state when handle changes
 		handleVerificationState = 'unverified';
 	}
@@ -101,10 +101,12 @@
 								value={email}
 								oninput={handleEmailInput}
 								autocomplete="email"
-								class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-lg px-3 py-1.5 text-base outline-none sm:text-sm/6 {emailValidationError ? 'border-red-500' : ''}"
+								class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-lg px-3 py-1.5 text-base outline-none sm:text-sm/6 {emailValidationError
+									? 'border-red-500'
+									: ''}"
 							/>
 							{#if emailValidationError}
-								<p class="text-xs text-rose-400 flex items-center gap-1">
+								<p class="flex items-center gap-1 text-xs text-rose-400">
 									<Icon src={ExclamationTriangle} size="14" />
 									{emailValidationError}
 								</p>
@@ -116,7 +118,7 @@
 						<label for="handle" class="block text-sm/6 font-medium">핸들</label>
 						<div class="mt-2 space-y-2">
 							<div class="relative flex">
-								<span class="inline-flex items-center rounded-l-lg px-3 text-sm bg-mofu-dark-800 border-r-0">@</span>
+								<span class="bg-mofu-dark-800 inline-flex items-center rounded-l-lg border-r-0 px-3 text-sm">@</span>
 								<div class="relative flex-1">
 									<input
 										id="handle"
@@ -126,9 +128,11 @@
 										placeholder="mofumofu"
 										value={handle}
 										oninput={handleHandleInput}
-										class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-l-none rounded-r-none px-3 py-1.5 text-base outline-none sm:text-sm/6 border-r-0 pr-12 {handleValidationError ? 'border-red-500' : ''}"
+										class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-l-none rounded-r-none border-r-0 px-3 py-1.5 pr-12 text-base outline-none sm:text-sm/6 {handleValidationError
+											? 'border-red-500'
+											: ''}"
 									/>
-									<div class="absolute top-1/2 right-3 -translate-y-1/2 text-xs text-mofu-dark-400">
+									<div class="text-mofu-dark-400 absolute top-1/2 right-3 -translate-y-1/2 text-xs">
 										{characterCount}/20
 									</div>
 								</div>
@@ -152,19 +156,19 @@
 									{/if}
 								</button>
 							</div>
-							
+
 							{#if handleValidationError}
-								<p class="text-xs text-rose-400 flex items-center gap-1">
+								<p class="flex items-center gap-1 text-xs text-rose-400">
 									<Icon src={ExclamationTriangle} size="14" />
 									{handleValidationError}
 								</p>
 							{:else if handleVerificationState === 'verified'}
-								<p class="text-xs text-green-400 flex items-center gap-1">
+								<p class="flex items-center gap-1 text-xs text-green-400">
 									<Icon src={CheckCircle} size="14" />
 									사용 가능한 핸들입니다
 								</p>
 							{:else if handleVerificationState === 'unavailable'}
-								<p class="text-xs text-rose-400 flex items-center gap-1">
+								<p class="flex items-center gap-1 text-xs text-rose-400">
 									<Icon src={ExclamationTriangle} size="14" />
 									이미 사용중인 핸들입니다
 								</p>
@@ -188,10 +192,12 @@
 								oninput={handlePasswordInput}
 								required
 								autocomplete="new-password"
-								class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-lg px-3 py-1.5 text-base outline-none sm:text-sm/6 {passwordValidationError ? 'border-red-500' : ''}"
+								class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-lg px-3 py-1.5 text-base outline-none sm:text-sm/6 {passwordValidationError
+									? 'border-red-500'
+									: ''}"
 							/>
 							{#if passwordValidationError}
-								<p class="text-xs text-rose-400 flex items-center gap-1">
+								<p class="flex items-center gap-1 text-xs text-rose-400">
 									<Icon src={ExclamationTriangle} size="14" />
 									{passwordValidationError}
 								</p>

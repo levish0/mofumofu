@@ -25,14 +25,12 @@
 		};
 
 		const result = v.safeParse(schema, dataToValidate);
-		
+
 		if (result.success) {
 			validationError = '';
 			onValidationChange();
 		} else {
-			const titleError = result.issues.find(issue => 
-				issue.path?.[0]?.key === 'title'
-			);
+			const titleError = result.issues.find((issue) => issue.path?.[0]?.key === 'title');
 			if (titleError) {
 				validationError = titleError.message;
 				onValidationChange(titleError.message);
@@ -55,9 +53,15 @@
 			{value}
 			oninput={handleInput}
 			placeholder="포스트 제목을 입력하세요"
-			class="dark:bg-mofu-dark-700 border-mofu-dark-600 placeholder:text-mofu-dark-400 pr-12 text-white {validationError ? 'border-red-500' : ''}"
+			class="dark:bg-mofu-dark-700 border-mofu-dark-600 placeholder:text-mofu-dark-400 pr-12 text-white {validationError
+				? 'border-red-500'
+				: ''}"
 		/>
-		<div class="absolute top-1/2 right-3 -translate-y-1/2 text-xs {validationError ? 'text-red-400' : 'text-mofu-dark-400'}">
+		<div
+			class="absolute top-1/2 right-3 -translate-y-1/2 text-xs {validationError
+				? 'text-red-400'
+				: 'text-mofu-dark-400'}"
+		>
 			{titleCount}/80
 		</div>
 	</div>

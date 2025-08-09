@@ -17,7 +17,7 @@
 	// 스토어에서 검증을 트리거하는 간단한 함수
 	function validateForm(): boolean {
 		const hasErrors = Object.keys(localErrors).length > 0;
-		
+
 		if (hasErrors) {
 			settingsStore.setValidationErrors('personal', localErrors);
 		} else {
@@ -65,7 +65,6 @@
 		localErrors = { ...localErrors };
 		validateForm();
 	}
-
 
 	function handleNameValidation(error?: string) {
 		if (error) {

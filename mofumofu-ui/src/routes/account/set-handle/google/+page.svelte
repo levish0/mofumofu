@@ -31,7 +31,7 @@
 		const value = (e.target as HTMLInputElement).value;
 		handle = value;
 		validationError = validateHandle(value);
-		
+
 		// Reset verification state when handle changes
 		verificationState = 'unverified';
 	}
@@ -58,7 +58,7 @@
 		try {
 			// Store handle in store
 			oauthHandleStore.setHandle(handle.trim());
-			
+
 			// Redirect to Google OAuth
 			window.location.href = getGoogleOAuthUrl();
 		} catch (error) {
@@ -76,9 +76,9 @@
 <div class="text-mofu-dark-200 bg-mofu-dark-900 flex min-h-screen items-center justify-center">
 	<div class="w-full max-w-md space-y-8 p-8">
 		<div class="text-center">
-			<div class="flex items-center justify-center mb-6">
+			<div class="mb-6 flex items-center justify-center">
 				<!-- Google 아이콘 -->
-				<div class="bg-mofu-dark-800 p-3 rounded-full mr-4">
+				<div class="bg-mofu-dark-800 mr-4 rounded-full p-3">
 					<svg viewBox="0 0 24 24" aria-hidden="true" class="h-8 w-8">
 						<path
 							d="M12.0003 4.75C13.7703 4.75 15.3553 5.36002 16.6053 6.54998L20.0303 3.125C17.9502 1.19 15.2353 0 12.0003 0C7.31028 0 3.25527 2.69 1.28027 6.60998L5.27028 9.70498C6.21525 6.86002 8.87028 4.75 12.0003 4.75Z"
@@ -119,7 +119,7 @@
 							value={handle}
 							oninput={handleInput}
 						/>
-						<div class="absolute top-1/2 right-3 -translate-y-1/2 text-xs text-mofu-dark-400">
+						<div class="text-mofu-dark-400 absolute top-1/2 right-3 -translate-y-1/2 text-xs">
 							{characterCount}/20
 						</div>
 					</div>
@@ -144,17 +144,17 @@
 				</div>
 
 				{#if validationError}
-					<p class="text-xs text-rose-400 flex items-center gap-1">
+					<p class="flex items-center gap-1 text-xs text-rose-400">
 						<Icon src={ExclamationTriangle} size="14" />
 						{validationError}
 					</p>
 				{:else if verificationState === 'verified'}
-					<p class="text-xs text-green-400 flex items-center gap-1">
+					<p class="flex items-center gap-1 text-xs text-green-400">
 						<Icon src={CheckCircle} size="14" />
 						사용 가능한 핸들입니다
 					</p>
 				{:else if verificationState === 'unavailable'}
-					<p class="text-xs text-rose-400 flex items-center gap-1">
+					<p class="flex items-center gap-1 text-xs text-rose-400">
 						<Icon src={ExclamationTriangle} size="14" />
 						이미 사용중인 핸들입니다
 					</p>
@@ -166,7 +166,9 @@
 			</div>
 
 			{#if proceedError}
-				<div class="text-rose-400 text-sm bg-rose-400/10 border border-rose-400/20 rounded-md p-3 flex items-center gap-2">
+				<div
+					class="flex items-center gap-2 rounded-md border border-rose-400/20 bg-rose-400/10 p-3 text-sm text-rose-400"
+				>
 					<Icon src={ExclamationTriangle} size="16" />
 					{proceedError}
 				</div>
@@ -176,7 +178,7 @@
 				<Button
 					onclick={proceedWithGoogle}
 					disabled={!canProceed || proceeding}
-					class="w-full bg-[#4285F4] hover:bg-[#4285F4]/80 text-white disabled:opacity-50 flex items-center justify-center gap-3"
+					class="flex w-full items-center justify-center gap-3 bg-[#4285F4] text-white hover:bg-[#4285F4]/80 disabled:opacity-50"
 				>
 					{#if proceeding}
 						<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -215,7 +217,7 @@
 				<Button
 					onclick={goBack}
 					variant="ghost"
-					class="w-full text-mofu-dark-300 hover:text-mofu-dark-200 hover:bg-mofu-dark-800"
+					class="text-mofu-dark-300 hover:text-mofu-dark-200 hover:bg-mofu-dark-800 w-full"
 				>
 					← 뒤로 가기
 				</Button>
