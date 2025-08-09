@@ -41,7 +41,7 @@ pub struct Model {
     pub view_count: i32,
 
     #[sea_orm(column_type = "Text", nullable, string_len = 255)]
-    pub slug: Option<String>,
+    pub slug: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

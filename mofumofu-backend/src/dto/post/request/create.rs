@@ -11,5 +11,5 @@ pub struct CreatePostRequest {
     #[validate(length(max = 40000, message = "Content must be at most 40000 characters."))]
     pub content: String,
     #[validate(length(max = 255, message = "Slug must be at most 255 characters."))]
-    pub slug: Option<String>,
+    pub slug: String,
 }

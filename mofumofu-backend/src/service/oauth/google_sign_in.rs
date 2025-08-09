@@ -16,6 +16,7 @@ pub async fn service_google_sign_in<C>(
     user_agent: Option<String>,
     ip_address: Option<String>,
     auth_code: &str,
+    handle: &str,
 ) -> Result<AuthJWTResponse, Errors>
 where
     C: ConnectionTrait + TransactionTrait,
@@ -33,6 +34,7 @@ where
         &google_user.sub,
         OAuthProvider::Google,
         Some(google_user.picture.clone()),
+        handle,
     )
     .await?;
 

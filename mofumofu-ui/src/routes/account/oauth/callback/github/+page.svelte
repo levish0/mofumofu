@@ -5,6 +5,7 @@
 	import { githubSignIn, googleSignIn } from '$lib/api/auth/authApi';
 	import { goto } from '$app/navigation';
 	import { authStore } from '$lib/stores/auth.svelte';
+	import { oauthHandleStore } from '$lib/stores/oauthHandle.svelte';
 	import { ApiError } from '$lib/api/error/common_error';
 	import { ExclamationTriangle, Icon } from 'svelte-hero-icons';
 	import * as m from '../../../../../paraglide/messages';
@@ -26,11 +27,17 @@
 				throw new Error('Authorization code not found');
 			}
 
+			// 저장된 핸들 가져오기
+			const handle = oauthHandleStore.currentHandle;
+
 			// GitHub OAuth 로그인 처리
-			const response = await githubSignIn(code);
+			const response = await githubSignIn(code, handle);
 
 			// 토큰을 스토어에 저장
 			authStore.setToken(response.access_token);
+
+			// 핸들 스토어 정리
+			oauthHandleStore.clearHandle();
 
 			// 성공 시 메인 페이지로 리다이렉트
 			await goto('/', { replaceState: true });

@@ -21,12 +21,12 @@ export async function signOut(): Promise<void> {
 	}
 }
 
-export async function googleSignIn(code: string): Promise<RefreshAccessTokenResponse> {
-	const payload: GoogleLoginRequest = { code };
+export async function googleSignIn(code: string, handle: string): Promise<RefreshAccessTokenResponse> {
+	const payload: GoogleLoginRequest = { code, handle };
 	return privateApi.post('v0/auth/google', { json: payload }).json<RefreshAccessTokenResponse>();
 }
 
-export async function githubSignIn(code: string): Promise<RefreshAccessTokenResponse> {
-	const payload: GithubLoginRequest = { code };
+export async function githubSignIn(code: string, handle: string): Promise<RefreshAccessTokenResponse> {
+	const payload: GithubLoginRequest = { code, handle };
 	return privateApi.post('v0/auth/github', { json: payload }).json<RefreshAccessTokenResponse>();
 }

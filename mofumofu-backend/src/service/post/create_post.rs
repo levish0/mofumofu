@@ -4,6 +4,7 @@ use crate::service::error::errors::Errors;
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use uuid::Uuid;
 
+
 pub async fn service_create_post<C>(
     conn: &C,
     payload: CreatePostRequest,
@@ -14,7 +15,15 @@ where
 {
     let txn = conn.begin().await?;
 
-    repository_create_post(&txn, payload, user_uuid).await?;
+    let post = CreatePostRequest {
+        title: payload.title,
+        summary: payload.summary,
+        content: payload.content,
+        slug: payload.slug,
+    };
+
+
+    repository_create_post(&txn, post, user_uuid).await?;
 
     // Commit the transaction
     txn.commit().await?;

@@ -1,6 +1,62 @@
 <script lang="ts">
 	import { getGoogleOAuthUrl, getGitHubOAuthUrl } from '$lib/oauth/config';
+	import { checkHandleAvailability } from '$lib/api/user/userApi';
+	import { createSignupSchema } from '$lib/schemas/signup';
+	import { safeParse } from 'valibot';
+	import { ExclamationTriangle, CheckCircle, Icon } from 'svelte-hero-icons';
 	import * as m from '../../../paraglide/messages';
+
+	let email = $state('');
+	let handle = $state('');
+	let password = $state('');
+	
+	let emailValidationError = $state<string | undefined>();
+	let handleValidationError = $state<string | undefined>();
+	let passwordValidationError = $state<string | undefined>();
+	let handleVerificationState = $state<'unverified' | 'checking' | 'verified' | 'unavailable'>('unverified');
+
+	const characterCount = $derived(handle.length);
+	const canCheckHandle = $derived(handle.trim() !== '' && !handleValidationError);
+
+	function validateField(field: 'email' | 'handle' | 'password', value: string): string | undefined {
+		const schema = createSignupSchema();
+		const result = safeParse(schema.entries[field], value.trim());
+		return result.success ? undefined : result.issues?.[0]?.message;
+	}
+
+	function handleEmailInput(e: Event) {
+		const value = (e.target as HTMLInputElement).value;
+		email = value;
+		emailValidationError = validateField('email', value);
+	}
+
+	function handleHandleInput(e: Event) {
+		const value = (e.target as HTMLInputElement).value;
+		handle = value;
+		handleValidationError = validateField('handle', value);
+		
+		// Reset verification state when handle changes
+		handleVerificationState = 'unverified';
+	}
+
+	function handlePasswordInput(e: Event) {
+		const value = (e.target as HTMLInputElement).value;
+		password = value;
+		passwordValidationError = validateField('password', value);
+	}
+
+	async function checkHandle() {
+		if (!canCheckHandle) return;
+
+		handleVerificationState = 'checking';
+		try {
+			const result = await checkHandleAvailability(handle.trim());
+			handleVerificationState = result.is_available ? 'verified' : 'unavailable';
+		} catch (error) {
+			console.error('Handle availability check failed:', error);
+			handleVerificationState = 'unverified';
+		}
+	}
 
 	function goBack() {
 		history.back();
@@ -35,31 +91,113 @@
 				<form method="POST" class="space-y-4">
 					<div>
 						<label for="email" class="block text-sm/6 font-medium">{m.auth_email_address()}</label>
-						<div class="mt-2">
+						<div class="mt-2 space-y-2">
 							<input
 								id="email"
 								type="email"
 								name="email"
 								required
 								placeholder="email@mofu.com"
+								value={email}
+								oninput={handleEmailInput}
 								autocomplete="email"
-								class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-lg px-3 py-1.5 text-base outline-none sm:text-sm/6"
+								class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-lg px-3 py-1.5 text-base outline-none sm:text-sm/6 {emailValidationError ? 'border-red-500' : ''}"
 							/>
+							{#if emailValidationError}
+								<p class="text-xs text-rose-400 flex items-center gap-1">
+									<Icon src={ExclamationTriangle} size="14" />
+									{emailValidationError}
+								</p>
+							{/if}
+						</div>
+					</div>
+
+					<div>
+						<label for="handle" class="block text-sm/6 font-medium">핸들</label>
+						<div class="mt-2 space-y-2">
+							<div class="relative flex">
+								<span class="inline-flex items-center rounded-l-lg px-3 text-sm bg-mofu-dark-800 border-r-0">@</span>
+								<div class="relative flex-1">
+									<input
+										id="handle"
+										type="text"
+										name="handle"
+										required
+										placeholder="mofumofu"
+										value={handle}
+										oninput={handleHandleInput}
+										class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-l-none rounded-r-none px-3 py-1.5 text-base outline-none sm:text-sm/6 border-r-0 pr-12 {handleValidationError ? 'border-red-500' : ''}"
+									/>
+									<div class="absolute top-1/2 right-3 -translate-y-1/2 text-xs text-mofu-dark-400">
+										{characterCount}/20
+									</div>
+								</div>
+								<button
+									type="button"
+									onclick={checkHandle}
+									disabled={handleVerificationState === 'checking' || !canCheckHandle}
+									class="bg-mofu-dark-800 text-mofu-dark-200 disabled:bg-mofu-dark-800/50 hover:bg-mofu-dark-700 inline-flex min-w-20 items-center justify-center rounded-r-lg px-3 py-1.5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
+								>
+									{#if handleVerificationState === 'checking'}
+										<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+											<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+											<path
+												class="opacity-75"
+												fill="currentColor"
+												d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+											></path>
+										</svg>
+									{:else}
+										확인
+									{/if}
+								</button>
+							</div>
+							
+							{#if handleValidationError}
+								<p class="text-xs text-rose-400 flex items-center gap-1">
+									<Icon src={ExclamationTriangle} size="14" />
+									{handleValidationError}
+								</p>
+							{:else if handleVerificationState === 'verified'}
+								<p class="text-xs text-green-400 flex items-center gap-1">
+									<Icon src={CheckCircle} size="14" />
+									사용 가능한 핸들입니다
+								</p>
+							{:else if handleVerificationState === 'unavailable'}
+								<p class="text-xs text-rose-400 flex items-center gap-1">
+									<Icon src={ExclamationTriangle} size="14" />
+									이미 사용중인 핸들입니다
+								</p>
+							{:else if handle.trim() !== ''}
+								<p class="text-xs text-orange-400">핸들 중복 확인이 필요합니다</p>
+							{:else}
+								<p class="text-mofu-dark-400 text-xs">3-20자의 영문, 숫자, 언더스코어만 사용 가능합니다</p>
+							{/if}
 						</div>
 					</div>
 
 					<div>
 						<label for="password" class="block text-sm/6 font-medium">{m.auth_password()}</label>
-						<div class="mt-2">
+						<div class="mt-2 space-y-2">
 							<input
 								id="password"
 								type="password"
 								name="password"
 								placeholder="p4ssw@rd!"
+								value={password}
+								oninput={handlePasswordInput}
 								required
-								autocomplete="current-password"
-								class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-lg px-3 py-1.5 text-base outline-none sm:text-sm/6"
+								autocomplete="new-password"
+								class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-lg px-3 py-1.5 text-base outline-none sm:text-sm/6 {passwordValidationError ? 'border-red-500' : ''}"
 							/>
+							{#if passwordValidationError}
+								<p class="text-xs text-rose-400 flex items-center gap-1">
+									<Icon src={ExclamationTriangle} size="14" />
+									{passwordValidationError}
+								</p>
+							{:else}
+								<p class="text-mofu-dark-400 text-xs">8자 이상, 대소문자, 숫자, 특수문자를 포함해주세요</p>
+							{/if}
 						</div>
 					</div>
 					<div>
@@ -85,7 +223,7 @@
 
 				<div class="mt-6 grid grid-cols-2 gap-4">
 					<a
-						href={getGoogleOAuthUrl()}
+						href="/account/set-handle/google"
 						class="bg-mofu-dark-800 flex w-full items-center justify-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold hover:opacity-70"
 					>
 						<!-- Google 아이콘 -->
@@ -111,7 +249,7 @@
 					</a>
 
 					<a
-						href={getGitHubOAuthUrl()}
+						href="/account/set-handle/github"
 						class="bg-mofu-dark-800 flex w-full items-center justify-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold hover:opacity-70"
 					>
 						<!-- GitHub 아이콘 -->

@@ -18,6 +18,7 @@ pub async fn service_github_sign_in<C>(
     user_agent: Option<String>,
     ip_address: Option<String>,
     auth_code: &str,
+    handle: &str,
 ) -> Result<AuthJWTResponse, Errors>
 where
     C: ConnectionTrait + TransactionTrait,
@@ -41,6 +42,7 @@ where
         &github_user.id.to_string(),
         OAuthProvider::Github,
         Some(github_user.avatar_url.clone()),
+        handle,
     )
     .await?;
 

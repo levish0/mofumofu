@@ -67,7 +67,6 @@ impl MigrationTrait for Migration {
                         ColumnDef::new(Posts::Slug)
                             .string_len(255)
                             .not_null()
-                            .unique_key(),
                     ) // URL 슬러그
                     // 작성자와의 외래키
                     .foreign_key(

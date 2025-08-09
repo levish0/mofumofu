@@ -4,8 +4,8 @@ use crate::entity::users::Model as UserModel;
 use crate::repository::oauth::create_oauth_connection::repository_create_oauth_connection;
 use crate::repository::oauth::create_oauth_user::repository_create_oauth_user;
 use crate::repository::oauth::find_user_by_oauth::repository_find_user_by_oauth;
-use crate::repository::oauth::generate_unique_handle::repository_generate_unique_handle;
 use crate::repository::user::find_user_by_email::repository_find_user_by_email;
+use crate::repository::user::find_user_by_handle::repository_find_user_by_handle;
 use crate::service::error::errors::Errors;
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use tracing::{error, info};
@@ -17,6 +17,7 @@ pub async fn service_find_or_create_oauth_user<C>(
     provider_id: &str,
     provider: OAuthProvider,
     profile_image: Option<String>,
+    handle: &str,
 ) -> Result<OAuthUserResult, Errors>
 where
     C: ConnectionTrait + TransactionTrait,
@@ -49,17 +50,22 @@ where
             is_new_user: false,
         });
     }
-    // 3. 새 유저 생성
-    let handle = repository_generate_unique_handle(txn).await?;
-    repository_create_oauth_user(txn, email, name, &handle, profile_image).await?;
-    // 4. 생성된 유저 조회
+    
+    // 3. 핸들 중복 확인
+    if repository_find_user_by_handle(txn, handle).await?.is_some() {
+        return Err(Errors::UserHandleAlreadyExists);
+    }
+    
+    // 4. 새 유저 생성
+    repository_create_oauth_user(txn, email, name, handle, profile_image).await?;
+    // 5. 생성된 유저 조회
     let created_user = repository_find_user_by_email(txn, email)
         .await?
         .ok_or_else(|| {
             error!("Failed to retrieve newly created OAuth user");
             Errors::DatabaseError("User creation verification failed".to_string())
         })?;
-    // 5. OAuth 연결 생성
+    // 6. OAuth 연결 생성
     repository_create_oauth_connection(txn, &created_user.id, provider.clone(), provider_id)
         .await?;
 
