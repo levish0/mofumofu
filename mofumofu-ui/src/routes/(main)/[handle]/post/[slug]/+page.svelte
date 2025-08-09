@@ -95,7 +95,7 @@
 									class="text-mofu-dark-300 flex items-center gap-2 rounded-full px-4 py-2 transition-colors hover:text-rose-600 dark:hover:text-red-400"
 								>
 									<Icon src={Heart} class="h-5 w-5" solid />
-									<span class="text-sm">{data.post.likes_count || 0}</span>
+									<span class="text-sm">{data.post.like_count || 0}</span>
 								</button>
 
 								<!-- Follow Button -->

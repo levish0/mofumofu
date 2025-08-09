@@ -1,4 +1,5 @@
-use crate::dto::post::response::post_info::PostInfoResponse;
+use crate::dto::post::response::post_info::{PostInfoResponse, PostAuthor};
+use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
 use crate::service::error::errors::Errors;
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use crate::repository::post::get_post_by_handle_and_slug::repository_get_post_by_handle_and_slug;
@@ -12,12 +13,20 @@ where
     C: ConnectionTrait + TransactionTrait,
 {
     let post = repository_get_post_by_handle_and_slug(conn, handle, slug).await?;
+    
+    // Get author information
+    let user = repository_find_user_by_uuid(conn, &post.user_id).await?
+        .ok_or(Errors::UserNotFound)?;
 
     Ok(PostInfoResponse {
         title: post.title,
         summary: post.summary,
         content: post.content,
-        user_id: post.user_id,
+        author: PostAuthor {
+            handle: user.handle,
+            name: user.name,
+            profile_image: user.profile_image,
+        },
         created_at: post.created_at,
         updated_at: post.updated_at,
         published_at: None,
@@ -25,5 +34,6 @@ where
         comment_count: post.comment_count,
         view_count: post.view_count,
         slug: post.slug,
+        tags: Vec::new(), // TODO: Implement tags system
     })
 }

@@ -9,7 +9,6 @@
 	}
 
 	interface Card {
-		id: number;
 		image?: string;
 		title: string;
 		summary: string;
@@ -18,6 +17,8 @@
 		views: string;
 		author: Author;
 		likes: number;
+		slug: string;
+		handle: string;
 	}
 
 	let {
@@ -45,7 +46,7 @@
 
 <div class="min-h-screen">
 	<div class="grid grid-cols-1 gap-x-5 gap-y-4 pb-20 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-		{#each cards as card (card.id)}
+		{#each cards as card (`${card.handle}-${card.slug}`)}
 			<PostCard
 				image={card.image}
 				title={card.title}
@@ -56,6 +57,8 @@
 				author_name={card.author.name}
 				author_avatar={card.author.avatar}
 				likes={card.likes}
+				handle={card.handle}
+				slug={card.slug}
 			/>
 		{/each}
 

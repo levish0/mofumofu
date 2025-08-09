@@ -10,7 +10,7 @@ pub struct PostInfoResponse {
     pub title: String,
     pub summary: Option<String>,
     pub content: String,
-    pub user_id: Uuid,
+    pub author: PostAuthor,
     pub created_at: DateTime<Utc>,
     pub updated_at: Option<DateTime<Utc>>,
     pub published_at: Option<DateTime<Utc>>,
@@ -18,6 +18,14 @@ pub struct PostInfoResponse {
     pub comment_count: i32,
     pub view_count: i32,
     pub slug: String,
+    pub tags: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, ToSchema)]
+pub struct PostAuthor {
+    pub handle: String,
+    pub name: String,
+    pub profile_image: Option<String>,
 }
 
 impl IntoResponse for PostInfoResponse {

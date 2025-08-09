@@ -6,12 +6,15 @@
 	import * as v from 'valibot';
 	import { createPostSchema } from '$lib/schemas/post';
 	import { Icon, PaperAirplane } from 'svelte-hero-icons';
+	import { goto } from '$app/navigation';
+	import { userStore } from '$lib/stores/user.svelte';
 
 	import TitleInput from './TitleInput.svelte';
 	import SlugInput from './SlugInput.svelte';
 	import TagsInput from './TagsInput.svelte';
 	import SummaryInput from './SummaryInput.svelte';
 	import ThumbnailUpload from './ThumbnailUpload.svelte';
+	import { ArrowLeft } from '@lucide/svelte';
 
 	interface Props {
 		title: string;
@@ -135,6 +138,12 @@
 
 			isOpen = false;
 			onPublished?.();
+
+			// Navigate to the published post
+			const userHandle = userStore.user?.handle;
+			if (userHandle) {
+				await goto(`/@${userHandle}/post/${publishData.slug.trim()}`);
+			}
 		} catch (error) {
 			console.error('출간 실패:', error);
 			alert('출간에 실패했습니다. 다시 시도해주세요.');
@@ -157,54 +166,61 @@
 </Button>
 
 <Dialog.Root bind:open={isOpen}>
-	<Dialog.Content class="dark:bg-mofu-dark-900 text-white sm:max-w-md">
-		<Dialog.Header>
-			<Dialog.Title>포스트 출간</Dialog.Title>
-			<Dialog.Description class="text-mofu-dark-300">포스트 정보를 확인하고 수정한 후 출간하세요.</Dialog.Description>
-		</Dialog.Header>
+	<Dialog.Content class="dark:bg-mofu-dark-900 p-2 text-white sm:max-w-lg">
+		<!-- Dialog main content with rounded-b-none -->
+		<div class="rounded-t-lg rounded-b-none px-2 pt-4">
+			<Dialog.Header class="mb-2 p-0">
+				<Dialog.Title>포스트 출간</Dialog.Title>
+				<Dialog.Description class="text-mofu-dark-300">포스트 정보를 확인하고 수정한 후 출간하세요.</Dialog.Description>
+			</Dialog.Header>
 
-		<div class="space-y-4">
-			<ThumbnailUpload thumbnail={publishData.thumbnail} onUpdate={handleThumbnailUpdate} />
-			<TitleInput
-				value={publishData.title}
-				onUpdate={updateField('title')}
-				onValidationChange={handleValidationChange('title')}
-			/>
+			<div class="hide-scrollbar max-h-[64vh] space-y-4 overflow-y-auto">
+				<ThumbnailUpload thumbnail={publishData.thumbnail} onUpdate={handleThumbnailUpdate} />
+				<TitleInput
+					value={publishData.title}
+					onUpdate={updateField('title')}
+					onValidationChange={handleValidationChange('title')}
+				/>
 
-			<SlugInput
-				value={publishData.slug}
-				onUpdate={updateField('slug')}
-				onValidationChange={handleValidationChange('slug')}
-			/>
+				<SlugInput
+					value={publishData.slug}
+					onUpdate={updateField('slug')}
+					onValidationChange={handleValidationChange('slug')}
+				/>
 
-			<TagsInput
-				value={publishData.tags}
-				onUpdate={updateField('tags')}
-				onValidationChange={handleValidationChange('tags')}
-			/>
+				<TagsInput
+					value={publishData.tags}
+					onUpdate={updateField('tags')}
+					onValidationChange={handleValidationChange('tags')}
+				/>
 
-			<SummaryInput
-				value={publishData.summary}
-				onUpdate={updateField('summary')}
-				onValidationChange={handleValidationChange('summary')}
-			/>
+				<SummaryInput
+					value={publishData.summary}
+					onUpdate={updateField('summary')}
+					onValidationChange={handleValidationChange('summary')}
+				/>
+			</div>
 		</div>
 
-		<Dialog.Footer>
+		<!-- Fixed button area -->
+		<div class="dark:bg-mofu-dark-900 flex justify-end gap-2 rounded-b-lg px-2 py-2">
 			<Button
-				variant="outline"
+				variant="ghost"
 				onclick={() => (isOpen = false)}
-				class="border-mofu-dark-600 text-mofu-dark-100 hover:bg-mofu-dark-700 bg-transparent"
+				class="dark:text-mofu-dark-200 text-md flex items-center gap-2 rounded px-4 py-2"
 			>
+				<ArrowLeft class="h-5 w-5" />
 				취소
 			</Button>
 			<Button
 				onclick={handlePublish}
 				disabled={isLoading || hasErrors}
-				class="bg-blue-600 hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+				variant="ghost"
+				class="dark:text-mofu-dark-950 dark:hover:bg-mofu bg-mofu text-md flex items-center gap-2 rounded px-4 py-2"
 			>
+				<Icon src={PaperAirplane} class="h-5 w-5" solid />
 				{isLoading ? '출간 중...' : '출간하기'}
 			</Button>
-		</Dialog.Footer>
+		</div>
 	</Dialog.Content>
 </Dialog.Root>
