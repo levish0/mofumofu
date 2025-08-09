@@ -41,7 +41,7 @@ pub async fn github_sign_in(
         Some(ua_str),
         Some(ip_str),
         &payload.code,
-        &payload.handle,
+        payload.handle.as_deref(),
     )
     .await?;
 

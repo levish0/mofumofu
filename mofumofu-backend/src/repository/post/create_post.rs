@@ -1,4 +1,4 @@
-use crate::dto::post::request::create::CreatePostRequest;
+use crate::dto::post::request::create_post::CreatePostRequest;
 use crate::entity::posts::ActiveModel as PostActiveModel;
 use crate::service::error::errors::Errors;
 use chrono::Utc;

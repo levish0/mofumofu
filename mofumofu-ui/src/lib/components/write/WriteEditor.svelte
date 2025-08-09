@@ -12,11 +12,20 @@
 		onContentChange: (value: string) => void;
 		onExit: () => void;
 		onSaveDraft: () => void;
-		onPublish: () => void;
+		onPublished: () => void;
 	}
 
-	const { title, tags, content, onTitleChange, onTagsChange, onContentChange, onExit, onSaveDraft, onPublish }: Props =
-		$props();
+	const {
+		title,
+		tags,
+		content,
+		onTitleChange,
+		onTagsChange,
+		onContentChange,
+		onExit,
+		onSaveDraft,
+		onPublished
+	}: Props = $props();
 
 	let contentTextarea: HTMLTextAreaElement;
 	let showStickyToolbar = $state(false);
@@ -65,5 +74,5 @@
 	</div>
 
 	<!-- 에디터 영역 하단 버튼들 -->
-	<WriteActions {onExit} {onSaveDraft} {onPublish} />
+	<WriteActions {title} {content} {tags} {onExit} {onSaveDraft} {onPublished} />
 </div>

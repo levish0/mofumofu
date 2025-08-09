@@ -1,0 +1,10 @@
+use crate::{state::AppState, middleware::auth::access_jwt_auth};
+use axum::{routing::post, Router, middleware::from_fn};
+use crate::api::v0::routes::post::create_post::create_post;
+use crate::api::v0::routes::post::get_post_by_handle_and_slug::get_post_by_handle_and_slug;
+
+pub fn post_routes() -> Router<AppState> {
+    Router::new()
+        .route("/post", post(create_post).route_layer(from_fn(access_jwt_auth)))
+        .route("/post/get", post(get_post_by_handle_and_slug))
+}

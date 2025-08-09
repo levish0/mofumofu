@@ -2,7 +2,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
-	import { githubSignIn, googleSignIn } from '$lib/api/auth/authApi';
+	import { githubAuth } from '$lib/api/auth/authApi';
 	import { goto } from '$app/navigation';
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { oauthHandleStore } from '$lib/stores/oauthHandle.svelte';
@@ -27,17 +27,20 @@
 				throw new Error('Authorization code not found');
 			}
 
-			// 저장된 핸들 가져오기
+			// 저장된 핸들 가져오기 (가입 시에만 존재)
 			const handle = oauthHandleStore.currentHandle;
+			console.log('Handle from store:', handle);
 
-			// GitHub OAuth 로그인 처리
-			const response = await githubSignIn(code, handle);
+			// GitHub OAuth 처리 (핸들이 있으면 가입, 없으면 로그인)
+			const response = await githubAuth(code, handle || undefined);
 
 			// 토큰을 스토어에 저장
 			authStore.setToken(response.access_token);
 
 			// 핸들 스토어 정리
-			oauthHandleStore.clearHandle();
+			if (handle) {
+				oauthHandleStore.clearHandle();
+			}
 
 			// 성공 시 메인 페이지로 리다이렉트
 			await goto('/', { replaceState: true });

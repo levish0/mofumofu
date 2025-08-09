@@ -16,7 +16,7 @@ pub async fn service_google_sign_in<C>(
     user_agent: Option<String>,
     ip_address: Option<String>,
     auth_code: &str,
-    handle: &str,
+    handle: Option<&str>,
 ) -> Result<AuthJWTResponse, Errors>
 where
     C: ConnectionTrait + TransactionTrait,

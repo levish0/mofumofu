@@ -1,4 +1,4 @@
-use crate::dto::post::request::create::CreatePostRequest;
+use crate::dto::post::request::create_post::CreatePostRequest;
 use crate::repository::post::create_post::repository_create_post;
 use crate::service::error::errors::Errors;
 use sea_orm::{ConnectionTrait, TransactionTrait};

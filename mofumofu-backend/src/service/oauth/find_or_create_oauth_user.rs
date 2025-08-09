@@ -17,7 +17,7 @@ pub async fn service_find_or_create_oauth_user<C>(
     provider_id: &str,
     provider: OAuthProvider,
     profile_image: Option<String>,
-    handle: &str,
+    handle: Option<&str>,
 ) -> Result<OAuthUserResult, Errors>
 where
     C: ConnectionTrait + TransactionTrait,
@@ -51,21 +51,24 @@ where
         });
     }
     
-    // 3. 핸들 중복 확인
+    // 3. handle이 없으면 로그인 시도인데 유저가 없으므로 에러
+    let handle = handle.ok_or(Errors::UserNotFound)?;
+    
+    // 4. 핸들 중복 확인 (가입 시에만)
     if repository_find_user_by_handle(txn, handle).await?.is_some() {
         return Err(Errors::UserHandleAlreadyExists);
     }
     
-    // 4. 새 유저 생성
+    // 5. 새 유저 생성
     repository_create_oauth_user(txn, email, name, handle, profile_image).await?;
-    // 5. 생성된 유저 조회
+    // 6. 생성된 유저 조회
     let created_user = repository_find_user_by_email(txn, email)
         .await?
         .ok_or_else(|| {
             error!("Failed to retrieve newly created OAuth user");
             Errors::DatabaseError("User creation verification failed".to_string())
         })?;
-    // 6. OAuth 연결 생성
+    // 7. OAuth 연결 생성
     repository_create_oauth_connection(txn, &created_user.id, provider.clone(), provider_id)
         .await?;
 

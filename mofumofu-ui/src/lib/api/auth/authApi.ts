@@ -1,5 +1,9 @@
 import { privateApi } from '../private';
-import type { GithubLoginRequest, GoogleLoginRequest, RefreshAccessTokenResponse } from './types';
+import type { 
+	GithubAuthRequest, 
+	GoogleAuthRequest, 
+	RefreshAccessTokenResponse 
+} from './types';
 
 export async function refreshAccessToken(): Promise<RefreshAccessTokenResponse> {
 	try {
@@ -21,12 +25,12 @@ export async function signOut(): Promise<void> {
 	}
 }
 
-export async function googleSignIn(code: string, handle: string): Promise<RefreshAccessTokenResponse> {
-	const payload: GoogleLoginRequest = { code, handle };
+export async function googleAuth(code: string, handle?: string): Promise<RefreshAccessTokenResponse> {
+	const payload: GoogleAuthRequest = { code, handle };
 	return privateApi.post('v0/auth/google', { json: payload }).json<RefreshAccessTokenResponse>();
 }
 
-export async function githubSignIn(code: string, handle: string): Promise<RefreshAccessTokenResponse> {
-	const payload: GithubLoginRequest = { code, handle };
+export async function githubAuth(code: string, handle?: string): Promise<RefreshAccessTokenResponse> {
+	const payload: GithubAuthRequest = { code, handle };
 	return privateApi.post('v0/auth/github', { json: payload }).json<RefreshAccessTokenResponse>();
 }

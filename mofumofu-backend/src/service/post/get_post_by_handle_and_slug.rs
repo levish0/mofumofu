@@ -1,18 +1,17 @@
-use crate::dto::user::response::info::UserInfoResponse;
-use crate::repository::user::get_user_by_handle::repository_get_user_by_handle;
+use crate::dto::post::response::post_info::PostInfoResponse;
 use crate::service::error::errors::Errors;
 use sea_orm::{ConnectionTrait, TransactionTrait};
-use crate::dto::post::response::post_info::PostInfoResponse;
-use crate::repository::post::get_post_by_slug::repository_get_post_by_slug;
+use crate::repository::post::get_post_by_handle_and_slug::repository_get_post_by_handle_and_slug;
 
-pub async fn service_get_post_by_slug<C>(
+pub async fn service_get_post_by_handle_and_slug<C>(
     conn: &C,
+    handle: &str,
     slug: &str,
 ) -> Result<PostInfoResponse, Errors>
 where
     C: ConnectionTrait + TransactionTrait,
 {
-    let post = repository_get_post_by_slug(conn, slug).await?;
+    let post = repository_get_post_by_handle_and_slug(conn, handle, slug).await?;
 
     Ok(PostInfoResponse {
         title: post.title,

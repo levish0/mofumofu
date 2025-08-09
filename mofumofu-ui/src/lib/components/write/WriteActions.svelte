@@ -2,14 +2,18 @@
 	import { BookmarkSquare, PaperAirplane, Icon, ClipboardDocumentList } from 'svelte-hero-icons';
 	import { Button } from '../ui/button';
 	import { ArrowLeft, Save, Send } from '@lucide/svelte';
+	import PublishDialog from './PublishDialog.svelte';
 
 	interface Props {
+		title: string;
+		content: string;
+		tags: string;
 		onExit: () => void;
 		onSaveDraft: () => void;
-		onPublish: () => void;
+		onPublished: () => void;
 	}
 
-	const { onExit, onSaveDraft, onPublish }: Props = $props();
+	const { title, content, tags, onExit, onSaveDraft, onPublished }: Props = $props();
 </script>
 
 <div class="bg-mofu-dark-950 p-4">
@@ -32,14 +36,7 @@
 				<Icon src={ClipboardDocumentList} class="h-5 w-5" solid />
 				임시저장
 			</Button>
-			<Button
-				variant="ghost"
-				onclick={onPublish}
-				class=" dark:text-mofu-dark-950 dark:hover:bg-mofu bg-mofu flex items-center gap-2 rounded px-4 py-2 text-lg "
-			>
-				<Icon src={PaperAirplane} class="h-5 w-5" solid />
-				출간하기
-			</Button>
+			<PublishDialog {title} {content} {tags} onPublished={onPublished} />
 		</div>
 	</div>
 </div>

@@ -1,3 +1,5 @@
+use axum::Json;
+use axum::response::{IntoResponse, Response};
 use chrono::{DateTime, Utc};
 use serde::Serialize;
 use utoipa::ToSchema;
@@ -17,6 +19,13 @@ pub struct PostInfoResponse {
     pub view_count: i32,
     pub slug: String,
 }
+
+impl IntoResponse for PostInfoResponse {
+    fn into_response(self) -> Response {
+        Json(self).into_response()
+    }
+}
+
 
 #[derive(Debug, Clone, Serialize, ToSchema)]
 pub struct PostSummary {

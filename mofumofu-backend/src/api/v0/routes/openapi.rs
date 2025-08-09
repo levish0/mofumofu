@@ -3,7 +3,9 @@ use crate::dto::auth::response::jwt::AuthJWTResponse;
 use crate::dto::follow::request::create::CreateFollowRequest;
 use crate::dto::follow::request::delete::DeleteFollowRequest;
 use crate::dto::follow::response::follow_list::FollowListResponse;
-use crate::dto::post::request::create::CreatePostRequest;
+use crate::dto::post::request::create_post::CreatePostRequest;
+use crate::dto::post::request::get_by_handle_and_slug::GetPostByHandleAndSlugRequest;
+use crate::dto::post::response::post_info::PostInfoResponse;
 use crate::dto::user::request::avatar_image::ProfileAvatarForm;
 use crate::dto::user::request::banner_image::ProfileBannerForm;
 use crate::dto::user::request::create::CreateUserRequest;
@@ -34,6 +36,7 @@ use utoipa::{
         crate::api::v0::routes::user::upload_avatar::upload_avatar,
         crate::api::v0::routes::user::upload_banner::upload_banner,
         crate::api::v0::routes::post::create_post::create_post,
+        crate::api::v0::routes::post::get_post_by_handle_and_slug::get_post_by_handle_and_slug,
         crate::api::v0::routes::follow::create_follow::api_create_follow,
         crate::api::v0::routes::follow::delete_follow::api_delete_follow,
         crate::api::v0::routes::follow::get_followers_list::get_followers,
@@ -45,6 +48,8 @@ use utoipa::{
             AuthJWTResponse,
             CreateUserRequest,
             CreatePostRequest,
+            GetPostByHandleAndSlugRequest,
+            PostInfoResponse,
             CreateFollowRequest,
             DeleteFollowRequest,
             FollowListResponse,

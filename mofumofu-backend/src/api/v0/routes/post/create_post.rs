@@ -1,5 +1,5 @@
 use crate::dto::auth::internal::access_token::AccessTokenClaims;
-use crate::dto::post::request::create::CreatePostRequest;
+use crate::dto::post::request::create_post::CreatePostRequest;
 use crate::middleware::auth::access_jwt_auth;
 use crate::service::error::errors::Errors;
 use crate::service::post::create_post::service_create_post;

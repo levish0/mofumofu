@@ -19,7 +19,7 @@ impl MigrationTrait for Migration {
                             .primary_key() // PK 지정
                             .default(Expr::cust("gen_random_uuid()")),
                     )
-                    .col(ColumnDef::new(Posts::Title).string_len(200).not_null()) // 블로그 제목
+                    .col(ColumnDef::new(Posts::Title).string_len(80).not_null()) // 블로그 제목
                     .col(ColumnDef::new(Posts::Summary).string_len(500).null()) // 요약
                     .col(ColumnDef::new(Posts::Content).text().not_null()) // 본문 (길이 제한 없음)
                     .col(ColumnDef::new(Posts::UserId).uuid().not_null())
@@ -65,7 +65,7 @@ impl MigrationTrait for Migration {
                     )
                     .col(
                         ColumnDef::new(Posts::Slug)
-                            .string_len(255)
+                            .string_len(80)
                             .not_null()
                     ) // URL 슬러그
                     // 작성자와의 외래키

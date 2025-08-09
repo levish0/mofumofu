@@ -43,8 +43,10 @@
 		console.log('임시저장:', { title, tags, content });
 	}
 
-	function handlePublish() {
-		console.log('출간:', { title, tags, content });
+	function handlePublished() {
+		console.log('출간 완료:', { title, tags, content });
+		// 출간 완료 후 처리 (예: 페이지 이동)
+		// goto('/profile/사용자핸들/포스트슬러그');
 	}
 
 	function handleExit() {
@@ -83,7 +85,7 @@
 				onContentChange={handleContentChange}
 				onExit={handleExit}
 				onSaveDraft={handleSaveDraft}
-				onPublish={handlePublish}
+				onPublished={handlePublished}
 			/>
 		</div>
 
