@@ -17,7 +17,7 @@ pub struct AuthJWTResponse {
 
 impl IntoResponse for AuthJWTResponse {
     fn into_response(self) -> Response {
-        let access_token_lifetime = DbConfig::get().auth_access_token_expire_time;
+        let refresh_token_lifetime = DbConfig::get().auth_refresh_token_expire_time;
         let is_dev = DbConfig::get().is_dev;
 
         let mut response = Json(AuthJWTResponse {
@@ -37,7 +37,7 @@ impl IntoResponse for AuthJWTResponse {
             .secure(true)
             .same_site(same_site_attribute)
             .path("/")
-            .max_age(Duration::days(access_token_lifetime))
+            .max_age(Duration::days(refresh_token_lifetime))
             .build();
 
         response.headers_mut().insert(
