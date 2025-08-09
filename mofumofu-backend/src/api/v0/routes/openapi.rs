@@ -10,6 +10,7 @@ use crate::dto::post::response::post_info::{PostInfoResponse, PostAuthor};
 use crate::dto::post::response::{GetPostsResponse, PostListItem};
 use crate::dto::user::request::avatar_image::ProfileAvatarForm;
 use crate::dto::user::request::banner_image::ProfileBannerForm;
+use crate::dto::post::request::thumbnail_image::PostThumbnailForm;
 use crate::dto::user::request::create::CreateUserRequest;
 use crate::dto::user::request::get_profile::GetUserProfileRequest;
 use crate::dto::user::request::update_profile::UpdateProfileRequest;
@@ -40,6 +41,7 @@ use utoipa::{
         crate::api::v0::routes::post::create_post::create_post,
         crate::api::v0::routes::post::get_post_by_handle_and_slug::get_post_by_handle_and_slug,
         crate::api::v0::routes::post::get_posts::get_posts,
+        crate::api::v0::routes::post::upload_thumbnail::upload_thumbnail,
         crate::api::v0::routes::follow::create_follow::api_create_follow,
         crate::api::v0::routes::follow::delete_follow::api_delete_follow,
         crate::api::v0::routes::follow::get_followers_list::get_followers,
@@ -68,6 +70,7 @@ use utoipa::{
             ErrorResponse,
             ProfileAvatarForm,
             ProfileBannerForm,
+            PostThumbnailForm,
         )
     ),
     tags(

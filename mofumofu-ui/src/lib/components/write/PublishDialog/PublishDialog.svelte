@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import { createPost } from '$lib/api/post/postApi';
+	import { createPost, uploadThumbnail } from '$lib/api/post/postApi';
 	import type { CreatePostRequest } from '$lib/api/post/types';
 	import * as v from 'valibot';
 	import { createPostSchema } from '$lib/schemas/post';
@@ -125,11 +125,22 @@
 				content: publishData.content.trim(),
 				slug: publishData.slug.trim(),
 				summary: publishData.summary.trim() || null
-				// TODO: 백엔드에서 썸네일 지원 추가되면 활성화
-				// thumbnail: publishData.thumbnailFile
 			};
 
 			await createPost(postRequest);
+
+			// Upload thumbnail if provided
+			if (publishData.thumbnailFile) {
+				try {
+					await uploadThumbnail({
+						slug: publishData.slug.trim(),
+						file: new File([publishData.thumbnailFile], 'thumbnail.jpg', { type: publishData.thumbnailFile.type })
+					});
+				} catch (thumbnailError) {
+					console.error('썸네일 업로드 실패:', thumbnailError);
+					// 썸네일 업로드 실패는 전체 출간을 취소하지 않음
+				}
+			}
 
 			// Clean up thumbnail blob URL after successful post creation
 			if (publishData.thumbnail && publishData.thumbnail.startsWith('blob:')) {

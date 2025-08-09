@@ -82,12 +82,10 @@
 	});
 </script>
 
-<div>
-	<label class="text-mofu-dark-100 mb-2 block text-sm font-medium">썸네일 (선택사항)</label>
+<div class="space-y-4">
+	<h2 class="text-lg font-medium text-mofu-dark-100">썸네일 (선택사항)</h2>
 	<div class="group relative transition-all">
-		<div
-			class="bg-mofu-dark-700 border-mofu-dark-600 relative aspect-video w-full overflow-hidden rounded-lg border group-hover:opacity-75"
-		>
+		<div class="bg-mofu-dark-800 relative aspect-video w-full overflow-hidden rounded-lg group-hover:opacity-75">
 			{#if thumbnail}
 				<!-- Loading shimmer -->
 				{#if imageLoading && !thumbnail.startsWith('blob:')}
@@ -102,37 +100,29 @@
 					onload={handleImageLoad}
 					onerror={handleImageError}
 				/>
-				<div
-					class="bg-opacity-0 group-hover:bg-opacity-30 absolute inset-0 flex items-center justify-center bg-black transition-all duration-200"
+				<label
+					for="thumbnail-upload"
+					class="dark:text-mofu-dark-300 absolute inset-0 flex cursor-pointer items-center justify-center hover:text-gray-300"
 				>
-					<div class="flex gap-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-						<label
-							for="thumbnail-upload"
-							class="cursor-pointer rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
-						>
-							변경
-						</label>
-						<button onclick={removeThumbnail} class="rounded bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700">
-							제거
-						</button>
-					</div>
-				</div>
+				</label>
 			{:else}
 				<label
 					for="thumbnail-upload"
-					class="text-mofu-dark-300 hover:text-mofu-dark-200 flex h-full cursor-pointer flex-col items-center justify-center space-y-2 transition-colors"
+					class="text-mofu-dark-300 flex h-full cursor-pointer flex-col items-center justify-center space-y-2"
 				>
-					<Icon src={Photo} class="h-12 w-12" />
-					<span class="text-sm">썸네일 이미지 추가</span>
-					<span class="text-mofu-dark-400 text-xs">16:9 비율 권장, 최대 3MB</span>
+					<Icon src={Photo} class="h-10 w-10" />
+					<span class="text-sm">썸네일 이미지 업로드</span>
+					<span class="text-xs">16:9 비율 권장, 최대 3MB</span>
 				</label>
 			{/if}
 		</div>
 		<input id="thumbnail-upload" type="file" accept="image/*" class="hidden" onchange={handleImageChange} />
 	</div>
-	<p class="text-mofu-dark-400 mt-1 text-xs">
-		썸네일은 포스트 목록과 공유 시 표시됩니다. 설정하지 않으면 기본 이미지가 사용됩니다.
-	</p>
+	{#if thumbnail}
+		<button onclick={removeThumbnail} class="text-red-400 hover:text-red-300 text-xs underline">
+			썸네일 제거
+		</button>
+	{/if}
 </div>
 
 <ImageCropModal

@@ -2,6 +2,7 @@ from sqlalchemy import create_engine, select, update, text
 from sqlalchemy.orm import sessionmaker, Session
 from app.core.config import settings
 from app.models.user import User
+from app.models.post import Post
 from typing import Optional
 import logging
 from datetime import datetime
@@ -158,6 +159,33 @@ class DatabaseService:
                 logger.error(f"사용자 조회 실패: {str(e)}")
                 return None
 
+    def get_post_by_id(self, post_id: str) -> Optional[Post]:
+        """
+        post_id로 포스트를 조회합니다.
+        
+        Args:
+            post_id: 포스트 UUID
+            
+        Returns:
+            Optional[Post]: 포스트 객체 또는 None
+        """
+        with self.session_factory() as session:
+            try:
+                stmt = select(Post).where(Post.id == post_id)
+                result = session.execute(stmt)
+                post = result.scalar_one_or_none()
+                
+                if post:
+                    logger.info(f"포스트 조회 성공: post_id={post_id}")
+                    return post
+                else:
+                    logger.warning(f"포스트를 찾을 수 없음: post_id={post_id}")
+                    return None
+                    
+            except Exception as e:
+                logger.error(f"포스트 조회 실패: {str(e)}")
+                return None
+
     def update_user_banner_image_by_uuid(self, user_uuid: str, banner_image_url: Optional[str]) -> bool:
         """
         사용자의 배너 이미지 URL을 UUID로 업데이트합니다.
@@ -191,6 +219,42 @@ class DatabaseService:
                     
             except Exception as e:
                 logger.error(f"배너 이미지 업데이트 실패: {str(e)}")
+                session.rollback()
+                return False
+
+    def update_post_thumbnail(self, post_id: str, thumbnail_url: Optional[str]) -> bool:
+        """
+        포스트의 썸네일 이미지 URL을 업데이트합니다.
+        
+        Args:
+            post_id: 포스트 UUID
+            thumbnail_url: 새로운 썸네일 이미지 URL (None이면 썸네일 제거)
+            
+        Returns:
+            bool: 업데이트 성공 여부
+        """
+        with self.session_factory() as session:
+            try:
+                # post_id로 포스트 조회 후 thumbnail_image 업데이트
+                stmt = (
+                    update(Post)
+                    .where(Post.id == post_id)
+                    .values(thumbnail_image=thumbnail_url)
+                )
+                
+                result = session.execute(stmt)
+                session.commit()
+                
+                if result.rowcount > 0:
+                    action = "제거" if thumbnail_url is None else "업데이트"
+                    logger.info(f"포스트 썸네일 {action} 성공: post_id={post_id}, url={thumbnail_url}")
+                    return True
+                else:
+                    logger.warning(f"포스트를 찾을 수 없음: post_id={post_id}")
+                    return False
+                    
+            except Exception as e:
+                logger.error(f"포스트 썸네일 업데이트 실패: {str(e)}")
                 session.rollback()
                 return False
     

@@ -61,3 +61,8 @@ export interface GetPostsResponse {
 	has_more: boolean;
 	total_count?: number | null;
 }
+
+export interface ThumbnailUploadRequest {
+	slug: string;
+	file: File;
+}

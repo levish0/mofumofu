@@ -265,11 +265,11 @@ async def _delete_user_file(user_uuid: str, user_handle: str, file_type: str) ->
         logger.info(f"{file_type} 이미지 R2 및 DB 삭제 완료")
         return True
     elif r2_result:
-        logger.warning(f"R2에서는 삭제되었지만 DB 업데이트 실패")
+        logger.warning("R2에서는 삭제되었지만 DB 업데이트 실패")
         # R2에서는 삭제되었으므로 부분적 성공으로 처리
         return True
     elif db_result:
-        logger.warning(f"DB는 업데이트되었지만 R2 삭제 실패")
+        logger.warning("DB는 업데이트되었지만 R2 삭제 실패")
         return True
     else:
         logger.warning(f"삭제할 {file_type} 이미지가 없거나 모든 삭제 작업 실패")

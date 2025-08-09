@@ -5,7 +5,8 @@ import type {
 	GetPostByHandleAndSlugRequest,
 	PostInfoResponse,
 	GetPostsRequest,
-	GetPostsResponse
+	GetPostsResponse,
+	ThumbnailUploadRequest
 } from './types';
 
 export async function createPost(postData: CreatePostRequest): Promise<void> {
@@ -33,6 +34,24 @@ export async function getPosts(request: GetPostsRequest = {}): Promise<GetPostsR
 		return response.json<GetPostsResponse>();
 	} catch (error) {
 		console.error('Failed to get posts:', error);
+		throw error;
+	}
+}
+
+export async function uploadThumbnail(request: ThumbnailUploadRequest): Promise<void> {
+	try {
+		const formData = new FormData();
+		formData.append('slug', request.slug);
+		formData.append('file', request.file);
+
+		await privateApi.post('v0/post/thumbnail', {
+			body: formData,
+			headers: {
+				'Content-Type': undefined
+			}
+		});
+	} catch (error) {
+		console.error('Failed to upload thumbnail:', error);
 		throw error;
 	}
 }
