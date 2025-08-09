@@ -20,6 +20,7 @@ impl MigrationTrait for Migration {
                             .default(Expr::cust("gen_random_uuid()")),
                     )
                     .col(ColumnDef::new(Posts::Title).string_len(80).not_null()) // 블로그 제목
+                    .col(ColumnDef::new(Posts::ThumbnailImage).text().null())
                     .col(ColumnDef::new(Posts::Summary).string_len(500).null()) // 요약
                     .col(ColumnDef::new(Posts::Content).text().not_null()) // 본문 (길이 제한 없음)
                     .col(ColumnDef::new(Posts::UserId).uuid().not_null())
@@ -138,6 +139,7 @@ enum Posts {
     Table,
     Id,
     Title,
+    ThumbnailImage,
     Summary,
     Content,
     UserId,

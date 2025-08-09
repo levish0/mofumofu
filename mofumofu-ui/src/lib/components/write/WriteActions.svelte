@@ -2,7 +2,7 @@
 	import { BookmarkSquare, PaperAirplane, Icon, ClipboardDocumentList } from 'svelte-hero-icons';
 	import { Button } from '../ui/button';
 	import { ArrowLeft, Save, Send } from '@lucide/svelte';
-	import PublishDialog from './PublishDialog.svelte';
+	import { PublishDialog } from './PublishDialog';
 
 	interface Props {
 		title: string;
@@ -36,7 +36,7 @@
 				<Icon src={ClipboardDocumentList} class="h-5 w-5" solid />
 				임시저장
 			</Button>
-			<PublishDialog {title} {content} {tags} onPublished={onPublished} />
+			<PublishDialog {title} {content} {tags} {onPublished} />
 		</div>
 	</div>
 </div>

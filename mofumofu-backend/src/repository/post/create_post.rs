@@ -16,6 +16,7 @@ where
     let new_post = PostActiveModel {
         id: Default::default(),
         title: Set(payload.title),
+        thumbnail_image: Default::default(),
         summary: Set(payload.summary),
         user_id: Set(*user_uuid),
         content: Set(payload.content),

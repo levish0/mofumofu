@@ -15,7 +15,7 @@ export function createPostSchema() {
 			v.string(),
 			v.minLength(1, '슬러그는 필수입니다.'),
 			v.maxLength(80, '슬러그는 80자를 초과할 수 없습니다.'),
-			v.regex(/^[a-z0-9-]+$/, '슬러그는 영문 소문자, 숫자, 하이픈만 사용할 수 있습니다.')
+			v.regex(/^[^\s\/\?#\[\]@!$&'()*+,;=]+$/, '슬러그에는 공백이나 URL에 사용할 수 없는 특수문자를 포함할 수 없습니다.')
 		),
 		summary: v.optional(
 			v.pipe(
