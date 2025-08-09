@@ -21,7 +21,7 @@ pub struct GetPostsRequest {
     #[validate(range(min = 1, message = "Page must be greater than 0."))]
     pub page: Option<u32>,
     
-    #[validate(range(min = 1, max = 50, message = "Page size must be between 1 and 50."))]
+    #[validate(range(min = 1, max = 20, message = "Page size must be between 1 and 20."))]
     pub page_size: Option<u32>,
     
     pub sort: Option<PostSortOrder>,
