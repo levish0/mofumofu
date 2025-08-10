@@ -24,7 +24,7 @@
 	let { isVisible, isAtTop } = $props();
 
 	let isDropdownOpen = $state(false);
-	let closeTimer: number | null = null;
+	let closeTimer: ReturnType<typeof setTimeout> | null = null;
 
 	const userInfo = $derived(userStore.user);
 	const isLoading = $derived(userStore.isLoading);
