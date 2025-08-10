@@ -16,27 +16,33 @@ import subprocess
 import sys
 import os
 
+
 def start_celery_beat():
     """Celery Beat 스케줄러를 시작합니다."""
-    
+
     # 현재 디렉토리를 tasks로 설정
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
-    
+
     # Celery Beat 실행 명령어
     cmd = [
-        "uv", "run", "celery", 
-        "-A", "app.core.celery_app",
+        "uv",
+        "run",
+        "celery",
+        "-A",
+        "app.core.celery_app",
         "beat",
-        "--loglevel=info"
+        "--loglevel=info",
     ]
-    
+
     print("=== Celery Beat 스케줄러 시작 ===")
     print("주기적 작업 스케줄:")
     print("- 리프레시 토큰 정리: 1시간마다")
+    print("- 포스트 재색인: 24시간마다")
+    print("- Meilisearch 헬스체크: 30분마다")
     print("스케줄러를 중지하려면 Ctrl+C를 누르세요.")
-    print("=" * 40)
+    print("=" * 50)
     print(f"Command: {' '.join(cmd)}")
-    
+
     try:
         subprocess.run(cmd, check=True)
     except KeyboardInterrupt:
@@ -44,6 +50,7 @@ def start_celery_beat():
     except subprocess.CalledProcessError as e:
         print(f"스케줄러 시작 중 오류 발생: {e}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     start_celery_beat()

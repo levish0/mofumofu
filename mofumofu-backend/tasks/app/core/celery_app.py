@@ -5,7 +5,12 @@ celery_app = Celery(
     "tasks",
     broker=settings.CELERY_BROKER_URL,
     backend=settings.CELERY_RESULT_BACKEND,
-    include=["app.tasks.profile_tasks", "app.tasks.token_tasks", "app.tasks.post_tasks"]
+    include=[
+        "app.tasks.profile_tasks",
+        "app.tasks.token_tasks",
+        "app.tasks.post_tasks",
+        "app.tasks.search_tasks",
+    ],
 )
 
 celery_app.conf.update(
@@ -21,12 +26,20 @@ celery_app.conf.update(
     # 결과 만료 설정 (Redis 메모리 관리)
     result_expires=3600,  # 1시간 후 결과 삭제
     # 작업 결과 압축
-    result_compression='gzip',
+    result_compression="gzip",
     # 주기적 작업 스케줄
     beat_schedule={
-        'cleanup-expired-refresh-tokens': {
-            'task': 'cleanup_expired_refresh_tokens',
-            'schedule': 3600.0,  # 1시간마다 실행 (3600초)
+        "cleanup-expired-refresh-tokens": {
+            "task": "cleanup_expired_refresh_tokens",
+            "schedule": 3600.0,  # 1시간마다 실행 (3600초)
+        },
+        "reindex-all-posts-daily": {
+            "task": "reindex_all_posts",
+            "schedule": 86400.0,  # 24시간마다 실행 (86400초 = 1일)
+        },
+        "check-meilisearch-health": {
+            "task": "check_meilisearch_health",
+            "schedule": 1800.0,  # 30분마다 헬스체크 (1800초)
         },
     },
 )

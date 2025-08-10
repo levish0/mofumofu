@@ -1,18 +1,17 @@
-use crate::connection::meilisearch::{MeilisearchClient, MeilisearchPost};
 use crate::dto::post::request::create_post::CreatePostRequest;
 use crate::repository::hashtag::associate_post_hashtags::repository_associate_post_hashtags;
 use crate::repository::hashtag::get_hashtags_by_post::repository_get_hashtags_by_post;
 use crate::repository::post::create_post::repository_create_post;
 use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
 use crate::service::error::errors::Errors;
-use crate::service::meilisearch::post_indexer;
+use crate::tasks_bridge::search_client;
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use tracing::warn;
 use uuid::Uuid;
 
 pub async fn service_create_post<C>(
     conn: &C,
-    meilisearch: &MeilisearchClient,
+    http_client: &reqwest::Client,
     payload: CreatePostRequest,
     user_uuid: &Uuid,
 ) -> anyhow::Result<(), Errors>
@@ -45,17 +44,9 @@ where
     // Commit the transaction
     txn.commit().await?;
 
-    // Meilisearch 인덱싱 (DB 트랜잭션 외부에서 실행)
-    if let Ok(user) = repository_find_user_by_uuid(conn, user_uuid).await {
-        if let Some(user) = user {
-            let meilisearch_post = MeilisearchPost::from_post_with_user_and_hashtags(
-                &created_post,
-                &user,
-                hashtag_names,
-            );
-
-            post_indexer::index_post(meilisearch, &meilisearch_post).await;
-        }
+    // Python 태스크로 색인 요청 (DB 트랜잭션 외부에서 실행)
+    if let Err(e) = search_client::queue_index_post(http_client, &created_post.id).await {
+        warn!("Failed to queue post indexing task: {}", e);
     }
 
     Ok(())

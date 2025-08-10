@@ -42,7 +42,7 @@ pub async fn create_post(
     info!("Received POST request to create post: {:?}", payload);
     let user_uuid = claims.sub.clone();
 
-    service_create_post(&state.conn, &state.meilisearch, payload, &user_uuid).await?;
+    service_create_post(&state.conn, &state.http_client, payload, &user_uuid).await?;
 
     Ok(StatusCode::NO_CONTENT)
 }

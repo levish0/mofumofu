@@ -1,7 +1,8 @@
 import logging
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, Optional, Tuple
+from enum import Enum
 
 import emails  # type: ignore
 from jinja2 import Template
@@ -94,3 +95,114 @@ def generate_new_account_email(
         },
     )
     return EmailData(html_content=html_content, subject=subject)
+
+
+# Task utilities
+
+
+class TaskStatus(Enum):
+    """태스크 상태 상수"""
+
+    SUCCESS = "SUCCESS"
+    FAILURE = "FAILURE"
+    PARTIAL_SUCCESS = "PARTIAL_SUCCESS"
+    WARNING = "WARNING"
+
+
+class TaskError(Exception):
+    """태스크 관련 커스텀 예외"""
+
+    def __init__(self, message: str, error_code: Optional[str] = None):
+        self.message = message
+        self.error_code = error_code
+        super().__init__(self.message)
+
+
+class ValidationError(TaskError):
+    """검증 관련 예외"""
+
+    pass
+
+
+class FileProcessingError(TaskError):
+    """파일 처리 관련 예외"""
+
+    pass
+
+
+class DatabaseError(TaskError):
+    """데이터베이스 관련 예외"""
+
+    pass
+
+
+def create_task_response(
+    status: TaskStatus, message: str, **kwargs: Any
+) -> Dict[str, Any]:
+    """표준화된 태스크 응답 생성"""
+    response = {
+        "status": status.value,
+        "message": message,
+    }
+    response.update(kwargs)
+    return response
+
+
+def create_success_response(message: str, **kwargs: Any) -> Dict[str, Any]:
+    """성공 응답 생성"""
+    return create_task_response(TaskStatus.SUCCESS, message, **kwargs)
+
+
+def create_failure_response(error: str, **kwargs: Any) -> Dict[str, Any]:
+    """실패 응답 생성"""
+    return create_task_response(
+        TaskStatus.FAILURE, f"작업 실패: {error}", error=error, **kwargs
+    )
+
+
+def validate_image_type(content_type: str, supported_types: set) -> None:
+    """이미지 타입 검증"""
+    if not content_type or content_type.lower() not in supported_types:
+        raise ValidationError(
+            f"지원되지 않는 이미지 타입: {content_type}. "
+            f"지원되는 타입: {', '.join(supported_types)}"
+        )
+
+
+def validate_file_size(file_data: bytes, max_size: int) -> None:
+    """파일 크기 검증"""
+    if len(file_data) == 0:
+        raise ValidationError("빈 파일입니다")
+
+    if len(file_data) > max_size:
+        raise ValidationError(
+            f"파일이 너무 큽니다: {len(file_data)} bytes (최대: {max_size} bytes)"
+        )
+
+
+def validate_uuid(uuid_string: str) -> None:
+    """UUID 형식 검증"""
+    import uuid
+
+    try:
+        uuid.UUID(uuid_string)
+    except (ValueError, TypeError):
+        raise ValidationError(f"잘못된 UUID 형식: {uuid_string}")
+
+
+def extract_filename_from_url(url: str) -> str:
+    """URL에서 파일명 추출"""
+    try:
+        return url.split("/")[-1]
+    except (AttributeError, IndexError):
+        raise ValidationError(f"URL에서 파일명을 추출할 수 없습니다: {url}")
+
+
+def safe_execute(func, *args, **kwargs) -> Tuple[bool, Any]:
+    """안전한 함수 실행 (에러를 잡아서 로깅)"""
+    try:
+        result = func(*args, **kwargs)
+        return True, result
+    except Exception as e:
+        logger.error(f"함수 실행 실패 {func.__name__}: {str(e)}")
+        return False, str(e)

@@ -1,314 +1,75 @@
-from sqlalchemy import create_engine, select, update, text
-from sqlalchemy.orm import sessionmaker, Session
-from app.core.config import settings
-from app.models.user import User
-from app.models.post import Post
-from typing import Optional
-import logging
+# 하위 호환성을 위한 기존 db_service 인터페이스 유지
+from app.services.base_db_service import base_db_service
+from app.services.user_service import user_service
+from app.services.post_service import post_service
+from app.services.token_service import token_service
+from typing import Optional, List, Dict, Any
 from datetime import datetime
+import logging
 
 logger = logging.getLogger(__name__)
 
+
 class DatabaseService:
+    """
+    기존 코드와의 호환성을 위한 통합 데이터베이스 서비스 클래스
+    실제 구현은 개별 서비스 클래스들에 위임
+    """
+
     def __init__(self):
-        # PostgreSQL 동기 연결 URL (psycopg2 드라이버 사용)
-        self.database_url = f"postgresql://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_NAME}"
-        
-        # 동기 엔진 생성
-        self.engine = create_engine(
-            self.database_url,
-            echo=False,  # 개발 시에는 True로 설정하면 SQL 쿼리 로그를 볼 수 있음
-            pool_size=5,
-            max_overflow=10,
-            pool_pre_ping=True  # 연결 상태 확인
+        self.base = base_db_service
+        self.users = user_service
+        self.posts = post_service
+        self.tokens = token_service
+
+    # 기본 데이터베이스 메서드들
+    def get_session(self):
+        return self.base.get_session()
+
+    def close(self):
+        return self.base.close()
+
+    # 사용자 관련 메서드들 (user_service로 위임)
+    def update_user_profile_image(
+        self, user_handle: str, profile_image_url: Optional[str]
+    ) -> bool:
+        return self.users.update_user_profile_image(user_handle, profile_image_url)
+
+    def update_user_profile_image_by_uuid(
+        self, user_uuid: str, profile_image_url: Optional[str]
+    ) -> bool:
+        return self.users.update_user_profile_image_by_uuid(
+            user_uuid, profile_image_url
         )
-        
-        # 동기 세션 팩토리
-        self.session_factory = sessionmaker(
-            self.engine,
-            expire_on_commit=False
-        )
-    
-    def get_session(self) -> Session:
-        """데이터베이스 세션을 반환합니다."""
-        return self.session_factory()
-    
-    def update_user_profile_image(self, user_handle: str, profile_image_url: Optional[str]) -> bool:
-        """
-        사용자의 프로필 이미지 URL을 업데이트합니다.
-        
-        Args:
-            user_handle: 사용자 핸들
-            profile_image_url: 새로운 프로필 이미지 URL (None이면 프로필 이미지 제거)
-            
-        Returns:
-            bool: 업데이트 성공 여부
-        """
-        with self.session_factory() as session:
-            try:
-                # handle로 사용자 조회 후 profile_image 업데이트
-                stmt = (
-                    update(User)
-                    .where(User.handle == user_handle)
-                    .values(profile_image=profile_image_url)
-                )
-                
-                result = session.execute(stmt)
-                session.commit()
-                
-                if result.rowcount > 0:
-                    action = "제거" if profile_image_url is None else "업데이트"
-                    logger.info(f"사용자 프로필 이미지 {action} 성공: handle={user_handle}, url={profile_image_url}")
-                    return True
-                else:
-                    logger.warning(f"사용자를 찾을 수 없음: handle={user_handle}")
-                    return False
-                    
-            except Exception as e:
-                logger.error(f"프로필 이미지 업데이트 실패: {str(e)}")
-                session.rollback()
-                return False
 
-    def update_user_profile_image_by_uuid(self, user_uuid: str, profile_image_url: Optional[str]) -> bool:
-        """
-        사용자의 프로필 이미지 URL을 UUID로 업데이트합니다.
-        
-        Args:
-            user_uuid: 사용자 UUID
-            profile_image_url: 새로운 프로필 이미지 URL (None이면 프로필 이미지 제거)
-            
-        Returns:
-            bool: 업데이트 성공 여부
-        """
-        with self.session_factory() as session:
-            try:
-                # UUID로 사용자 조회 후 profile_image 업데이트
-                stmt = (
-                    update(User)
-                    .where(User.id == user_uuid)
-                    .values(profile_image=profile_image_url)
-                )
-                
-                result = session.execute(stmt)
-                session.commit()
-                
-                if result.rowcount > 0:
-                    action = "제거" if profile_image_url is None else "업데이트"
-                    logger.info(f"사용자 프로필 이미지 {action} 성공: uuid={user_uuid}, url={profile_image_url}")
-                    return True
-                else:
-                    logger.warning(f"사용자를 찾을 수 없음: uuid={user_uuid}")
-                    return False
-                    
-            except Exception as e:
-                logger.error(f"프로필 이미지 업데이트 실패: {str(e)}")
-                session.rollback()
-                return False
-    
-    def get_user_by_uuid(self, user_uuid: str) -> Optional[User]:
-        """
-        UUID로 사용자를 조회합니다.
-        
-        Args:
-            user_uuid: 사용자 UUID
-            
-        Returns:
-            Optional[User]: 사용자 객체 또는 None
-        """
-        with self.session_factory() as session:
-            try:
-                stmt = select(User).where(User.id == user_uuid)
-                result = session.execute(stmt)
-                user = result.scalar_one_or_none()
-                
-                if user:
-                    logger.info(f"사용자 조회 성공: uuid={user_uuid}")
-                    return user
-                else:
-                    logger.warning(f"사용자를 찾을 수 없음: uuid={user_uuid}")
-                    return None
-                    
-            except Exception as e:
-                logger.error(f"사용자 조회 실패: {str(e)}")
-                return None
+    def get_user_by_uuid(self, user_uuid: str):
+        return self.users.get_user_by_uuid(user_uuid)
 
-    def get_user_by_handle(self, user_handle: str) -> Optional[User]:
-        """
-        handle로 사용자를 조회합니다.
-        
-        Args:
-            user_handle: 사용자 핸들
-            
-        Returns:
-            Optional[User]: 사용자 객체 또는 None
-        """
-        with self.session_factory() as session:
-            try:
-                stmt = select(User).where(User.handle == user_handle)
-                result = session.execute(stmt)
-                user = result.scalar_one_or_none()
-                
-                if user:
-                    logger.info(f"사용자 조회 성공: handle={user_handle}")
-                    return user
-                else:
-                    logger.warning(f"사용자를 찾을 수 없음: handle={user_handle}")
-                    return None
-                    
-            except Exception as e:
-                logger.error(f"사용자 조회 실패: {str(e)}")
-                return None
+    def get_user_by_handle(self, user_handle: str):
+        return self.users.get_user_by_handle(user_handle)
 
-    def get_post_by_id(self, post_id: str) -> Optional[Post]:
-        """
-        post_id로 포스트를 조회합니다.
-        
-        Args:
-            post_id: 포스트 UUID
-            
-        Returns:
-            Optional[Post]: 포스트 객체 또는 None
-        """
-        with self.session_factory() as session:
-            try:
-                stmt = select(Post).where(Post.id == post_id)
-                result = session.execute(stmt)
-                post = result.scalar_one_or_none()
-                
-                if post:
-                    logger.info(f"포스트 조회 성공: post_id={post_id}")
-                    return post
-                else:
-                    logger.warning(f"포스트를 찾을 수 없음: post_id={post_id}")
-                    return None
-                    
-            except Exception as e:
-                logger.error(f"포스트 조회 실패: {str(e)}")
-                return None
+    def update_user_banner_image_by_uuid(
+        self, user_uuid: str, banner_image_url: Optional[str]
+    ) -> bool:
+        return self.users.update_user_banner_image_by_uuid(user_uuid, banner_image_url)
 
-    def update_user_banner_image_by_uuid(self, user_uuid: str, banner_image_url: Optional[str]) -> bool:
-        """
-        사용자의 배너 이미지 URL을 UUID로 업데이트합니다.
-        
-        Args:
-            user_uuid: 사용자 UUID
-            banner_image_url: 새로운 배너 이미지 URL (None이면 배너 이미지 제거)
-            
-        Returns:
-            bool: 업데이트 성공 여부
-        """
-        with self.session_factory() as session:
-            try:
-                # UUID로 사용자 조회 후 banner_image 업데이트
-                stmt = (
-                    update(User)
-                    .where(User.id == user_uuid)
-                    .values(banner_image=banner_image_url)
-                )
-                
-                result = session.execute(stmt)
-                session.commit()
-                
-                if result.rowcount > 0:
-                    action = "제거" if banner_image_url is None else "업데이트"
-                    logger.info(f"사용자 배너 이미지 {action} 성공: uuid={user_uuid}, url={banner_image_url}")
-                    return True
-                else:
-                    logger.warning(f"사용자를 찾을 수 없음: uuid={user_uuid}")
-                    return False
-                    
-            except Exception as e:
-                logger.error(f"배너 이미지 업데이트 실패: {str(e)}")
-                session.rollback()
-                return False
+    # 포스트 관련 메서드들 (post_service로 위임)
+    def get_post_by_id(self, post_id: str):
+        return self.posts.get_post_by_id(post_id)
 
     def update_post_thumbnail(self, post_id: str, thumbnail_url: Optional[str]) -> bool:
-        """
-        포스트의 썸네일 이미지 URL을 업데이트합니다.
-        
-        Args:
-            post_id: 포스트 UUID
-            thumbnail_url: 새로운 썸네일 이미지 URL (None이면 썸네일 제거)
-            
-        Returns:
-            bool: 업데이트 성공 여부
-        """
-        with self.session_factory() as session:
-            try:
-                # post_id로 포스트 조회 후 thumbnail_image 업데이트
-                stmt = (
-                    update(Post)
-                    .where(Post.id == post_id)
-                    .values(thumbnail_image=thumbnail_url)
-                )
-                
-                result = session.execute(stmt)
-                session.commit()
-                
-                if result.rowcount > 0:
-                    action = "제거" if thumbnail_url is None else "업데이트"
-                    logger.info(f"포스트 썸네일 {action} 성공: post_id={post_id}, url={thumbnail_url}")
-                    return True
-                else:
-                    logger.warning(f"포스트를 찾을 수 없음: post_id={post_id}")
-                    return False
-                    
-            except Exception as e:
-                logger.error(f"포스트 썸네일 업데이트 실패: {str(e)}")
-                session.rollback()
-                return False
-    
-    def cleanup_expired_refresh_tokens(self, current_time: datetime) -> dict:
-        """
-        만료되거나 폐기된 리프레시 토큰을 정리합니다.
-        
-        Args:
-            current_time: 현재 시각 (UTC)
-            
-        Returns:
-            dict: 정리 결과 (success, expired_count, revoked_count, error)
-        """
-        with self.session_factory() as session:
-            try:
-                # 만료된 토큰 삭제 (expires_at < current_time)
-                expired_stmt = text("""
-                    DELETE FROM user_refresh_tokens 
-                    WHERE expires_at < :current_time
-                """)
-                expired_result = session.execute(expired_stmt, {"current_time": current_time})
-                expired_count = expired_result.rowcount
-                
-                # 폐기된 토큰 삭제 (revoked_at IS NOT NULL)
-                revoked_stmt = text("""
-                    DELETE FROM user_refresh_tokens 
-                    WHERE revoked_at IS NOT NULL
-                """)
-                revoked_result = session.execute(revoked_stmt)
-                revoked_count = revoked_result.rowcount
-                
-                session.commit()
-                
-                logger.info(f"토큰 정리 완료: 만료된 토큰 {expired_count}개, 폐기된 토큰 {revoked_count}개 삭제")
-                
-                return {
-                    'success': True,
-                    'expired_count': expired_count,
-                    'revoked_count': revoked_count
-                }
-                
-            except Exception as e:
-                logger.error(f"토큰 정리 실패: {str(e)}")
-                session.rollback()
-                return {
-                    'success': False,
-                    'expired_count': 0,
-                    'revoked_count': 0,
-                    'error': str(e)
-                }
-    
-    def close(self):
-        """데이터베이스 연결을 종료합니다."""
-        self.engine.dispose()
+        return self.posts.update_post_thumbnail(post_id, thumbnail_url)
 
-# 전역 데이터베이스 서비스 인스턴스
+    def get_all_posts_for_indexing(self) -> List[Dict[str, Any]]:
+        return self.posts.get_all_posts_for_indexing()
+
+    def get_posts_by_ids(self, post_ids: List[str]) -> List[Dict[str, Any]]:
+        return self.posts.get_posts_by_ids(post_ids)
+
+    # 토큰 관련 메서드들 (token_service로 위임)
+    def cleanup_expired_refresh_tokens(self, current_time: datetime) -> dict:
+        return self.tokens.cleanup_expired_refresh_tokens(current_time)
+
+
+# 전역 데이터베이스 서비스 인스턴스 (기존 코드와 호환)
 db_service = DatabaseService()

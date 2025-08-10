@@ -163,13 +163,14 @@
 	});
 
 	// 이전 정렬 값 추적
-	let prevSortBy = $state(filter.sortBy);
+	let prevSortBy = $state('');
 
 	// 필터 변경 시 posts 리로드
 	$effect(() => {
 		// 필터가 실제로 변경되었는지 확인 (검색어, 태그, 정렬, 기간)
-		if (filter.sortBy !== prevSortBy) {
-			prevSortBy = filter.sortBy;
+		const currentSortBy = filter.sortBy;
+		if (currentSortBy !== prevSortBy) {
+			prevSortBy = currentSortBy;
 
 			// 초기 로딩이 완료된 후에만 리로드
 			if (!postsStore.initialLoading) {
@@ -180,18 +181,20 @@
 	});
 
 	// 이전 검색 상태 추적
-	let prevKeyword = $state(filter.keyword);
-	let prevTags = $state(filter.tags);
+	let prevKeyword = $state('');
+	let prevTags = $state<string[]>([]);
 	let searchTimeout: number | null = null;
 
 	// 검색어나 태그 변경 시 debounced 검색
 	$effect(() => {
-		const keywordChanged = filter.keyword !== prevKeyword;
-		const tagsChanged = JSON.stringify(filter.tags) !== JSON.stringify(prevTags);
+		const currentKeyword = filter.keyword;
+		const currentTags = filter.tags;
+		const keywordChanged = currentKeyword !== prevKeyword;
+		const tagsChanged = JSON.stringify(currentTags) !== JSON.stringify(prevTags);
 
 		if (keywordChanged || tagsChanged) {
-			prevKeyword = filter.keyword;
-			prevTags = [...filter.tags];
+			prevKeyword = currentKeyword;
+			prevTags = [...currentTags];
 
 			// 기존 timeout 취소
 			if (searchTimeout) {
@@ -199,7 +202,7 @@
 			}
 
 			// 검색어가 있으면 500ms 후 검색, 없으면 즉시 일반 모드로
-			if (filter.keyword || filter.tags.length > 0) {
+			if (currentKeyword || currentTags.length > 0) {
 				searchTimeout = window.setTimeout(() => {
 					if (!postsStore.initialLoading) {
 						postsStore.setTargetPage(1);

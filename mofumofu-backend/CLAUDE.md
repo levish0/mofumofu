@@ -46,11 +46,13 @@ Located in `tasks/` directory:
 ### Key Components
 - **Authentication**: JWT-based with access/refresh token pattern
 - **Database**: PostgreSQL with connection pooling via SeaORM
-- **Background Tasks**: Celery with Redis broker for long-running operations (profile image upload, indexing, etc.)
+- **Search Engine**: Meilisearch integration for full-text search with automatic indexing
+- **Background Tasks**: Celery with Redis broker for long-running operations (profile image upload, search indexing, etc.)
 - **File Storage**: Cloudflare R2 (S3-compatible) for profile images and media
 - **API Documentation**: Auto-generated Swagger UI at `/docs` endpoint (Rust) and `/tasks/docs` (Python)
 - **Error Handling**: Centralized error management with proper HTTP status codes
 - **Logging**: Structured logging with tracing crate
+- **Task Bridge**: Communication bridge between Rust backend and Python task runner via HTTP
 
 ### Database Entities
 - `users` - User accounts and profiles
@@ -72,32 +74,40 @@ Copy `.env.example` to `.env` and configure:
 ## API Structure
 
 All API endpoints are versioned under `/v0/`:
-- `/v0/auth/*` - Authentication endpoints
-- `/v0/users/*` - User management
-- `/v0/posts/*` - Content management  
+- `/v0/auth/*` - Authentication endpoints (OAuth, sign-in/out, token refresh)
+- `/v0/users/*` - User management (profiles, avatar/banner upload)
+- `/v0/posts/*` - Content management (CRUD, search, thumbnails)
 - `/v0/follow/*` - Social following features
 - `/docs` - Swagger UI documentation
 
 ## Development Notes
 
 - The codebase uses Korean comments in some files
-- State management is handled through `AppState` with database connection sharing
+- State management is handled through `AppState` with shared connections (database, R2, HTTP client, Meilisearch)
 - All routes are protected by appropriate middleware (CORS, compression, auth)
 - The project includes both synchronous Rust backend and asynchronous Python task runner
 - Database migrations are managed separately in the `/migration` directory
-- Long-running tasks (profile image upload, etc.) are offloaded to Celery workers for better performance
+- Long-running tasks (profile image upload, search indexing, etc.) are offloaded to Celery workers
 - Profile images from OAuth providers are processed asynchronously and stored in Cloudflare R2
+- Search functionality uses Meilisearch with automatic post indexing via background tasks
+- Task communication between Rust and Python happens via HTTP through the `tasks_bridge` module
 - Redis is required for Celery broker and result backend
 
 ## Background Task System
 
 ### Celery Tasks
-- **Profile Image Upload**: Downloads Google OAuth profile images and uploads to R2
+- **Profile Image Upload**: Downloads OAuth profile images and uploads to R2
+- **Search Indexing**: Automatically indexes posts in Meilisearch for full-text search
 - **Image Processing**: Validates image types and sizes before storage
+- **Token Cleanup**: Periodic cleanup of expired JWT tokens
 - **Task Monitoring**: Use Flower web interface for monitoring task status
 
 ### Task Endpoints (Python API)
 - `POST /tasks/profile/upload-image` - Queue profile image upload
 - `DELETE /tasks/profile/delete-image` - Queue profile image deletion
+- `POST /tasks/search/index` - Queue post indexing for search
+- `PUT /tasks/search/update` - Queue post search index update
+- `DELETE /tasks/search/delete` - Queue post removal from search index
+- `POST /tasks/search/reindex` - Queue full search reindexing
 - `GET /tasks/profile/task-status/{task_id}` - Check task status
 - `GET /tasks/profile/health` - Health check for profile service

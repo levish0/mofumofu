@@ -9,15 +9,15 @@ This is **mofumofu-ui**, a Svelte 5 component library for a social media applica
 ## Development Commands
 
 - `pnpm dev` - Start development server for the showcase app
-- `pnpm build` - Build both the library and production app (includes prepack step)
+- `pnpm build` - Build both the library and production app (runs vite build + prepack)
 - `pnpm preview` - Preview the production build
-- `pnpm check` - Run Svelte type checking
+- `pnpm check` - Run Svelte type checking (svelte-kit sync + svelte-check)
 - `pnpm check:watch` - Run type checking in watch mode
 - `pnpm fmt` - Format code with Prettier
-- `pnpm lint` - Check code formatting with Prettier
+- `pnpm lint` - Check code formatting with Prettier (prettier --check)
 - `pnpm prepack` - Build the library package (svelte-kit sync, svelte-package, publint)
 
-Note: This project uses **pnpm** as the package manager.
+Note: This project uses **pnpm** as the package manager, not npm.
 
 ## Architecture
 
@@ -44,7 +44,7 @@ Note: This project uses **pnpm** as the package manager.
   - `useNavbarScroll.svelte.ts` - Navbar visibility on scroll with performance optimization
   - `useInfiniteScroll.svelte.ts` - Infinite scrolling functionality
   - `useResizable.svelte.ts` - Resizable component behavior
-  - `useTextareaToolbar.svelte.ts` - Rich text editing toolbar
+  - `useWriteEditor.svelte.ts` - Write editor functionality
 
 - **Stores** (`src/lib/stores/`) - Svelte 5 state management:
   - `auth.svelte.ts` - Authentication state with localStorage persistence
@@ -52,11 +52,13 @@ Note: This project uses **pnpm** as the package manager.
   - `settings/personal.svelte.ts` - Personal information state
 
 - **Utils** (`src/lib/utils/`) - Utility functions:
-  - `utils.ts` - TailwindCSS class merging (`cn` function) and TypeScript helpers
+  - `utils.ts` - TailwindCSS class merging (`cn` function) and TypeScript helpers (root level)
   - `imagecrop.ts` - Image processing and cropping utilities
+  - `markdown.ts` - Markdown processing utilities
 
 - **Schemas** (`src/lib/schemas/`) - Validation schemas using Valibot
 - **OAuth** (`src/lib/oauth/`) - OAuth configuration and flows
+- **Styles** (`src/lib/styles/`) - CSS stylesheets for components
 
 ### Application Routes (`src/routes/`)
 
@@ -70,13 +72,14 @@ Note: This project uses **pnpm** as the package manager.
 
 - **Svelte 5** with runes (`$state`, `$props`, `$derived`) for reactive state
 - **SvelteKit** for routing, SSR, and server-side data loading
-- **TailwindCSS 4** with custom animations via `tw-animate-css`
+- **TailwindCSS 4** with custom animations via `tw-animate-css` (no config file - uses Vite plugin)
 - **TypeScript** with strict configuration
 - **ky** for HTTP requests with error handling
 - **mode-watcher** for theme switching
 - **Cloudflare** adapter for edge deployment
 - **Valibot** for schema validation
 - **bits-ui** for accessible component primitives
+- **@inlang/paraglide-js** for internationalization (i18n)
 
 ### Component Architecture
 
@@ -101,4 +104,12 @@ Note: This project uses **pnpm** as the package manager.
 
 ### Library Export System
 
-Components must be explicitly exported in `src/lib/index.ts` to be available when the library is installed as a package. The file is currently empty and needs exports added as components are finalized.
+Components must be explicitly exported in `src/lib/index.ts` to be available when the library is installed as a package. The file is currently empty (`// Reexport your entry components here`) and needs exports added as components are finalized.
+
+### Build System
+
+- Uses **Vite** with SvelteKit plugin for bundling
+- **@tailwindcss/vite** plugin for TailwindCSS 4 integration (no separate config file needed)
+- **svelte-package** for library packaging
+- **publint** for package validation
+- Targets Cloudflare Workers with adapter-cloudflare
