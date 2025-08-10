@@ -1,6 +1,6 @@
 use serde::Deserialize;
 use utoipa::ToSchema;
-use validator::Validate;
+use validator::{Validate, ValidationError};
 
 #[derive(Debug, Clone, Deserialize, Validate, ToSchema)]
 pub struct CreatePostRequest {
@@ -12,4 +12,22 @@ pub struct CreatePostRequest {
     pub content: String,
     #[validate(length(max = 80, message = "Slug must be at most 80 characters."))]
     pub slug: String,
+    #[validate(custom(function = "validate_hashtags"))]
+    pub hashtags: Option<Vec<String>>,
+}
+
+fn validate_hashtags(hashtags: &Vec<String>) -> Result<(), ValidationError> {
+    if hashtags.len() > 8 {
+        let mut error = ValidationError::new("too_many");
+        error.message = Some("Maximum 8 hashtags allowed.".into());
+        return Err(error);
+    }
+    for tag in hashtags {
+        if tag.len() > 50 {
+            let mut error = ValidationError::new("too_long");
+            error.message = Some("Each hashtag must be at most 50 characters.".into());
+            return Err(error);
+        }
+    }
+    Ok(())
 }

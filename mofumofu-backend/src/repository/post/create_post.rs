@@ -1,5 +1,5 @@
 use crate::dto::post::request::create_post::CreatePostRequest;
-use crate::entity::posts::ActiveModel as PostActiveModel;
+use crate::entity::posts::{ActiveModel as PostActiveModel, Model as PostModel};
 use crate::service::error::errors::Errors;
 use chrono::Utc;
 use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
@@ -9,7 +9,7 @@ pub async fn repository_create_post<C>(
     txn: &C,
     payload: CreatePostRequest,
     user_uuid: &Uuid,
-) -> Result<(), Errors>
+) -> Result<PostModel, Errors>
 where
     C: ConnectionTrait + TransactionTrait,
 {
@@ -22,8 +22,6 @@ where
         content: Set(payload.content),
         created_at: Set(Utc::now()),
         updated_at: Set(Option::from(Utc::now())),
-        is_deleted: Set(false),
-        deleted_at: Default::default(),
         like_count: Set(0),
         comment_count: Set(0),
         view_count: Set(0),
@@ -31,7 +29,7 @@ where
     };
 
     // Insert the new post
-    new_post.insert(txn).await?;
+    let created_post = new_post.insert(txn).await?;
 
-    Ok(())
+    Ok(created_post)
 }

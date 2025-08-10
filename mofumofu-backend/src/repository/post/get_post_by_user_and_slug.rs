@@ -17,7 +17,6 @@ where
     let post = posts::Entity::find()
         .filter(posts::Column::UserId.eq(*user_id))
         .filter(posts::Column::Slug.eq(slug))
-        .filter(posts::Column::IsDeleted.eq(false))
         .one(conn)
         .await
         .map_err(|e| {

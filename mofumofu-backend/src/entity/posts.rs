@@ -28,12 +28,6 @@ pub struct Model {
     #[sea_orm(column_type = "TimestampWithTimeZone", nullable)]
     pub updated_at: Option<DateTimeUtc>,
 
-    #[sea_orm(column_type = "Boolean", not_null, default_value = "false")]
-    pub is_deleted: bool,
-
-    #[sea_orm(column_type = "TimestampWithTimeZone", nullable)]
-    pub deleted_at: Option<DateTimeUtc>,
-
     #[sea_orm(column_type = "Integer", not_null, default_value = "0")]
     pub like_count: i32,
 

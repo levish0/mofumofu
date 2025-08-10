@@ -3,6 +3,7 @@ export interface CreatePostRequest {
 	content: string;
 	slug: string;
 	summary?: string | null;
+	hashtags?: string[] | null;
 }
 
 export interface GetPostByHandleAndSlugRequest {
@@ -39,6 +40,26 @@ export interface GetPostsRequest {
 	sort?: PostSortOrder;
 }
 
+export interface GetPostsAroundPageRequest {
+	target_page: number;
+	page_size?: number;
+	pages_around?: number;
+	sort?: PostSortOrder;
+}
+
+export interface SearchPostsRequest {
+	query?: string | null;
+	hashtags?: string[] | null;
+	date_from?: string | null;
+	date_to?: string | null;
+	min_likes?: number | null;
+	user_handle?: string | null;
+	sort?: PostSortOrder | null;
+	target_page?: number | null;
+	page_size?: number | null;
+	pages_around?: number | null;
+}
+
 export interface PostListItem {
 	id: string;
 	title: string;
@@ -52,6 +73,7 @@ export interface PostListItem {
 	comment_count: number;
 	view_count: number;
 	slug: string;
+	hashtags: string[];
 }
 
 export interface GetPostsResponse {

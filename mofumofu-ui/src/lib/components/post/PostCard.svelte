@@ -2,40 +2,61 @@
 	import PostCardImage from './PostCardImage.svelte';
 	import PostCardContent from './PostCardContent.svelte';
 	import PostCardFooter from './PostCardFooter.svelte';
+	import type { PostListItem } from '$lib/api/post/types';
 
 	const {
-		image = undefined,
-		title = '',
-		summary = '',
-		date = '',
-		comments = 0,
-		views = '',
-		author_name = '',
-		author_avatar = '',
-		likes = 0,
-		handle = '',
-		slug = ''
+		post = undefined
+	}: {
+		post?: PostListItem;
 	} = $props();
 
-	// skeleton 모드인지 확인 (모든 props가 비어있으면 skeleton)
-	let isSkeleton = $derived(!title && !summary && !date && !author_name);
+	// date formatting 함수 - 정확한 날짜/시간 표시
+	const formatDate = (dateStr: string) => {
+		const date = new Date(dateStr);
+		const year = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, '0');
+		const day = String(date.getDate()).padStart(2, '0');
+		const hours = String(date.getHours()).padStart(2, '0');
+		const minutes = String(date.getMinutes()).padStart(2, '0');
+
+		return `${year}.${month}.${day} ${hours}:${minutes}`;
+	};
+
+	// skeleton 모드인지 확인 (post가 없으면 skeleton)
+	let isSkeleton = $derived(!post);
+
+	// 파생된 값들
+	let formattedDate = $derived(post ? formatDate(post.created_at) : '');
+	let authorAvatar = $derived(post ? post.user_avatar : '');
 </script>
 
 <!-- 카드 전체 -->
 <a
-	href="/@{handle}/post/{slug}"
+	href={post ? `/@${post.user_handle}/post/${post.slug}` : '#'}
 	class="dark:bg-mofu-dark-800 dark:border-mofu-dark-800 border-mofu-light-300 group flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border bg-white transition-all duration-200 hover:-translate-y-1 hover:opacity-75 hover:shadow-lg md:min-h-[300px]"
 >
 	<!-- 이미지 영역 (스켈레톤이거나 이미지가 있을 때만) -->
-	{#if isSkeleton || image}
-		<PostCardImage {image} {title} {isSkeleton} />
+	{#if isSkeleton || post?.thumbnail_image}
+		<PostCardImage image={post?.thumbnail_image || undefined} title={post?.title || ''} {isSkeleton} />
 	{/if}
 
 	<!-- 텍스트 영역 -->
-	<PostCardContent {title} {summary} {date} {comments} {views} {isSkeleton} />
+	<PostCardContent
+		title={post?.title || ''}
+		summary={post?.summary || ''}
+		date={formattedDate}
+		comments={post?.comment_count || 0}
+		{isSkeleton}
+	/>
 
 	<!-- 구분선과 푸터 -->
 	<div class="dark:border-mofu-dark-600 border-mofu-light-400 border-t">
-		<PostCardFooter {author_name} {author_avatar} {likes} {isSkeleton} />
+		<PostCardFooter
+			author_name={post?.user_name || ''}
+			author_avatar={authorAvatar || ''}
+			likes={post?.like_count || 0}
+			views={post?.view_count || 0}
+			{isSkeleton}
+		/>
 	</div>
 </a>

@@ -56,6 +56,10 @@ pub struct DbConfig {
     pub task_server_host: String,
     pub task_server_port: String,
 
+    // Meilisearch
+    pub meilisearch_host: String,
+    pub meilisearch_api_key: Option<String>,
+
     pub cors_allowed_origins: Vec<HeaderValue>,
     pub cors_allowed_headers: Vec<HeaderName>,
     pub cors_max_age: Option<u64>,
@@ -199,6 +203,10 @@ static CONFIG: LazyLock<DbConfig> = LazyLock::new(|| {
         // Task Server
         task_server_host: env::var("TASK_SERVER_HOST").unwrap_or_else(|_| "127.0.0.1".to_string()),
         task_server_port: env::var("TASK_SERVER_PORT").unwrap_or_else(|_| "7000".to_string()),
+
+        // Meilisearch
+        meilisearch_host: env::var("MEILISEARCH_HOST").unwrap_or_else(|_| "http://localhost:7700".to_string()),
+        meilisearch_api_key: env::var("MEILISEARCH_API_KEY").ok().filter(|key| !key.is_empty()),
 
         cors_allowed_origins: cors_origins,
         cors_allowed_headers: cors_headers,

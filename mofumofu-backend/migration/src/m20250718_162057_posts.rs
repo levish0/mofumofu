@@ -25,12 +25,6 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Posts::Content).text().not_null()) // 본문 (길이 제한 없음)
                     .col(ColumnDef::new(Posts::UserId).uuid().not_null())
                     .col(
-                        ColumnDef::new(Posts::IsDeleted)
-                            .boolean()
-                            .not_null()
-                            .default(false),
-                    )
-                    .col(
                         ColumnDef::new(Posts::CreatedAt)
                             .timestamp_with_time_zone()
                             .not_null()
@@ -38,11 +32,6 @@ impl MigrationTrait for Migration {
                     )
                     .col(
                         ColumnDef::new(Posts::UpdatedAt)
-                            .timestamp_with_time_zone()
-                            .null(),
-                    )
-                    .col(
-                        ColumnDef::new(Posts::DeletedAt)
                             .timestamp_with_time_zone()
                             .null(),
                     )
@@ -145,8 +134,6 @@ enum Posts {
     UserId,
     CreatedAt,
     UpdatedAt,
-    IsDeleted,
-    DeletedAt,
     LikeCount,
     CommentCount,
     ViewCount,

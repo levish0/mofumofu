@@ -19,6 +19,7 @@ pub struct PostListItem {
     pub comment_count: i32,
     pub view_count: i32,
     pub slug: String,
+    pub hashtags: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, ToSchema)]

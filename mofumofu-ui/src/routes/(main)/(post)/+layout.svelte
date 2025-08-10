@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Footer from '$lib/components/Footer.svelte';
 	import SearchPanel from '$lib/components/search/SearchPanel.svelte';
 	import { getContext } from 'svelte';
 

@@ -83,7 +83,7 @@
 </script>
 
 <div class="space-y-4">
-	<h2 class="text-lg font-medium text-mofu-dark-100">썸네일 (선택사항)</h2>
+	<h2 class="text-mofu-dark-100 text-lg font-medium">썸네일 (선택사항)</h2>
 	<div class="group relative transition-all">
 		<div class="bg-mofu-dark-800 relative aspect-video w-full overflow-hidden rounded-lg group-hover:opacity-75">
 			{#if thumbnail}
@@ -119,9 +119,7 @@
 		<input id="thumbnail-upload" type="file" accept="image/*" class="hidden" onchange={handleImageChange} />
 	</div>
 	{#if thumbnail}
-		<button onclick={removeThumbnail} class="text-red-400 hover:text-red-300 text-xs underline">
-			썸네일 제거
-		</button>
+		<button onclick={removeThumbnail} class="text-xs text-red-400 underline hover:text-red-300"> 썸네일 제거 </button>
 	{/if}
 </div>
 

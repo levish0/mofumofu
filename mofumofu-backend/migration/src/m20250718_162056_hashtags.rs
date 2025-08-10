@@ -46,6 +46,17 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
+        // 해시태그 이름으로 검색 최적화
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_hashtags_name")
+                    .table(HashTags::Table)
+                    .col(HashTags::Name)
+                    .to_owned(),
+            )
+            .await?;
+
         // 인기 해시태그 조회 (사용 횟수 기준)
         manager
             .create_index(

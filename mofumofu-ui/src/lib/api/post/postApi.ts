@@ -5,6 +5,8 @@ import type {
 	GetPostByHandleAndSlugRequest,
 	PostInfoResponse,
 	GetPostsRequest,
+	GetPostsAroundPageRequest,
+	SearchPostsRequest,
 	GetPostsResponse,
 	ThumbnailUploadRequest
 } from './types';
@@ -34,6 +36,26 @@ export async function getPosts(request: GetPostsRequest = {}): Promise<GetPostsR
 		return response.json<GetPostsResponse>();
 	} catch (error) {
 		console.error('Failed to get posts:', error);
+		throw error;
+	}
+}
+
+export async function getPostsAroundPage(request: GetPostsAroundPageRequest): Promise<GetPostsResponse> {
+	try {
+		const response = await publicApi.post('v0/posts/around', { json: request });
+		return response.json<GetPostsResponse>();
+	} catch (error) {
+		console.error('Failed to get posts around page:', error);
+		throw error;
+	}
+}
+
+export async function searchPosts(request: SearchPostsRequest): Promise<GetPostsResponse> {
+	try {
+		const response = await publicApi.post('v0/posts/search', { json: request });
+		return response.json<GetPostsResponse>();
+	} catch (error) {
+		console.error('Failed to search posts:', error);
 		throw error;
 	}
 }

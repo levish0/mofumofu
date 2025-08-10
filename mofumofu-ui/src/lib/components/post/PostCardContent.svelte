@@ -4,14 +4,12 @@
 		summary = '',
 		date = '',
 		comments = 0,
-		views = '',
 		isSkeleton = false
 	}: {
 		title: string;
 		summary: string;
 		date: string;
 		comments: number;
-		views: string;
 		isSkeleton?: boolean;
 	} = $props();
 </script>

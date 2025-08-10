@@ -5,12 +5,12 @@ use crate::service::error::errors::Errors;
 use crate::state::AppState;
 use crate::utils::extract_ip_address::extract_ip_address;
 use crate::utils::extract_user_agent::extract_user_agent;
-use axum::Extension;
 use axum::extract::{ConnectInfo, State};
-use axum::http::{HeaderMap, StatusCode};
+use axum::http::HeaderMap;
 use axum::response::IntoResponse;
-use axum_extra::TypedHeader;
+use axum::Extension;
 use axum_extra::headers::UserAgent;
+use axum_extra::TypedHeader;
 use std::net::SocketAddr;
 
 #[utoipa::path(

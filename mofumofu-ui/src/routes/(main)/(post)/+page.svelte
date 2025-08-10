@@ -1,123 +1,159 @@
 <script lang="ts">
 	import PostList from '$lib/components/post/PostList.svelte';
-	import { getPosts } from '$lib/api/post/postApi';
+	import { getPosts, getPostsAroundPage, searchPosts } from '$lib/api/post/postApi';
 	import type { PostListItem, PostSortOrder } from '$lib/api/post/types';
+	import { postsStore } from '$lib/stores/posts.svelte';
 	import { onMount } from 'svelte';
 
-	interface Author {
-		name: string;
-		avatar: string;
-	}
-
-	interface Card {
-		image?: string;
-		title: string;
-		summary: string;
-		date: string;
-		comments: number;
-		views: string;
-		author: Author;
-		likes: number;
-		slug: string;
-		handle: string;
-	}
-
-	// PostListItem을 Card 형태로 변환하는 함수
-	const convertToCard = (post: PostListItem): Card => {
-		const formatDate = (dateStr: string) => {
-			const date = new Date(dateStr);
-			const now = new Date();
-			const diff = now.getTime() - date.getTime();
-			const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-			if (days === 0) {
-				const hours = Math.floor(diff / (1000 * 60 * 60));
-				return hours === 0 ? '방금 전' : `${hours}시간 전`;
-			} else if (days < 7) {
-				return `${days}일 전`;
-			} else if (days < 30) {
-				const weeks = Math.floor(days / 7);
-				return `${weeks}주 전`;
-			} else if (days < 365) {
-				const months = Math.floor(days / 30);
-				return `${months}개월 전`;
-			} else {
-				const years = Math.floor(days / 365);
-				return `${years}년 전`;
-			}
-		};
-
-		return {
-			image: post.thumbnail_image || undefined,
-			title: post.title,
-			summary: post.summary || '',
-			date: formatDate(post.created_at),
-			comments: post.comment_count,
-			views: 'Views',
-			author: {
-				name: post.user_name,
-				avatar: post.user_avatar || `https://picsum.photos/32/32?random=${post.user_handle}`
-			},
-			likes: post.like_count,
-			slug: post.slug,
-			handle: post.user_handle
-		};
-	};
-
-	// 상태 관리
-	let cards = $state<Card[]>([]);
-	let loading = $state(false);
-	let initialLoading = $state(true);
-	let currentPage = $state(1);
 	const PAGE_SIZE = 8;
 	const skeletonCount = PAGE_SIZE - 4;
-	let hasMore = $state(true);
-	const sortOrder: PostSortOrder = 'latest';
+	const PAGES_AROUND = 2; // target_page 주변으로 가져올 페이지 수
 
-	// 초기 데이터 로드
-	const loadInitialPosts = async () => {
-		try {
-			initialLoading = true;
-			const response = await getPosts({
-				page: 1,
-				page_size: PAGE_SIZE,
-				sort: sortOrder
-			});
-
-			cards = response.posts.map(convertToCard);
-			hasMore = response.has_more;
-			currentPage = 1;
-		} catch (error) {
-			console.error('Failed to load initial posts:', error);
-			// 에러 시 빈 배열로 초기화
-			cards = [];
-			hasMore = false;
-		} finally {
-			initialLoading = false;
+	// SearchPanel의 sortBy를 API의 PostSortOrder로 매핑
+	const mapSortByToApiSort = (sortBy: string): PostSortOrder => {
+		switch (sortBy) {
+			case 'recent':
+				return 'latest';
+			case 'oldest':
+				return 'oldest';
+			case 'popular':
+			case 'comments':
+			case 'views':
+				return 'popular'; // 임시로 popular로 매핑
+			default:
+				return 'latest';
 		}
 	};
 
-	// 더 많은 포스트 로드
-	const onLoadMore = async () => {
-		if (loading || !hasMore) return;
+	// SearchPanel의 timeRange를 날짜 범위로 매핑
+	const mapTimeRangeToDate = (timeRange: string): { date_from?: string; date_to?: string } => {
+		const now = new Date();
+		const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-		loading = true;
+		switch (timeRange) {
+			case 'today':
+				return { date_from: today.toISOString() };
+			case 'week':
+				const weekAgo = new Date(today);
+				weekAgo.setDate(weekAgo.getDate() - 7);
+				return { date_from: weekAgo.toISOString() };
+			case 'month':
+				const monthAgo = new Date(today);
+				monthAgo.setMonth(monthAgo.getMonth() - 1);
+				return { date_from: monthAgo.toISOString() };
+			case 'year':
+				const yearAgo = new Date(today);
+				yearAgo.setFullYear(yearAgo.getFullYear() - 1);
+				return { date_from: yearAgo.toISOString() };
+			default:
+				return {};
+		}
+	};
+
+	// store의 상태를 reactive하게 사용
+	let posts = $derived(postsStore.posts);
+	let loading = $derived(postsStore.loading);
+	let initialLoading = $derived(postsStore.initialLoading);
+	let hasMore = $derived(postsStore.hasMore);
+	let currentPage = $derived(postsStore.currentPage);
+	let filter = $derived(postsStore.filter);
+	let isSearchMode = $derived(postsStore.isSearchMode);
+
+	// 파생된 API 정렬 옵션
+	let apiSort = $derived(mapSortByToApiSort(filter.sortBy));
+	let dateRange = $derived(mapTimeRangeToDate(filter.timeRange));
+
+	// 초기 데이터 로드 또는 around page로 로드
+	const loadInitialPosts = async () => {
+		try {
+			postsStore.setInitialLoading(true);
+
+			let response;
+
+			if (isSearchMode) {
+				// 검색 모드일 때는 search API 사용
+				response = await searchPosts({
+					query: filter.keyword || null,
+					hashtags: filter.tags.length > 0 ? filter.tags : null,
+					sort: apiSort,
+					page_size: PAGE_SIZE,
+					target_page: postsStore.targetPage > 1 ? postsStore.targetPage : 1,
+					pages_around: postsStore.targetPage > 1 ? PAGES_AROUND : null,
+					...dateRange
+				});
+			} else {
+				// 일반 모드
+				if (postsStore.targetPage > 1) {
+					response = await getPostsAroundPage({
+						target_page: postsStore.targetPage,
+						page_size: PAGE_SIZE,
+						pages_around: PAGES_AROUND,
+						sort: apiSort
+					});
+				} else {
+					response = await getPosts({
+						page: 1,
+						page_size: PAGE_SIZE,
+						sort: apiSort
+					});
+				}
+			}
+
+			postsStore.setPosts(response.posts);
+			postsStore.setHasMore(response.has_more);
+			postsStore.setCurrentPage(response.current_page);
+		} catch (error) {
+			console.error('Failed to load initial posts:', error);
+			postsStore.setPosts([]);
+			postsStore.setHasMore(false);
+		} finally {
+			postsStore.setInitialLoading(false);
+		}
+	};
+
+	// 더 많은 포스트 로드 - search API 또는 around API 활용
+	const onLoadMore = async () => {
+		if (postsStore.loading || !postsStore.hasMore) return;
+
+		postsStore.setLoading(true);
 
 		try {
-			const response = await getPosts({
-				page: currentPage + 1,
-				page_size: PAGE_SIZE,
-				sort: sortOrder
-			});
+			const nextPage = postsStore.currentPage + 1;
+			let response;
 
-			const newCards = response.posts.map(convertToCard);
-			cards = [...cards, ...newCards];
-			currentPage++;
-			hasMore = response.has_more;
+			if (isSearchMode) {
+				// 검색 모드일 때는 search API 사용
+				response = await searchPosts({
+					query: filter.keyword || null,
+					hashtags: filter.tags.length > 0 ? filter.tags : null,
+					sort: apiSort,
+					page_size: PAGE_SIZE,
+					target_page: nextPage,
+					pages_around: PAGES_AROUND,
+					...dateRange
+				});
+			} else {
+				// 일반 모드일 때는 around API 사용
+				response = await getPostsAroundPage({
+					target_page: nextPage,
+					page_size: PAGE_SIZE,
+					pages_around: PAGES_AROUND,
+					sort: apiSort
+				});
+			}
+
+			// 새로운 포스트들만 필터링해서 추가
+			const existingIds = new Set(postsStore.posts.map((post) => post.id));
+			const newPosts = response.posts.filter((post) => !existingIds.has(post.id));
+
+			postsStore.addPosts(newPosts);
+			postsStore.setCurrentPage(nextPage);
+			postsStore.setTargetPage(nextPage);
+			postsStore.setHasMore(response.has_more);
 		} catch (error) {
 			console.error('Failed to load more posts:', error);
 		} finally {
-			loading = false;
+			postsStore.setLoading(false);
 		}
 	};
 
@@ -125,6 +161,60 @@
 	onMount(() => {
 		loadInitialPosts();
 	});
+
+	// 이전 정렬 값 추적
+	let prevSortBy = $state(filter.sortBy);
+
+	// 필터 변경 시 posts 리로드
+	$effect(() => {
+		// 필터가 실제로 변경되었는지 확인 (검색어, 태그, 정렬, 기간)
+		if (filter.sortBy !== prevSortBy) {
+			prevSortBy = filter.sortBy;
+
+			// 초기 로딩이 완료된 후에만 리로드
+			if (!postsStore.initialLoading) {
+				postsStore.setTargetPage(1); // 필터 변경 시 첫 페이지부터 시작
+				loadInitialPosts();
+			}
+		}
+	});
+
+	// 이전 검색 상태 추적
+	let prevKeyword = $state(filter.keyword);
+	let prevTags = $state(filter.tags);
+	let searchTimeout: number | null = null;
+
+	// 검색어나 태그 변경 시 debounced 검색
+	$effect(() => {
+		const keywordChanged = filter.keyword !== prevKeyword;
+		const tagsChanged = JSON.stringify(filter.tags) !== JSON.stringify(prevTags);
+
+		if (keywordChanged || tagsChanged) {
+			prevKeyword = filter.keyword;
+			prevTags = [...filter.tags];
+
+			// 기존 timeout 취소
+			if (searchTimeout) {
+				clearTimeout(searchTimeout);
+			}
+
+			// 검색어가 있으면 500ms 후 검색, 없으면 즉시 일반 모드로
+			if (filter.keyword || filter.tags.length > 0) {
+				searchTimeout = window.setTimeout(() => {
+					if (!postsStore.initialLoading) {
+						postsStore.setTargetPage(1);
+						loadInitialPosts();
+					}
+				}, 500);
+			} else {
+				// 검색어와 태그가 모두 비어있으면 즉시 일반 모드로
+				if (!postsStore.initialLoading) {
+					postsStore.setTargetPage(1);
+					loadInitialPosts();
+				}
+			}
+		}
+	});
 </script>
 
-<PostList {cards} {loading} {onLoadMore} {hasMore} {skeletonCount} />
+<PostList {posts} {loading} {onLoadMore} {hasMore} {skeletonCount} />

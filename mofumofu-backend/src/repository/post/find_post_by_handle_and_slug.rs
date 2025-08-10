@@ -15,7 +15,6 @@ where
         .join(JoinType::InnerJoin, PostRelation::User.def())
         .filter(UserColumn::Handle.eq(handle))
         .filter(PostColumn::Slug.eq(slug))
-        .filter(PostColumn::IsDeleted.eq(false))
         .one(conn)
         .await?)
 }

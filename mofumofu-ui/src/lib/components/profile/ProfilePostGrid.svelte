@@ -53,15 +53,6 @@
 
 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 	{#each mockPosts as post (post.id)}
-		<PostCard
-			image={post.image}
-			title={post.title}
-			summary={post.content}
-			date={post.timestamp}
-			comments={post.comments}
-			likes={post.likes}
-			author_name={profile.name}
-			author_avatar={profile.profile_image}
-		/>
+		<PostCard />
 	{/each}
 </div>

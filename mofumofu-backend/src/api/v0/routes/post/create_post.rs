@@ -44,12 +44,8 @@ pub async fn create_post(
 
     service_create_post(
         &state.conn,
-        CreatePostRequest {
-            title: payload.title,
-            summary: payload.summary,
-            content: payload.content,
-            slug: payload.slug,
-        },
+        &state.meilisearch,
+        payload,
         &user_uuid,
     )
     .await?;

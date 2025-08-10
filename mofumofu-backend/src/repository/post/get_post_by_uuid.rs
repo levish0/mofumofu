@@ -4,7 +4,7 @@ use sea_orm::{ColumnTrait, ConnectionTrait, EntityTrait, QueryFilter};
 use tracing::{error, info};
 use uuid::Uuid;
 
-pub async fn repository_get_post_by_id<C>(
+pub async fn repository_get_post_by_uuid<C>(
     conn: &C,
     post_id: &Uuid,
 ) -> Result<posts::Model, Errors>
@@ -15,7 +15,6 @@ where
 
     let post = posts::Entity::find()
         .filter(posts::Column::Id.eq(*post_id))
-        .filter(posts::Column::IsDeleted.eq(false))
         .one(conn)
         .await
         .map_err(|e| {

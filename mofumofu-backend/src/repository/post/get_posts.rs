@@ -14,8 +14,7 @@ where
 {
     let offset = (page - 1) * page_size;
 
-    let mut query = PostEntity::find()
-        .filter(Column::IsDeleted.eq(false));
+    let mut query = PostEntity::find();
 
     // 정렬 조건 적용
     match sort_order {
@@ -40,12 +39,54 @@ where
     Ok(posts)
 }
 
+pub async fn repository_get_posts_around_page<C>(
+    conn: &C,
+    target_page: u32,
+    page_size: u32,
+    pages_around: u32,
+    sort_order: &PostSortOrder,
+) -> Result<Vec<PostModel>, Errors>
+where
+    C: ConnectionTrait,
+{
+    let start_page = if target_page > pages_around {
+        target_page - pages_around
+    } else {
+        1
+    };
+    let end_page = target_page + pages_around;
+    
+    let start_offset = (start_page - 1) * page_size;
+    let total_items = (end_page - start_page + 1) * page_size;
+
+    let mut query = PostEntity::find();
+
+    match sort_order {
+        PostSortOrder::Latest => {
+            query = query.order_by_desc(Column::CreatedAt);
+        }
+        PostSortOrder::Popular => {
+            query = query.order_by_desc(Column::LikeCount);
+        }
+        PostSortOrder::Oldest => {
+            query = query.order_by_asc(Column::CreatedAt);
+        }
+    }
+
+    let posts = query
+        .offset(start_offset as u64)
+        .limit(total_items as u64)
+        .all(conn)
+        .await?;
+
+    Ok(posts)
+}
+
 pub async fn repository_get_posts_count<C>(conn: &C) -> Result<u64, Errors>
 where
     C: ConnectionTrait,
 {
     let count = PostEntity::find()
-        .filter(Column::IsDeleted.eq(false))
         .count(conn)
         .await?;
 

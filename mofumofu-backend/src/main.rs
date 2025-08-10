@@ -3,6 +3,7 @@ use crate::config::db_config::DbConfig;
 use crate::connection::cloudflare_r2::establish_r2_connection;
 use crate::connection::database::establish_connection;
 use crate::connection::http::create_http_client;
+use crate::connection::meilisearch::MeilisearchClient;
 use crate::middleware::cors::cors_layer;
 use crate::state::AppState;
 use crate::utils::logger::init_tracing;
@@ -34,6 +35,18 @@ pub async fn run_server() -> anyhow::Result<()> {
         anyhow::anyhow!("HTTP client creation failed: {}", e)
     })?;
 
+    let meilisearch = MeilisearchClient::new().map_err(|e| {
+        error!("Failed to create Meilisearch client: {}", e);
+        anyhow::anyhow!("Meilisearch client creation failed: {}", e)
+    })?;
+
+    // Meilisearch 인덱스 설정
+    if let Err(e) = crate::service::meilisearch::post_indexer::setup_posts_index(&meilisearch).await {
+        error!("Failed to setup Meilisearch posts index: {}", e);
+    } else {
+        info!("Meilisearch posts index setup completed");
+    }
+
     let server_url = format!(
         "{}:{}",
         &DbConfig::get().server_host,
@@ -47,6 +60,7 @@ pub async fn run_server() -> anyhow::Result<()> {
             conn,
             cloudflare_r2,
             http_client,
+            meilisearch,
         });
 
     info!("Starting server at: {}", server_url);
