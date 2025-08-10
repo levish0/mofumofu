@@ -25,3 +25,6 @@ services:
       - mofumofu-network
     volumes:
       - meili_data:/meili_data
+
+volumes:
+  meili_data:
