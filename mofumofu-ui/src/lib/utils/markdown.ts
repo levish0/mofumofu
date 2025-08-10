@@ -9,6 +9,14 @@ export interface MarkdownProcessResult {
 	tocItems: TocItem[];
 }
 
+interface MarkdownNode {
+	type: string;
+	tagName?: string;
+	value?: string;
+	children?: MarkdownNode[];
+	properties?: { id?: string; [key: string]: unknown };
+}
+
 export async function processMarkdown(markdown: string): Promise<MarkdownProcessResult> {
 	try {
 		const { unified } = await import('unified');
@@ -31,12 +39,12 @@ export async function processMarkdown(markdown: string): Promise<MarkdownProcess
 
 		// TOC extraction plugin
 		const tocPlugin = () => {
-			return (tree: any) => {
+			return (tree: MarkdownNode) => {
 				const headings: TocItem[] = [];
 
-				const extractText = (node: any): string => {
+				const extractText = (node: MarkdownNode): string => {
 					if (node.type === 'text') {
-						return node.value;
+						return node.value || '';
 					}
 					if (node.children) {
 						return node.children.map(extractText).join('');
@@ -44,7 +52,7 @@ export async function processMarkdown(markdown: string): Promise<MarkdownProcess
 					return '';
 				};
 
-				const visit = (node: any) => {
+				const visit = (node: MarkdownNode) => {
 					if (node.tagName && /^h[1-6]$/.test(node.tagName)) {
 						const level = parseInt(node.tagName.charAt(1));
 						const text = extractText(node).trim();

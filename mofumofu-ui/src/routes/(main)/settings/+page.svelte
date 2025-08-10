@@ -94,38 +94,36 @@
 		return authStore.isAuthenticated ? 'personal' : 'display';
 	};
 
-	onMount(async () => {
+	onMount(() => {
 		// URL 해시에서 초기 섹션 설정
 		selectedSection = getInitialSection();
 
 		// Initialize settings with default data
 		settingsStore.initializeWithDefaults();
+	});
 
-		// Load user profile data from user store or API if needed
-		if (authStore.isAuthenticated) {
-			// Ensure user profile is loaded
-			if (!userStore.user) {
-				await userStore.loadProfile();
+	// userStore.user가 로드되면 자동으로 settings 업데이트
+	let userInitialized = $state(false);
+
+	$effect(() => {
+		if (authStore.isAuthenticated && userStore.user && !userInitialized) {
+			settingsStore.updatePersonalSilent({
+				handle: userStore.user.handle,
+				name: userStore.user.name,
+				bio: userStore.user.bio || '',
+				location: userStore.user.location || '',
+				website: userStore.user.website || '',
+				profileImage: userStore.user.profile_image || null,
+				bannerImage: userStore.user.banner_image || null
+			});
+
+			// API 호출이 성공하면 인증된 상태이므로 personal 섹션으로 변경 (단, 해시가 없는 경우만)
+			if (!window.location.hash && selectedSection === 'display') {
+				selectedSection = 'personal';
+				window.location.hash = 'personal';
 			}
 
-			// Initialize settings from user store data
-			if (userStore.user) {
-				settingsStore.updatePersonalSilent({
-					handle: userStore.user.handle,
-					name: userStore.user.name,
-					bio: userStore.user.bio || '',
-					location: userStore.user.location || '',
-					website: userStore.user.website || '',
-					profileImage: userStore.user.profile_image || null,
-					bannerImage: userStore.user.banner_image || null
-				});
-
-				// API 호출이 성공하면 인증된 상태이므로 personal 섹션으로 변경 (단, 해시가 없는 경우만)
-				if (!window.location.hash && selectedSection === 'display') {
-					selectedSection = 'personal';
-					window.location.hash = 'personal';
-				}
-			}
+			userInitialized = true;
 		}
 	});
 

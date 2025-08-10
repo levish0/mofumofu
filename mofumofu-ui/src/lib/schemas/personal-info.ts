@@ -24,8 +24,8 @@ export function createPersonalInfoSchema() {
 		]),
 		profileImage: v.nullable(v.string()),
 		bannerImage: v.nullable(v.string()),
-		profileImageFile: v.nullable(v.any()),
-		bannerImageFile: v.nullable(v.any())
+		profileImageFile: v.nullable(v.instance(Blob)),
+		bannerImageFile: v.nullable(v.instance(Blob))
 	});
 }
 

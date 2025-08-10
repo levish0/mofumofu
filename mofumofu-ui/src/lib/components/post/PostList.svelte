@@ -1,7 +1,7 @@
 <script lang="ts">
 	import PostCard from './PostCard.svelte';
 	import PostCardSkeleton from './PostCardSkeleton.svelte';
-	import { useInfiniteScroll } from '$lib/hooks/useInfiniteScroll.svelte';
+	import { useInfiniteScroll } from '$lib/hooks/ui/useInfiniteScroll.svelte';
 	import type { PostListItem } from '$lib/api/post/types';
 
 	let {

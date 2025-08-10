@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '$lib/styles/markdown.css';
-	import { useResizable } from '$lib/hooks/useResizable.svelte';
+	import { useResizable } from '$lib/hooks/ui/useResizable.svelte';
 	import WriteEditor from '$lib/components/write/WriteEditor.svelte';
 	import WritePreview from '$lib/components/write/WritePreview.svelte';
 	import { processMarkdown } from '$lib/utils/markdown';

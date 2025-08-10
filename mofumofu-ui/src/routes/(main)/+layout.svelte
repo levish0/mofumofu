@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Navbar from '$lib/components/navbar/Navbar.svelte';
 	import SearchPanel from '$lib/components/search/SearchPanel.svelte';
-	import { useNavbarScroll } from '$lib/hooks/useNavbarScroll.svelte';
+	import { useNavbarScroll } from '$lib/hooks/ui/useNavbarScroll.svelte';
 	import { getContext, setContext } from 'svelte';
 
 	let { children } = $props();

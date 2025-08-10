@@ -215,7 +215,7 @@ export class PersonalSettingsStore {
 	}
 
 	// Save changes
-	async save(accountPassword?: string): Promise<{ success: boolean; error?: any }> {
+	async save(accountPassword?: string): Promise<{ success: boolean; error?: string }> {
 		try {
 			// Validate before saving
 			const isValid = await this.validate();
@@ -294,7 +294,7 @@ export class PersonalSettingsStore {
 		} catch (error) {
 			console.error('Failed to save personal settings:', error);
 			this.errors = { general: 'Failed to save personal settings. Please try again.' };
-			return { success: false, error };
+			return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
 		}
 	}
 

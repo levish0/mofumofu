@@ -2,6 +2,18 @@
 	import Cropper from 'svelte-easy-crop';
 	import { Button } from '../ui/button';
 
+	interface CropArea {
+		x: number;
+		y: number;
+		width: number;
+		height: number;
+	}
+
+	interface CropData {
+		croppedAreaPixels: CropArea;
+		croppedAreaPercentage: CropArea;
+	}
+
 	let {
 		isOpen = $bindable(false),
 		imageSrc,
@@ -14,14 +26,14 @@
 		imageSrc: string;
 		aspectRatio?: number;
 		cropShape?: 'rect' | 'round';
-		onCrop: (data: { croppedAreaPixels: any; croppedAreaPercentage: any }) => void;
+		onCrop: (data: CropData) => void;
 		onCancel: () => void;
 	}>();
 
 	let crop = $state({ x: 0, y: 0 });
 	let zoom = $state(1);
-	let croppedAreaPixels = $state<any>(null);
-	let croppedAreaPercentage = $state<any>(null);
+	let croppedAreaPixels = $state<CropArea | null>(null);
+	let croppedAreaPercentage = $state<CropArea | null>(null);
 
 	function handleSave() {
 		if (croppedAreaPixels && croppedAreaPercentage) {

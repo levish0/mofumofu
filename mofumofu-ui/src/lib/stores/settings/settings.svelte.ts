@@ -1,4 +1,5 @@
 import { personalSettingsStore } from './personal.svelte';
+import type { PersonalInfo } from '$lib/schemas/personal-info';
 import type {
 	DisplaySettings,
 	NotificationSettings,
@@ -173,13 +174,13 @@ class SettingsStore {
 	}
 
 	// Update specific section - delegate personal to personalSettingsStore
-	updatePersonal(updates: any) {
+	updatePersonal(updates: Partial<PersonalInfo>) {
 		personalSettingsStore.update(updates);
 		this.checkForChanges();
 	}
 
 	// Update personal info without triggering change detection (for initial load)
-	updatePersonalSilent(updates: any) {
+	updatePersonalSilent(updates: Partial<PersonalInfo>) {
 		personalSettingsStore.updateSilent(updates);
 	}
 
