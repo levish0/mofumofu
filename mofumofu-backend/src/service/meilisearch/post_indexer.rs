@@ -1,18 +1,20 @@
 use crate::connection::meilisearch::{MeilisearchClient, MeilisearchPost};
 use tracing::warn;
 
-pub async fn setup_posts_index(meilisearch: &MeilisearchClient) -> Result<(), meilisearch_sdk::errors::Error> {
+pub async fn setup_posts_index(
+    meilisearch: &MeilisearchClient,
+) -> Result<(), meilisearch_sdk::errors::Error> {
     let posts_index = meilisearch.get_client().index("posts");
-    
+
     // 검색 가능한 필드 설정
     posts_index
         .set_searchable_attributes(&[
-            "title", 
-            "content", 
-            "summary", 
-            "hashtags", 
-            "user_handle", 
-            "user_name"
+            "title",
+            "content",
+            "summary",
+            "hashtags",
+            "user_handle",
+            "user_name",
         ])
         .await?;
 
@@ -20,22 +22,17 @@ pub async fn setup_posts_index(meilisearch: &MeilisearchClient) -> Result<(), me
     posts_index
         .set_filterable_attributes(&[
             "user_id",
-            "user_handle", 
-            "hashtags", 
+            "user_handle",
+            "hashtags",
             "created_at",
             "like_count",
-            "view_count"
+            "view_count",
         ])
         .await?;
 
     // 정렬 가능한 필드 설정
     posts_index
-        .set_sortable_attributes(&[
-            "created_at",
-            "like_count", 
-            "view_count",
-            "comment_count"
-        ])
+        .set_sortable_attributes(&["created_at", "like_count", "view_count", "comment_count"])
         .await?;
 
     Ok(())
@@ -76,10 +73,10 @@ pub async fn search_posts(
 ) -> Result<Vec<MeilisearchPost>, meilisearch_sdk::errors::Error> {
     let posts_index = meilisearch.get_client().index("posts");
     let offset = (page - 1) * page_size;
-    
+
     // 필터 조건 구성
     let mut filters = Vec::new();
-    
+
     if let Some(tags) = hashtags {
         if !tags.is_empty() {
             let hashtag_filters: Vec<String> = tags
@@ -89,19 +86,19 @@ pub async fn search_posts(
             filters.push(format!("({})", hashtag_filters.join(" OR ")));
         }
     }
-    
+
     if let Some(handle) = user_handle {
         filters.push(format!("user_handle = '{}'", handle));
     }
-    
+
     if let Some(from_timestamp) = date_from {
         filters.push(format!("created_at >= {}", from_timestamp));
     }
-    
+
     if let Some(to_timestamp) = date_to {
         filters.push(format!("created_at <= {}", to_timestamp));
     }
-    
+
     if let Some(min_likes_count) = min_likes {
         filters.push(format!("like_count >= {}", min_likes_count));
     }

@@ -9,7 +9,7 @@ pub struct Model {
 
     #[sea_orm(column_type = "Text", not_null, string_len = 200)]
     pub title: String,
-    
+
     #[sea_orm(column_type = "Text", nullable)]
     pub thumbnail_image: Option<String>,
 

@@ -24,7 +24,10 @@ pub async fn get_posts_around_page(
     State(state): State<AppState>,
     ValidatedJson(payload): ValidatedJson<GetPostsAroundPageRequest>,
 ) -> Result<impl IntoResponse, Errors> {
-    info!("Received POST request to get posts around page: {:?}", payload);
+    info!(
+        "Received POST request to get posts around page: {:?}",
+        payload
+    );
 
     let response = service_get_posts_around_page(&state.conn, &state.meilisearch, payload).await?;
 

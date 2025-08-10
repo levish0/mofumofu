@@ -205,8 +205,11 @@ static CONFIG: LazyLock<DbConfig> = LazyLock::new(|| {
         task_server_port: env::var("TASK_SERVER_PORT").unwrap_or_else(|_| "7000".to_string()),
 
         // Meilisearch
-        meilisearch_host: env::var("MEILISEARCH_HOST").unwrap_or_else(|_| "http://localhost:7700".to_string()),
-        meilisearch_api_key: env::var("MEILISEARCH_API_KEY").ok().filter(|key| !key.is_empty()),
+        meilisearch_host: env::var("MEILISEARCH_HOST")
+            .unwrap_or_else(|_| "http://localhost:7700".to_string()),
+        meilisearch_api_key: env::var("MEILISEARCH_API_KEY")
+            .ok()
+            .filter(|key| !key.is_empty()),
 
         cors_allowed_origins: cors_origins,
         cors_allowed_headers: cors_headers,

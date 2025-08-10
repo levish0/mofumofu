@@ -1,4 +1,4 @@
-use crate::entity::hash_tags::{Entity as HashTagEntity, Model as HashTagModel, Column};
+use crate::entity::hash_tags::{Column, Entity as HashTagEntity, Model as HashTagModel};
 use crate::service::error::errors::Errors;
 use sea_orm::{ConnectionTrait, EntityTrait, QueryOrder, QuerySelect};
 

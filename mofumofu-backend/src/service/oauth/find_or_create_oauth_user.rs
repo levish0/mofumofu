@@ -50,15 +50,15 @@ where
             is_new_user: false,
         });
     }
-    
+
     // 3. handle이 없으면 로그인 시도인데 유저가 없으므로 에러
     let handle = handle.ok_or(Errors::UserNotFound)?;
-    
+
     // 4. 핸들 중복 확인 (가입 시에만)
     if repository_find_user_by_handle(txn, handle).await?.is_some() {
         return Err(Errors::UserHandleAlreadyExists);
     }
-    
+
     // 5. 새 유저 생성
     repository_create_oauth_user(txn, email, name, handle, profile_image).await?;
     // 6. 생성된 유저 조회

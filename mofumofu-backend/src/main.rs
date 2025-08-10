@@ -41,7 +41,8 @@ pub async fn run_server() -> anyhow::Result<()> {
     })?;
 
     // Meilisearch 인덱스 설정
-    if let Err(e) = crate::service::meilisearch::post_indexer::setup_posts_index(&meilisearch).await {
+    if let Err(e) = crate::service::meilisearch::post_indexer::setup_posts_index(&meilisearch).await
+    {
         error!("Failed to setup Meilisearch posts index: {}", e);
     } else {
         info!("Meilisearch posts index setup completed");

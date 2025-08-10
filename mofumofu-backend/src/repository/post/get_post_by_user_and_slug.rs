@@ -20,7 +20,10 @@ where
         .one(conn)
         .await
         .map_err(|e| {
-            error!("Database error while fetching post by user_id {} and slug {}: {}", user_id, slug, e);
+            error!(
+                "Database error while fetching post by user_id {} and slug {}: {}",
+                user_id, slug, e
+            );
             Errors::SysInternalError("Failed to fetch post".to_string())
         })?;
 

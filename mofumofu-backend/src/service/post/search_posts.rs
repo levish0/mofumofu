@@ -1,6 +1,6 @@
-use crate::dto::post::request::{SearchPostsRequest, PostSortOrder};
-use crate::dto::post::response::{GetPostsResponse, PostListItem};
 use crate::connection::meilisearch::MeilisearchClient;
+use crate::dto::post::request::{PostSortOrder, SearchPostsRequest};
+use crate::dto::post::response::{GetPostsResponse, PostListItem};
 use crate::service::error::errors::Errors;
 use crate::service::meilisearch::post_indexer;
 use sea_orm::{ConnectionTrait, TransactionTrait};
@@ -30,7 +30,11 @@ where
     };
 
     // 페이지 범위 계산 (around 방식)
-    let start_page = if target_page > pages_around { target_page - pages_around } else { 1 };
+    let start_page = if target_page > pages_around {
+        target_page - pages_around
+    } else {
+        1
+    };
     let end_page = target_page + pages_around;
     let total_pages_to_fetch = end_page - start_page + 1;
     let total_items_to_fetch = total_pages_to_fetch * page_size;

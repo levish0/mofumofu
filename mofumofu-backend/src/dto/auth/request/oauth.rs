@@ -6,7 +6,11 @@ use validator::Validate;
 pub struct GoogleLoginRequest {
     #[validate(length(min = 1, message = "Authorization code is required"))]
     pub code: String,
-    #[validate(length(min = 3, max = 20, message = "Handle must be between 3 and 20 characters"))]
+    #[validate(length(
+        min = 3,
+        max = 20,
+        message = "Handle must be between 3 and 20 characters"
+    ))]
     pub handle: Option<String>,
 }
 
@@ -14,6 +18,10 @@ pub struct GoogleLoginRequest {
 pub struct GithubLoginRequest {
     #[validate(length(min = 1, message = "Authorization code is required"))]
     pub code: String,
-    #[validate(length(min = 3, max = 20, message = "Handle must be between 3 and 20 characters"))]
+    #[validate(length(
+        min = 3,
+        max = 20,
+        message = "Handle must be between 3 and 20 characters"
+    ))]
     pub handle: Option<String>,
 }

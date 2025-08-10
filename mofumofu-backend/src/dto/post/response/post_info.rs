@@ -34,7 +34,6 @@ impl IntoResponse for PostInfoResponse {
     }
 }
 
-
 #[derive(Debug, Clone, Serialize, ToSchema)]
 pub struct PostSummary {
     pub id: Uuid,

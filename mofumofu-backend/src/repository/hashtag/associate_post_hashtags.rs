@@ -1,8 +1,14 @@
-use crate::entity::post_hash_tags::{Entity as PostHashTagEntity, ActiveModel as PostHashTagActiveModel};
-use crate::entity::hash_tags::{Entity as HashTagEntity, ActiveModel as HashTagActiveModel, Column as HashTagColumn};
+use crate::entity::hash_tags::{
+    ActiveModel as HashTagActiveModel, Column as HashTagColumn, Entity as HashTagEntity,
+};
+use crate::entity::post_hash_tags::{
+    ActiveModel as PostHashTagActiveModel, Entity as PostHashTagEntity,
+};
 use crate::service::error::errors::Errors;
 use crate::utils::hashtag_normalizer::normalize_hashtag;
-use sea_orm::{ActiveModelTrait, ColumnTrait, ConnectionTrait, EntityTrait, QueryFilter, Set, TransactionTrait};
+use sea_orm::{
+    ActiveModelTrait, ColumnTrait, ConnectionTrait, EntityTrait, QueryFilter, Set, TransactionTrait,
+};
 use uuid::Uuid;
 
 pub async fn repository_associate_post_hashtags<C>(
@@ -18,7 +24,7 @@ where
 
     for tag_name in hashtag_names {
         let normalized_name = normalize_hashtag(tag_name);
-        
+
         if normalized_name.is_empty() {
             continue;
         }

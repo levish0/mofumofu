@@ -1,6 +1,6 @@
-use crate::service::error::errors::Errors;
 use crate::repository::post::get_post_by_user_and_slug::repository_get_post_by_user_and_slug;
-use crate::tasks_bridge::post_client::{queue_post_thumbnail_update};
+use crate::service::error::errors::Errors;
+use crate::tasks_bridge::post_client::queue_post_thumbnail_update;
 use axum::extract::Multipart;
 use chrono::Utc;
 use reqwest::Client;
@@ -60,10 +60,15 @@ where
     })?;
 
     if slug.trim().is_empty() || slug.len() > 80 {
-        return Err(Errors::ValidationError("Slug must be between 1 and 80 characters".to_string()));
+        return Err(Errors::ValidationError(
+            "Slug must be between 1 and 80 characters".to_string(),
+        ));
     }
 
-    info!("Processing thumbnail image upload for post slug: {} by user: {}", slug, user_uuid);
+    info!(
+        "Processing thumbnail image upload for post slug: {} by user: {}",
+        slug, user_uuid
+    );
 
     // 포스트 존재 확인 및 작성자 권한 검증 (user_id와 slug로 조회하므로 권한 검증 불필요)
     let post = repository_get_post_by_user_and_slug(conn, user_uuid, &slug).await?;
@@ -119,7 +124,10 @@ where
         Errors::SysInternalError("Failed to queue thumbnail image upload task".to_string())
     })?;
 
-    info!("Thumbnail image upload task queued for post slug: {} by user: {}", slug, user_uuid);
+    info!(
+        "Thumbnail image upload task queued for post slug: {} by user: {}",
+        slug, user_uuid
+    );
 
     Ok(())
 }

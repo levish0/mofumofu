@@ -18,7 +18,10 @@ where
         .one(conn)
         .await
         .map_err(|e| {
-            error!("Database error while fetching post by ID {}: {}", post_id, e);
+            error!(
+                "Database error while fetching post by ID {}: {}",
+                post_id, e
+            );
             Errors::SysInternalError("Failed to fetch post".to_string())
         })?;
 

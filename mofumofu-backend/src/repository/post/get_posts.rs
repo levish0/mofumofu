@@ -1,7 +1,9 @@
 use crate::dto::post::request::PostSortOrder;
 use crate::entity::posts::{Column, Entity as PostEntity, Model as PostModel};
 use crate::service::error::errors::Errors;
-use sea_orm::{ColumnTrait, ConnectionTrait, EntityTrait, QueryFilter, QueryOrder, PaginatorTrait, QuerySelect};
+use sea_orm::{
+    ColumnTrait, ConnectionTrait, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder, QuerySelect,
+};
 
 pub async fn repository_get_posts<C>(
     conn: &C,
@@ -55,7 +57,7 @@ where
         1
     };
     let end_page = target_page + pages_around;
-    
+
     let start_offset = (start_page - 1) * page_size;
     let total_items = (end_page - start_page + 1) * page_size;
 
@@ -86,9 +88,7 @@ pub async fn repository_get_posts_count<C>(conn: &C) -> Result<u64, Errors>
 where
     C: ConnectionTrait,
 {
-    let count = PostEntity::find()
-        .count(conn)
-        .await?;
+    let count = PostEntity::find().count(conn).await?;
 
     Ok(count)
 }

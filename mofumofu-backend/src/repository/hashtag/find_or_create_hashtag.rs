@@ -1,4 +1,6 @@
-use crate::entity::hash_tags::{Entity as HashTagEntity, Model as HashTagModel, ActiveModel as HashTagActiveModel, Column};
+use crate::entity::hash_tags::{
+    ActiveModel as HashTagActiveModel, Column, Entity as HashTagEntity, Model as HashTagModel,
+};
 use crate::service::error::errors::Errors;
 use crate::utils::hashtag_normalizer::normalize_hashtag;
 use sea_orm::{ActiveModelTrait, ColumnTrait, ConnectionTrait, EntityTrait, QueryFilter, Set};
@@ -12,7 +14,7 @@ where
     C: ConnectionTrait,
 {
     let normalized_name = normalize_hashtag(tag_name);
-    
+
     if let Some(existing_tag) = HashTagEntity::find()
         .filter(Column::Name.eq(&normalized_name))
         .one(conn)

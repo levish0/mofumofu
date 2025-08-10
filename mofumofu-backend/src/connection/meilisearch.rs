@@ -10,7 +10,7 @@ pub struct MeilisearchClient {
 impl MeilisearchClient {
     pub fn new() -> Result<Self, meilisearch_sdk::errors::Error> {
         let config = DbConfig::get();
-        
+
         let client = if let Some(api_key) = &config.meilisearch_api_key {
             Client::new(&config.meilisearch_host, Some(api_key.as_str()))?
         } else {

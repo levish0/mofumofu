@@ -5,12 +5,14 @@ use crate::dto::follow::request::delete::DeleteFollowRequest;
 use crate::dto::follow::response::follow_list::FollowListResponse;
 use crate::dto::post::request::create_post::CreatePostRequest;
 use crate::dto::post::request::get_by_handle_and_slug::GetPostByHandleAndSlugRequest;
-use crate::dto::post::request::{GetPostsRequest, GetPostsAroundPageRequest, SearchPostsRequest, PostSortOrder};
-use crate::dto::post::response::post_info::{PostInfoResponse, PostAuthor};
+use crate::dto::post::request::thumbnail_image::PostThumbnailForm;
+use crate::dto::post::request::{
+    GetPostsAroundPageRequest, GetPostsRequest, PostSortOrder, SearchPostsRequest,
+};
+use crate::dto::post::response::post_info::{PostAuthor, PostInfoResponse};
 use crate::dto::post::response::{GetPostsResponse, PostListItem};
 use crate::dto::user::request::avatar_image::ProfileAvatarForm;
 use crate::dto::user::request::banner_image::ProfileBannerForm;
-use crate::dto::post::request::thumbnail_image::PostThumbnailForm;
 use crate::dto::user::request::create::CreateUserRequest;
 use crate::dto::user::request::get_profile::GetUserProfileRequest;
 use crate::dto::user::request::update_profile::UpdateProfileRequest;

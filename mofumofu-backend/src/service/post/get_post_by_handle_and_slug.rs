@@ -1,8 +1,8 @@
-use crate::dto::post::response::post_info::{PostInfoResponse, PostAuthor};
+use crate::dto::post::response::post_info::{PostAuthor, PostInfoResponse};
+use crate::repository::post::get_post_by_handle_and_slug::repository_get_post_by_handle_and_slug;
 use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
 use crate::service::error::errors::Errors;
 use sea_orm::{ConnectionTrait, TransactionTrait};
-use crate::repository::post::get_post_by_handle_and_slug::repository_get_post_by_handle_and_slug;
 
 pub async fn service_get_post_by_handle_and_slug<C>(
     conn: &C,
@@ -13,9 +13,10 @@ where
     C: ConnectionTrait + TransactionTrait,
 {
     let post = repository_get_post_by_handle_and_slug(conn, handle, slug).await?;
-    
+
     // Get author information
-    let user = repository_find_user_by_uuid(conn, &post.user_id).await?
+    let user = repository_find_user_by_uuid(conn, &post.user_id)
+        .await?
         .ok_or(Errors::UserNotFound)?;
 
     Ok(PostInfoResponse {

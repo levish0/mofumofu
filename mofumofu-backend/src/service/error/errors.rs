@@ -7,14 +7,15 @@ use crate::service::error::protocol::oauth::{
     OAUTH_INVALID_AUTH_URL, OAUTH_INVALID_REDIRECT_URL, OAUTH_INVALID_TOKEN_URL,
     OAUTH_TOKEN_EXCHANGE_FAILED, OAUTH_USER_INFO_FETCH_FAILED, OAUTH_USER_INFO_PARSE_FAILED,
 };
+use crate::service::error::protocol::post::POST_NOT_FOUND;
 use crate::service::error::protocol::system::{
     SYS_DATABASE_ERROR, SYS_HASHING_ERROR, SYS_INTERNAL_ERROR, SYS_NOT_FOUND,
     SYS_TOKEN_CREATION_ERROR, SYS_TRANSACTION_ERROR,
 };
 use crate::service::error::protocol::user::{
-    USER_HANDLE_GENERATION_FAILED, USER_HANDLE_ALREADY_EXISTS, USER_INVALID_PASSWORD, USER_INVALID_TOKEN,
-    USER_NO_REFRESH_TOKEN, USER_NOT_FOUND, USER_NOT_VERIFIED, USER_TOKEN_EXPIRED,
-    USER_UNAUTHORIZED,
+    USER_HANDLE_ALREADY_EXISTS, USER_HANDLE_GENERATION_FAILED, USER_INVALID_PASSWORD,
+    USER_INVALID_TOKEN, USER_NO_REFRESH_TOKEN, USER_NOT_FOUND, USER_NOT_VERIFIED,
+    USER_TOKEN_EXPIRED, USER_UNAUTHORIZED,
 };
 use axum::Json;
 use axum::extract::Request;
@@ -24,7 +25,6 @@ use sea_orm::{DbErr, TransactionError};
 use serde::Serialize;
 use tracing::error;
 use utoipa::ToSchema;
-use crate::service::error::protocol::post::POST_NOT_FOUND;
 // 이 모듈은 애플리케이션의 오류 처리 시스템을 구현합니다.
 // 주요 기능:
 // 1. 다양한 오류 유형 정의 (사용자, 문서, 권한, 시스템 등)
@@ -77,10 +77,10 @@ pub enum Errors {
     UserUnauthorized, // 인증되지 않은 사용자
     UserHandleGenerationFailed,
     UserHandleAlreadyExists, // 핸들이 이미 존재함
-    UserTokenExpired, // 만료된 토큰
+    UserTokenExpired,        // 만료된 토큰
     UserNoRefreshToken,
     UserInvalidToken, // 유효하지 않은 토큰
-    
+
     // Post
     PostNotFound,
 
@@ -126,15 +126,13 @@ impl IntoResponse for Errors {
                 USER_HANDLE_GENERATION_FAILED,
                 None,
             ),
-            Errors::UserHandleAlreadyExists => (
-                StatusCode::CONFLICT,
-                USER_HANDLE_ALREADY_EXISTS,
-                None,
-            ),
+            Errors::UserHandleAlreadyExists => {
+                (StatusCode::CONFLICT, USER_HANDLE_ALREADY_EXISTS, None)
+            }
             Errors::UserTokenExpired => (StatusCode::UNAUTHORIZED, USER_TOKEN_EXPIRED, None),
             Errors::UserNoRefreshToken => (StatusCode::UNAUTHORIZED, USER_NO_REFRESH_TOKEN, None),
             Errors::UserInvalidToken => (StatusCode::UNAUTHORIZED, USER_INVALID_TOKEN, None),
-            
+
             Errors::PostNotFound => (StatusCode::NOT_FOUND, POST_NOT_FOUND, None),
 
             // Follow

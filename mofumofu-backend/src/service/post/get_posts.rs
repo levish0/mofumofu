@@ -1,11 +1,13 @@
-use crate::dto::post::request::{GetPostsRequest, GetPostsAroundPageRequest, PostSortOrder};
-use crate::dto::post::response::{GetPostsResponse, PostListItem};
-use crate::repository::post::get_posts::{repository_get_posts, repository_get_posts_around_page, repository_get_posts_count};
-use crate::repository::hashtag::get_hashtags_by_post::repository_get_hashtags_by_posts;
-use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
 use crate::connection::meilisearch::MeilisearchClient;
-use crate::service::meilisearch::post_indexer;
+use crate::dto::post::request::{GetPostsAroundPageRequest, GetPostsRequest, PostSortOrder};
+use crate::dto::post::response::{GetPostsResponse, PostListItem};
+use crate::repository::hashtag::get_hashtags_by_post::repository_get_hashtags_by_posts;
+use crate::repository::post::get_posts::{
+    repository_get_posts, repository_get_posts_around_page, repository_get_posts_count,
+};
+use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
 use crate::service::error::errors::Errors;
+use crate::service::meilisearch::post_indexer;
 use sea_orm::{ConnectionTrait, TransactionTrait};
 
 pub async fn service_get_posts<C>(
@@ -39,13 +41,15 @@ where
         sort_str,
         page,
         page_size,
-    ).await {
+    )
+    .await
+    {
         Ok(posts) => posts,
         Err(e) => {
             // Meilisearch 오류 시 DB로 폴백
             tracing::warn!("Meilisearch fallback for get_posts: {}", e);
             let posts = repository_get_posts(conn, page, page_size, &sort_order).await?;
-            
+
             if posts.is_empty() {
                 return Ok(GetPostsResponse {
                     posts: Vec::new(),
@@ -55,23 +59,25 @@ where
                     total_count: Some(0),
                 });
             }
-            
+
             // DB 결과를 PostListItem으로 변환 (기존 로직)
             let post_ids: Vec<uuid::Uuid> = posts.iter().map(|p| p.id).collect();
-            let post_hashtags_map = repository_get_hashtags_by_posts(conn, &post_ids).await?
+            let post_hashtags_map = repository_get_hashtags_by_posts(conn, &post_ids)
+                .await?
                 .into_iter()
                 .collect::<std::collections::HashMap<_, _>>();
-            
+
             let mut post_items = Vec::new();
             for post in posts {
-                let user = repository_find_user_by_uuid(conn, &post.user_id).await?
+                let user = repository_find_user_by_uuid(conn, &post.user_id)
+                    .await?
                     .ok_or(Errors::UserNotFound)?;
-                
+
                 let hashtags = post_hashtags_map
                     .get(&post.id)
                     .map(|tags| tags.iter().map(|tag| tag.name.clone()).collect())
                     .unwrap_or_else(Vec::new);
-                
+
                 post_items.push(PostListItem {
                     id: post.id,
                     title: post.title,
@@ -88,10 +94,10 @@ where
                     hashtags,
                 });
             }
-            
+
             let has_more = post_items.len() == page_size as usize;
             let total_count = Some(repository_get_posts_count(conn).await?);
-            
+
             return Ok(GetPostsResponse {
                 posts: post_items,
                 current_page: page,
@@ -164,17 +170,21 @@ where
     // 정렬 문자열 변환
     let sort_str = match sort_order {
         PostSortOrder::Popular => "popular",
-        PostSortOrder::Oldest => "oldest", 
+        PostSortOrder::Oldest => "oldest",
         PostSortOrder::Latest => "latest",
     };
 
     // 페이지 범위 계산
-    let start_page = if target_page > pages_around { target_page - pages_around } else { 1 };
+    let start_page = if target_page > pages_around {
+        target_page - pages_around
+    } else {
+        1
+    };
     let end_page = target_page + pages_around;
     let total_pages_to_fetch = end_page - start_page + 1;
     let total_items_to_fetch = total_pages_to_fetch * page_size;
 
-    // Meilisearch를 사용하여 더 많은 데이터를 한 번에 가져오기 
+    // Meilisearch를 사용하여 더 많은 데이터를 한 번에 가져오기
     let meilisearch_posts = match post_indexer::search_posts(
         meilisearch,
         None, // query
@@ -186,13 +196,22 @@ where
         sort_str,
         start_page, // 시작 페이지부터 가져오기
         total_items_to_fetch,
-    ).await {
+    )
+    .await
+    {
         Ok(posts) => posts,
         Err(e) => {
             // Meilisearch 오류 시 DB로 폴백
             tracing::warn!("Meilisearch fallback for get_posts_around_page: {}", e);
-            let posts = repository_get_posts_around_page(conn, target_page, page_size, pages_around, &sort_order).await?;
-            
+            let posts = repository_get_posts_around_page(
+                conn,
+                target_page,
+                page_size,
+                pages_around,
+                &sort_order,
+            )
+            .await?;
+
             if posts.is_empty() {
                 return Ok(GetPostsResponse {
                     posts: Vec::new(),
@@ -202,23 +221,25 @@ where
                     total_count: Some(0),
                 });
             }
-            
+
             // DB 결과를 PostListItem으로 변환 (기존 로직)
             let post_ids: Vec<uuid::Uuid> = posts.iter().map(|p| p.id).collect();
-            let post_hashtags_map = repository_get_hashtags_by_posts(conn, &post_ids).await?
+            let post_hashtags_map = repository_get_hashtags_by_posts(conn, &post_ids)
+                .await?
                 .into_iter()
                 .collect::<std::collections::HashMap<_, _>>();
-            
+
             let mut post_items = Vec::new();
             for post in posts {
-                let user = repository_find_user_by_uuid(conn, &post.user_id).await?
+                let user = repository_find_user_by_uuid(conn, &post.user_id)
+                    .await?
                     .ok_or(Errors::UserNotFound)?;
-                
+
                 let hashtags = post_hashtags_map
                     .get(&post.id)
                     .map(|tags| tags.iter().map(|tag| tag.name.clone()).collect())
                     .unwrap_or_else(Vec::new);
-                
+
                 post_items.push(PostListItem {
                     id: post.id,
                     title: post.title,
@@ -235,10 +256,10 @@ where
                     hashtags,
                 });
             }
-            
+
             let has_more = post_items.len() == ((pages_around * 2 + 1) * page_size) as usize;
             let total_count = Some(repository_get_posts_count(conn).await?);
-            
+
             return Ok(GetPostsResponse {
                 posts: post_items,
                 current_page: target_page,

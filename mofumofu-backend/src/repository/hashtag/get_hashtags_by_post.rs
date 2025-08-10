@@ -1,7 +1,9 @@
 use crate::entity::hash_tags::{Entity as HashTagEntity, Model as HashTagModel};
-use crate::entity::post_hash_tags::{Entity as PostHashTagEntity, Column as PostHashTagColumn};
+use crate::entity::post_hash_tags::{Column as PostHashTagColumn, Entity as PostHashTagEntity};
 use crate::service::error::errors::Errors;
-use sea_orm::{ColumnTrait, ConnectionTrait, EntityTrait, QueryFilter, JoinType, QuerySelect, RelationTrait};
+use sea_orm::{
+    ColumnTrait, ConnectionTrait, EntityTrait, JoinType, QueryFilter, QuerySelect, RelationTrait,
+};
 use uuid::Uuid;
 
 pub async fn repository_get_hashtags_by_post<C>(
@@ -12,7 +14,10 @@ where
     C: ConnectionTrait,
 {
     let hashtags = HashTagEntity::find()
-        .join(JoinType::InnerJoin, crate::entity::hash_tags::Relation::PostHashTags.def())
+        .join(
+            JoinType::InnerJoin,
+            crate::entity::hash_tags::Relation::PostHashTags.def(),
+        )
         .filter(PostHashTagColumn::PostId.eq(post_id))
         .all(conn)
         .await?;
@@ -27,7 +32,7 @@ pub async fn repository_get_hashtags_by_posts<C>(
 where
     C: ConnectionTrait,
 {
-    use sea_orm::{FromQueryResult};
+    use sea_orm::FromQueryResult;
 
     #[derive(FromQueryResult)]
     struct PostHashTagResult {
@@ -40,7 +45,10 @@ where
     }
 
     let results: Vec<PostHashTagResult> = PostHashTagEntity::find()
-        .join(JoinType::InnerJoin, crate::entity::post_hash_tags::Relation::HashTag.def())
+        .join(
+            JoinType::InnerJoin,
+            crate::entity::post_hash_tags::Relation::HashTag.def(),
+        )
         .filter(PostHashTagColumn::PostId.is_in(post_ids.iter().cloned()))
         .select_only()
         .column(PostHashTagColumn::PostId)
@@ -53,8 +61,9 @@ where
         .all(conn)
         .await?;
 
-    let mut post_hashtags: std::collections::HashMap<Uuid, Vec<HashTagModel>> = std::collections::HashMap::new();
-    
+    let mut post_hashtags: std::collections::HashMap<Uuid, Vec<HashTagModel>> =
+        std::collections::HashMap::new();
+
     for result in results {
         let hashtag = HashTagModel {
             id: result.tag_id,
@@ -63,7 +72,7 @@ where
             created_at: result.created_at,
             last_used_at: result.last_used_at,
         };
-        
+
         post_hashtags
             .entry(result.post_id)
             .or_insert_with(Vec::new)

@@ -1,7 +1,11 @@
-use crate::entity::posts::{Column as PostColumn, Entity as PostEntity, Model as PostModel, Relation as PostRelation};
+use crate::entity::posts::{
+    Column as PostColumn, Entity as PostEntity, Model as PostModel, Relation as PostRelation,
+};
 use crate::entity::users::{Column as UserColumn, Entity as UserEntity, Relation as UserRelation};
 use crate::service::error::errors::Errors;
-use sea_orm::{ColumnTrait, ConnectionTrait, EntityTrait, QueryFilter, QuerySelect, JoinType, RelationTrait};
+use sea_orm::{
+    ColumnTrait, ConnectionTrait, EntityTrait, JoinType, QueryFilter, QuerySelect, RelationTrait,
+};
 
 pub async fn repository_find_post_by_handle_and_slug<C>(
     conn: &C,

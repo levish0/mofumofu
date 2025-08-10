@@ -20,10 +20,10 @@ impl Default for PostSortOrder {
 pub struct GetPostsRequest {
     #[validate(range(min = 1, message = "Page must be greater than 0."))]
     pub page: Option<u32>,
-    
+
     #[validate(range(min = 1, max = 20, message = "Page size must be between 1 and 20."))]
     pub page_size: Option<u32>,
-    
+
     pub sort: Option<PostSortOrder>,
 }
 
@@ -31,13 +31,13 @@ pub struct GetPostsRequest {
 pub struct GetPostsAroundPageRequest {
     #[validate(range(min = 1, message = "Target page must be greater than 0."))]
     pub target_page: u32,
-    
+
     #[validate(range(min = 1, max = 20, message = "Page size must be between 1 and 20."))]
     pub page_size: Option<u32>,
-    
+
     #[validate(range(min = 1, max = 5, message = "Pages around must be between 1 and 5."))]
     pub pages_around: Option<u32>,
-    
+
     pub sort: Option<PostSortOrder>,
 }
 
