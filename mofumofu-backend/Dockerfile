@@ -30,7 +30,7 @@ COPY src ./src
 
 # Build the application using previously cached dependencies.
 # The previous step's target_deps will be leveraged, making this step faster.
-RUN cargo build # --release
+RUN cargo build --release
 
 # Runtime stage
 FROM debian:stable-slim AS runtime
@@ -49,7 +49,7 @@ RUN groupadd -r app && useradd -r -g app app
 WORKDIR /app
 
 # Copy the binary from builder stage
-COPY --from=builder /app/target/debug/mofumofu-backend .
+COPY --from=builder /app/target/release/mofumofu-backend .
 
 # Copy environment file template (optional)
 # If you have an actual .env file, uncomment the line below.

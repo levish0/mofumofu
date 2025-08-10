@@ -1,10 +1,8 @@
 from sqlalchemy import Column, String, Boolean, Text
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+from .base import Base
 import uuid
-
-Base = declarative_base()
 
 
 class User(Base):
@@ -19,9 +17,7 @@ class User(Base):
     profile_image = Column(Text, nullable=True)
     banner_image = Column(Text, nullable=True)
     
-    # 관계 정의
-    posts = relationship("Post", back_populates="user", lazy="select")
-    refresh_tokens = relationship("UserRefreshToken", back_populates="user", lazy="select")
+    # 관계 정의는 __init__.py에서 모든 모델 로드 후 설정
 
     def __repr__(self):
         return f"<User(handle='{self.handle}', email='{self.email}')>"

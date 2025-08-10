@@ -1,11 +1,9 @@
 from sqlalchemy import Column, String, Text, Integer, DateTime, ForeignKey, Table
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+from .base import Base
 import uuid
-
-Base = declarative_base()
 
 # 다대다 관계를 위한 연결 테이블
 post_hash_tags = Table(
@@ -34,7 +32,4 @@ class Post(Base):
     view_count = Column(Integer, default=0, nullable=False)
     slug = Column(String(80), nullable=False)
     
-    # 관계 정의
-    user = relationship("User", back_populates="posts")
-    hashtags = relationship("HashTag", secondary=post_hash_tags, back_populates="posts")
-    comments = relationship("Comment", back_populates="post", lazy="select")
+    # 관계 정의는 __init__.py에서 모든 모델 로드 후 설정

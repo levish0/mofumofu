@@ -1,11 +1,9 @@
 from sqlalchemy import Column, Text, DateTime, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+from .base import Base
 import uuid
-
-Base = declarative_base()
 
 
 class Comment(Base):
@@ -17,9 +15,7 @@ class Comment(Base):
     user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     
-    # 관계 정의
-    post = relationship("Post", back_populates="comments")
-    user = relationship("User")
+    # 관계 정의는 __init__.py에서 모든 모델 로드 후 설정
 
     def __repr__(self):
         return f"<Comment(id='{self.id}', post_id='{self.post_id}')>"

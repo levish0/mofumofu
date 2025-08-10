@@ -1,10 +1,8 @@
 from sqlalchemy import Column, String
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+from .base import Base
 import uuid
-
-Base = declarative_base()
 
 
 class HashTag(Base):
@@ -13,8 +11,7 @@ class HashTag(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(50), nullable=False, unique=True, index=True)
     
-    # 관계 정의
-    posts = relationship("Post", secondary="post_hash_tags", back_populates="hashtags")
+    # 관계 정의는 __init__.py에서 모든 모델 로드 후 설정
 
     def __repr__(self):
         return f"<HashTag(name='{self.name}')>"
