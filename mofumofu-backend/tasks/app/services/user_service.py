@@ -1,5 +1,4 @@
-from sqlalchemy import select, update
-from app.models.user import User
+from app.models import User
 from app.services.base_db_service import base_db_service
 from typing import Optional
 import logging
@@ -8,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 class UserService:
-    """사용자 관련 데이터베이스 서비스"""
+    """사용자 관련 데이터베이스 서비스 (ORM 기반)"""
 
     def __init__(self):
         self.db = base_db_service
@@ -28,17 +27,13 @@ class UserService:
         """
         with self.db.session_factory() as session:
             try:
-                # handle로 사용자 조회 후 profile_image 업데이트
-                stmt = (
-                    update(User)
-                    .where(User.handle == user_handle)
-                    .values(profile_image=profile_image_url)
-                )
+                # ORM을 사용하여 사용자 조회 및 업데이트
+                user = session.query(User).filter(User.handle == user_handle).first()
 
-                result = session.execute(stmt)
-                session.commit()
+                if user:
+                    user.profile_image = profile_image_url
+                    session.commit()
 
-                if result.rowcount > 0:
                     action = "제거" if profile_image_url is None else "업데이트"
                     logger.info(
                         f"사용자 프로필 이미지 {action} 성공: handle={user_handle}, url={profile_image_url}"
@@ -68,17 +63,13 @@ class UserService:
         """
         with self.db.session_factory() as session:
             try:
-                # UUID로 사용자 조회 후 profile_image 업데이트
-                stmt = (
-                    update(User)
-                    .where(User.id == user_uuid)
-                    .values(profile_image=profile_image_url)
-                )
+                # ORM을 사용하여 사용자 조회 및 업데이트
+                user = session.query(User).filter(User.id == user_uuid).first()
 
-                result = session.execute(stmt)
-                session.commit()
+                if user:
+                    user.profile_image = profile_image_url
+                    session.commit()
 
-                if result.rowcount > 0:
                     action = "제거" if profile_image_url is None else "업데이트"
                     logger.info(
                         f"사용자 프로필 이미지 {action} 성공: uuid={user_uuid}, url={profile_image_url}"
@@ -105,9 +96,7 @@ class UserService:
         """
         with self.db.session_factory() as session:
             try:
-                stmt = select(User).where(User.id == user_uuid)
-                result = session.execute(stmt)
-                user = result.scalar_one_or_none()
+                user = session.query(User).filter(User.id == user_uuid).first()
 
                 if user:
                     logger.info(f"사용자 조회 성공: uuid={user_uuid}")
@@ -132,9 +121,7 @@ class UserService:
         """
         with self.db.session_factory() as session:
             try:
-                stmt = select(User).where(User.handle == user_handle)
-                result = session.execute(stmt)
-                user = result.scalar_one_or_none()
+                user = session.query(User).filter(User.handle == user_handle).first()
 
                 if user:
                     logger.info(f"사용자 조회 성공: handle={user_handle}")
@@ -162,17 +149,13 @@ class UserService:
         """
         with self.db.session_factory() as session:
             try:
-                # UUID로 사용자 조회 후 banner_image 업데이트
-                stmt = (
-                    update(User)
-                    .where(User.id == user_uuid)
-                    .values(banner_image=banner_image_url)
-                )
+                # ORM을 사용하여 사용자 조회 및 업데이트
+                user = session.query(User).filter(User.id == user_uuid).first()
 
-                result = session.execute(stmt)
-                session.commit()
+                if user:
+                    user.banner_image = banner_image_url
+                    session.commit()
 
-                if result.rowcount > 0:
                     action = "제거" if banner_image_url is None else "업데이트"
                     logger.info(
                         f"사용자 배너 이미지 {action} 성공: uuid={user_uuid}, url={banner_image_url}"
