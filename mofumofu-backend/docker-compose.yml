@@ -1,7 +1,6 @@
 networks:
   mofumofu-network:
-    external: true
-    name: mofumofu-tasks
+    driver: bridge
 
 services:
   mofumofu-backend:
@@ -26,5 +25,107 @@ services:
     volumes:
       - meili_data:/meili_data
 
+  # Redis (Celery 브로커)
+  redis-celery:
+    image: redis:8.0.2
+    container_name: redis-celery
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis-celery-data:/data
+    networks:
+      - mofumofu-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # FastAPI 태스크 서버
+  tasks-api:
+    build:
+      context: tasks
+      dockerfile: Dockerfile
+    container_name: tasks-api
+    ports:
+      - "7000:7000"
+    env_file:
+      - docker.env
+    environment:
+      - CELERY_BROKER_URL=redis://redis-celery:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis-celery:6379/0
+    networks:
+      - mofumofu-network
+    depends_on:
+      redis-celery:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Celery Worker
+  celery-worker:
+    build:
+      context: tasks
+      dockerfile: Dockerfile
+    command: ["python", "start_worker.py"]
+    env_file:
+      - docker.env
+    environment:
+      - CELERY_BROKER_URL=redis://redis-celery:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis-celery:6379/0
+    networks:
+      - mofumofu-network
+    depends_on:
+      redis-celery:
+        condition: service_healthy
+      tasks-api:
+        condition: service_started
+    restart: unless-stopped
+    deploy:
+      replicas: 2
+
+  # Celery Beat (스케줄러)
+  celery-beat:
+    build:
+      context: tasks
+      dockerfile: Dockerfile
+    container_name: celery-beat
+    command: ["uv", "run", "celery", "-A", "app.core.celery_app", "beat", "--loglevel=info"]
+    env_file:
+      - docker.env
+    environment:
+      - CELERY_BROKER_URL=redis://redis-celery:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis-celery:6379/0
+    networks:
+      - mofumofu-network
+    depends_on:
+      redis-celery:
+        condition: service_healthy
+      tasks-api:
+        condition: service_started
+    restart: unless-stopped
+
+  # Celery Flower (모니터링)
+  flower:
+    build:
+      context: tasks
+      dockerfile: Dockerfile
+    container_name: flower
+    command: ["uv", "run", "celery", "-A", "app.core.celery_app", "--broker=redis://redis-celery:6379/0", "flower", "--port=5555"]
+    ports:
+      - "5555:5555"
+    env_file:
+      - docker.env
+    environment:
+      - CELERY_BROKER_URL=redis://redis-celery:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis-celery:6379/0
+    networks:
+      - mofumofu-network
+    depends_on:
+      redis-celery:
+        condition: service_healthy
+    restart: unless-stopped
+
 volumes:
   meili_data:
+  redis-celery-data:
