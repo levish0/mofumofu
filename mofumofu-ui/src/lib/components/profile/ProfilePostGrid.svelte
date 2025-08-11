@@ -72,24 +72,26 @@
 	const initialized = $derived(profilePostsStore.initialized);
 
 	// 필터링된 포스트들
-	const posts = $derived((() => {
-		if (selectedTags.length === 0) {
-			return allPosts; // 선택된 태그가 없으면 모든 포스트 표시
-		}
-		
-		// 선택된 태그 중 하나라도 포함하는 포스트만 필터링
-		return allPosts.filter(post => {
-			return selectedTags.some(selectedTag => 
-				post.hashtags.some(postTag => 
-					postTag.toLowerCase().includes(selectedTag.toLowerCase())
-				)
-			);
-		});
-	})());
+	const posts = $derived(
+		(() => {
+			if (selectedTags.length === 0) {
+				return allPosts; // 선택된 태그가 없으면 모든 포스트 표시
+			}
+
+			// 선택된 태그 중 하나라도 포함하는 포스트만 필터링
+			return allPosts.filter((post) => {
+				return selectedTags.some((selectedTag) =>
+					post.hashtags.some((postTag) => postTag.toLowerCase().includes(selectedTag.toLowerCase()))
+				);
+			});
+		})()
+	);
 
 	// 정렬 변경 핸들러
-	function handleSortChange(sort: PostSortOrder) {
-		changeSortOrder(sort);
+	function handleSortChange(value: string | undefined) {
+		if (value && (value === 'latest' || value === 'oldest' || value === 'popular')) {
+			changeSortOrder(value as PostSortOrder);
+		}
 	}
 
 	// 무한 스크롤 훅 사용
@@ -118,17 +120,20 @@
 	// navbar 상태에 따른 sticky top 위치 계산
 	const stickyTopPosition = $derived(navbar?.isVisible() ? '60px' : '0px');
 
-	// 프로필이 변경되거나 초기 로드
+	// 프로필이 변경되거나 초기 로드 (사용자가 바뀔 때만)
 	$effect(() => {
-		if (profile.handle && (!initialized || storeUserHandle !== profile.handle)) {
+		if (profile.handle && storeUserHandle !== profile.handle) {
 			loadInitialPosts(profile.handle, 'latest');
 		}
 	});
 </script>
 
-<div class="space-y-6">
+<div class="space-y-2">
 	<!-- Sticky Hashtags & Sort Section -->
-	<div class="bg-mofu-dark-900 sticky z-20 py-4 transition-all duration-100 ease-out" style="top: {stickyTopPosition}">
+	<div
+		class="bg-mofu-dark-900 sticky z-20 pt-2 pb-2 transition-all duration-100 ease-out"
+		style="top: {stickyTopPosition}"
+	>
 		<div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 			<!-- Left: Hashtags -->
 			<div class="flex-1">
@@ -153,19 +158,13 @@
 
 			<!-- Right: Sort Dropdown -->
 			<div class="lg:w-48">
-				<Select.Root type="single">
-					<Select.Trigger
-						class="border-mofu-dark-600 bg-mofu-dark-700 text-mofu-dark-200 focus-visible:border-mofu focus-visible:ring-mofu w-full"
-					>
+				<Select.Root type="single" value={currentSort} onValueChange={handleSortChange}>
+					<Select.Trigger class=" bg-mofu-dark-700 text-mofu-dark-200 w-full font-semibold">
 						{sortOptions.find((o) => o.value === currentSort)?.label || '최신순'}
 					</Select.Trigger>
 					<Select.Content class="bg-mofu-dark-700 border-mofu-dark-600">
 						{#each sortOptions as option}
-							<Select.Item
-								value={option.value}
-								class="text-mofu-dark-200 focus:bg-mofu-dark-600"
-								onclick={() => handleSortChange(option.value)}
-							>
+							<Select.Item value={option.value} class="text-mofu-dark-200 focus:bg-mofu-dark-600 font-semibold">
 								{option.label}
 							</Select.Item>
 						{/each}
@@ -203,13 +202,8 @@
 		<div class="flex flex-col items-center justify-center py-12 text-center">
 			{#if selectedTags.length > 0}
 				<div class="text-mofu-dark-400 mb-2 text-lg">선택한 태그와 일치하는 포스트가 없습니다</div>
-				<div class="text-mofu-dark-500 text-sm mb-4">
-					다른 태그를 선택하거나 필터를 해제해보세요.
-				</div>
-				<button 
-					onclick={() => selectedTags = []}
-					class="text-mofu hover:text-mofu/80 text-sm underline"
-				>
+				<div class="text-mofu-dark-500 mb-4 text-sm">다른 태그를 선택하거나 필터를 해제해보세요.</div>
+				<button onclick={() => (selectedTags = [])} class="text-mofu hover:text-mofu/80 text-sm underline">
 					모든 필터 해제
 				</button>
 			{:else if allPosts.length === 0}
