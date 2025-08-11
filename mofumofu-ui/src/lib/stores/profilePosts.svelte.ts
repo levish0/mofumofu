@@ -3,6 +3,7 @@ import type { PostListItem, PostSortOrder } from '$lib/api/post/types';
 interface ProfilePostsState {
 	posts: PostListItem[];
 	currentPage: number;
+	targetPage: number;
 	hasMore: boolean;
 	loading: boolean;
 	initialLoading: boolean;
@@ -14,6 +15,7 @@ interface ProfilePostsState {
 let state = $state<ProfilePostsState>({
 	posts: [],
 	currentPage: 1,
+	targetPage: 1,
 	hasMore: true,
 	loading: false,
 	initialLoading: true,
@@ -28,6 +30,9 @@ export const profilePostsStore = {
 	},
 	get currentPage() {
 		return state.currentPage;
+	},
+	get targetPage() {
+		return state.targetPage;
 	},
 	get hasMore() {
 		return state.hasMore;
@@ -57,6 +62,9 @@ export const profilePostsStore = {
 	setCurrentPage(page: number) {
 		state.currentPage = page;
 	},
+	setTargetPage(page: number) {
+		state.targetPage = page;
+	},
 	setHasMore(hasMore: boolean) {
 		state.hasMore = hasMore;
 	},
@@ -80,6 +88,7 @@ export const profilePostsStore = {
 	reset(userHandle?: string, sortOrder?: PostSortOrder) {
 		state.posts = [];
 		state.currentPage = 1;
+		state.targetPage = 1;
 		state.hasMore = true;
 		state.loading = false;
 		state.initialLoading = true;

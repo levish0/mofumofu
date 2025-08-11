@@ -29,13 +29,9 @@ pub struct SearchPostsRequest {
     /// 정렬 방식
     pub sort: Option<PostSortOrder>,
 
-    /// 타겟 페이지 번호 (무한스크롤용)
-    #[validate(range(min = 1, message = "Target page must be greater than 0."))]
-    pub target_page: Option<u32>,
-
-    /// 타겟 페이지 주변에서 가져올 페이지 수
-    #[validate(range(min = 1, max = 5, message = "Pages around must be between 1 and 5."))]
-    pub pages_around: Option<u32>,
+    /// 페이지 번호
+    #[validate(range(min = 1, message = "Page must be greater than 0."))]
+    pub page: Option<u32>,
 
     /// 페이지 크기
     #[validate(range(min = 1, max = 20, message = "Page size must be between 1 and 20."))]
@@ -52,8 +48,7 @@ impl Default for SearchPostsRequest {
             date_to: None,
             min_likes: None,
             sort: Some(PostSortOrder::Latest),
-            target_page: Some(1),
-            pages_around: Some(2),
+            page: Some(1),
             page_size: Some(20),
         }
     }

@@ -7,9 +7,9 @@
 	const PAGE_SIZE = 15;
 	const skeletonCount = 5;
 
-	// Set filter to popular (trending) on mount
+	// Set filter to recent on mount
 	onMount(() => {
-		postsStore.updateFilter({ sortBy: 'popular' });
+		postsStore.updateFilter({ sortBy: 'recent' });
 	});
 
 	// 커스텀 훅 사용

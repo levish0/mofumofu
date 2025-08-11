@@ -13,11 +13,9 @@ export function usePostsFilter(config: UsePostsFilterConfig) {
 	const filter = $derived(postsStore.filter);
 	const initialLoading = $derived(postsStore.initialLoading);
 
-	// 이전 값들 추적
-	let prevSortBy = $state('');
-	let prevKeyword = $state('');
-	let prevTags = $state<string[]>([]);
-	let prevTimeRange = $state('');
+	// 이전 값들 추적 - Store의 기본값과 동일하게 초기화
+	let prevSortBy = $state('recent');
+	let prevTimeRange = $state('all');
 	let searchTimeout: number | null = null;
 
 	// 정렬 변경 감지 (즉시 반영)
@@ -32,33 +30,34 @@ export function usePostsFilter(config: UsePostsFilterConfig) {
 		}
 	});
 
+	// TODO: 검색 기능 제거로 인한 주석 처리
 	// 검색어/태그 변경 감지 (debounced)
-	$effect(() => {
-		const currentKeyword = filter.keyword;
-		const currentTags = filter.tags;
-		const keywordChanged = currentKeyword !== prevKeyword;
-		const tagsChanged = JSON.stringify(currentTags) !== JSON.stringify(prevTags);
+	// $effect(() => {
+	// 	const currentKeyword = filter.keyword;
+	// 	const currentTags = filter.tags;
+	// 	const keywordChanged = currentKeyword !== prevKeyword;
+	// 	const tagsChanged = JSON.stringify(currentTags) !== JSON.stringify(prevTags);
 
-		if ((keywordChanged || tagsChanged) && !initialLoading) {
-			prevKeyword = currentKeyword;
-			prevTags = [...currentTags];
+	// 	if ((keywordChanged || tagsChanged) && !initialLoading) {
+	// 		prevKeyword = currentKeyword;
+	// 		prevTags = [...currentTags];
 
-			// 기존 timeout 취소
-			if (searchTimeout) {
-				clearTimeout(searchTimeout);
-			}
+	// 		// 기존 timeout 취소
+	// 		if (searchTimeout) {
+	// 			clearTimeout(searchTimeout);
+	// 		}
 
-			// 검색어가 있으면 debounce, 없으면 즉시
-			if (currentKeyword || currentTags.length > 0) {
-				searchTimeout = window.setTimeout(() => {
-					onFilterChange();
-				}, debounceMs);
-			} else {
-				// 검색어와 태그가 모두 비어있으면 즉시 일반 모드로
-				onFilterChange();
-			}
-		}
-	});
+	// 		// 검색어가 있으면 debounce, 없으면 즉시
+	// 		if (currentKeyword || currentTags.length > 0) {
+	// 			searchTimeout = window.setTimeout(() => {
+	// 				onFilterChange();
+	// 			}, debounceMs);
+	// 		} else {
+	// 			// 검색어와 태그가 모두 비어있으면 즉시 일반 모드로
+	// 			onFilterChange();
+	// 		}
+	// 	}
+	// });
 
 	// cleanup
 	return () => {

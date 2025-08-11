@@ -20,8 +20,8 @@
 
 	const { profile }: Props = $props();
 
-	const PAGE_SIZE = 12;
-	const skeletonCount = 4;
+	const PAGE_SIZE = 6;
+	const skeletonCount = 2;
 
 	const sortOptions: { value: PostSortOrder; label: string }[] = [
 		{ value: 'latest', label: '최신순' },
@@ -58,8 +58,7 @@
 
 	// 프로필 포스트 데이터 훅 사용
 	const { loadInitialPosts, loadMorePosts, changeSortOrder } = useProfilePostsData({
-		pageSize: PAGE_SIZE,
-		pagesAround: 2
+		pageSize: PAGE_SIZE
 	});
 
 	// Store에서 직접 reactive 값 가져오기
@@ -190,7 +189,7 @@
 
 	<!-- End message -->
 	{#if !hasMore && !loading && posts.length > 0}
-		<div class="dark:text-mofu-dark-300 pb-20 text-center text-lg font-bold">모든 포스트를 확인하셨습니다 ✨</div>
+		<div class="dark:text-mofu-dark-300 pt-20 text-center text-lg font-bold">모든 포스트를 확인하셨습니다 ✨</div>
 	{:else if posts.length > 8 && !loading && hasMore}
 		<div class="dark:text-mofu-dark-300 pb-20 text-center text-lg font-bold">
 			스크롤하여 더 많은 포스트를 확인하세요 📜

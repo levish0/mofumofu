@@ -1,36 +1,61 @@
 import { searchPosts } from '$lib/api/post/postApi';
-import type { PostSortOrder } from '$lib/api/post/types';
+import type { PostSortOrder, PostListItem } from '$lib/api/post/types';
 import { profilePostsStore } from '$lib/stores/profilePosts.svelte';
 
 interface UseProfilePostsDataConfig {
 	pageSize?: number;
-	pagesAround?: number;
 }
 
 export function useProfilePostsData(config: UseProfilePostsDataConfig = {}) {
 	const PAGE_SIZE = config.pageSize ?? 12;
-	const PAGES_AROUND = config.pagesAround ?? 2;
 
-	// 초기 데이터 로드
+	// 초기 데이터 로드 - Store에 저장된 포스트가 있으면 복원, 없으면 targetPage부터 로드
 	const loadInitialPosts = async (userHandle: string, sortOrder: PostSortOrder = 'latest') => {
 		if (!userHandle) return;
 		
+		const targetPage = profilePostsStore.targetPage;
+		const existingPosts = profilePostsStore.posts;
+		const currentUserHandle = profilePostsStore.userHandle;
+		const currentSortOrder = profilePostsStore.sortOrder;
+		
+		console.log('Profile loadInitialPosts called, userHandle:', userHandle, 'targetPage:', targetPage, 'existing posts:', existingPosts.length);
+		
+		// 같은 사용자, 같은 정렬이고 이미 저장된 포스트가 있으면 그대로 사용 (페이지 복원)
+		if (existingPosts.length > 0 && currentUserHandle === userHandle && currentSortOrder === sortOrder) {
+			console.log('Using existing profile posts from store');
+			profilePostsStore.setInitialLoading(false);
+			return;
+		}
+		
+		// 저장된 포스트가 없거나 다른 사용자/정렬이면 새로 로드
 		try {
 			profilePostsStore.setInitialLoading(true);
 			profilePostsStore.setUserHandle(userHandle);
 			profilePostsStore.setSortOrder(sortOrder);
 
-			const response = await searchPosts({
-				user_handle: userHandle,
-				sort: sortOrder,
-				page_size: PAGE_SIZE,
-				target_page: 1
-			});
+			// targetPage까지 순차적으로 로드하여 누적
+			const allPosts: PostListItem[] = [];
+			let hasMore = true;
+			let currentPage = 1;
 
-			profilePostsStore.setPosts(response.posts);
-			profilePostsStore.setHasMore(response.has_more);
-			profilePostsStore.setCurrentPage(2); // Next page after first load
+			for (let page = 1; page <= targetPage; page++) {
+				const response = await searchPosts({
+					user_handle: userHandle,
+					sort: sortOrder,
+					page_size: PAGE_SIZE,
+					page: page
+				});
+				allPosts.push(...response.posts);
+				currentPage = response.current_page;
+				hasMore = response.has_more;
+			}
+
+			profilePostsStore.setPosts(allPosts);
+			profilePostsStore.setHasMore(hasMore);
+			profilePostsStore.setCurrentPage(currentPage);
 			profilePostsStore.setInitialized(true);
+			
+			console.log('Profile loadInitialPosts completed: loaded', allPosts.length, 'posts up to page', targetPage);
 		} catch (error) {
 			console.error('Failed to load profile posts:', error);
 			profilePostsStore.setPosts([]);
@@ -40,30 +65,34 @@ export function useProfilePostsData(config: UseProfilePostsDataConfig = {}) {
 		}
 	};
 
-	// 더 많은 포스트 로드
+	// 다음 페이지 로드 (아래쪽 무한스크롤)
 	const loadMorePosts = async () => {
 		if (profilePostsStore.loading || !profilePostsStore.hasMore || !profilePostsStore.userHandle) {
 			return;
 		}
 
+		console.log('Profile loadMorePosts called');
 		profilePostsStore.setLoading(true);
 
 		try {
+			const nextPage = profilePostsStore.currentPage + 1;
 			const response = await searchPosts({
 				user_handle: profilePostsStore.userHandle,
 				sort: profilePostsStore.sortOrder,
 				page_size: PAGE_SIZE,
-				target_page: profilePostsStore.currentPage,
-				pages_around: PAGES_AROUND
+				page: nextPage
 			});
 
-			// 중복 제거 후 추가
+			// 중복 제거 후 추가 (누적 저장)
 			const existingIds = new Set(profilePostsStore.posts.map((post) => post.id));
 			const newPosts = response.posts.filter((post) => !existingIds.has(post.id));
 
 			profilePostsStore.addPosts(newPosts);
-			profilePostsStore.setCurrentPage(profilePostsStore.currentPage + 1);
+			profilePostsStore.setCurrentPage(response.current_page);
+			profilePostsStore.setTargetPage(response.current_page); // targetPage도 업데이트
 			profilePostsStore.setHasMore(response.has_more);
+			
+			console.log('Profile loadMorePosts completed: loaded', newPosts.length, 'posts from page', nextPage);
 		} catch (error) {
 			console.error('Failed to load more profile posts:', error);
 		} finally {
@@ -77,8 +106,10 @@ export function useProfilePostsData(config: UseProfilePostsDataConfig = {}) {
 			return;
 		}
 
-		profilePostsStore.reset(profilePostsStore.userHandle, sortOrder);
-		await loadInitialPosts(profilePostsStore.userHandle, sortOrder);
+		console.log('Profile changeSortOrder called with:', sortOrder);
+		const currentUserHandle = profilePostsStore.userHandle;
+		profilePostsStore.reset(currentUserHandle, sortOrder); // targetPage는 1로 리셋
+		await loadInitialPosts(currentUserHandle, sortOrder);
 	};
 
 	return {

@@ -23,12 +23,12 @@
 		onLoadMore,
 		isLoading: () => loading,
 		hasMore: () => hasMore,
-		threshold: 50
+		threshold: 100
 	});
 </script>
 
 <div class="min-h-screen">
-	<div class="grid grid-cols-1 gap-x-5 gap-y-4 pb-20 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+	<div class="grid grid-cols-1 gap-x-5 gap-y-4 pb-20 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
 		{#each posts as post (`${post.user_handle}-${post.slug}`)}
 			<PostCard {post} />
 		{/each}

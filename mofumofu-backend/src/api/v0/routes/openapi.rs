@@ -9,7 +9,7 @@ use crate::dto::post::request::create_post::CreatePostRequest;
 use crate::dto::post::request::get_by_handle_and_slug::GetPostByHandleAndSlugRequest;
 use crate::dto::post::request::thumbnail_image::PostThumbnailForm;
 use crate::dto::post::request::{
-    GetPostsAroundPageRequest, GetPostsRequest, PostSortOrder, SearchPostsRequest,
+    GetPostsRequest, PostSortOrder, SearchPostsRequest,
 };
 use crate::dto::post::response::post_info::{PostAuthor, PostInfoResponse};
 use crate::dto::post::response::{GetPostsResponse, PostListItem};
@@ -45,7 +45,6 @@ use utoipa::{
         crate::api::v0::routes::post::create_post::create_post,
         crate::api::v0::routes::post::get_post_by_handle_and_slug::get_post_by_handle_and_slug,
         crate::api::v0::routes::post::get_posts::get_posts,
-        crate::api::v0::routes::post::get_posts_around_page::get_posts_around_page,
         crate::api::v0::routes::post::search_posts::search_posts,
         crate::api::v0::routes::post::upload_thumbnail::upload_thumbnail,
         crate::api::v0::routes::follow::create_follow::api_create_follow,
@@ -62,7 +61,6 @@ use utoipa::{
             CreatePostRequest,
             GetPostByHandleAndSlugRequest,
             GetPostsRequest,
-            GetPostsAroundPageRequest,
             SearchPostsRequest,
             PostSortOrder,
             PostInfoResponse,

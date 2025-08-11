@@ -55,9 +55,8 @@ export interface SearchPostsRequest {
 	min_likes?: number | null;
 	user_handle?: string | null;
 	sort?: PostSortOrder | null;
-	target_page?: number | null;
+	page?: number | null;
 	page_size?: number | null;
-	pages_around?: number | null;
 }
 
 export interface PostListItem {

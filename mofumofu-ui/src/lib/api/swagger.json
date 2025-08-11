@@ -276,24 +276,6 @@
 				}
 			}
 		},
-		"/v0/posts/around": {
-			"post": {
-				"tags": ["Post"],
-				"operationId": "get_posts_around_page",
-				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetPostsAroundPageRequest" } } },
-					"required": true
-				},
-				"responses": {
-					"200": {
-						"description": "Posts around target page retrieved successfully",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetPostsResponse" } } }
-					},
-					"400": { "description": "Invalid input" },
-					"500": { "description": "Internal Server Error" }
-				}
-			}
-		},
 		"/v0/posts/search": {
 			"post": {
 				"tags": ["Post"],
@@ -517,16 +499,6 @@
 				"required": ["handle", "slug"],
 				"properties": { "handle": { "type": "string" }, "slug": { "type": "string" } }
 			},
-			"GetPostsAroundPageRequest": {
-				"type": "object",
-				"required": ["target_page"],
-				"properties": {
-					"page_size": { "type": ["integer", "null"], "format": "int32", "minimum": 0 },
-					"pages_around": { "type": ["integer", "null"], "format": "int32", "minimum": 0 },
-					"sort": { "oneOf": [{ "type": "null" }, { "$ref": "#/components/schemas/PostSortOrder" }] },
-					"target_page": { "type": "integer", "format": "int32", "minimum": 0 }
-				}
-			},
 			"GetPostsRequest": {
 				"type": "object",
 				"properties": {
@@ -667,22 +639,11 @@
 						"description": "특정 해시태그로 필터링"
 					},
 					"min_likes": { "type": ["integer", "null"], "format": "int32", "description": "최소 좋아요 수" },
+					"page": { "type": ["integer", "null"], "format": "int32", "description": "페이지 번호", "minimum": 0 },
 					"page_size": { "type": ["integer", "null"], "format": "int32", "description": "페이지 크기", "minimum": 0 },
-					"pages_around": {
-						"type": ["integer", "null"],
-						"format": "int32",
-						"description": "타겟 페이지 주변에서 가져올 페이지 수",
-						"minimum": 0
-					},
 					"query": { "type": ["string", "null"], "description": "검색 쿼리 (제목, 내용, 해시태그, 사용자명에서 검색)" },
 					"sort": {
 						"oneOf": [{ "type": "null" }, { "$ref": "#/components/schemas/PostSortOrder", "description": "정렬 방식" }]
-					},
-					"target_page": {
-						"type": ["integer", "null"],
-						"format": "int32",
-						"description": "타겟 페이지 번호 (무한스크롤용)",
-						"minimum": 0
 					},
 					"user_handle": { "type": ["string", "null"], "description": "특정 사용자로 필터링" }
 				}

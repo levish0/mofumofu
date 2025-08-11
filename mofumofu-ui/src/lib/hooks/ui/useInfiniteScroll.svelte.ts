@@ -9,7 +9,12 @@ interface InfiniteScrollOptions {
 }
 
 export function useInfiniteScroll(options: InfiniteScrollOptions) {
-	const { threshold = 200, onLoadMore, isLoading = () => false, hasMore = () => true } = options;
+	const { 
+		threshold = 200, 
+		onLoadMore, 
+		isLoading = () => false, 
+		hasMore = () => true
+	} = options;
 
 	let rafId: number | null = null;
 

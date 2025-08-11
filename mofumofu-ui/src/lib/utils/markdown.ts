@@ -221,7 +221,6 @@ export async function processMarkdown(markdown: string): Promise<MarkdownProcess
 			clobber: [] // 아무것도 clobber하지 않음
 		};
 
-		console.log(sanitizeSchema);
 		const result = await unified()
 			.use(remarkParse)
 			.use(remarkGfm)
@@ -239,8 +238,6 @@ export async function processMarkdown(markdown: string): Promise<MarkdownProcess
 			.use(rehypeSanitize, sanitizeSchema)
 			.use(rehypeStringify, { allowDangerousHtml: true })
 			.process(markdown);
-
-		console.log(result);
 
 		return {
 			htmlContent: String(result),

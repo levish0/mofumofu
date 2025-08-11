@@ -72,8 +72,19 @@
 >
 	<div class="max-w-8xl mx-auto flex items-center justify-between px-4 py-3">
 		<!-- 좌측 -->
-		<div class="flex items-center space-x-3">
-			<a href="/" class="text-3xl font-bold whitespace-nowrap text-black dark:dark:text-white">もふもふ。</a>
+		<div class="flex items-center space-x-2">
+			<a href="/" class="text-3xl font-bold whitespace-nowrap text-black dark:text-white">もふもふ。</a>
+
+			<div class="flex items-center space-x-5">
+				<Button variant="ghost" href="/" class="p-0 text-lg">
+					<Icon src={ArrowTrendingUp} solid size="20" class="mr-3 text-black dark:text-white" />
+					트렌딩
+				</Button>
+				<Button variant="ghost" href="/latest" class="p-0 text-lg">
+					<Icon src={Clock} size="20" solid class="mr-3 text-black dark:text-white" />
+					최신
+				</Button>
+			</div>
 		</div>
 
 		<!-- 우측 -->

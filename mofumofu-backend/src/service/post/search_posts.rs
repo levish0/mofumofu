@@ -14,9 +14,8 @@ pub async fn service_search_posts<C>(
 where
     C: ConnectionTrait + TransactionTrait,
 {
-    let target_page = request.target_page.unwrap_or(1);
+    let page = request.page.unwrap_or(1);
     let page_size = request.page_size.unwrap_or(20);
-    let pages_around = request.pages_around.unwrap_or(2);
     let sort_order = request.sort.unwrap_or(PostSortOrder::Latest);
 
     // 날짜를 Unix timestamp로 변환
@@ -30,17 +29,7 @@ where
         PostSortOrder::Latest => "latest",
     };
 
-    // 페이지 범위 계산 (around 방식)
-    let start_page = if target_page > pages_around {
-        target_page - pages_around
-    } else {
-        1
-    };
-    let end_page = target_page + pages_around;
-    let total_pages_to_fetch = end_page - start_page + 1;
-    let total_items_to_fetch = total_pages_to_fetch * page_size;
-
-    // Meilisearch에서 검색 (around 방식으로)
+    // Meilisearch에서 검색 (일반 페이지네이션)
     let meilisearch_posts = post_indexer::search_posts(
         meilisearch,
         request.query.as_deref(),
@@ -50,8 +39,8 @@ where
         date_to,
         request.min_likes,
         sort_str,
-        start_page, // 시작 페이지부터 가져오기
-        total_items_to_fetch,
+        page,
+        page_size,
     )
     .await
     .map_err(|e| {
@@ -62,7 +51,7 @@ where
     if meilisearch_posts.is_empty() {
         return Ok(GetPostsResponse {
             posts: Vec::new(),
-            current_page: target_page,
+            current_page: page,
             page_size,
             has_more: false,
             total_count: Some(0),
@@ -95,12 +84,12 @@ where
         })
         .collect();
 
-    // 다음 페이지가 있는지 확인 (around 방식)
-    let has_more = post_items.len() == total_items_to_fetch as usize;
+    // 다음 페이지가 있는지 확인 (일반 페이지네이션)
+    let has_more = post_items.len() == page_size as usize;
 
     Ok(GetPostsResponse {
         posts: post_items,
-        current_page: target_page,
+        current_page: page,
         page_size,
         has_more,
         total_count: None, // Meilisearch에서 총 개수를 가져오려면 별도 요청 필요

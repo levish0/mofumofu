@@ -1,32 +1,18 @@
-// src/lib/hooks/usePostsData.svelte.ts
-
-import { getPosts, getPostsAroundPage, searchPosts } from '$lib/api/post/postApi';
+import { searchPosts } from '$lib/api/post/postApi';
 import type {
 	PostSortOrder,
-	GetPostsRequest,
-	GetPostsAroundPageRequest,
-	SearchPostsRequest
+	SearchPostsRequest,
+	PostListItem
 } from '$lib/api/post/types';
 import { postsStore } from '$lib/stores/posts.svelte';
 import { onMount } from 'svelte';
 
 interface UsePostsDataConfig {
 	pageSize?: number;
-	pagesAround?: number;
 }
 
 export function usePostsData(config: UsePostsDataConfig = {}) {
 	const PAGE_SIZE = config.pageSize ?? 8;
-	const PAGES_AROUND = config.pagesAround ?? 2;
-
-	// Store 상태를 reactive하게 사용
-	const posts = $derived(postsStore.posts);
-	const loading = $derived(postsStore.loading);
-	const initialLoading = $derived(postsStore.initialLoading);
-	const hasMore = $derived(postsStore.hasMore);
-	const currentPage = $derived(postsStore.currentPage);
-	const filter = $derived(postsStore.filter);
-	const isSearchMode = $derived(postsStore.isSearchMode);
 
 	// API 파라미터 매핑 함수들
 	const mapSortByToApiSort = (sortBy: string): PostSortOrder => {
@@ -65,70 +51,55 @@ export function usePostsData(config: UsePostsDataConfig = {}) {
 		}
 	};
 
-	// 파생된 값들
-	const apiSort = $derived(mapSortByToApiSort(filter.sortBy));
-	const dateRange = $derived(mapTimeRangeToDate(filter.timeRange));
-
-	// API 호출을 통합하는 헬퍼 함수
-	const buildApiParams = (targetPage: number, isLoadMore = false) => {
+	// API 호출 파라미터 빌드
+	const buildApiParams = (page: number) => {
 		const currentFilter = postsStore.filter;
 		const currentApiSort = mapSortByToApiSort(currentFilter.sortBy);
 		const currentDateRange = mapTimeRangeToDate(currentFilter.timeRange);
 
-		const baseParams = {
+		return {
+			page: page,
 			page_size: PAGE_SIZE,
 			sort: currentApiSort,
 			...currentDateRange
 		};
-
-		if (postsStore.isSearchMode) {
-			return {
-				query: currentFilter.keyword || null,
-				hashtags: currentFilter.tags.length > 0 ? currentFilter.tags : null,
-				target_page: targetPage,
-				pages_around: targetPage > 1 || isLoadMore ? PAGES_AROUND : null,
-				...baseParams
-			};
-		} else {
-			if (targetPage > 1 || isLoadMore) {
-				return {
-					target_page: targetPage,
-					pages_around: PAGES_AROUND,
-					...baseParams
-				};
-			} else {
-				return {
-					page: 1,
-					...baseParams
-				};
-			}
-		}
 	};
 
-	// API 호출 함수 선택
-	const callApi = async (targetPage: number, isLoadMore = false) => {
-		const params = buildApiParams(targetPage, isLoadMore);
-
-		if (postsStore.isSearchMode) {
-			return await searchPosts(params as SearchPostsRequest);
-		} else if (targetPage > 1 || isLoadMore) {
-			return await getPostsAroundPage(params as GetPostsAroundPageRequest);
-		} else {
-			return await getPosts(params as GetPostsRequest);
-		}
+	// API 호출 함수 - 모든 post 요청에 searchPosts 사용
+	const callApi = async (page: number) => {
+		const params = buildApiParams(page);
+		return await searchPosts(params as SearchPostsRequest);
 	};
 
-	// 초기 데이터 로드
+	// 초기 데이터 로드 - Store에 저장된 포스트가 있으면 복원, 없으면 targetPage부터 로드
 	const loadInitialPosts = async () => {
+		const targetPage = postsStore.targetPage;
+		const existingPosts = postsStore.posts;
+		
+			// 이미 저장된 포스트가 있으면 복원
+		if (existingPosts.length > 0) {
+			postsStore.setInitialLoading(false);
+			return;
+		}
+		
+		// 저장된 포스트가 없으면 targetPage부터 누적 로드
 		try {
 			postsStore.setInitialLoading(true);
 
-			const targetPage = postsStore.targetPage > 1 ? postsStore.targetPage : 1;
-			const response = await callApi(targetPage);
+				const allPosts: PostListItem[] = [];
+			let hasMore = true;
+			let currentPage = 1;
 
-			postsStore.setPosts(response.posts);
-			postsStore.setHasMore(response.has_more);
-			postsStore.setCurrentPage(response.current_page);
+			for (let page = 1; page <= targetPage; page++) {
+				const response = await callApi(page);
+				allPosts.push(...response.posts);
+				currentPage = response.current_page;
+				hasMore = response.has_more;
+			}
+
+			postsStore.setPosts(allPosts);
+			postsStore.setHasMore(hasMore);
+			postsStore.setCurrentPage(currentPage);
 		} catch (error) {
 			console.error('Failed to load initial posts:', error);
 			postsStore.setPosts([]);
@@ -138,7 +109,7 @@ export function usePostsData(config: UsePostsDataConfig = {}) {
 		}
 	};
 
-	// 더 많은 포스트 로드
+	// 다음 페이지 로드 (무한스크롤)
 	const loadMorePosts = async () => {
 		if (postsStore.loading || !postsStore.hasMore) return;
 
@@ -146,15 +117,15 @@ export function usePostsData(config: UsePostsDataConfig = {}) {
 
 		try {
 			const nextPage = postsStore.currentPage + 1;
-			const response = await callApi(nextPage, true);
+			const response = await callApi(nextPage);
 
 			// 중복 제거 후 추가
 			const existingIds = new Set(postsStore.posts.map((post) => post.id));
 			const newPosts = response.posts.filter((post) => !existingIds.has(post.id));
 
 			postsStore.addPosts(newPosts);
-			postsStore.setCurrentPage(nextPage);
-			postsStore.setTargetPage(nextPage);
+			postsStore.setCurrentPage(response.current_page);
+			postsStore.setTargetPage(response.current_page);
 			postsStore.setHasMore(response.has_more);
 		} catch (error) {
 			console.error('Failed to load more posts:', error);
@@ -165,7 +136,7 @@ export function usePostsData(config: UsePostsDataConfig = {}) {
 
 	// 필터 변경 시 데이터 리로드
 	const reloadWithNewFilter = () => {
-		postsStore.setTargetPage(1);
+		postsStore.reset();
 		loadInitialPosts();
 	};
 
@@ -174,8 +145,8 @@ export function usePostsData(config: UsePostsDataConfig = {}) {
 		loadInitialPosts();
 	});
 
-	// Reactive한 객체 직접 반환
-	const reactiveState = {
+	return {
+		// Store getters
 		get posts() {
 			return postsStore.posts;
 		},
@@ -194,14 +165,8 @@ export function usePostsData(config: UsePostsDataConfig = {}) {
 		get filter() {
 			return postsStore.filter;
 		},
-		get isSearchMode() {
-			return postsStore.isSearchMode;
-		}
-	};
 
-	return {
-		...reactiveState,
-		// 액션
+		// Actions
 		loadInitialPosts,
 		loadMorePosts,
 		reloadWithNewFilter

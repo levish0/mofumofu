@@ -1,8 +1,6 @@
 import type { PostListItem, PostSortOrder } from '$lib/api/post/types';
 
 interface PostsFilter {
-	keyword: string;
-	tags: string[];
 	sortBy: string;
 	timeRange: string;
 }
@@ -16,7 +14,6 @@ interface PostsState {
 	initialLoading: boolean;
 	sortOrder: PostSortOrder;
 	filter: PostsFilter;
-	isSearchMode: boolean; // 검색 모드인지 일반 모드인지
 }
 
 let state = $state<PostsState>({
@@ -28,12 +25,9 @@ let state = $state<PostsState>({
 	initialLoading: true,
 	sortOrder: 'latest',
 	filter: {
-		keyword: '',
-		tags: [],
-		sortBy: 'recent',
+		sortBy: 'popular',
 		timeRange: 'all'
-	},
-	isSearchMode: false
+	}
 });
 
 export const postsStore = {
@@ -60,9 +54,6 @@ export const postsStore = {
 	},
 	get filter() {
 		return state.filter;
-	},
-	get isSearchMode() {
-		return state.isSearchMode;
 	},
 
 	setPosts(posts: PostListItem[]) {
@@ -91,20 +82,15 @@ export const postsStore = {
 	},
 	setFilter(filter: Partial<PostsFilter>) {
 		state.filter = { ...state.filter, ...filter };
-		// 검색어나 태그가 있으면 검색 모드로 전환
-		state.isSearchMode = !!(state.filter.keyword || state.filter.tags.length > 0);
 	},
-	setSearchMode(isSearchMode: boolean) {
-		state.isSearchMode = isSearchMode;
+	updateFilter(filter: Partial<PostsFilter>) {
+		state.filter = { ...state.filter, ...filter };
 	},
 	resetFilter() {
 		state.filter = {
-			keyword: '',
-			tags: [],
-			sortBy: 'recent',
+			sortBy: 'popular',
 			timeRange: 'all'
 		};
-		state.isSearchMode = false;
 	},
 
 	reset() {
