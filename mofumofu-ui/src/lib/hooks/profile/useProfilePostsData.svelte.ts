@@ -12,21 +12,28 @@ export function useProfilePostsData(config: UseProfilePostsDataConfig = {}) {
 	// 초기 데이터 로드 - Store에 저장된 포스트가 있으면 복원, 없으면 targetPage부터 로드
 	const loadInitialPosts = async (userHandle: string, sortOrder: PostSortOrder = 'latest') => {
 		if (!userHandle) return;
-		
+
 		const targetPage = profilePostsStore.targetPage;
 		const existingPosts = profilePostsStore.posts;
 		const currentUserHandle = profilePostsStore.userHandle;
 		const currentSortOrder = profilePostsStore.sortOrder;
-		
-		console.log('Profile loadInitialPosts called, userHandle:', userHandle, 'targetPage:', targetPage, 'existing posts:', existingPosts.length);
-		
+
+		console.log(
+			'Profile loadInitialPosts called, userHandle:',
+			userHandle,
+			'targetPage:',
+			targetPage,
+			'existing posts:',
+			existingPosts.length
+		);
+
 		// 같은 사용자, 같은 정렬이고 이미 저장된 포스트가 있으면 그대로 사용 (페이지 복원)
 		if (existingPosts.length > 0 && currentUserHandle === userHandle && currentSortOrder === sortOrder) {
 			console.log('Using existing profile posts from store');
 			profilePostsStore.setInitialLoading(false);
 			return;
 		}
-		
+
 		// 저장된 포스트가 없거나 다른 사용자/정렬이면 새로 로드
 		try {
 			profilePostsStore.setInitialLoading(true);
@@ -54,7 +61,7 @@ export function useProfilePostsData(config: UseProfilePostsDataConfig = {}) {
 			profilePostsStore.setHasMore(hasMore);
 			profilePostsStore.setCurrentPage(currentPage);
 			profilePostsStore.setInitialized(true);
-			
+
 			console.log('Profile loadInitialPosts completed: loaded', allPosts.length, 'posts up to page', targetPage);
 		} catch (error) {
 			console.error('Failed to load profile posts:', error);
@@ -91,7 +98,7 @@ export function useProfilePostsData(config: UseProfilePostsDataConfig = {}) {
 			profilePostsStore.setCurrentPage(response.current_page);
 			profilePostsStore.setTargetPage(response.current_page); // targetPage도 업데이트
 			profilePostsStore.setHasMore(response.has_more);
-			
+
 			console.log('Profile loadMorePosts completed: loaded', newPosts.length, 'posts from page', nextPage);
 		} catch (error) {
 			console.error('Failed to load more profile posts:', error);

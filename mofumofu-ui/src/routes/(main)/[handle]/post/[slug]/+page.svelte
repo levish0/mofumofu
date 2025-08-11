@@ -66,7 +66,7 @@
 				<article class="rounded-lg">
 					<!-- Post Header -->
 					<header class=" mb-8">
-						<h1 class="dark:text-mofu-200 mb-4 text-4xl font-bold">
+						<h1 class="dark:text-mofu-200 mb-4 text-4xl font-bold break-all">
 							{data.post.title}
 						</h1>
 

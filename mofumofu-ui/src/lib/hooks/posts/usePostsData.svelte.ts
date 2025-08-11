@@ -1,9 +1,5 @@
 import { getPosts } from '$lib/api/post/postApi';
-import type {
-	PostSortOrder,
-	GetPostsRequest,
-	PostListItem
-} from '$lib/api/post/types';
+import type { PostSortOrder, GetPostsRequest, PostListItem } from '$lib/api/post/types';
 import { postsStore } from '$lib/stores/posts.svelte';
 import { onMount } from 'svelte';
 
@@ -35,18 +31,18 @@ export function usePostsData(config: UsePostsDataConfig = {}) {
 	const loadInitialPosts = async () => {
 		const targetPage = postsStore.targetPage;
 		const existingPosts = postsStore.posts;
-		
-			// 이미 저장된 포스트가 있으면 복원
+
+		// 이미 저장된 포스트가 있으면 복원
 		if (existingPosts.length > 0) {
 			postsStore.setInitialLoading(false);
 			return;
 		}
-		
+
 		// 저장된 포스트가 없으면 targetPage부터 누적 로드
 		try {
 			postsStore.setInitialLoading(true);
 
-				const allPosts: PostListItem[] = [];
+			const allPosts: PostListItem[] = [];
 			let hasMore = true;
 			let currentPage = 1;
 

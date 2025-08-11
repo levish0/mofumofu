@@ -127,9 +127,9 @@
 				summary: publishData.summary.trim() || null,
 				hashtags: publishData.tags.trim()
 					? publishData.tags
-						.split(/[,\n]/)
-						.map(tag => tag.trim())
-						.filter(tag => tag.length > 0)
+							.split(/[,\n]/)
+							.map((tag) => tag.trim())
+							.filter((tag) => tag.length > 0)
 					: null
 			};
 
