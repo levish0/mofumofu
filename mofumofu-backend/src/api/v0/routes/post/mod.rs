@@ -4,3 +4,4 @@ pub mod get_posts;
 pub mod routes;
 pub mod search_posts;
 pub mod upload_thumbnail;
+pub mod increment_view;

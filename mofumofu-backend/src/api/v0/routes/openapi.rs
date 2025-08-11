@@ -45,6 +45,7 @@ use utoipa::{
         crate::api::v0::routes::post::create_post::create_post,
         crate::api::v0::routes::post::get_post_by_handle_and_slug::get_post_by_handle_and_slug,
         crate::api::v0::routes::post::get_posts::get_posts,
+        crate::api::v0::routes::post::increment_view::increment_view,
         crate::api::v0::routes::post::search_posts::search_posts,
         crate::api::v0::routes::post::upload_thumbnail::upload_thumbnail,
         crate::api::v0::routes::follow::create_follow::api_create_follow,
@@ -111,6 +112,11 @@ impl Modify for SecurityAddon {
             components.add_security_scheme(
                 "refresh_token_cookie",
                 SecurityScheme::ApiKey(ApiKey::Cookie(ApiKeyValue::new("refresh_token"))),
+            );
+
+            components.add_security_scheme(
+                "anonymous_id_cookie",
+                SecurityScheme::ApiKey(ApiKey::Cookie(ApiKeyValue::new("anonymous_user_id"))),
             )
         }
     }

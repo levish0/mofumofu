@@ -1,9 +1,10 @@
 <script lang="ts">
 	import '$lib/styles/markdown.css';
-	import { getContext } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import type { PageData } from './$types';
 	import { processMarkdown, type TocItem } from '$lib/utils/markdown';
 	import { Heart, Icon } from 'svelte-hero-icons';
+	import { incrementPostView } from '$lib/api/post/postApi';
 
 	const { data }: { data: PageData } = $props();
 
@@ -24,6 +25,12 @@
 			htmlContent = result.htmlContent;
 			tocItems = result.tocItems;
 		})();
+	});
+
+	onMount(() => {
+		incrementPostView({ handle: data.handle, slug: data.slug }).catch((error) => {
+			console.warn('Failed to increment view count:', error);
+		});
 	});
 </script>
 

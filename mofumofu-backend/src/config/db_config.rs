@@ -38,9 +38,9 @@ pub struct DbConfig {
     pub db_min_connection: u32,
 
     // Redis
-    // pub redis_host: String,
-    // pub redis_port: String,
-    // pub redis_ttl: u64,
+    pub redis_host: String,
+    pub redis_port: String,
+    pub redis_ttl: u64,
 
     // OpenSearch
     // pub opensearch_host: String,
@@ -174,7 +174,6 @@ static CONFIG: LazyLock<DbConfig> = LazyLock::new(|| {
             .unwrap_or(10),
 
         // Redis
-        /*
         redis_host: env::var("REDIS_HOST").expect("REDIS_HOST must be set"),
         redis_port: env::var("REDIS_PORT").expect("REDIS_PORT must be set"),
         redis_ttl: env::var("REDIS_TTL")
@@ -182,7 +181,7 @@ static CONFIG: LazyLock<DbConfig> = LazyLock::new(|| {
             .and_then(|v| v.parse().ok())
             .unwrap_or(3600),
 
-        */
+
         // Opensearch
         /*
          opensearch_host: env::var("OPENSEARCH_HOST").expect("OPENSEARCH_HOST must be set"),

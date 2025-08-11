@@ -20,7 +20,7 @@ export const load: PageServerLoad = async ({ params }) => {
 		return {
 			post: postData,
 			author: postData.author,
-			handle: params.handle,
+			handle,
 			slug: params.slug
 		};
 	} catch (err) {

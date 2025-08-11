@@ -237,7 +237,8 @@
 					"400": { "description": "Invalid input" },
 					"404": { "description": "Post not found" },
 					"500": { "description": "Internal Server Error" }
-				}
+				},
+				"security": [{ "anonymous_id_cookie": [] }]
 			}
 		},
 		"/v0/post/thumbnail": {
@@ -256,6 +257,25 @@
 					"500": { "description": "Internal server error" }
 				},
 				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/post/view": {
+			"post": {
+				"tags": ["Post"],
+				"operationId": "increment_view",
+				"requestBody": {
+					"content": {
+						"application/json": { "schema": { "$ref": "#/components/schemas/GetPostByHandleAndSlugRequest" } }
+					},
+					"required": true
+				},
+				"responses": {
+					"204": { "description": "View count incremented successfully" },
+					"400": { "description": "Invalid input" },
+					"404": { "description": "Post not found" },
+					"500": { "description": "Internal Server Error" }
+				},
+				"security": [{ "anonymous_id_cookie": [] }]
 			}
 		},
 		"/v0/posts": {
@@ -687,6 +707,7 @@
 			}
 		},
 		"securitySchemes": {
+			"anonymous_id_cookie": { "type": "apiKey", "in": "cookie", "name": "anonymous_user_id" },
 			"bearer_auth": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" },
 			"refresh_token_cookie": { "type": "apiKey", "in": "cookie", "name": "refresh_token" }
 		}

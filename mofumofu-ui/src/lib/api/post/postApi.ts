@@ -77,3 +77,12 @@ export async function uploadThumbnail(request: ThumbnailUploadRequest): Promise<
 		throw error;
 	}
 }
+
+export async function incrementPostView(request: GetPostByHandleAndSlugRequest): Promise<void> {
+	try {
+		await publicApi.post('v0/post/view', { json: request });
+	} catch (error) {
+		console.error('Failed to increment post view:', error);
+		throw error;
+	}
+}

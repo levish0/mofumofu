@@ -11,6 +11,7 @@ use axum::Router;
 use std::net::SocketAddr;
 use tower_http::compression::CompressionLayer;
 use tracing::{error, info};
+use crate::connection::redis_connection::establish_redis_connection;
 
 mod api;
 mod config;
@@ -29,6 +30,10 @@ pub async fn run_server() -> anyhow::Result<()> {
     let cloudflare_r2 = establish_r2_connection().await.map_err(|e| {
         error!("Failed to establish cloudflare_r2 connection: {}", e);
         anyhow::anyhow!("R2 connection failed: {}", e)
+    })?;
+    let redis = establish_redis_connection().await.map_err(|e| {
+        error!("Failed to establish redis connection: {}", e);
+        anyhow::anyhow!("Redis connection failed: {}", e)
     })?;
     let http_client = create_http_client().await.map_err(|e| {
         error!("Failed to create HTTP client: {}", e);
@@ -60,6 +65,7 @@ pub async fn run_server() -> anyhow::Result<()> {
         .with_state(AppState {
             conn,
             cloudflare_r2,
+            redis,
             http_client,
             meilisearch,
         });
