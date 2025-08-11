@@ -1,8 +1,8 @@
 use crate::dto::hashtag::request::trending_hashtags::TrendingHashtagsRequest;
 use crate::dto::hashtag::response::trending_hashtags::TrendingHashtagsResponse;
+use crate::service::error::errors::Errors;
 use crate::service::hashtag::get_trending_hashtags::service_get_trending_hashtags;
 use crate::service::validator::json_validator::ValidatedJson;
-use crate::service::error::errors::Errors;
 use crate::state::AppState;
 use axum::extract::State;
 use axum::http::StatusCode;

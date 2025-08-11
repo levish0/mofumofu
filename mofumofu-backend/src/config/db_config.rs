@@ -181,7 +181,6 @@ static CONFIG: LazyLock<DbConfig> = LazyLock::new(|| {
             .and_then(|v| v.parse().ok())
             .unwrap_or(3600),
 
-
         // Opensearch
         /*
          opensearch_host: env::var("OPENSEARCH_HOST").expect("OPENSEARCH_HOST must be set"),

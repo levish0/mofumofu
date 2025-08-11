@@ -2,9 +2,7 @@ use crate::connection::meilisearch::MeilisearchClient;
 use crate::dto::post::request::{GetPostsRequest, PostSortOrder};
 use crate::dto::post::response::{GetPostsResponse, PostListItem};
 use crate::repository::hashtag::get_hashtags_by_post::repository_get_hashtags_by_posts;
-use crate::repository::post::get_posts::{
-    repository_get_posts, repository_get_posts_count,
-};
+use crate::repository::post::get_posts::{repository_get_posts, repository_get_posts_count};
 use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
 use crate::service::error::errors::Errors;
 use crate::service::meilisearch::post_indexer;
@@ -153,4 +151,3 @@ where
         total_count: None, // Meilisearch에서 총 개수를 가져오려면 별도 요청 필요
     })
 }
-

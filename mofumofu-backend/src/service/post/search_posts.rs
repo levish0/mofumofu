@@ -1,9 +1,9 @@
-use chrono::{DateTime, Utc};
 use crate::connection::meilisearch::MeilisearchClient;
 use crate::dto::post::request::{PostSortOrder, SearchPostsRequest};
 use crate::dto::post::response::{GetPostsResponse, PostListItem};
 use crate::service::error::errors::Errors;
 use crate::service::meilisearch::post_indexer;
+use chrono::{DateTime, Utc};
 use sea_orm::{ConnectionTrait, TransactionTrait};
 
 pub async fn service_search_posts<C>(
@@ -63,8 +63,7 @@ where
         .into_iter()
         .map(|mpost| {
             // created_at을 Unix timestamp에서 DateTime으로 변환
-            let created_at = DateTime::from_timestamp(mpost.created_at, 0)
-                .unwrap_or_else(Utc::now);
+            let created_at = DateTime::from_timestamp(mpost.created_at, 0).unwrap_or_else(Utc::now);
 
             PostListItem {
                 id: mpost.id.parse().unwrap_or_default(),

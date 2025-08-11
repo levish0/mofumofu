@@ -27,7 +27,6 @@ pub struct GetPostsRequest {
     pub sort: Option<PostSortOrder>,
 }
 
-
 impl Default for GetPostsRequest {
     fn default() -> Self {
         Self {
@@ -37,4 +36,3 @@ impl Default for GetPostsRequest {
         }
     }
 }
-

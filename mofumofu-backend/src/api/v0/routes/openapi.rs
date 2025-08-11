@@ -8,9 +8,7 @@ use crate::dto::hashtag::response::trending_hashtags::TrendingHashtagsResponse;
 use crate::dto::post::request::create_post::CreatePostRequest;
 use crate::dto::post::request::get_by_handle_and_slug::GetPostByHandleAndSlugRequest;
 use crate::dto::post::request::thumbnail_image::PostThumbnailForm;
-use crate::dto::post::request::{
-    GetPostsRequest, PostSortOrder, SearchPostsRequest,
-};
+use crate::dto::post::request::{GetPostsRequest, PostSortOrder, SearchPostsRequest};
 use crate::dto::post::response::post_info::{PostAuthor, PostInfoResponse};
 use crate::dto::post::response::{GetPostsResponse, PostListItem};
 use crate::dto::user::request::avatar_image::ProfileAvatarForm;

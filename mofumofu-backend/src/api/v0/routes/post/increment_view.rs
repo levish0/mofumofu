@@ -4,8 +4,8 @@ use crate::service::error::errors::Errors;
 use crate::service::post::increment_view_service::service_increment_view;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
-use axum::extract::State;
 use axum::Extension;
+use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 
@@ -36,7 +36,8 @@ pub async fn increment_view(
         &req_body.handle,
         &req_body.slug,
         Some(&anonymous_ctx.anonymous_user_id),
-    ).await?;
+    )
+    .await?;
 
     Ok(StatusCode::NO_CONTENT)
 }

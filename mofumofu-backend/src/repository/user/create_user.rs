@@ -5,7 +5,10 @@ use crate::utils::crypto::hash_password;
 use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
 use uuid::Uuid;
 
-pub async fn repository_create_user<C>(txn: &C, payload: CreateUserRequest) -> Result<UserModel, Errors>
+pub async fn repository_create_user<C>(
+    txn: &C,
+    payload: CreateUserRequest,
+) -> Result<UserModel, Errors>
 where
     C: ConnectionTrait + TransactionTrait,
 {

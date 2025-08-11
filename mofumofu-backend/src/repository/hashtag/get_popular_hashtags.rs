@@ -1,11 +1,11 @@
-use crate::entity::hash_tags::{Column, Entity as HashTagEntity, Model as HashTagModel};
-use crate::entity::system_events::{Entity as SystemEventEntity, Column as SystemEventColumn};
 use crate::entity::common::{ActionType, TargetType};
+use crate::entity::hash_tags::{Column, Entity as HashTagEntity, Model as HashTagModel};
+use crate::entity::system_events::{Column as SystemEventColumn, Entity as SystemEventEntity};
 use crate::service::error::errors::Errors;
 use chrono::{Duration, Utc};
 use sea_orm::{
-    ConnectionTrait, EntityTrait, QueryOrder, QuerySelect, QueryFilter, 
-    ColumnTrait, DbBackend, Statement, FromQueryResult
+    ColumnTrait, ConnectionTrait, DbBackend, EntityTrait, FromQueryResult, QueryFilter, QueryOrder,
+    QuerySelect, Statement,
 };
 
 pub async fn repository_get_popular_hashtags<C>(
@@ -49,8 +49,8 @@ where
     C: ConnectionTrait,
 {
     let since = Utc::now() - Duration::days(days);
-    
-    // 최근 N일간 hashtag_used 액션이 있는 해시태그들을 
+
+    // 최근 N일간 hashtag_used 액션이 있는 해시태그들을
     // 사용 빈도순으로 정렬해서 가져오기
     let hashtag_ids: Vec<uuid::Uuid> = SystemEventEntity::find()
         .filter(SystemEventColumn::ActionType.eq(ActionType::HashtagUsed))

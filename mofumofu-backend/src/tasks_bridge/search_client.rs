@@ -51,12 +51,18 @@ pub async fn queue_index_post(
             .text()
             .await
             .unwrap_or_else(|_| "Unknown error".to_string());
-        warn!("Post indexing task queue failed: {} - {}", status, error_text);
+        warn!(
+            "Post indexing task queue failed: {} - {}",
+            status, error_text
+        );
         return Err(format!("Task queue request failed: {} - {}", status, error_text).into());
     }
 
     let task_response: TaskResponse = response.json().await?;
-    info!("Post indexing task queued with ID: {}", task_response.task_id);
+    info!(
+        "Post indexing task queued with ID: {}",
+        task_response.task_id
+    );
 
     Ok(task_response.task_id)
 }
@@ -121,12 +127,18 @@ pub async fn queue_delete_post(
             .text()
             .await
             .unwrap_or_else(|_| "Unknown error".to_string());
-        warn!("Post deletion task queue failed: {} - {}", status, error_text);
+        warn!(
+            "Post deletion task queue failed: {} - {}",
+            status, error_text
+        );
         return Err(format!("Task queue request failed: {} - {}", status, error_text).into());
     }
 
     let task_response: TaskResponse = response.json().await?;
-    info!("Post deletion task queued with ID: {}", task_response.task_id);
+    info!(
+        "Post deletion task queued with ID: {}",
+        task_response.task_id
+    );
 
     Ok(task_response.task_id)
 }

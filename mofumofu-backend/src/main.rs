@@ -4,6 +4,7 @@ use crate::connection::cloudflare_r2::establish_r2_connection;
 use crate::connection::database::establish_connection;
 use crate::connection::http::create_http_client;
 use crate::connection::meilisearch::MeilisearchClient;
+use crate::connection::redis_connection::establish_redis_connection;
 use crate::middleware::cors::cors_layer;
 use crate::state::AppState;
 use crate::utils::logger::init_tracing;
@@ -11,7 +12,6 @@ use axum::Router;
 use std::net::SocketAddr;
 use tower_http::compression::CompressionLayer;
 use tracing::{error, info};
-use crate::connection::redis_connection::establish_redis_connection;
 
 mod api;
 mod config;

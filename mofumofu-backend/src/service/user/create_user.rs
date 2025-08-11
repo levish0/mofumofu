@@ -5,7 +5,8 @@ use crate::repository::user::create_user::repository_create_user;
 use crate::service::error::errors::Errors;
 use sea_orm::{ConnectionTrait, DatabaseConnection, TransactionTrait};
 
-pub async fn service_create_user<C>(conn: &C, payload: CreateUserRequest) -> Result<(), Errors> where
+pub async fn service_create_user<C>(conn: &C, payload: CreateUserRequest) -> Result<(), Errors>
+where
     C: ConnectionTrait + TransactionTrait,
 {
     let txn = conn.begin().await?;

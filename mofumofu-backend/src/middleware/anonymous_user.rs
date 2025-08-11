@@ -1,21 +1,18 @@
+use crate::config::db_config::DbConfig;
+use crate::dto::auth::internal::anonymous_user::AnonymousUserContext;
 use axum::body::Body;
-use axum::http::Request;
 use axum::http::HeaderValue;
+use axum::http::Request;
 use axum::http::header::{COOKIE, SET_COOKIE};
 use axum::middleware::Next;
 use axum::response::Response;
 use cookie::time::Duration;
 use cookie::{Cookie, SameSite};
 use uuid::Uuid;
-use crate::config::db_config::DbConfig;
-use crate::dto::auth::internal::anonymous_user::AnonymousUserContext;
 
 pub const ANONYMOUS_USER_COOKIE_NAME: &str = "anonymous_user_id";
 
-pub async fn anonymous_user_middleware(
-    mut req: Request<Body>,
-    next: Next,
-) -> Response {
+pub async fn anonymous_user_middleware(mut req: Request<Body>, next: Next) -> Response {
     // 쿠키에서 anonymous_user_id 확인
     let cookie_header = req.headers().get(COOKIE);
     let mut anonymous_user_id = None;

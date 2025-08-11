@@ -1,11 +1,11 @@
-use redis::AsyncCommands;
 use crate::repository::post::get_post_by_handle_and_slug::repository_get_post_by_handle_and_slug;
+use crate::repository::post::increment_view_count::repository_increment_view_count;
 use crate::service::error::errors::Errors;
 use crate::state::AppState;
+use redis::AsyncCommands;
 use sea_orm::ConnectionTrait;
 use tracing::{error, info};
 use uuid::Uuid;
-use crate::repository::post::increment_view_count::repository_increment_view_count;
 
 const VIEW_COUNT_TTL: i64 = 3600; // 1시간
 
@@ -23,12 +23,7 @@ where
     let post = repository_get_post_by_handle_and_slug(conn, handle, slug).await?;
 
     // 조회수 증가
-    increment_view_count_with_redis_check(
-        app_state,
-        conn,
-        &post.id,
-        anonymous_user_id,
-    ).await?;
+    increment_view_count_with_redis_check(app_state, conn, &post.id, anonymous_user_id).await?;
 
     Ok(())
 }
@@ -54,13 +49,10 @@ where
     };
 
     // Redis에서 키 존재 여부 확인
-    let exists: bool = redis_conn
-        .exists(&redis_key)
-        .await
-        .map_err(|e| {
-            error!("Redis exists check failed: {}", e);
-            Errors::SysInternalError("".to_string())
-        })?;
+    let exists: bool = redis_conn.exists(&redis_key).await.map_err(|e| {
+        error!("Redis exists check failed: {}", e);
+        Errors::SysInternalError("".to_string())
+    })?;
 
     if !exists {
         // DB에서 조회수 증가

@@ -38,13 +38,14 @@ where
         Errors::UserInvalidToken
     })?;
 
-    let result = repository_revoke_refresh_token(conn, stored_token, ip_address, user_agent, Utc::now())
-        .await
-        .map(|_| ())
-        .map_err(|e| {
-            error!("Failed to revoke refresh token: {:?}", e);
-            e
-        });
+    let result =
+        repository_revoke_refresh_token(conn, stored_token, ip_address, user_agent, Utc::now())
+            .await
+            .map(|_| ())
+            .map_err(|e| {
+                error!("Failed to revoke refresh token: {:?}", e);
+                e
+            });
 
     // 로그아웃 성공 시 이벤트 로깅
     if result.is_ok() {

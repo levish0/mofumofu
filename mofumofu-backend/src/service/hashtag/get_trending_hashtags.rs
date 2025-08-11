@@ -12,9 +12,9 @@ pub async fn service_get_trending_hashtags(
     let limit = limit.unwrap_or(16); // 기본값: 상위 16개
 
     let hashtags = repository_get_trending_hashtags(conn, days, limit).await?;
-    
+
     let hashtag_names = hashtags.into_iter().map(|h| h.name).collect();
-    
+
     Ok(TrendingHashtagsResponse {
         hashtags: hashtag_names,
     })

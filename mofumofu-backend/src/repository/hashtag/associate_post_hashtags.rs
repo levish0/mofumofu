@@ -52,7 +52,7 @@ where
                     last_used_at: Set(Some(chrono::Utc::now())),
                 };
                 let created_hashtag = new_hashtag.insert(&txn).await?;
-                
+
                 // 새 해시태그 생성 이벤트 로깅
                 repository_log_event(
                     conn,
@@ -63,7 +63,7 @@ where
                     None,
                 )
                 .await;
-                
+
                 created_hashtag
             }
         };
