@@ -1,9 +1,11 @@
+use crate::entity::common::{ActionType, TargetType};
 use crate::entity::hash_tags::{
     ActiveModel as HashTagActiveModel, Column as HashTagColumn, Entity as HashTagEntity,
 };
 use crate::entity::post_hash_tags::{
     ActiveModel as PostHashTagActiveModel, Entity as PostHashTagEntity,
 };
+use crate::repository::system_events::log_event::repository_log_event;
 use crate::service::error::errors::Errors;
 use crate::utils::hashtag_normalizer::normalize_hashtag;
 use sea_orm::{
@@ -15,6 +17,7 @@ pub async fn repository_associate_post_hashtags<C>(
     conn: &C,
     post_id: Uuid,
     hashtag_names: &[String],
+    user_id: Uuid,
 ) -> Result<Vec<Uuid>, Errors>
 where
     C: ConnectionTrait + TransactionTrait,
@@ -48,7 +51,20 @@ where
                     created_at: Set(chrono::Utc::now()),
                     last_used_at: Set(Some(chrono::Utc::now())),
                 };
-                new_hashtag.insert(&txn).await?
+                let created_hashtag = new_hashtag.insert(&txn).await?;
+                
+                // 새 해시태그 생성 이벤트 로깅
+                repository_log_event(
+                    conn,
+                    Some(user_id),
+                    ActionType::HashtagCreated,
+                    Some(created_hashtag.id),
+                    Some(TargetType::Hashtag),
+                    None,
+                )
+                .await;
+                
+                created_hashtag
             }
         };
 

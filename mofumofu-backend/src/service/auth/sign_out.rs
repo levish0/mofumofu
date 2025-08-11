@@ -1,6 +1,8 @@
 use crate::dto::auth::internal::refresh_token::RefreshTokenClaims;
+use crate::entity::common::{ActionType, TargetType};
 use crate::repository::auth::find_refresh_token_by_jti_and_token::repository_find_refresh_token_by_jti_and_token;
 use crate::repository::auth::revoke_refresh_token::repository_revoke_refresh_token;
+use crate::repository::system_events::log_event::repository_log_event;
 use crate::service::error::errors::Errors;
 use chrono::Utc;
 use sea_orm::{ConnectionTrait, TransactionTrait};
@@ -36,11 +38,26 @@ where
         Errors::UserInvalidToken
     })?;
 
-    repository_revoke_refresh_token(conn, stored_token, ip_address, user_agent, Utc::now())
+    let result = repository_revoke_refresh_token(conn, stored_token, ip_address, user_agent, Utc::now())
         .await
         .map(|_| ())
         .map_err(|e| {
             error!("Failed to revoke refresh token: {:?}", e);
             e
-        })
+        });
+
+    // 로그아웃 성공 시 이벤트 로깅
+    if result.is_ok() {
+        repository_log_event(
+            conn,
+            Some(refresh_token_claims.sub),
+            ActionType::UserSignedOut,
+            Some(refresh_token_claims.sub),
+            Some(TargetType::User),
+            None,
+        )
+        .await;
+    }
+
+    result
 }

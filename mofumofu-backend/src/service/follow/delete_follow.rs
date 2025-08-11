@@ -1,4 +1,6 @@
 use crate::dto::follow::internal::delete::DeleteFollow;
+use crate::entity::common::{ActionType, TargetType};
+use crate::repository::system_events::log_event::repository_log_event;
 use crate::repository::user::find_user_by_handle::repository_find_user_by_handle;
 use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
 use crate::service::error::errors::Errors;
@@ -33,6 +35,18 @@ where
             let follow_active_model: crate::entity::follows::ActiveModel = follow_record.into();
             follow_active_model.delete(&txn).await?;
             txn.commit().await?;
+
+            // 팔로우 삭제 이벤트 로깅
+            repository_log_event(
+                conn,
+                Some(follower.id),
+                ActionType::FollowDeleted,
+                Some(followee.id),
+                Some(TargetType::User),
+                None,
+            )
+            .await;
+
             Ok(())
         }
         None => Err(Errors::FollowNotExist),

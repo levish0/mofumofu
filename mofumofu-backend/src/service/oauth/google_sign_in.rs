@@ -1,6 +1,7 @@
 use crate::dto::auth::response::jwt::AuthJWTResponse;
-use crate::entity::common::OAuthProvider;
+use crate::entity::common::{ActionType, OAuthProvider, TargetType};
 use crate::entity::user_refresh_tokens::ActiveModel as RefreshTokenActiveModel;
+use crate::repository::system_events::log_event::repository_log_event;
 use crate::service::auth::jwt::{create_jwt_access_token, create_jwt_refresh_token};
 use crate::service::error::errors::Errors;
 use crate::service::oauth::find_or_create_oauth_user::service_find_or_create_oauth_user;
@@ -98,6 +99,17 @@ where
         "Successfully logged in user via Google OAuth: {}",
         oauth_result.user.email
     );
+
+    // Google OAuth 로그인 이벤트 로깅
+    repository_log_event(
+        txn,
+        Some(oauth_result.user.id),
+        ActionType::UserSignedIn,
+        Some(oauth_result.user.id),
+        Some(TargetType::User),
+        Some(serde_json::json!({"oauth_provider": "google"})),
+    )
+    .await;
 
     Ok(AuthJWTResponse {
         access_token,

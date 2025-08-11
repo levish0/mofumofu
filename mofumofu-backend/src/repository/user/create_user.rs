@@ -1,10 +1,11 @@
 use crate::dto::user::request::create::CreateUserRequest;
-use crate::entity::users::ActiveModel as UserActiveModel;
+use crate::entity::users::{ActiveModel as UserActiveModel, Model as UserModel};
 use crate::service::error::errors::Errors;
 use crate::utils::crypto::hash_password;
 use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
+use uuid::Uuid;
 
-pub async fn repository_create_user<C>(txn: &C, payload: CreateUserRequest) -> Result<(), Errors>
+pub async fn repository_create_user<C>(txn: &C, payload: CreateUserRequest) -> Result<UserModel, Errors>
 where
     C: ConnectionTrait + TransactionTrait,
 {
@@ -24,7 +25,7 @@ where
         banner_image: Default::default(),
     };
 
-    new_user.insert(txn).await?;
+    let user = new_user.insert(txn).await?;
 
-    Ok(())
+    Ok(user)
 }

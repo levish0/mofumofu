@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use crate::connection::meilisearch::MeilisearchClient;
 use crate::dto::post::request::{PostSortOrder, SearchPostsRequest};
 use crate::dto::post::response::{GetPostsResponse, PostListItem};
@@ -73,8 +74,8 @@ where
         .into_iter()
         .map(|mpost| {
             // created_at을 Unix timestamp에서 DateTime으로 변환
-            let created_at = chrono::DateTime::from_timestamp(mpost.created_at, 0)
-                .unwrap_or_else(chrono::Utc::now);
+            let created_at = DateTime::from_timestamp(mpost.created_at, 0)
+                .unwrap_or_else(Utc::now);
 
             PostListItem {
                 id: mpost.id.parse().unwrap_or_default(),

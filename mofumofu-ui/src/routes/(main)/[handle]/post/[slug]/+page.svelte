@@ -33,7 +33,7 @@
 
 	<!-- Open Graph -->
 	<meta property="og:title" content="{data.post.title} - {data.author.name}" />
-	<meta property="og:description" content={data.post.content.slice(0, 160)} />
+	<meta property="og:description" content={data.post.summary} />
 	<meta property="og:type" content="article" />
 	<meta property="og:url" content="https://mofumofu.ink/{data.author.handle}/post/{data.post.slug}" />
 	<meta property="og:image" content="https://mofumofu.ink/og-default.png" />

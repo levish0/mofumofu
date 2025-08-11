@@ -131,8 +131,17 @@
 		const result = await settingsStore.saveChanges();
 		if (result.success) {
 			saveSuccess = true;
+		} else {
+			saveSuccess = false;
 		}
 	}
+
+	// Reset save success when user makes new changes
+	$effect(() => {
+		if (settingsStore.hasChanges && saveSuccess) {
+			saveSuccess = false;
+		}
+	});
 </script>
 
 <svelte:head>

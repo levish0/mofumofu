@@ -28,7 +28,7 @@ export function createPostSchema() {
 						.filter((tag) => tag);
 					return tagArray;
 				}),
-				v.maxLength(5, '태그는 최대 5개까지 입력할 수 있습니다.')
+				v.maxLength(8, '태그는 최대 8개까지 입력할 수 있습니다.')
 			)
 		)
 	});

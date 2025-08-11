@@ -5,7 +5,7 @@
 		"description": "",
 		"contact": { "name": "Levi Lim", "email": "shiueo.csh@gmail.com" },
 		"license": { "name": "" },
-		"version": "0.1.0"
+		"version": "0.2.0"
 	},
 	"paths": {
 		"/v0/auth/github": {
@@ -182,6 +182,24 @@
 						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/FollowListResponse" } } }
 					},
 					"404": { "description": "User not found" }
+				}
+			}
+		},
+		"/v0/hashtag/trending": {
+			"post": {
+				"tags": ["Hashtag"],
+				"operationId": "trending_hashtags",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/TrendingHashtagsRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Trending hashtags retrieved successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/TrendingHashtagsResponse" } } }
+					},
+					"400": { "description": "Invalid input" },
+					"500": { "description": "Internal Server Error" }
 				}
 			}
 		},
@@ -669,6 +687,18 @@
 					"user_handle": { "type": ["string", "null"], "description": "특정 사용자로 필터링" }
 				}
 			},
+			"TrendingHashtagsRequest": {
+				"type": "object",
+				"properties": {
+					"days": { "type": ["integer", "null"], "format": "int64" },
+					"limit": { "type": ["integer", "null"], "format": "int64", "minimum": 0 }
+				}
+			},
+			"TrendingHashtagsResponse": {
+				"type": "object",
+				"required": ["hashtags"],
+				"properties": { "hashtags": { "type": "array", "items": { "type": "string" } } }
+			},
 			"UpdateProfileRequest": {
 				"type": "object",
 				"properties": {
@@ -704,6 +734,7 @@
 		{ "name": "Auth", "description": "Authentication endpoints" },
 		{ "name": "User", "description": "User endpoints" },
 		{ "name": "Post", "description": "Post endpoints" },
-		{ "name": "Follow", "description": "Follow endpoints" }
+		{ "name": "Follow", "description": "Follow endpoints" },
+		{ "name": "Hashtag", "description": "Hashtag endpoints" }
 	]
 }

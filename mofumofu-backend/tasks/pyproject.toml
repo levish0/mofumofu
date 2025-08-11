@@ -6,7 +6,7 @@ requires-python = ">=3.10"
 dependencies = [
     "asyncpg>=0.30.0",
     "bcrypt==4.3.0",
-    "boto3>=1.40.1",
+    "boto3>=1.40.6",
     "celery>=5.5.3",
     "emails>=0.6",
     "fastapi[standard]>=0.116.1",
@@ -18,7 +18,7 @@ dependencies = [
     "passlib[bcrypt]>=1.7.4",
     "psycopg2-binary>=2.9.0",
     "pydantic-settings>=2.10.1",
-    "redis>=6.2.0",
+    "redis>=6.4.0",
     "sqlalchemy>=2.0.42",
 ]
 

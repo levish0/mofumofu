@@ -3,6 +3,8 @@ use crate::dto::auth::response::jwt::AuthJWTResponse;
 use crate::dto::follow::request::create::CreateFollowRequest;
 use crate::dto::follow::request::delete::DeleteFollowRequest;
 use crate::dto::follow::response::follow_list::FollowListResponse;
+use crate::dto::hashtag::request::trending_hashtags::TrendingHashtagsRequest;
+use crate::dto::hashtag::response::trending_hashtags::TrendingHashtagsResponse;
 use crate::dto::post::request::create_post::CreatePostRequest;
 use crate::dto::post::request::get_by_handle_and_slug::GetPostByHandleAndSlugRequest;
 use crate::dto::post::request::thumbnail_image::PostThumbnailForm;
@@ -49,7 +51,8 @@ use utoipa::{
         crate::api::v0::routes::follow::create_follow::api_create_follow,
         crate::api::v0::routes::follow::delete_follow::api_delete_follow,
         crate::api::v0::routes::follow::get_followers_list::get_followers,
-        crate::api::v0::routes::follow::get_following_list::get_following
+        crate::api::v0::routes::follow::get_following_list::get_following,
+        crate::api::v0::routes::hashtag::trending_hashtags::trending_hashtags
     ),
     components(
         schemas(
@@ -77,13 +80,16 @@ use utoipa::{
             ProfileAvatarForm,
             ProfileBannerForm,
             PostThumbnailForm,
+            TrendingHashtagsRequest,
+            TrendingHashtagsResponse,
         )
     ),
     tags(
         (name = "Auth", description = "Authentication endpoints"),
         (name = "User", description = "User endpoints"),
         (name = "Post", description = "Post endpoints"),
-        (name = "Follow", description = "Follow endpoints")
+        (name = "Follow", description = "Follow endpoints"),
+        (name = "Hashtag", description = "Hashtag endpoints")
     ),
     modifiers(&SecurityAddon) // 보안 스키마 등록
 )]

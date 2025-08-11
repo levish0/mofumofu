@@ -4,8 +4,8 @@
 	import { usePostsFilter } from '$lib/hooks/posts/usePostsFilter.svelte';
 	import { postsStore } from '$lib/stores/posts.svelte';
 
-	const PAGE_SIZE = 8;
-	const skeletonCount = PAGE_SIZE - 4;
+	const PAGE_SIZE = 12;
+	const skeletonCount = 4;
 
 	// 커스텀 훅 사용 (액션만 사용)
 	const { loadMorePosts, reloadWithNewFilter } = usePostsData({
@@ -20,7 +20,7 @@
 	// 필터 변경 감지
 	usePostsFilter({
 		onFilterChange: reloadWithNewFilter,
-		debounceMs: 500
+		debounceMs: 400
 	});
 </script>
 

@@ -51,7 +51,7 @@
 
 	function addTag() {
 		const trimmedTag = currentTagInput.trim();
-		if (trimmedTag && tagArray.length < 5 && !tagArray.includes(trimmedTag)) {
+		if (trimmedTag && tagArray.length < 8 && !tagArray.includes(trimmedTag)) {
 			const newTags = [...tagArray, trimmedTag];
 			const newValue = newTags.join(',');
 			onUpdate(newValue);
@@ -94,7 +94,7 @@
 		{/if}
 
 		<!-- 태그가 5개 미만일 때만 입력 필드 표시 -->
-		{#if tagArray.length < 5}
+		{#if tagArray.length < 8}
 			<div class="relative">
 				<Input
 					bind:value={currentTagInput}
@@ -107,13 +107,13 @@
 						? 'text-red-400'
 						: 'text-mofu-dark-400'}"
 				>
-					{tagCount}/5
+					{tagCount}/8
 				</div>
 			</div>
 		{:else}
 			<!-- 태그가 5개일 때는 개수만 표시 -->
 			<div class="text-xs {validationError ? 'text-red-400' : 'text-mofu-dark-400'} text-right">
-				{tagCount}/5
+				{tagCount}/8
 			</div>
 		{/if}
 	</div>

@@ -1,10 +1,14 @@
 <!-- src/lib/components/search/SearchPanel.svelte -->
 <script lang="ts">
 	import { postsStore } from '$lib/stores/posts.svelte';
+	import { getTrendingHashtags } from '$lib/api/hashtag/hashtagApi';
+	import { Badge } from '../ui/badge';
+	import { onMount } from 'svelte';
 
 	let { isVisible, isAtTop } = $props();
 
-	let tags = ['React', 'TypeScript', 'Next.js', 'Svelte', 'Zustand', 'UX'];
+	let trendingHashtags = $state<string[]>([]);
+	let isLoadingTags = $state(true);
 
 	// store의 filter 상태를 reactive하게 사용
 	let keyword = $derived(postsStore.filter.keyword);
@@ -30,8 +34,27 @@
 		postsStore.setFilter({ timeRange: value });
 	};
 
+	// trending hashtags 로드
+	async function loadTrendingHashtags() {
+		try {
+			isLoadingTags = true;
+			const response = await getTrendingHashtags({ days: 7, limit: 12 });
+			trendingHashtags = response.hashtags;
+		} catch (error) {
+			console.error('Failed to load trending hashtags:', error);
+			// 에러 시 더미 태그 사용
+			trendingHashtags = ['React', 'TypeScript', 'Next.js', 'Svelte', 'Zustand', 'UX'];
+		} finally {
+			isLoadingTags = false;
+		}
+	}
+
 	// Calculate the top position based on navbar state
 	const topPosition = $derived(isVisible() ? '68px' : '8px');
+
+	onMount(() => {
+		loadTrendingHashtags();
+	});
 </script>
 
 <div class="sticky w-full space-y-6 transition-all duration-100 ease-out" style="top: {topPosition}">
@@ -55,17 +78,28 @@
 	<!-- 태그 필터 -->
 	<div>
 		<h3 class="text-mofu-dark-100 mb-2 text-sm font-semibold">인기 태그</h3>
-		<div class="flex flex-wrap gap-2">
-			{#each tags as tag}
-				<button
-					onclick={() => toggleTag(tag)}
-					class="rounded-full px-3 py-1 text-xs transition-colors
-					       {selected.includes(tag) ? 'bg-blue-600 text-white' : 'bg-mofu-dark-800 hover:bg-mofu-dark-500 text-gray-200'}"
-				>
-					{tag}
-				</button>
-			{/each}
-		</div>
+		{#if isLoadingTags}
+			<!-- 로딩 스켈레톤 -->
+			<div class="flex flex-wrap gap-2">
+				{#each Array(6) as _}
+					<div class="shimmer h-6 w-16 rounded-full bg-mofu-dark-800"></div>
+				{/each}
+			</div>
+		{:else}
+			<div class="flex flex-wrap gap-2">
+				{#each trendingHashtags as tag}
+					<Badge
+						variant="secondary"
+						class="cursor-pointer text-xs {selected.includes(tag) 
+							? 'bg-mofu text-mofu-dark-950 hover:bg-mofu/90' 
+							: 'bg-mofu-dark-800 text-mofu hover:bg-mofu-dark-700 hover:text-mofu'} transition-colors"
+						onclick={() => toggleTag(tag)}
+					>
+						#{tag}
+					</Badge>
+				{/each}
+			</div>
+		{/if}
 	</div>
 
 	<!-- 정렬 -->

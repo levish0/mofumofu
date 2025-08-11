@@ -124,7 +124,13 @@
 				title: publishData.title.trim(),
 				content: publishData.content.trim(),
 				slug: publishData.slug.trim(),
-				summary: publishData.summary.trim() || null
+				summary: publishData.summary.trim() || null,
+				hashtags: publishData.tags.trim()
+					? publishData.tags
+						.split(/[,\n]/)
+						.map(tag => tag.trim())
+						.filter(tag => tag.length > 0)
+					: null
 			};
 
 			await createPost(postRequest);

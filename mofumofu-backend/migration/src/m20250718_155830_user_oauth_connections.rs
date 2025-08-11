@@ -29,9 +29,7 @@ impl MigrationTrait for Migration {
                         ColumnDef::new(UserOAuthConnections::Provider)
                             .enumeration(
                                 OAuthProvider::Table,
-                                OAuthProvider::iter()
-                                    .filter(|p| !matches!(p, OAuthProvider::Table))
-                                    .collect::<Vec<_>>(),
+                                OAuthProvider::iter().skip(1)
                             )
                             .not_null(),
                     )

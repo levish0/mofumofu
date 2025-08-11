@@ -1,13 +1,15 @@
 use crate::dto::auth::request::login::AuthLoginRequest;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
+use crate::entity::common::{ActionType, TargetType};
 use crate::entity::user_refresh_tokens::ActiveModel as RefreshTokenActiveModel;
 use crate::repository::auth::create_refresh_token::repository_create_refresh_token;
+use crate::repository::system_events::log_event::repository_log_event;
 use crate::repository::user::find_user_by_handle::repository_find_user_by_handle;
 use crate::service::auth::jwt::{create_jwt_access_token, create_jwt_refresh_token};
 use crate::service::error::errors::Errors;
 use crate::utils::crypto::verify_password;
 use anyhow::Result;
-use sea_orm::{ConnectionTrait, Set, TransactionTrait};
+use sea_orm::{ConnectionTrait, DatabaseConnection, Set, TransactionTrait};
 use tracing::error;
 
 pub async fn service_sign_in<C>(
@@ -50,7 +52,7 @@ where
         revoked_at: Default::default(),
     };
 
-    repository_create_refresh_token(conn, refresh_model)
+    let result = repository_create_refresh_token(conn, refresh_model)
         .await
         .map(|_| AuthJWTResponse {
             access_token,
@@ -59,5 +61,20 @@ where
         .map_err(|e| {
             error!("Failed to login user: {:?}", e);
             e
-        })
+        });
+
+    // 로그인 성공 시 이벤트 로깅
+    if result.is_ok() {
+        repository_log_event(
+            conn,
+            Some(user.id),
+            ActionType::UserSignedIn,
+            Some(user.id),
+            Some(TargetType::User),
+            None,
+        )
+        .await;
+    }
+
+    result
 }

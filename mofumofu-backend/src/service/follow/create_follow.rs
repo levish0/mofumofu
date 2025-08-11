@@ -1,7 +1,9 @@
 use crate::dto::follow::internal::create::CreateFollow;
+use crate::entity::common::{ActionType, TargetType};
 use crate::entity::follows::ActiveModel as FollowsActiveModel;
 use crate::entity::follows::Column as FollowsColumn;
 use crate::entity::follows::Entity as FollowsEntity;
+use crate::repository::system_events::log_event::repository_log_event;
 use crate::repository::user::find_user_by_handle::repository_find_user_by_handle;
 use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
 use crate::service::error::errors::Errors;
@@ -47,10 +49,21 @@ where
     };
 
     // Insert the new follow relationship
-    new_follow.insert(&txn).await?;
+    let created_follow = new_follow.insert(&txn).await?;
 
     // Commit the transaction
     txn.commit().await?;
+
+    // 팔로우 생성 이벤트 로깅
+    repository_log_event(
+        conn,
+        Some(follower.id),
+        ActionType::FollowCreated,
+        Some(followee.id),
+        Some(TargetType::User),
+        None,
+    )
+    .await;
 
     Ok(())
 }

@@ -45,9 +45,9 @@
 					.filter((tag) => tag.length > 0)
 			);
 
-			// 5개 제한 체크
-			if (currentTags.size >= 5) {
-				alert('태그는 최대 5개까지 추가할 수 있습니다.');
+			// 8개 제한 체크
+			if (currentTags.size >= 8) {
+				alert('태그는 최대 8개까지 추가할 수 있습니다.');
 				return;
 			}
 
@@ -107,7 +107,7 @@
 			{/each}
 
 			<!-- 태그 입력 필드 (5개 미만일 때만 표시) -->
-			{#if tagArray.length < 5}
+			{#if tagArray.length < 8}
 				<input
 					bind:value={currentInput}
 					onkeydown={handleTagKeyPress}
@@ -117,8 +117,8 @@
 			{/if}
 		</div>
 		<!-- 태그 개수 표시 -->
-		<div class="mt-2 text-xs {tagArray.length >= 5 ? 'text-red-400' : 'text-mofu-dark-400'}">
-			태그: {tagArray.length}/5
+		<div class="mt-2 text-xs {tagArray.length >= 8 ? 'text-red-400' : 'text-mofu-dark-400'}">
+			태그: {tagArray.length}/8
 		</div>
 	</div>
 </div>
