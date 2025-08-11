@@ -1,7 +1,7 @@
+use crate::entity::common::{ActionType, TargetType};
 use crate::repository::post::get_post_by_handle_and_slug::repository_get_post_by_handle_and_slug;
 use crate::repository::post::increment_view_count::repository_increment_view_count;
 use crate::repository::system_events::log_event::repository_log_event;
-use crate::entity::common::{ActionType, TargetType};
 use crate::service::error::errors::Errors;
 use crate::state::AppState;
 use redis::AsyncCommands;
@@ -73,7 +73,8 @@ where
             Some(*post_id),
             Some(TargetType::Post),
             Some(metadata),
-        ).await;
+        )
+        .await;
 
         // 중복 방지를 위한 키 저장 (TTL 설정)
         let _: () = redis_conn
@@ -84,7 +85,10 @@ where
                 Errors::SysInternalError("".to_string())
             })?;
 
-        info!("View count incremented for post: {} and logged system event", post_id);
+        info!(
+            "View count incremented for post: {} and logged system event",
+            post_id
+        );
     } else {
         info!("View already counted for post: {} within TTL", post_id);
     }

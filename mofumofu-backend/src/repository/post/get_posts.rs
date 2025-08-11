@@ -1,11 +1,9 @@
 use crate::dto::post::request::PostSortOrder;
-use crate::entity::posts::{Column, Entity as PostEntity, Model as PostModel};
 use crate::entity::common::{ActionType, TargetType};
+use crate::entity::posts::{Column, Entity as PostEntity, Model as PostModel};
 use crate::service::error::errors::Errors;
-use sea_orm::{
-    ConnectionTrait, EntityTrait, PaginatorTrait, QueryOrder, QuerySelect,
-};
 use sea_orm::prelude::Expr;
+use sea_orm::{ConnectionTrait, EntityTrait, PaginatorTrait, QueryOrder, QuerySelect};
 
 pub async fn repository_get_posts<C>(
     conn: &C,
@@ -28,7 +26,7 @@ where
         PostSortOrder::Popular => {
             // 최근 2주간 PostViewed 이벤트 수 기반으로 trending 정렬
             let two_weeks_ago = chrono::Utc::now() - chrono::Duration::weeks(2);
-            
+
             query = query
                 .order_by_desc(Expr::cust(&format!(
                     "(SELECT COUNT(*) FROM system_events WHERE target_id = posts.id AND action_type = 'post_viewed' AND target_type = 'post' AND created_at >= '{}')",
