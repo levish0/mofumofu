@@ -18,10 +18,23 @@
 	import { fly, scale } from 'svelte/transition';
 	import { Button } from '../ui/button';
 	import { invalidateAll } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { postsStore } from '$lib/stores/posts.svelte';
 	import * as m from '../../../paraglide/messages';
 	import { cn } from '$lib/utils';
 
 	let { isVisible, isAtTop } = $props();
+
+	// 현재 경로에 따른 활성 상태 확인
+	const isHomePage = $derived($page.url.pathname === '/');
+	const isLatestPage = $derived($page.url.pathname === '/latest');
+
+	// 네비게이션 클릭 시 postsStore 리셋 (다른 페이지로 이동할 때만)
+	const handleNavClick = (targetPath: string) => {
+		if ($page.url.pathname !== targetPath) {
+			postsStore.reset();
+		}
+	};
 
 	let isDropdownOpen = $state(false);
 	let closeTimer: ReturnType<typeof setTimeout> | null = null;
@@ -73,14 +86,24 @@
 	<div class="max-w-8xl mx-auto flex items-center justify-between px-4 py-3">
 		<!-- 좌측 -->
 		<div class="flex items-center space-x-2">
-			<a href="/" class="text-3xl font-bold whitespace-nowrap text-black dark:text-white">もふもふ。</a>
+			<a href="/" class="text-3xl font-bold whitespace-nowrap text-black dark:text-white" onclick={() => handleNavClick('/')}>もふもふ。</a>
 
 			<div class="flex items-center space-x-5">
-				<Button variant="ghost" href="/" class="p-0 text-lg">
+				<Button
+					variant="ghost"
+					href="/"
+					class={cn('p-0 text-lg', isHomePage ? 'opacity-80' : '')}
+					onclick={() => handleNavClick('/')}
+				>
 					<Icon src={ArrowTrendingUp} solid size="20" class="mr-3 text-black dark:text-white" />
 					트렌딩
 				</Button>
-				<Button variant="ghost" href="/latest" class="p-0 text-lg">
+				<Button
+					variant="ghost"
+					href="/latest"
+					class={cn('p-0 text-lg', isLatestPage ? 'opacity-80' : '')}
+					onclick={() => handleNavClick('/latest')}
+				>
 					<Icon src={Clock} size="20" solid class="mr-3 text-black dark:text-white" />
 					최신
 				</Button>

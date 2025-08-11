@@ -46,6 +46,7 @@
 		summary={post?.summary || ''}
 		date={formattedDate}
 		comments={post?.comment_count || 0}
+		hashtags={post?.hashtags || []}
 		{isSkeleton}
 	/>
 

@@ -7,7 +7,6 @@ use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, ToSchema)]
 pub struct PostListItem {
-    pub id: Uuid,
     pub title: String,
     pub summary: Option<String>,
     pub thumbnail_image: Option<String>,

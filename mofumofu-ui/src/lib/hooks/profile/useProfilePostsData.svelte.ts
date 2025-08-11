@@ -83,9 +83,9 @@ export function useProfilePostsData(config: UseProfilePostsDataConfig = {}) {
 				page: nextPage
 			});
 
-			// 중복 제거 후 추가 (누적 저장)
-			const existingIds = new Set(profilePostsStore.posts.map((post) => post.id));
-			const newPosts = response.posts.filter((post) => !existingIds.has(post.id));
+			// 중복 제거 후 추가 (user_handle + slug 조합으로 고유성 판단)
+			const existingKeys = new Set(profilePostsStore.posts.map((post) => `${post.user_handle}-${post.slug}`));
+			const newPosts = response.posts.filter((post) => !existingKeys.has(`${post.user_handle}-${post.slug}`));
 
 			profilePostsStore.addPosts(newPosts);
 			profilePostsStore.setCurrentPage(response.current_page);

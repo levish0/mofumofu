@@ -60,7 +60,6 @@ export interface SearchPostsRequest {
 }
 
 export interface PostListItem {
-	id: string;
 	title: string;
 	summary?: string | null;
 	thumbnail_image?: string | null;

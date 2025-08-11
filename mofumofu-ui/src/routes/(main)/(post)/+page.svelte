@@ -2,19 +2,14 @@
 	import PostList from '$lib/components/post/PostList.svelte';
 	import { usePostsData } from '$lib/hooks/posts/usePostsData.svelte';
 	import { postsStore } from '$lib/stores/posts.svelte';
-	import { onMount } from 'svelte';
 
 	const PAGE_SIZE = 15;
 	const skeletonCount = 5;
 
-	// Set filter to popular (trending) on mount
-	onMount(() => {
-		postsStore.updateFilter({ sortBy: 'popular' });
-	});
-
 	// 커스텀 훅 사용
-	const { loadMorePosts, reloadWithNewFilter } = usePostsData({
-		pageSize: PAGE_SIZE
+	const { loadMorePosts } = usePostsData({
+		pageSize: PAGE_SIZE,
+		sortOrder: 'popular'
 	});
 
 	// Store에서 직접 reactive 값 가져오기

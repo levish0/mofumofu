@@ -66,7 +66,6 @@ where
             let created_at = DateTime::from_timestamp(mpost.created_at, 0).unwrap_or_else(Utc::now);
 
             PostListItem {
-                id: mpost.id.parse().unwrap_or_default(),
                 title: mpost.title,
                 summary: mpost.summary,
                 thumbnail_image: mpost.thumbnail_image,

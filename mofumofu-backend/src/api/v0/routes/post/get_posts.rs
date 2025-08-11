@@ -26,7 +26,7 @@ pub async fn get_posts(
 ) -> Result<impl IntoResponse, Errors> {
     info!("Received POST request to get posts: {:?}", payload);
 
-    let response = service_get_posts(&state.conn, &state.meilisearch, payload).await?;
+    let response = service_get_posts(&state.conn, payload).await?;
 
     Ok(response)
 }

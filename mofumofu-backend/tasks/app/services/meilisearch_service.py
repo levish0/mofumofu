@@ -241,7 +241,7 @@ class MeilisearchService:
             }
 
             index = self.client.index(self.index_name)
-            task = index.add_or_replace([document], primary_key="id")
+            task = index.add_documents([document], primary_key="id")
 
             return {
                 "status": "success",

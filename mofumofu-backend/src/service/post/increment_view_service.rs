@@ -1,5 +1,7 @@
 use crate::repository::post::get_post_by_handle_and_slug::repository_get_post_by_handle_and_slug;
 use crate::repository::post::increment_view_count::repository_increment_view_count;
+use crate::repository::system_events::log_event::repository_log_event;
+use crate::entity::common::{ActionType, TargetType};
 use crate::service::error::errors::Errors;
 use crate::state::AppState;
 use redis::AsyncCommands;
@@ -58,6 +60,21 @@ where
         // DB에서 조회수 증가
         repository_increment_view_count(conn, post_id).await?;
 
+        // System event 로그 남기기
+        let metadata = serde_json::json!({
+            "anonymous_user_id": anonymous_user_id,
+            "ip_address": null // 필요시 추가 가능
+        });
+
+        repository_log_event(
+            conn,
+            None, // 익명 사용자이므로 user_id는 None
+            ActionType::PostViewed,
+            Some(*post_id),
+            Some(TargetType::Post),
+            Some(metadata),
+        ).await;
+
         // 중복 방지를 위한 키 저장 (TTL 설정)
         let _: () = redis_conn
             .set_ex(&redis_key, "1", VIEW_COUNT_TTL as u64)
@@ -67,7 +84,7 @@ where
                 Errors::SysInternalError("".to_string())
             })?;
 
-        info!("View count incremented for post: {}", post_id);
+        info!("View count incremented for post: {} and logged system event", post_id);
     } else {
         info!("View already counted for post: {} within TTL", post_id);
     }

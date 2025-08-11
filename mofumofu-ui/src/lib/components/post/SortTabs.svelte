@@ -13,7 +13,7 @@
 
 	const currentSort = $derived(postsStore.filter.sortBy);
 	const currentTimeRange = $derived(postsStore.filter.timeRange);
-	const showTimeRange = $derived(currentSort === 'popular' || currentSort === 'trending');
+	const showTimeRange = $derived(currentSort === 'popular');
 
 	const timeRangeOptions = [
 		{ value: 'all', label: '전체 기간' },

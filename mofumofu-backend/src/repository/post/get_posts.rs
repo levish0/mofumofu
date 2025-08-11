@@ -1,9 +1,11 @@
 use crate::dto::post::request::PostSortOrder;
 use crate::entity::posts::{Column, Entity as PostEntity, Model as PostModel};
+use crate::entity::common::{ActionType, TargetType};
 use crate::service::error::errors::Errors;
 use sea_orm::{
-    ColumnTrait, ConnectionTrait, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder, QuerySelect,
+    ConnectionTrait, EntityTrait, PaginatorTrait, QueryOrder, QuerySelect,
 };
+use sea_orm::prelude::Expr;
 
 pub async fn repository_get_posts<C>(
     conn: &C,
@@ -24,8 +26,15 @@ where
             query = query.order_by_desc(Column::CreatedAt);
         }
         PostSortOrder::Popular => {
-            // 좋아요 수 기준으로 정렬 (나중에 더 복잡한 로직으로 변경 가능)
-            query = query.order_by_desc(Column::LikeCount);
+            // 최근 2주간 PostViewed 이벤트 수 기반으로 trending 정렬
+            let two_weeks_ago = chrono::Utc::now() - chrono::Duration::weeks(2);
+            
+            query = query
+                .order_by_desc(Expr::cust(&format!(
+                    "(SELECT COUNT(*) FROM system_events WHERE target_id = posts.id AND action_type = 'post_viewed' AND target_type = 'post' AND created_at >= '{}')",
+                    two_weeks_ago.format("%Y-%m-%d %H:%M:%S%.3f+00:00")
+                )))
+                .order_by_desc(Column::CreatedAt); // 같은 view count일 때는 최신순
         }
         PostSortOrder::Oldest => {
             query = query.order_by_asc(Column::CreatedAt);

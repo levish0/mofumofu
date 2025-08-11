@@ -20,24 +20,32 @@
 	font-size: 2rem !important;
 	line-height: 2.5rem !important;
 	color: inherit !important;
+	margin-top: 1.5rem !important;
+	margin-bottom: 1rem !important;
 }
 
 .prose h2 {
 	font-size: 1.75rem !important;
 	line-height: 2rem !important;
 	color: inherit !important;
+	margin-top: 1.25rem !important;
+	margin-bottom: 0.75rem !important;
 }
 
 .prose h3 {
 	font-size: 1.5rem !important;
 	line-height: 1.75rem !important;
 	color: inherit !important;
+	margin-top: 1rem !important;
+	margin-bottom: 0.5rem !important;
 }
 
 .prose h4 {
 	font-size: 1.25rem !important;
 	line-height: 1.5rem !important;
 	color: inherit !important;
+	margin-top: 0.75rem !important;
+	margin-bottom: 0.5rem !important;
 }
 
 .prose h5 {
@@ -46,4 +54,56 @@
 
 .prose h6 {
 	color: inherit !important;
+}
+
+/* Blockquote styling */
+.prose blockquote {
+	border-left-color: #fab69a !important;
+}
+
+/* Link styling */
+.prose a {
+	margin: 0 !important;
+	padding: 0 !important;
+	color: #fab69a !important;
+}
+
+/* Image inside links */
+.prose a img {
+	margin: 0 !important;
+	padding: 0 !important;
+	display: inline !important;
+	vertical-align: middle !important;
+}
+
+/* Paragraph and line break styling */
+.prose p {
+	line-height: 1.4 !important;
+	margin-top: 0.5rem !important;
+	margin-bottom: 0.5rem !important;
+}
+
+.prose br {
+	margin: 0 !important;
+	line-height: 1 !important;
+}
+
+/* Horizontal rule styling */
+.prose hr {
+	border-color: #f3f3f4 !important;
+	margin-top: 1rem !important;
+	margin-bottom: 1rem !important;
+}
+
+.prose:where(.dark, .dark *) hr {
+	border-color: #1e1e1e !important;
+}
+
+/* List styling */
+.prose ul li::marker {
+	color: #000000 !important;
+}
+
+.prose:where(.dark, .dark *) ul li::marker {
+	color: #ffffff !important;
 }

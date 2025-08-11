@@ -1,7 +1,7 @@
-import { searchPosts } from '$lib/api/post/postApi';
+import { getPosts } from '$lib/api/post/postApi';
 import type {
 	PostSortOrder,
-	SearchPostsRequest,
+	GetPostsRequest,
 	PostListItem
 } from '$lib/api/post/types';
 import { postsStore } from '$lib/stores/posts.svelte';
@@ -9,66 +9,26 @@ import { onMount } from 'svelte';
 
 interface UsePostsDataConfig {
 	pageSize?: number;
+	sortOrder?: PostSortOrder;
 }
 
 export function usePostsData(config: UsePostsDataConfig = {}) {
 	const PAGE_SIZE = config.pageSize ?? 8;
-
-	// API 파라미터 매핑 함수들
-	const mapSortByToApiSort = (sortBy: string): PostSortOrder => {
-		switch (sortBy) {
-			case 'recent':
-				return 'latest';
-			case 'oldest':
-				return 'oldest';
-			case 'popular':
-			case 'comments':
-			case 'views':
-				return 'popular';
-			default:
-				return 'latest';
-		}
-	};
-
-	const mapTimeRangeToDate = (timeRange: string) => {
-		const now = new Date();
-		const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
-		switch (timeRange) {
-			case 'today':
-				return { date_from: today.toISOString() };
-			case 'week':
-				const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
-				return { date_from: weekAgo.toISOString() };
-			case 'month':
-				const monthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
-				return { date_from: monthAgo.toISOString() };
-			case 'year':
-				const yearAgo = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
-				return { date_from: yearAgo.toISOString() };
-			default:
-				return {};
-		}
-	};
+	const SORT_ORDER = config.sortOrder ?? 'latest';
 
 	// API 호출 파라미터 빌드
 	const buildApiParams = (page: number) => {
-		const currentFilter = postsStore.filter;
-		const currentApiSort = mapSortByToApiSort(currentFilter.sortBy);
-		const currentDateRange = mapTimeRangeToDate(currentFilter.timeRange);
-
 		return {
 			page: page,
 			page_size: PAGE_SIZE,
-			sort: currentApiSort,
-			...currentDateRange
+			sort: SORT_ORDER
 		};
 	};
 
-	// API 호출 함수 - 모든 post 요청에 searchPosts 사용
+	// API 호출 함수 - 모든 post 요청에 getPosts 사용
 	const callApi = async (page: number) => {
 		const params = buildApiParams(page);
-		return await searchPosts(params as SearchPostsRequest);
+		return await getPosts(params as GetPostsRequest);
 	};
 
 	// 초기 데이터 로드 - Store에 저장된 포스트가 있으면 복원, 없으면 targetPage부터 로드
@@ -119,9 +79,9 @@ export function usePostsData(config: UsePostsDataConfig = {}) {
 			const nextPage = postsStore.currentPage + 1;
 			const response = await callApi(nextPage);
 
-			// 중복 제거 후 추가
-			const existingIds = new Set(postsStore.posts.map((post) => post.id));
-			const newPosts = response.posts.filter((post) => !existingIds.has(post.id));
+			// 중복 제거 후 추가 (user_handle + slug 조합으로 고유성 판단)
+			const existingKeys = new Set(postsStore.posts.map((post) => `${post.user_handle}-${post.slug}`));
+			const newPosts = response.posts.filter((post) => !existingKeys.has(`${post.user_handle}-${post.slug}`));
 
 			postsStore.addPosts(newPosts);
 			postsStore.setCurrentPage(response.current_page);
@@ -134,8 +94,8 @@ export function usePostsData(config: UsePostsDataConfig = {}) {
 		}
 	};
 
-	// 필터 변경 시 데이터 리로드
-	const reloadWithNewFilter = () => {
+	// 데이터 리로드
+	const reloadData = () => {
 		postsStore.reset();
 		loadInitialPosts();
 	};
@@ -162,13 +122,9 @@ export function usePostsData(config: UsePostsDataConfig = {}) {
 		get currentPage() {
 			return postsStore.currentPage;
 		},
-		get filter() {
-			return postsStore.filter;
-		},
-
 		// Actions
 		loadInitialPosts,
 		loadMorePosts,
-		reloadWithNewFilter
+		reloadData
 	};
 }

@@ -127,7 +127,7 @@
 					</header>
 
 					<!-- Post Content -->
-					<div class="prose prose-invert prose-lg text-mofu-dark-200 max-w-none">
+					<div class="prose prose-invert prose-lg text-mofu-dark-200 max-w-none break-all">
 						{@html htmlContent}
 					</div>
 				</article>
@@ -138,7 +138,7 @@
 				<div class="sticky transition-all duration-100 ease-out" style="top: {topPosition}">
 					<div class="px-4">
 						<h3 class="dark:text-mofu-dark-200 mb-2 text-xl font-semibold">목차</h3>
-						<nav class="space-y-2">
+						<nav class="max-h-[80vh] space-y-2 overflow-y-auto">
 							{#each tocItems as item}
 								<a
 									href="#{item.id}"

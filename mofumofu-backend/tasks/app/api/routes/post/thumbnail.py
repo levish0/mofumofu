@@ -1,6 +1,8 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File, Form
 from pydantic import BaseModel
 from app.tasks.post_tasks import upload_post_file_task, delete_post_file_task
+from app.tasks.search_tasks import update_single_post_task
+from celery import chain
 import logging
 
 logger = logging.getLogger(__name__)
@@ -31,10 +33,13 @@ async def upload_thumbnail(
         # Content-Type 가져오기
         content_type = file.content_type or "image/jpeg"
 
-        # Celery 태스크 실행
+        # 썸네일 업로드 태스크 실행
         task = upload_post_file_task.delay(
             user_uuid, post_id, filename, file_data, content_type, "thumbnail", False
         )
+        
+        # 검색 색인 업데이트 태스크도 실행
+        update_single_post_task.delay(post_id)
 
         logger.info(
             f"포스트 썸네일 업로드 태스크 시작: {task.id} (user_uuid: {user_uuid}, post_id: {post_id}, filename: {file.filename})"
@@ -96,6 +101,9 @@ async def update_thumbnail(
         task = upload_post_file_task.delay(
             user_uuid, post_id, filename, file_data, content_type, "thumbnail", True
         )
+        
+        # 검색 색인 업데이트 태스크도 실행
+        update_single_post_task.delay(post_id)
 
         logger.info(
             f"포스트 썸네일 업데이트 태스크 시작: {task.id} (user_uuid: {user_uuid}, post_id: {post_id}, filename: {file.filename})"
