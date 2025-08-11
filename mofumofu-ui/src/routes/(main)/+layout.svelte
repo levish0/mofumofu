@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Footer from '$lib/components/Footer.svelte';
 	import Navbar from '$lib/components/navbar/Navbar.svelte';
 	import { useNavbarScroll } from '$lib/hooks/ui/useNavbarScroll.svelte';
 	import { setContext } from 'svelte';
@@ -19,3 +20,4 @@
 		{@render children()}
 	</div>
 </div>
+<Footer />

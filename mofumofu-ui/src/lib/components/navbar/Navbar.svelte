@@ -86,7 +86,11 @@
 	<div class="max-w-8xl mx-auto flex items-center justify-between px-4 py-3">
 		<!-- 좌측 -->
 		<div class="flex items-center space-x-2">
-			<a href="/" class="text-3xl font-bold whitespace-nowrap text-black dark:text-white" onclick={() => handleNavClick('/')}>もふもふ。</a>
+			<a
+				href="/"
+				class="text-3xl font-bold whitespace-nowrap text-black dark:text-white"
+				onclick={() => handleNavClick('/')}>もふもふ(づ￣ ³￣)づ。</a
+			>
 
 			<div class="flex items-center space-x-5">
 				<Button

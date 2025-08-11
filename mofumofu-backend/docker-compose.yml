@@ -12,6 +12,9 @@ services:
       - "8000:8000"
     networks:
       - mofumofu-network
+    depends_on:
+      redis-backend:
+        condition: service_healthy
 
   meilisearch:
     image: getmeili/meilisearch:latest
@@ -24,6 +27,23 @@ services:
       - mofumofu-network
     volumes:
       - meili_data:/meili_data
+
+  # 백엔드용 redis
+  redis-backend:
+    image: redis:8.0.2
+    container_name: redis-backend
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-backend-data:/data
+    networks:
+      - mofumofu-network
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # Redis (Celery 브로커)
   redis-celery:
@@ -52,9 +72,6 @@ services:
       - "7000:7000"
     env_file:
       - docker.env
-    environment:
-      - CELERY_BROKER_URL=redis://redis-celery:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis-celery:6379/0
     networks:
       - mofumofu-network
     depends_on:
@@ -70,9 +87,6 @@ services:
     command: ["python", "start_worker.py"]
     env_file:
       - docker.env
-    environment:
-      - CELERY_BROKER_URL=redis://redis-celery:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis-celery:6379/0
     networks:
       - mofumofu-network
     depends_on:
@@ -93,9 +107,6 @@ services:
     command: ["uv", "run", "celery", "-A", "app.core.celery_app", "beat", "--loglevel=info"]
     env_file:
       - docker.env
-    environment:
-      - CELERY_BROKER_URL=redis://redis-celery:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis-celery:6379/0
     networks:
       - mofumofu-network
     depends_on:
@@ -116,9 +127,6 @@ services:
       - "5555:5555"
     env_file:
       - docker.env
-    environment:
-      - CELERY_BROKER_URL=redis://redis-celery:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis-celery:6379/0
     networks:
       - mofumofu-network
     depends_on:
@@ -129,3 +137,4 @@ services:
 volumes:
   meili_data:
   redis-celery-data:
+  redis-backend-data:
