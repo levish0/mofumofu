@@ -33,6 +33,7 @@ pub async fn establish_connection() -> DatabaseConnection {
         .min_connections(DbConfig::get().db_min_connection) // 최소 연결 수
         // 타임아웃 설정
         .connect_timeout(Duration::from_secs(8)) // 연결 타임아웃: 8초
+        .acquire_timeout(Duration::from_secs(30))
         .idle_timeout(Duration::from_secs(300)) // 유휴 타임아웃: 5분
         // SQL 로깅 활성화 (디버깅 용도)
         .sqlx_logging(false);
