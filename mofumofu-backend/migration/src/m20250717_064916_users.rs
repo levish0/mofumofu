@@ -45,6 +45,12 @@ impl MigrationTrait for Migration {
                     )
                     .col(ColumnDef::new(Users::ProfileImage).text().null())
                     .col(ColumnDef::new(Users::BannerImage).text().null())
+                    .col(
+                        ColumnDef::new(Users::CreatedAt)
+                            .timestamp_with_time_zone()
+                            .not_null()
+                            .default(Expr::cust("now()")),
+                    )
                     .to_owned(),
             )
             .await?;
@@ -93,4 +99,5 @@ enum Users {
     IsVerified,
     ProfileImage,
     BannerImage,
+    CreatedAt,
 }

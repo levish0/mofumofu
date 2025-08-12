@@ -60,19 +60,13 @@ where
         // DB에서 조회수 증가
         repository_increment_view_count(conn, post_id).await?;
 
-        // System event 로그 남기기
-        let metadata = serde_json::json!({
-            "anonymous_user_id": anonymous_user_id,
-            "ip_address": null // 필요시 추가 가능
-        });
-
         repository_log_event(
             conn,
             None, // 익명 사용자이므로 user_id는 None
             ActionType::PostViewed,
             Some(*post_id),
             Some(TargetType::Post),
-            Some(metadata),
+            None,
         )
         .await;
 

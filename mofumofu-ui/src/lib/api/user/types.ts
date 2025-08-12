@@ -7,6 +7,7 @@ export interface UserInfoResponse {
 	website?: string;
 	profile_image?: string;
 	banner_image?: string;
+	created_at?: string;
 }
 
 export interface HandleCheckResponse {

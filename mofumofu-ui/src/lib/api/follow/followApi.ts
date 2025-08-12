@@ -1,5 +1,6 @@
 import { privateApi } from '../private';
-import type { CreateFollowRequest, DeleteFollowRequest } from './types';
+import { publicApi } from '../public';
+import type { CreateFollowRequest, DeleteFollowRequest, GetFollowCountRequest, FollowCountResponse } from './types';
 
 export async function createFollow(request: CreateFollowRequest) {
 	try {
@@ -19,6 +20,34 @@ export async function deleteFollow(request: DeleteFollowRequest) {
 		});
 	} catch (error) {
 		console.error('Failed to delete follow:', error);
+		throw error;
+	}
+}
+
+export async function getFollowerCount(request: GetFollowCountRequest): Promise<FollowCountResponse> {
+	try {
+		const response = await publicApi
+			.post('v0/follow/follower-count', {
+				json: request
+			})
+			.json<FollowCountResponse>();
+		return response;
+	} catch (error) {
+		console.error('Failed to get follower count:', error);
+		throw error;
+	}
+}
+
+export async function getFollowingCount(request: GetFollowCountRequest): Promise<FollowCountResponse> {
+	try {
+		const response = await publicApi
+			.post('v0/follow/following-count', {
+				json: request
+			})
+			.json<FollowCountResponse>();
+		return response;
+	} catch (error) {
+		console.error('Failed to get following count:', error);
 		throw error;
 	}
 }

@@ -1,15 +1,13 @@
 use crate::dto::follow::internal::create::CreateFollow;
 use crate::entity::common::{ActionType, TargetType};
-use crate::entity::follows::ActiveModel as FollowsActiveModel;
-use crate::entity::follows::Column as FollowsColumn;
-use crate::entity::follows::Entity as FollowsEntity;
+use crate::repository::follow::check_follow_exists::repository_check_follow_exists;
+use crate::repository::follow::create_follow::repository_create_follow;
 use crate::repository::system_events::log_event::repository_log_event;
 use crate::repository::user::find_user_by_handle::repository_find_user_by_handle;
 use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
 use crate::service::error::errors::Errors;
+use sea_orm::ConnectionTrait;
 use sea_orm::TransactionTrait;
-use sea_orm::{ActiveModelTrait, ConnectionTrait, QueryFilter, Set};
-use sea_orm::{ColumnTrait, EntityTrait};
 
 pub async fn service_create_follow_by_handle<C>(
     conn: &C,
@@ -32,24 +30,14 @@ where
     }
 
     // 이미 팔로우 관계가 있는지 체크
-    let existing_follow = FollowsEntity::find()
-        .filter(FollowsColumn::FollowerId.eq(follower.id))
-        .filter(FollowsColumn::FolloweeId.eq(followee.id))
-        .one(&txn)
-        .await?;
+    let follow_exists = repository_check_follow_exists(&txn, follower.id, followee.id).await?;
 
-    if existing_follow.is_some() {
+    if follow_exists {
         return Err(Errors::FollowAlreadyFollowing);
     }
 
-    let new_follow = FollowsActiveModel {
-        id: Default::default(),
-        follower_id: Set(follower.id),
-        followee_id: Set(followee.id),
-    };
-
     // Insert the new follow relationship
-    let created_follow = new_follow.insert(&txn).await?;
+    let _created_follow = repository_create_follow(&txn, follower.id, followee.id).await?;
 
     // Commit the transaction
     txn.commit().await?;

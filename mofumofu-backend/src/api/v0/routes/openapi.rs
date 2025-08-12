@@ -2,15 +2,17 @@ use crate::dto::auth::request::login::AuthLoginRequest;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
 use crate::dto::follow::request::create::CreateFollowRequest;
 use crate::dto::follow::request::delete::DeleteFollowRequest;
+use crate::dto::follow::request::get_count::GetFollowCountRequest;
+use crate::dto::follow::response::follow_count::FollowCountResponse;
 use crate::dto::follow::response::follow_list::FollowListResponse;
 use crate::dto::hashtag::request::trending_hashtags::TrendingHashtagsRequest;
 use crate::dto::hashtag::response::trending_hashtags::TrendingHashtagsResponse;
 use crate::dto::post::request::create_post::CreatePostRequest;
 use crate::dto::post::request::get_by_handle_and_slug::GetPostByHandleAndSlugRequest;
 use crate::dto::post::request::thumbnail_image::PostThumbnailForm;
-use crate::dto::post::request::{GetPostsRequest, PostSortOrder, SearchPostsRequest};
+use crate::dto::post::request::{GetPostsRequest, GetUserPostsRequest, PostSortOrder, SearchPostsRequest};
 use crate::dto::post::response::post_info::{PostAuthor, PostInfoResponse};
-use crate::dto::post::response::{GetPostsResponse, PostListItem};
+use crate::dto::post::response::{GetPostsResponse, PostListItem, UserPostsResponse};
 use crate::dto::user::request::avatar_image::ProfileAvatarForm;
 use crate::dto::user::request::banner_image::ProfileBannerForm;
 use crate::dto::user::request::create::CreateUserRequest;
@@ -21,8 +23,8 @@ use crate::dto::user::response::info::UserInfoResponse;
 use crate::service::error::errors::ErrorResponse;
 use utoipa::openapi::security::{ApiKey, ApiKeyValue};
 use utoipa::{
-    Modify, OpenApi,
-    openapi::security::{HttpAuthScheme, HttpBuilder, SecurityScheme},
+    openapi::security::{HttpAuthScheme, HttpBuilder, SecurityScheme}, Modify,
+    OpenApi,
 };
 
 #[derive(OpenApi)]
@@ -43,12 +45,15 @@ use utoipa::{
         crate::api::v0::routes::post::create_post::create_post,
         crate::api::v0::routes::post::get_post_by_handle_and_slug::get_post_by_handle_and_slug,
         crate::api::v0::routes::post::get_posts::get_posts,
+        crate::api::v0::routes::post::get_user_posts::get_user_posts,
         crate::api::v0::routes::post::increment_view::increment_view,
         crate::api::v0::routes::post::search_posts::search_posts,
         crate::api::v0::routes::post::upload_thumbnail::upload_thumbnail,
         crate::api::v0::routes::follow::create_follow::api_create_follow,
         crate::api::v0::routes::follow::delete_follow::api_delete_follow,
+        crate::api::v0::routes::follow::get_follower_count::api_get_follower_count,
         crate::api::v0::routes::follow::get_followers_list::get_followers,
+        crate::api::v0::routes::follow::get_following_count::api_get_following_count,
         crate::api::v0::routes::follow::get_following_list::get_following,
         crate::api::v0::routes::hashtag::trending_hashtags::trending_hashtags
     ),
@@ -60,14 +65,18 @@ use utoipa::{
             CreatePostRequest,
             GetPostByHandleAndSlugRequest,
             GetPostsRequest,
+            GetUserPostsRequest,
             SearchPostsRequest,
             PostSortOrder,
             PostInfoResponse,
             PostAuthor,
             PostListItem,
             GetPostsResponse,
+            UserPostsResponse,
             CreateFollowRequest,
             DeleteFollowRequest,
+            GetFollowCountRequest,
+            FollowCountResponse,
             FollowListResponse,
             GetUserProfileRequest,
             UpdateProfileRequest,

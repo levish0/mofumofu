@@ -7,9 +7,9 @@ use crate::api::v0::routes::user::upload_avatar::upload_avatar;
 use crate::api::v0::routes::user::upload_banner::upload_banner;
 use crate::middleware::auth::access_jwt_auth;
 use crate::state::AppState;
-use axum::Router;
 use axum::extract::DefaultBodyLimit;
 use axum::routing::{get, post, put};
+use axum::Router;
 
 pub fn user_routes() -> Router<AppState> {
     Router::new()

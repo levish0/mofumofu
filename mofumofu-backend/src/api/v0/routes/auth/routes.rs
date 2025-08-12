@@ -5,8 +5,8 @@ use crate::api::v0::routes::auth::sign_in::sign_in;
 use crate::api::v0::routes::auth::sign_out::sign_out;
 use crate::middleware::auth::refresh_jwt_auth;
 use crate::state::AppState;
-use axum::Router;
 use axum::routing::post;
+use axum::Router;
 
 pub fn auth_routes() -> Router<AppState> {
     Router::new()

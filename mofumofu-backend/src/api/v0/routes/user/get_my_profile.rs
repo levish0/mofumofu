@@ -3,8 +3,8 @@ use crate::dto::user::response::info::UserInfoResponse;
 use crate::service::error::errors::Errors;
 use crate::service::user::service_get_user_by_uuid;
 use crate::state::AppState;
-use axum::Extension;
 use axum::extract::State;
+use axum::Extension;
 
 // 보호된 API - 사용자 프로필 조회
 #[utoipa::path(

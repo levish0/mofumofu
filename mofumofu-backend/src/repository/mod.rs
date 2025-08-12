@@ -1,4 +1,5 @@
 pub mod auth;
+pub mod follow;
 pub mod hashtag;
 pub mod oauth;
 pub mod post;

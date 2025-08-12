@@ -5,7 +5,6 @@ use crate::service::post::get_post_by_handle_and_slug::service_get_post_by_handl
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
 use axum::extract::State;
-use axum::http::StatusCode;
 
 #[utoipa::path(
     post,

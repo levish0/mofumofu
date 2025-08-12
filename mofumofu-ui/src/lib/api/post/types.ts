@@ -59,6 +59,14 @@ export interface SearchPostsRequest {
 	page_size?: number | null;
 }
 
+export interface GetUserPostsRequest {
+	user_handle: string;
+}
+
+export interface UserPostsResponse {
+	posts: PostListItem[];
+}
+
 export interface PostListItem {
 	title: string;
 	summary?: string | null;

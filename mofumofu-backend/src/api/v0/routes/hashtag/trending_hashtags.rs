@@ -5,7 +5,6 @@ use crate::service::hashtag::get_trending_hashtags::service_get_trending_hashtag
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
 use axum::extract::State;
-use axum::http::StatusCode;
 
 #[utoipa::path(
     post,

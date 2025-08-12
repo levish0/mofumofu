@@ -8,6 +8,14 @@ export interface DeleteFollowRequest {
 	followee_handle: string;
 }
 
+export interface GetFollowCountRequest {
+	user_handle: string;
+}
+
+export interface FollowCountResponse {
+	count: number;
+}
+
 export interface FollowListResponse {
 	has_more: boolean;
 	page: number;

@@ -3,10 +3,10 @@ use crate::dto::post::request::thumbnail_image::PostThumbnailForm;
 use crate::service::error::errors::Errors;
 use crate::service::post::update_post_thumbnail::service_update_post_thumbnail;
 use crate::state::AppState;
-use axum::Extension;
 use axum::extract::{Multipart, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
+use axum::Extension;
 use tracing::info;
 
 #[utoipa::path(

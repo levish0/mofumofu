@@ -26,6 +26,7 @@ where
         is_verified: Set(true),
         profile_image: Set(profile_image),
         banner_image: Set(None),
+        created_at: Default::default(),
     };
 
     new_user.insert(txn).await?;

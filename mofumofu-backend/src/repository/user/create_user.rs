@@ -26,6 +26,7 @@ where
         is_verified: Set(false),
         profile_image: Default::default(),
         banner_image: Default::default(),
+        created_at: Default::default(),
     };
 
     let user = new_user.insert(txn).await?;

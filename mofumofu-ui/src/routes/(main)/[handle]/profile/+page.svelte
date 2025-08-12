@@ -87,13 +87,13 @@
 			<div class="lg:col-span-1">
 				<div class="sticky transition-all duration-100 ease-out" style="top: {topPosition}">
 					<ProfileHeader profile={data.profile} {isOwnProfile} {isLoading} {topPosition} />
-					<ProfileInfo profile={data.profile} />
+					<ProfileInfo profile={data.profile} followerCount={data.followerCount} followingCount={data.followingCount} />
 				</div>
 			</div>
 
 			<!-- Right Column: Posts -->
 			<div class="lg:col-span-1">
-				<ProfilePostGrid profile={data.profile} />
+				<ProfilePostGrid profile={data.profile} posts={data.posts} />
 			</div>
 		</div>
 	</div>

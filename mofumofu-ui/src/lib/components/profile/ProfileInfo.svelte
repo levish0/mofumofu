@@ -7,9 +7,23 @@
 
 	type Props = {
 		profile: UserInfoResponse;
+		followerCount?: number;
+		followingCount?: number;
 	};
 
-	const { profile }: Props = $props();
+	const { profile, followerCount = 0, followingCount = 0 }: Props = $props();
+
+	// 가입 날짜 포맷팅 함수
+	function formatJoinDate(createdAt?: string): string {
+		if (!createdAt) return 'Joined August 2017'; // 기본값
+
+		const date = new Date(createdAt);
+		const options: Intl.DateTimeFormatOptions = { 
+			year: 'numeric', 
+			month: 'long' 
+		};
+		return `Joined ${date.toLocaleDateString('en-US', options)}`;
+	}
 
 	function linkifyBio(text: string): string {
 		// 1. First escape HTML
@@ -78,18 +92,18 @@
 			</div>
 			<div class="flex items-center gap-1">
 				<Icon src={CalendarDays} class="h-4 w-4" />
-				<span>Joined August 2017</span>
+				<span>{formatJoinDate(profile.created_at)}</span>
 			</div>
 		</div>
 
 		<!-- Stats -->
 		<div class="flex items-center space-x-4 text-sm">
 			<div>
-				<span class="font-bold text-gray-900 dark:text-white">427</span>
+				<span class="font-bold text-gray-900 dark:text-white">{followingCount.toLocaleString()}</span>
 				<span class="dark:text-mofu-dark-300">{m.profile_following()}</span>
 			</div>
 			<div>
-				<span class="font-bold text-gray-900 dark:text-white">152.1K</span>
+				<span class="font-bold text-gray-900 dark:text-white">{followerCount.toLocaleString()}</span>
 				<span class="dark:text-mofu-dark-300">{m.profile_followers()}</span>
 			</div>
 		</div>

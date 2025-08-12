@@ -8,7 +8,9 @@ import type {
 	GetPostsAroundPageRequest,
 	SearchPostsRequest,
 	GetPostsResponse,
-	ThumbnailUploadRequest
+	ThumbnailUploadRequest,
+	GetUserPostsRequest,
+	UserPostsResponse
 } from './types';
 
 export async function createPost(postData: CreatePostRequest): Promise<void> {
@@ -83,6 +85,16 @@ export async function incrementPostView(request: GetPostByHandleAndSlugRequest):
 		await publicApi.post('v0/post/view', { json: request });
 	} catch (error) {
 		console.error('Failed to increment post view:', error);
+		throw error;
+	}
+}
+
+export async function getUserPosts(request: GetUserPostsRequest): Promise<UserPostsResponse> {
+	try {
+		const response = await publicApi.post('v0/posts/user', { json: request });
+		return response.json<UserPostsResponse>();
+	} catch (error) {
+		console.error('Failed to get user posts:', error);
 		throw error;
 	}
 }

@@ -1,9 +1,8 @@
+use crate::repository::follow::get_follower_count::repository_get_follower_count;
 use crate::repository::user::get_user_by_handle::repository_get_user_by_handle;
 use crate::service::error::errors::Errors;
-use sea_orm::PaginatorTrait;
+use sea_orm::ConnectionTrait;
 use sea_orm::TransactionTrait;
-use sea_orm::{ColumnTrait, EntityTrait};
-use sea_orm::{ConnectionTrait, QueryFilter};
 
 pub async fn service_get_follower_count<C>(
     conn: &C,
@@ -13,11 +12,6 @@ where
     C: ConnectionTrait + TransactionTrait,
 {
     let user = repository_get_user_by_handle(conn, user_handle).await?;
-
-    let count = crate::entity::follows::Entity::find()
-        .filter(crate::entity::follows::Column::FolloweeId.eq(user.id))
-        .count(conn)
-        .await?;
-
+    let count = repository_get_follower_count(conn, user.id).await?;
     Ok(count)
 }

@@ -26,6 +26,8 @@ pub struct Model {
     pub profile_image: Option<String>,
     #[sea_orm(column_type = "Text", nullable)]
     pub banner_image: Option<String>,
+    #[sea_orm(column_type = "TimestampWithTimeZone", not_null)]
+    pub created_at: DateTimeUtc,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

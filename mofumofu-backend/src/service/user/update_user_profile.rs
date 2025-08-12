@@ -40,5 +40,6 @@ where
         website: updated_user.website,
         profile_image: updated_user.profile_image,
         banner_image: updated_user.banner_image,
+        created_at: updated_user.created_at,
     })
 }

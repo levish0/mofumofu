@@ -1,5 +1,6 @@
 use axum::Json;
 use axum::response::{IntoResponse, Response};
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
@@ -19,6 +20,8 @@ pub struct UserInfoResponse {
     pub profile_image: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub banner_image: Option<String>,
+    
+    pub created_at: DateTime<Utc>,
 }
 
 impl IntoResponse for UserInfoResponse {

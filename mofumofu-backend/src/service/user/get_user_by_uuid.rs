@@ -19,5 +19,6 @@ pub async fn service_get_user_by_uuid(
         website: user.website,
         profile_image: user.profile_image,
         banner_image: user.banner_image,
+        created_at: user.created_at,
     })
 }
