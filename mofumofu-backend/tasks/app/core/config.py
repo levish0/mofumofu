@@ -35,7 +35,8 @@ class Settings(BaseSettings):
     MEILISEARCH_API_KEY: str = ""
     
     # Markdown 서비스 설정
-    MARKDOWN_SERVICE_HOST: str = "http://localhost:6700"
+    MARKDOWN_SERVICE_HOST: str = "localhost"
+    MARKDOWN_SERVICE_PORT: int = 6700
 
 
 settings = Settings()

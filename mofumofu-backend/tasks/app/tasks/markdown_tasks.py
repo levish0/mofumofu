@@ -8,6 +8,7 @@ from app.core.config import settings
 import logging
 import httpx
 from typing import Optional, Dict, Any
+from app.utils import create_failure_response
 
 logger = logging.getLogger(__name__)
 
@@ -70,7 +71,7 @@ def render_and_cache_markdown_task(self, post_id: str, content: str, cache_ttl: 
     except Exception as exc:
         logger.error(f"마크다운 렌더링 실패: {str(exc)}")
         current_task.update_state(state="FAILURE", meta={"error": str(exc)})
-        return {"status": "FAILURE", "error": str(exc)}
+        return create_failure_response(str(exc))
 
 
 @celery_app.task(bind=True, name="get_cached_markdown")
@@ -101,7 +102,7 @@ def get_cached_markdown_task(self, post_id: str) -> Optional[Dict[str, Any]]:
             
     except Exception as exc:
         logger.error(f"캐시 조회 실패: {str(exc)}")
-        return {"status": "FAILURE", "error": str(exc)}
+        return create_failure_response(str(exc))
 
 
 @celery_app.task(bind=True, name="invalidate_markdown_cache")
@@ -128,14 +129,14 @@ def invalidate_markdown_cache_task(self, post_id: str) -> Dict[str, Any]:
             
     except Exception as exc:
         logger.error(f"캐시 무효화 실패: {str(exc)}")
-        return {"status": "FAILURE", "error": str(exc)}
+        return create_failure_response(str(exc))
 
 
 async def _render_markdown(content: str) -> Dict[str, Any]:
     """마크다운 서비스를 통한 렌더링"""
     
     # 마크다운 서비스 URL
-    markdown_service_url = settings.MARKDOWN_SERVICE_HOST
+    markdown_service_url = f"http://{settings.MARKDOWN_SERVICE_HOST}:{settings.MARKDOWN_SERVICE_PORT}"
     
     request_data = {
         "markdown": content
@@ -228,4 +229,4 @@ def warm_up_markdown_cache_task(self, posts: list, cache_ttl: int = 86400) -> Di
         
     except Exception as exc:
         logger.error(f"캐시 워밍업 실패: {str(exc)}")
-        return {"status": "FAILURE", "error": str(exc)}
+        return create_failure_response(str(exc))
