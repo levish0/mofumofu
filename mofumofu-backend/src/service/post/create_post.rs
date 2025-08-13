@@ -6,7 +6,7 @@ use crate::repository::post::create_post::repository_create_post;
 use crate::repository::system_events::log_event::repository_log_event;
 use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
 use crate::service::error::errors::Errors;
-use crate::tasks_bridge::search_client;
+use crate::microservices::search_client;
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use tracing::warn;
 use uuid::Uuid;

@@ -15,6 +15,8 @@ services:
     depends_on:
       redis-backend:
         condition: service_healthy
+      markdown-service:
+        condition: service_healthy
 
   meilisearch:
     image: getmeili/meilisearch:latest
@@ -133,6 +135,23 @@ services:
       redis-celery:
         condition: service_healthy
     restart: unless-stopped
+
+  # Markdown Service (Bun + Elysia)
+  markdown-service:
+    build:
+      context: markdown-service
+      dockerfile: Dockerfile
+    container_name: markdown-service
+    ports:
+      - "6700:6700"
+    networks:
+      - mofumofu-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6700/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 volumes:
   meili_data:

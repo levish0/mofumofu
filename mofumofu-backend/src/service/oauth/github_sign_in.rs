@@ -8,7 +8,7 @@ use crate::service::oauth::find_or_create_oauth_user::service_find_or_create_oau
 use crate::service::oauth::provider::common::exchange_oauth_code;
 use crate::service::oauth::provider::github::client::{exchange_github_code, get_github_user_info};
 use crate::service::oauth::provider::google::client::{exchange_google_code, get_google_user_info};
-use crate::tasks_bridge::profile_client::queue_oauth_avatar_upload;
+use crate::microservices::profile_client::queue_oauth_avatar_upload;
 use reqwest::Client as ReqwestClient;
 use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
 use tracing::{error, info, warn};

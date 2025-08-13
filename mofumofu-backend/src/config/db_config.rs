@@ -56,6 +56,10 @@ pub struct DbConfig {
     pub task_server_host: String,
     pub task_server_port: String,
 
+    // Markdown Service
+    pub markdown_service_host: String,
+    pub markdown_service_port: String,
+
     // Meilisearch
     pub meilisearch_host: String,
     pub meilisearch_api_key: Option<String>,
@@ -201,6 +205,10 @@ static CONFIG: LazyLock<DbConfig> = LazyLock::new(|| {
         // Task Server
         task_server_host: env::var("TASK_SERVER_HOST").unwrap_or_else(|_| "127.0.0.1".to_string()),
         task_server_port: env::var("TASK_SERVER_PORT").unwrap_or_else(|_| "7000".to_string()),
+
+        // Markdown Service
+        markdown_service_host: env::var("MARKDOWN_SERVICE_HOST").unwrap_or_else(|_| "127.0.0.1".to_string()),
+        markdown_service_port: env::var("MARKDOWN_SERVICE_PORT").unwrap_or_else(|_| "6700".to_string()),
 
         // Meilisearch
         meilisearch_host: env::var("MEILISEARCH_HOST")

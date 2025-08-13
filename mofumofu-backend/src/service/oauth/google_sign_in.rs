@@ -6,7 +6,7 @@ use crate::service::auth::jwt::{create_jwt_access_token, create_jwt_refresh_toke
 use crate::service::error::errors::Errors;
 use crate::service::oauth::find_or_create_oauth_user::service_find_or_create_oauth_user;
 use crate::service::oauth::provider::google::client::{exchange_google_code, get_google_user_info};
-use crate::tasks_bridge::profile_client::queue_oauth_avatar_upload;
+use crate::microservices::profile_client::queue_oauth_avatar_upload;
 use reqwest::Client;
 use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
 use tracing::{error, info, warn};

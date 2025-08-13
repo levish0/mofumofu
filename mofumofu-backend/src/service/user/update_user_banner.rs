@@ -1,7 +1,7 @@
 use crate::service::error::errors::Errors;
 
 use crate::repository::user::get_user_by_uuid::repository_get_user_by_uuid;
-use crate::tasks_bridge::profile_client::queue_user_banner_update;
+use crate::microservices::profile_client::queue_user_banner_update;
 use axum::extract::Multipart;
 use chrono::Utc;
 use reqwest::Client;

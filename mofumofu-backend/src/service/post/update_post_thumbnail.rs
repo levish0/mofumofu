@@ -1,6 +1,6 @@
 use crate::repository::post::get_post_by_user_and_slug::repository_get_post_by_user_and_slug;
 use crate::service::error::errors::Errors;
-use crate::tasks_bridge::post_client::queue_post_thumbnail_update;
+use crate::microservices::post_client::queue_post_thumbnail_update;
 use axum::extract::Multipart;
 use chrono::Utc;
 use reqwest::Client;

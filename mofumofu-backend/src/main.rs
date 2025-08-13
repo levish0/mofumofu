@@ -22,7 +22,7 @@ mod middleware;
 mod repository;
 mod service;
 mod state;
-mod tasks_bridge;
+mod microservices;
 mod utils;
 
 pub async fn run_server() -> anyhow::Result<()> {
