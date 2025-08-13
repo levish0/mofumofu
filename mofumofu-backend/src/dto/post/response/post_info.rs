@@ -10,6 +10,8 @@ pub struct PostInfoResponse {
     pub title: String,
     pub summary: Option<String>,
     pub content: String,
+    pub rendered: String,
+    pub toc_items: Vec<TocItem>,
     pub author: PostAuthor,
     pub created_at: DateTime<Utc>,
     pub updated_at: Option<DateTime<Utc>>,
@@ -19,6 +21,13 @@ pub struct PostInfoResponse {
     pub view_count: i32,
     pub slug: String,
     pub tags: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, ToSchema)]
+pub struct TocItem {
+    pub level: i32,
+    pub text: String,
+    pub id: String,
 }
 
 #[derive(Debug, Clone, Serialize, ToSchema)]

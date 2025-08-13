@@ -1,7 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import { getPostByHandleAndSlug } from '$lib/api/post/postApi';
-import { processMarkdown } from '$lib/utils/markdown';
 
 export const load: PageServerLoad = async ({ params }) => {
 	if (!params.handle || !params.slug) {
@@ -12,21 +11,14 @@ export const load: PageServerLoad = async ({ params }) => {
 	const handle = params.handle.startsWith('@') ? params.handle.slice(1) : params.handle;
 
 	try {
-		// Call the actual API
+		// Call the actual API (now returns rendered HTML and TOC from backend)
 		const postData = await getPostByHandleAndSlug({
 			handle,
 			slug: params.slug
 		});
 
-		// Process markdown on server side for SEO
-		const { htmlContent, tocItems } = await processMarkdown(postData.content);
-
 		return {
-			post: {
-				...postData,
-				htmlContent,
-				tocItems
-			},
+			post: postData,
 			author: postData.author,
 			handle,
 			slug: params.slug

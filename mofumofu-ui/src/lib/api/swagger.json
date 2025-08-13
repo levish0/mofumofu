@@ -623,13 +623,13 @@
 			},
 			"GetPostsResponse": {
 				"type": "object",
-				"required": ["posts", "current_page", "page_size", "has_more"],
+				"required": ["posts", "current_page", "page_size", "has_more", "total_count"],
 				"properties": {
 					"current_page": { "type": "integer", "format": "int32", "minimum": 0 },
 					"has_more": { "type": "boolean" },
 					"page_size": { "type": "integer", "format": "int32", "minimum": 0 },
 					"posts": { "type": "array", "items": { "$ref": "#/components/schemas/PostListItem" } },
-					"total_count": { "type": ["integer", "null"], "format": "int64", "minimum": 0 }
+					"total_count": { "type": "integer", "format": "int64", "minimum": 0 }
 				}
 			},
 			"GetUserPostsRequest": {
@@ -671,6 +671,8 @@
 				"required": [
 					"title",
 					"content",
+					"rendered",
+					"toc_items",
 					"author",
 					"created_at",
 					"like_count",
@@ -686,10 +688,12 @@
 					"created_at": { "type": "string", "format": "date-time" },
 					"like_count": { "type": "integer", "format": "int32" },
 					"published_at": { "type": ["string", "null"], "format": "date-time" },
+					"rendered": { "type": "string" },
 					"slug": { "type": "string" },
 					"summary": { "type": ["string", "null"] },
 					"tags": { "type": "array", "items": { "type": "string" } },
 					"title": { "type": "string" },
+					"toc_items": { "type": "array", "items": { "$ref": "#/components/schemas/TocItem" } },
 					"updated_at": { "type": ["string", "null"], "format": "date-time" },
 					"view_count": { "type": "integer", "format": "int32" }
 				}
@@ -763,6 +767,15 @@
 						"oneOf": [{ "type": "null" }, { "$ref": "#/components/schemas/PostSortOrder", "description": "정렬 방식" }]
 					},
 					"user_handle": { "type": ["string", "null"], "description": "특정 사용자로 필터링" }
+				}
+			},
+			"TocItem": {
+				"type": "object",
+				"required": ["level", "text", "id"],
+				"properties": {
+					"id": { "type": "string" },
+					"level": { "type": "integer", "format": "int32" },
+					"text": { "type": "string" }
 				}
 			},
 			"TrendingHashtagsRequest": {

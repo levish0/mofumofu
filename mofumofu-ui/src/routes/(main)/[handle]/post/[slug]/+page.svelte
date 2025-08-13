@@ -7,9 +7,9 @@
 
 	const { data }: { data: PageData } = $props();
 
-	// 서버에서 처리된 HTML과 TOC 사용
-	const htmlContent = data.post.htmlContent;
-	const tocItems = data.post.tocItems;
+	// 백엔드에서 렌더된 HTML과 TOC 사용
+	const htmlContent = data.post.rendered;
+	const tocItems = data.post.toc_items;
 
 	type NavbarContext = {
 		isVisible: () => boolean;

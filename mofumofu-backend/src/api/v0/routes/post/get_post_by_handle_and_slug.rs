@@ -25,8 +25,13 @@ pub async fn get_post_by_handle_and_slug(
     State(state): State<AppState>,
     ValidatedJson(req_body): ValidatedJson<GetPostByHandleAndSlugRequest>,
 ) -> Result<PostInfoResponse, Errors> {
-    let post =
-        service_get_post_by_handle_and_slug(&state.conn, &req_body.handle, &req_body.slug).await?;
+    let post = service_get_post_by_handle_and_slug(
+        &state.conn,
+        &state.http_client,
+        &req_body.handle,
+        &req_body.slug,
+    )
+    .await?;
 
     Ok(post)
 }

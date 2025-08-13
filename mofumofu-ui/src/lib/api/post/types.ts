@@ -17,9 +17,17 @@ export interface PostAuthor {
 	profile_image?: string | null;
 }
 
+export interface TocItem {
+	level: number;
+	text: string;
+	id: string;
+}
+
 export interface PostInfoResponse {
 	title: string;
 	content: string;
+	rendered: string;
+	toc_items: TocItem[];
 	author: PostAuthor;
 	created_at: string;
 	like_count: number;

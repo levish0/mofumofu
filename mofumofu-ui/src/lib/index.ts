@@ -80,7 +80,6 @@ export * from './api/follow/types';
 // Utils
 export * from './utils/index';
 export * from './utils/imagecrop';
-export * from './utils/markdown';
 
 // Schemas
 export { createPostSchema, type PostData } from './schemas/post';
