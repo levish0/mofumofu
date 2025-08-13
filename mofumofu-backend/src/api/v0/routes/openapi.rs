@@ -1,10 +1,12 @@
 use crate::dto::auth::request::login::AuthLoginRequest;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
+use crate::dto::follow::request::check_follow_status::CheckFollowStatusRequest;
 use crate::dto::follow::request::create::CreateFollowRequest;
 use crate::dto::follow::request::delete::DeleteFollowRequest;
 use crate::dto::follow::request::get_count::GetFollowCountRequest;
 use crate::dto::follow::response::follow_count::FollowCountResponse;
 use crate::dto::follow::response::follow_list::FollowListResponse;
+use crate::dto::follow::response::follow_status::FollowStatusResponse;
 use crate::dto::hashtag::request::trending_hashtags::TrendingHashtagsRequest;
 use crate::dto::hashtag::response::trending_hashtags::TrendingHashtagsResponse;
 use crate::dto::post::request::create_post::CreatePostRequest;
@@ -49,6 +51,7 @@ use utoipa::{
         crate::api::v0::routes::post::increment_view::increment_view,
         crate::api::v0::routes::post::search_posts::search_posts,
         crate::api::v0::routes::post::upload_thumbnail::upload_thumbnail,
+        crate::api::v0::routes::follow::check_follow_status::api_check_follow_status,
         crate::api::v0::routes::follow::create_follow::api_create_follow,
         crate::api::v0::routes::follow::delete_follow::api_delete_follow,
         crate::api::v0::routes::follow::get_follower_count::api_get_follower_count,
@@ -73,11 +76,13 @@ use utoipa::{
             PostListItem,
             GetPostsResponse,
             UserPostsResponse,
+            CheckFollowStatusRequest,
             CreateFollowRequest,
             DeleteFollowRequest,
             GetFollowCountRequest,
             FollowCountResponse,
             FollowListResponse,
+            FollowStatusResponse,
             GetUserProfileRequest,
             UpdateProfileRequest,
             HandleCheckResponse,

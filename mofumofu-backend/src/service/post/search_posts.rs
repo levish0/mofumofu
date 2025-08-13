@@ -30,7 +30,7 @@ where
     };
 
     // Meilisearch에서 검색 (일반 페이지네이션)
-    let meilisearch_posts = post_indexer::search_posts(
+    let (meilisearch_posts, total_hits) = post_indexer::search_posts(
         meilisearch,
         request.query.as_deref(),
         request.hashtags.as_deref(),
@@ -54,7 +54,7 @@ where
             current_page: page,
             page_size,
             has_more: false,
-            total_count: Some(0),
+            total_count: total_hits,
         });
     }
 
@@ -90,6 +90,6 @@ where
         current_page: page,
         page_size,
         has_more,
-        total_count: None, // Meilisearch에서 총 개수를 가져오려면 별도 요청 필요
+        total_count: total_hits,
     })
 }

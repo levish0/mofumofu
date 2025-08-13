@@ -1,6 +1,6 @@
 import { privateApi } from '../private';
 import { publicApi } from '../public';
-import type { CreateFollowRequest, DeleteFollowRequest, GetFollowCountRequest, FollowCountResponse } from './types';
+import type { CreateFollowRequest, DeleteFollowRequest, GetFollowCountRequest, FollowCountResponse, CheckFollowStatusRequest, FollowStatusResponse } from './types';
 
 export async function createFollow(request: CreateFollowRequest) {
 	try {
@@ -48,6 +48,20 @@ export async function getFollowingCount(request: GetFollowCountRequest): Promise
 		return response;
 	} catch (error) {
 		console.error('Failed to get following count:', error);
+		throw error;
+	}
+}
+
+export async function checkFollowStatus(request: CheckFollowStatusRequest): Promise<FollowStatusResponse> {
+	try {
+		const response = await privateApi
+			.post('v0/follow/status', {
+				json: request
+			})
+			.json<FollowStatusResponse>();
+		return response;
+	} catch (error) {
+		console.error('Failed to check follow status:', error);
 		throw error;
 	}
 }

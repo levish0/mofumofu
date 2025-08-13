@@ -5,9 +5,9 @@
   "identifier": "com.levish.mofumofu-desktop",
   "build": {
     "beforeDevCommand": "",
-    "devUrl": "http://localhost:5173",
+    "devUrl": "https://mofumofu.ink/",
     "beforeBuildCommand": "",
-    "frontendDist": "http://localhost:5173"
+    "frontendDist": "https://mofumofu.ink/"
   },
   "app": {
     "withGlobalTauri": true,

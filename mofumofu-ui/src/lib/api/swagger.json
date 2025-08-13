@@ -1,654 +1,825 @@
 {
 	"openapi": "3.1.0",
-	"info": { "title": "mofumofu_tasks", "version": "0.1.0" },
+	"info": {
+		"title": "mofumofu-backend",
+		"description": "",
+		"contact": { "name": "Levi Lim", "email": "shiueo.csh@gmail.com" },
+		"license": { "name": "" },
+		"version": "0.4.0"
+	},
 	"paths": {
-		"/tasks/oauth/upload-avatar": {
+		"/v0/auth/github": {
 			"post": {
-				"tags": ["oauth"],
-				"summary": "Upload Oauth Profile Image",
-				"description": "Google OAuth 프로필 이미지를 R2에 업로드하는 태스크를 실행",
-				"operationId": "oauth-upload_oauth_profile_image",
+				"tags": ["Auth"],
+				"operationId": "github_sign_in",
 				"requestBody": {
-					"content": {
-						"application/json": { "schema": { "$ref": "#/components/schemas/ProfileImageOauthUploadRequest" } }
-					},
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GithubLoginRequest" } } },
 					"required": true
 				},
 				"responses": {
 					"200": {
-						"description": "Successful Response",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/TaskResponse" } } }
+						"description": "GitHub OAuth login successful",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthJWTResponse" } } }
 					},
-					"422": {
-						"description": "Validation Error",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
-					}
+					"400": { "description": "Invalid authorization code" },
+					"401": { "description": "OAuth authentication failed" },
+					"500": { "description": "Internal server error" }
 				}
 			}
 		},
-		"/tasks/oauth/delete-avatar": {
-			"delete": {
-				"tags": ["oauth"],
-				"summary": "Delete Oauth Profile Image",
-				"description": "OAuth 프로필 이미지를 R2에서 삭제하는 태스크를 실행",
-				"operationId": "oauth-delete_oauth_profile_image",
-				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProfileImageDeleteRequest" } } },
-					"required": true
-				},
-				"responses": {
-					"200": {
-						"description": "Successful Response",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/TaskResponse" } } }
-					},
-					"422": {
-						"description": "Validation Error",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
-					}
-				}
-			}
-		},
-		"/tasks/avatar/upload": {
+		"/v0/auth/google": {
 			"post": {
-				"tags": ["avatar"],
-				"summary": "Upload Avatar",
-				"description": "사용자 아바타 이미지를 R2에 업로드하는 태스크를 실행",
-				"operationId": "avatar-upload_avatar",
+				"tags": ["Auth"],
+				"operationId": "google_sign_in",
 				"requestBody": {
-					"content": {
-						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/Body_avatar-upload_avatar" } }
-					},
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GoogleLoginRequest" } } },
 					"required": true
 				},
 				"responses": {
 					"200": {
-						"description": "Successful Response",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/TaskResponse" } } }
+						"description": "Google OAuth login successful",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthJWTResponse" } } }
 					},
-					"422": {
-						"description": "Validation Error",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
-					}
+					"400": { "description": "Invalid authorization code" },
+					"401": { "description": "OAuth authentication failed" },
+					"500": { "description": "Internal server error" }
 				}
 			}
 		},
-		"/tasks/avatar/delete": {
-			"delete": {
-				"tags": ["avatar"],
-				"summary": "Delete Avatar",
-				"description": "사용자 아바타 이미지를 R2에서 삭제하는 태스크를 실행",
-				"operationId": "avatar-delete_avatar",
-				"requestBody": {
-					"content": {
-						"application/x-www-form-urlencoded": {
-							"schema": { "$ref": "#/components/schemas/Body_avatar-delete_avatar" }
-						}
-					},
-					"required": true
-				},
-				"responses": {
-					"200": {
-						"description": "Successful Response",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/TaskResponse" } } }
-					},
-					"422": {
-						"description": "Validation Error",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
-					}
-				}
-			}
-		},
-		"/tasks/avatar/update": {
-			"put": {
-				"tags": ["avatar"],
-				"summary": "Update Avatar",
-				"description": "사용자 아바타 이미지를 업데이트 (기존 삭제 후 새 이미지 업로드)",
-				"operationId": "avatar-update_avatar",
-				"requestBody": {
-					"content": {
-						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/Body_avatar-update_avatar" } }
-					},
-					"required": true
-				},
-				"responses": {
-					"200": {
-						"description": "Successful Response",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/TaskResponse" } } }
-					},
-					"422": {
-						"description": "Validation Error",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
-					}
-				}
-			}
-		},
-		"/tasks/banner/upload": {
+		"/v0/auth/refresh": {
 			"post": {
-				"tags": ["banner"],
-				"summary": "Upload Banner",
-				"description": "사용자 배너 이미지를 R2에 업로드하는 태스크를 실행",
-				"operationId": "banner-upload_banner",
-				"requestBody": {
-					"content": {
-						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/Body_banner-upload_banner" } }
-					},
-					"required": true
-				},
+				"tags": ["Auth"],
+				"operationId": "refresh",
 				"responses": {
 					"200": {
-						"description": "Successful Response",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/TaskResponse" } } }
+						"description": "Token refresh successful",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthJWTResponse" } } }
 					},
-					"422": {
-						"description": "Validation Error",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
-					}
-				}
-			}
-		},
-		"/tasks/banner/delete": {
-			"delete": {
-				"tags": ["banner"],
-				"summary": "Delete Banner",
-				"description": "사용자 배너 이미지를 R2에서 삭제하는 태스크를 실행",
-				"operationId": "banner-delete_banner",
-				"requestBody": {
-					"content": {
-						"application/x-www-form-urlencoded": {
-							"schema": { "$ref": "#/components/schemas/Body_banner-delete_banner" }
-						}
-					},
-					"required": true
+					"400": { "description": "No refresh token cookie found" },
+					"401": { "description": "Refresh token cookie exists but is invalid or malformed" },
+					"404": { "description": "User not found" },
+					"500": { "description": "Internal server error" }
 				},
-				"responses": {
-					"200": {
-						"description": "Successful Response",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/TaskResponse" } } }
-					},
-					"422": {
-						"description": "Validation Error",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
-					}
-				}
+				"security": [{ "refresh_token_cookie": [] }]
 			}
 		},
-		"/tasks/banner/update": {
-			"put": {
-				"tags": ["banner"],
-				"summary": "Update Banner",
-				"description": "사용자 배너 이미지를 업데이트 (기존 삭제 후 새 이미지 업로드)",
-				"operationId": "banner-update_banner",
-				"requestBody": {
-					"content": {
-						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/Body_banner-update_banner" } }
-					},
-					"required": true
-				},
-				"responses": {
-					"200": {
-						"description": "Successful Response",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/TaskResponse" } } }
-					},
-					"422": {
-						"description": "Validation Error",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
-					}
-				}
-			}
-		},
-		"/tasks/post/thumbnail/upload": {
+		"/v0/auth/sign_in": {
 			"post": {
-				"tags": ["thumbnail"],
-				"summary": "Upload Thumbnail",
-				"description": "포스트 썸네일 이미지를 R2에 업로드하는 태스크를 실행",
-				"operationId": "thumbnail-upload_thumbnail",
+				"tags": ["Auth"],
+				"operationId": "sign_in",
 				"requestBody": {
-					"content": {
-						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/Body_thumbnail-upload_thumbnail" } }
-					},
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthLoginRequest" } } },
 					"required": true
 				},
 				"responses": {
 					"200": {
-						"description": "Successful Response",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/TaskResponse" } } }
+						"description": "Login successful",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthJWTResponse" } } }
 					},
-					"422": {
-						"description": "Validation Error",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
-					}
+					"400": { "description": "Invalid request" },
+					"401": { "description": "Invalid credentials" },
+					"404": { "description": "User not found" },
+					"500": { "description": "Internal server error" }
 				}
 			}
 		},
-		"/tasks/post/thumbnail/delete": {
-			"delete": {
-				"tags": ["thumbnail"],
-				"summary": "Delete Thumbnail",
-				"description": "포스트 썸네일 이미지를 R2에서 삭제하는 태스크를 실행",
-				"operationId": "thumbnail-delete_thumbnail",
+		"/v0/auth/sign_out": {
+			"post": {
+				"tags": ["Auth"],
+				"operationId": "sign_out",
+				"responses": {
+					"204": { "description": "Sign out Successful" },
+					"400": { "description": "No refresh token cookie found" },
+					"401": { "description": "Refresh token cookie exists but is invalid or malformed" },
+					"404": { "description": "User not found" },
+					"500": { "description": "Internal server error" }
+				},
+				"security": [{ "refresh_token_cookie": [] }]
+			}
+		},
+		"/v0/follow": {
+			"post": {
+				"tags": ["Follow"],
+				"operationId": "api_create_follow",
 				"requestBody": {
-					"content": {
-						"application/x-www-form-urlencoded": {
-							"schema": { "$ref": "#/components/schemas/Body_thumbnail-delete_thumbnail" }
-						}
-					},
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateFollowRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"204": { "description": "Successfully followed user" },
+					"400": { "description": "Bad request" },
+					"404": { "description": "User not found" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/follow/follower-count": {
+			"post": {
+				"tags": ["Follow"],
+				"operationId": "api_get_follower_count",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetFollowCountRequest" } } },
 					"required": true
 				},
 				"responses": {
 					"200": {
-						"description": "Successful Response",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/TaskResponse" } } }
+						"description": "Successfully retrieved follower count",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/FollowCountResponse" } } }
 					},
-					"422": {
-						"description": "Validation Error",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
-					}
+					"400": { "description": "Invalid input" },
+					"404": { "description": "User not found" }
 				}
 			}
 		},
-		"/tasks/post/thumbnail/update": {
-			"put": {
-				"tags": ["thumbnail"],
-				"summary": "Update Thumbnail",
-				"description": "포스트 썸네일 이미지를 업데이트 (기존 삭제 후 새 이미지 업로드)",
-				"operationId": "thumbnail-update_thumbnail",
+		"/v0/follow/following-count": {
+			"post": {
+				"tags": ["Follow"],
+				"operationId": "api_get_following_count",
 				"requestBody": {
-					"content": {
-						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/Body_thumbnail-update_thumbnail" } }
-					},
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetFollowCountRequest" } } },
 					"required": true
 				},
 				"responses": {
 					"200": {
-						"description": "Successful Response",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/TaskResponse" } } }
+						"description": "Successfully retrieved following count",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/FollowCountResponse" } } }
 					},
-					"422": {
-						"description": "Validation Error",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
-					}
+					"400": { "description": "Invalid input" },
+					"404": { "description": "User not found" }
 				}
 			}
 		},
-		"/tasks/tasks/status/{task_id}": {
+		"/v0/follow/status": {
+			"post": {
+				"tags": ["Follow"],
+				"operationId": "api_check_follow_status",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CheckFollowStatusRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Follow status retrieved successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/FollowStatusResponse" } } }
+					},
+					"400": { "description": "Bad request" },
+					"404": { "description": "User not found" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/followers/{handle}": {
 			"get": {
-				"tags": ["common"],
-				"summary": "Get Task Status",
-				"description": "태스크 실행 상태와 결과를 조회",
-				"operationId": "common-get_task_status",
+				"tags": ["Follow"],
+				"operationId": "get_followers",
 				"parameters": [
-					{ "name": "task_id", "in": "path", "required": true, "schema": { "type": "string", "title": "Task Id" } }
+					{
+						"name": "handle",
+						"in": "path",
+						"description": "User handle",
+						"required": true,
+						"schema": { "type": "string" }
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"description": "Page number (default: 1)",
+						"required": false,
+						"schema": { "type": "integer", "format": "int64", "minimum": 0 }
+					},
+					{
+						"name": "per_page",
+						"in": "query",
+						"description": "Items per page (default: 20)",
+						"required": false,
+						"schema": { "type": "integer", "format": "int64", "minimum": 0 }
+					}
 				],
 				"responses": {
 					"200": {
-						"description": "Successful Response",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/TaskStatusResponse" } } }
+						"description": "Followers list",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/FollowListResponse" } } }
 					},
-					"422": {
-						"description": "Validation Error",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
-					}
+					"404": { "description": "User not found" }
 				}
 			}
 		},
-		"/tasks/tasks/health": {
+		"/v0/following/{handle}": {
 			"get": {
-				"tags": ["common"],
-				"summary": "Health Check",
-				"description": "태스크 서비스 헬스 체크",
-				"operationId": "common-health_check",
-				"responses": {
-					"200": { "description": "Successful Response", "content": { "application/json": { "schema": {} } } }
-				}
-			}
-		},
-		"/tasks/token-cleanup/cleanup": {
-			"post": {
-				"tags": ["Token Cleanup"],
-				"summary": "Cleanup Tokens",
-				"description": "만료된 리프레시 토큰을 수동으로 정리합니다.\n\nReturns:\n    dict: 작업 ID와 상태",
-				"operationId": "Token Cleanup-cleanup_tokens",
-				"responses": {
-					"200": { "description": "Successful Response", "content": { "application/json": { "schema": {} } } }
-				}
-			}
-		},
-		"/tasks/token-cleanup/cleanup/status/{task_id}": {
-			"get": {
-				"tags": ["Token Cleanup"],
-				"summary": "Get Cleanup Status",
-				"description": "토큰 정리 작업의 상태를 확인합니다.\n\nArgs:\n    task_id: 작업 ID\n\nReturns:\n    dict: 작업 상태와 결과",
-				"operationId": "Token Cleanup-get_cleanup_status",
+				"tags": ["Follow"],
+				"operationId": "get_following",
 				"parameters": [
-					{ "name": "task_id", "in": "path", "required": true, "schema": { "type": "string", "title": "Task Id" } }
+					{
+						"name": "handle",
+						"in": "path",
+						"description": "User handle",
+						"required": true,
+						"schema": { "type": "string" }
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"description": "Page number (default: 1)",
+						"required": false,
+						"schema": { "type": "integer", "format": "int64", "minimum": 0 }
+					},
+					{
+						"name": "per_page",
+						"in": "query",
+						"description": "Items per page (default: 20)",
+						"required": false,
+						"schema": { "type": "integer", "format": "int64", "minimum": 0 }
+					}
 				],
 				"responses": {
-					"200": { "description": "Successful Response", "content": { "application/json": { "schema": {} } } },
-					"422": {
-						"description": "Validation Error",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
-					}
+					"200": {
+						"description": "Following list",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/FollowListResponse" } } }
+					},
+					"404": { "description": "User not found" }
 				}
 			}
 		},
-		"/tasks/token-cleanup/health": {
-			"get": {
-				"tags": ["Token Cleanup"],
-				"summary": "Token Cleanup Health",
-				"description": "토큰 정리 서비스 상태를 확인합니다.\n\nReturns:\n    dict: 서비스 상태",
-				"operationId": "Token Cleanup-token_cleanup_health",
-				"responses": {
-					"200": { "description": "Successful Response", "content": { "application/json": { "schema": {} } } }
-				}
-			}
-		},
-		"/tasks/search-reindex/reindex": {
+		"/v0/hashtag/trending": {
 			"post": {
-				"tags": ["Search Reindex"],
-				"summary": "Reindex Posts",
-				"description": "전체 포스트를 수동으로 재색인합니다.\n\nCelery 태스크를 사용하여 백그라운드에서 처리됩니다.\n\nReturns:\n    dict: 작업 ID와 상태",
-				"operationId": "Search Reindex-reindex_posts",
-				"responses": {
-					"200": { "description": "Successful Response", "content": { "application/json": { "schema": {} } } }
-				}
-			}
-		},
-		"/tasks/search-reindex/reindex/status/{task_id}": {
-			"get": {
-				"tags": ["Search Reindex"],
-				"summary": "Get Reindex Status",
-				"description": "포스트 재색인 작업의 상태를 확인합니다.\n\nArgs:\n    task_id: 작업 ID\n\nReturns:\n    dict: 작업 상태와 결과",
-				"operationId": "Search Reindex-get_reindex_status",
-				"parameters": [
-					{ "name": "task_id", "in": "path", "required": true, "schema": { "type": "string", "title": "Task Id" } }
-				],
-				"responses": {
-					"200": { "description": "Successful Response", "content": { "application/json": { "schema": {} } } },
-					"422": {
-						"description": "Validation Error",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
-					}
-				}
-			}
-		},
-		"/tasks/search-reindex/stats": {
-			"get": {
-				"tags": ["Search Reindex"],
-				"summary": "Get Search Stats",
-				"description": "검색 색인 통계를 직접 조회합니다.\n\nReturns:\n    dict: 색인 통계 정보",
-				"operationId": "Search Reindex-get_search_stats",
-				"responses": {
-					"200": { "description": "Successful Response", "content": { "application/json": { "schema": {} } } }
-				}
-			}
-		},
-		"/tasks/search-reindex/stats/task": {
-			"get": {
-				"tags": ["Search Reindex"],
-				"summary": "Get Search Stats Task",
-				"description": "검색 색인 통계를 Celery 태스크로 조회합니다.\n\nReturns:\n    dict: 작업 ID와 상태",
-				"operationId": "Search Reindex-get_search_stats_task",
-				"responses": {
-					"200": { "description": "Successful Response", "content": { "application/json": { "schema": {} } } }
-				}
-			}
-		},
-		"/tasks/search-reindex/health": {
-			"get": {
-				"tags": ["Search Reindex"],
-				"summary": "Search Health",
-				"description": "검색 서비스 상태를 직접 확인합니다.\n\nReturns:\n    dict: 서비스 상태",
-				"operationId": "Search Reindex-search_health",
-				"responses": {
-					"200": { "description": "Successful Response", "content": { "application/json": { "schema": {} } } }
-				}
-			}
-		},
-		"/tasks/search-reindex/health/task": {
-			"get": {
-				"tags": ["Search Reindex"],
-				"summary": "Search Health Task",
-				"description": "검색 서비스 상태를 Celery 태스크로 확인합니다.\n\nReturns:\n    dict: 작업 ID와 상태",
-				"operationId": "Search Reindex-search_health_task",
-				"responses": {
-					"200": { "description": "Successful Response", "content": { "application/json": { "schema": {} } } }
-				}
-			}
-		},
-		"/tasks/search/index": {
-			"post": {
-				"tags": ["Search Index"],
-				"summary": "Index Post",
-				"description": "단일 포스트를 색인합니다.\n\nArgs:\n    request: 포스트 ID가 포함된 요청 객체\n\nReturns:\n    dict: 작업 ID와 상태",
-				"operationId": "Search Index-index_post",
+				"tags": ["Hashtag"],
+				"operationId": "trending_hashtags",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/PostIndexRequest" } } },
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/TrendingHashtagsRequest" } } },
 					"required": true
 				},
 				"responses": {
-					"200": { "description": "Successful Response", "content": { "application/json": { "schema": {} } } },
-					"422": {
-						"description": "Validation Error",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
-					}
+					"200": {
+						"description": "Trending hashtags retrieved successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/TrendingHashtagsResponse" } } }
+					},
+					"400": { "description": "Invalid input" },
+					"500": { "description": "Internal Server Error" }
 				}
 			}
 		},
-		"/tasks/search/update": {
+		"/v0/post": {
+			"post": {
+				"tags": ["Post"],
+				"operationId": "create_post",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreatePostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"204": { "description": "Post created successfully" },
+					"400": { "description": "Invalid input" },
+					"500": { "description": "Internal Server Error" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/post/get": {
+			"post": {
+				"tags": ["Post"],
+				"operationId": "get_post_by_handle_and_slug",
+				"requestBody": {
+					"content": {
+						"application/json": { "schema": { "$ref": "#/components/schemas/GetPostByHandleAndSlugRequest" } }
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Post retrieved successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/PostInfoResponse" } } }
+					},
+					"400": { "description": "Invalid input" },
+					"404": { "description": "Post not found" },
+					"500": { "description": "Internal Server Error" }
+				},
+				"security": [{ "anonymous_id_cookie": [] }]
+			}
+		},
+		"/v0/post/thumbnail": {
+			"post": {
+				"tags": ["Post"],
+				"operationId": "upload_thumbnail",
+				"requestBody": {
+					"content": { "multipart/form-data": { "schema": { "$ref": "#/components/schemas/PostThumbnailForm" } } },
+					"required": true
+				},
+				"responses": {
+					"204": { "description": "Thumbnail image upload queued successfully" },
+					"400": { "description": "Invalid file or parameters" },
+					"401": { "description": "Unauthorized" },
+					"404": { "description": "Post not found" },
+					"500": { "description": "Internal server error" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/post/view": {
+			"post": {
+				"tags": ["Post"],
+				"operationId": "increment_view",
+				"requestBody": {
+					"content": {
+						"application/json": { "schema": { "$ref": "#/components/schemas/GetPostByHandleAndSlugRequest" } }
+					},
+					"required": true
+				},
+				"responses": {
+					"204": { "description": "View count incremented successfully" },
+					"400": { "description": "Invalid input" },
+					"404": { "description": "Post not found" },
+					"500": { "description": "Internal Server Error" }
+				},
+				"security": [{ "anonymous_id_cookie": [] }]
+			}
+		},
+		"/v0/posts": {
+			"post": {
+				"tags": ["Post"],
+				"operationId": "get_posts",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetPostsRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Posts retrieved successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetPostsResponse" } } }
+					},
+					"400": { "description": "Invalid input" },
+					"500": { "description": "Internal Server Error" }
+				}
+			}
+		},
+		"/v0/posts/search": {
+			"post": {
+				"tags": ["Post"],
+				"operationId": "search_posts",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/SearchPostsRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Posts search completed successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetPostsResponse" } } }
+					},
+					"400": { "description": "Invalid search parameters" },
+					"500": { "description": "Search service error" }
+				}
+			}
+		},
+		"/v0/posts/user": {
+			"post": {
+				"tags": ["Post"],
+				"operationId": "get_user_posts",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetUserPostsRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "User posts retrieved successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserPostsResponse" } } }
+					},
+					"400": { "description": "Invalid input" },
+					"404": { "description": "User not found" },
+					"500": { "description": "Internal Server Error" }
+				}
+			}
+		},
+		"/v0/unfollow": {
+			"post": {
+				"tags": ["Follow"],
+				"operationId": "api_delete_follow",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/DeleteFollowRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"204": { "description": "Successfully unfollowed user" },
+					"400": { "description": "Bad request" },
+					"404": { "description": "User not found" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/user": {
+			"post": {
+				"tags": ["User"],
+				"operationId": "create_user",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateUserRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"204": { "description": "User created successfully" },
+					"400": { "description": "Invalid input" },
+					"500": { "description": "Internal Server Error" }
+				}
+			}
+		},
+		"/v0/user/check-handle": {
+			"post": {
+				"tags": ["User"],
+				"operationId": "check_handle_availability",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetUserProfileRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Handle availability check result",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HandleCheckResponse" } } }
+					},
+					"400": { "description": "Invalid input" },
+					"500": { "description": "Internal Server Error" }
+				}
+			}
+		},
+		"/v0/user/my_profile": {
+			"get": {
+				"tags": ["User"],
+				"operationId": "get_my_profile",
+				"responses": {
+					"200": {
+						"description": "Successfully retrieved user profile",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserInfoResponse" } } }
+					},
+					"401": { "description": "Unauthorized" },
+					"404": { "description": "User not found" },
+					"500": { "description": "Internal Server Error" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/user/profile": {
 			"put": {
-				"tags": ["Search Index"],
-				"summary": "Update Post",
-				"description": "단일 포스트 색인을 업데이트합니다.\n\nArgs:\n    request: 포스트 ID가 포함된 요청 객체\n\nReturns:\n    dict: 작업 ID와 상태",
-				"operationId": "Search Index-update_post",
+				"tags": ["User"],
+				"operationId": "update_profile",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/PostIndexRequest" } } },
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateProfileRequest" } } },
 					"required": true
 				},
 				"responses": {
-					"200": { "description": "Successful Response", "content": { "application/json": { "schema": {} } } },
-					"422": {
-						"description": "Validation Error",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
-					}
-				}
-			}
-		},
-		"/tasks/search/delete": {
-			"delete": {
-				"tags": ["Search Index"],
-				"summary": "Delete Post",
-				"description": "단일 포스트를 색인에서 삭제합니다.\n\nArgs:\n    request: 포스트 ID가 포함된 요청 객체\n\nReturns:\n    dict: 작업 ID와 상태",
-				"operationId": "Search Index-delete_post",
+					"200": {
+						"description": "Profile updated successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserInfoResponse" } } }
+					},
+					"400": { "description": "Invalid input" },
+					"401": { "description": "Unauthorized" },
+					"404": { "description": "User not found" },
+					"500": { "description": "Internal Server Error" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			},
+			"post": {
+				"tags": ["User"],
+				"operationId": "get_profile",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/PostIndexRequest" } } },
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetUserProfileRequest" } } },
 					"required": true
 				},
 				"responses": {
-					"200": { "description": "Successful Response", "content": { "application/json": { "schema": {} } } },
-					"422": {
-						"description": "Validation Error",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
-					}
+					"200": {
+						"description": "Successfully retrieved user information",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserInfoResponse" } } }
+					},
+					"404": { "description": "User not found" },
+					"500": { "description": "Internal Server Error" }
 				}
 			}
 		},
-		"/tasks/search/index/status/{task_id}": {
-			"get": {
-				"tags": ["Search Index"],
-				"summary": "Get Index Status",
-				"description": "색인 작업의 상태를 확인합니다.\n\nArgs:\n    task_id: 작업 ID\n\nReturns:\n    dict: 작업 상태와 결과",
-				"operationId": "Search Index-get_index_status",
-				"parameters": [
-					{ "name": "task_id", "in": "path", "required": true, "schema": { "type": "string", "title": "Task Id" } }
-				],
+		"/v0/user/profile/avatar": {
+			"post": {
+				"tags": ["User"],
+				"operationId": "upload_avatar",
+				"requestBody": {
+					"content": { "multipart/form-data": { "schema": { "$ref": "#/components/schemas/ProfileAvatarForm" } } },
+					"required": true
+				},
 				"responses": {
-					"200": { "description": "Successful Response", "content": { "application/json": { "schema": {} } } },
-					"422": {
-						"description": "Validation Error",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
-					}
-				}
+					"204": { "description": "Profile image upload queued successfully" },
+					"400": { "description": "Invalid file or parameters" },
+					"401": { "description": "Unauthorized" },
+					"500": { "description": "Internal server error" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/user/profile/banner": {
+			"post": {
+				"tags": ["User"],
+				"operationId": "upload_banner",
+				"requestBody": {
+					"content": { "multipart/form-data": { "schema": { "$ref": "#/components/schemas/ProfileBannerForm" } } },
+					"required": true
+				},
+				"responses": {
+					"204": { "description": "Banner image upload queued successfully" },
+					"400": { "description": "Invalid file or parameters" },
+					"401": { "description": "Unauthorized" },
+					"500": { "description": "Internal server error" }
+				},
+				"security": [{ "bearer_auth": [] }]
 			}
 		}
 	},
 	"components": {
 		"schemas": {
-			"Body_avatar-delete_avatar": {
+			"AuthJWTResponse": {
+				"type": "object",
+				"required": ["access_token"],
+				"properties": { "access_token": { "type": "string" } }
+			},
+			"AuthLoginRequest": {
+				"type": "object",
+				"required": ["handle", "password"],
+				"properties": { "handle": { "type": "string" }, "password": { "type": "string" } }
+			},
+			"CheckFollowStatusRequest": {
+				"type": "object",
+				"required": ["handle"],
+				"properties": { "handle": { "type": "string" } }
+			},
+			"CreateFollowRequest": {
+				"type": "object",
+				"required": ["followee_handle"],
+				"properties": { "followee_handle": { "type": "string" } }
+			},
+			"CreatePostRequest": {
+				"type": "object",
+				"required": ["title", "content", "slug"],
 				"properties": {
-					"user_uuid": { "type": "string", "title": "User Uuid" },
-					"user_handle": { "type": "string", "title": "User Handle" }
-				},
-				"type": "object",
-				"required": ["user_uuid", "user_handle"],
-				"title": "Body_avatar-delete_avatar"
+					"content": { "type": "string" },
+					"hashtags": { "type": ["array", "null"], "items": { "type": "string" } },
+					"slug": { "type": "string" },
+					"summary": { "type": ["string", "null"] },
+					"title": { "type": "string" }
+				}
 			},
-			"Body_avatar-update_avatar": {
+			"CreateUserRequest": {
+				"type": "object",
+				"required": ["name", "handle", "password", "email"],
 				"properties": {
-					"user_uuid": { "type": "string", "title": "User Uuid" },
-					"user_handle": { "type": "string", "title": "User Handle" },
-					"filename": { "type": "string", "title": "Filename" },
-					"file": { "type": "string", "format": "binary", "title": "File" }
-				},
-				"type": "object",
-				"required": ["user_uuid", "user_handle", "filename", "file"],
-				"title": "Body_avatar-update_avatar"
+					"email": { "type": "string" },
+					"handle": { "type": "string" },
+					"name": { "type": "string" },
+					"password": { "type": "string" }
+				}
 			},
-			"Body_avatar-upload_avatar": {
+			"DeleteFollowRequest": {
+				"type": "object",
+				"required": ["followee_handle"],
+				"properties": { "followee_handle": { "type": "string" } }
+			},
+			"ErrorResponse": {
+				"type": "object",
+				"required": ["status", "code"],
 				"properties": {
-					"user_uuid": { "type": "string", "title": "User Uuid" },
-					"user_handle": { "type": "string", "title": "User Handle" },
-					"filename": { "type": "string", "title": "Filename" },
-					"file": { "type": "string", "format": "binary", "title": "File" }
-				},
-				"type": "object",
-				"required": ["user_uuid", "user_handle", "filename", "file"],
-				"title": "Body_avatar-upload_avatar"
+					"code": { "type": "string" },
+					"details": { "type": ["string", "null"] },
+					"status": { "type": "integer", "format": "int32", "minimum": 0 }
+				}
 			},
-			"Body_banner-delete_banner": {
+			"FollowCountResponse": {
+				"type": "object",
+				"required": ["count"],
+				"properties": { "count": { "type": "integer", "format": "int64", "minimum": 0 } }
+			},
+			"FollowListResponse": {
+				"type": "object",
+				"required": ["users", "total_count", "page", "per_page", "has_more"],
 				"properties": {
-					"user_uuid": { "type": "string", "title": "User Uuid" },
-					"user_handle": { "type": "string", "title": "User Handle" }
-				},
-				"type": "object",
-				"required": ["user_uuid", "user_handle"],
-				"title": "Body_banner-delete_banner"
+					"has_more": { "type": "boolean" },
+					"page": { "type": "integer", "format": "int64", "minimum": 0 },
+					"per_page": { "type": "integer", "format": "int64", "minimum": 0 },
+					"total_count": { "type": "integer", "format": "int64", "minimum": 0 },
+					"users": { "type": "array", "items": { "$ref": "#/components/schemas/UserInfoResponse" } }
+				}
 			},
-			"Body_banner-update_banner": {
+			"FollowStatusResponse": {
+				"type": "object",
+				"required": ["is_following"],
+				"properties": { "is_following": { "type": "boolean" } }
+			},
+			"GetFollowCountRequest": {
+				"type": "object",
+				"required": ["user_handle"],
+				"properties": { "user_handle": { "type": "string" } }
+			},
+			"GetPostByHandleAndSlugRequest": {
+				"type": "object",
+				"required": ["handle", "slug"],
+				"properties": { "handle": { "type": "string" }, "slug": { "type": "string" } }
+			},
+			"GetPostsRequest": {
+				"type": "object",
 				"properties": {
-					"user_uuid": { "type": "string", "title": "User Uuid" },
-					"user_handle": { "type": "string", "title": "User Handle" },
-					"filename": { "type": "string", "title": "Filename" },
-					"file": { "type": "string", "format": "binary", "title": "File" }
-				},
-				"type": "object",
-				"required": ["user_uuid", "user_handle", "filename", "file"],
-				"title": "Body_banner-update_banner"
+					"page": { "type": ["integer", "null"], "format": "int32", "minimum": 0 },
+					"page_size": { "type": ["integer", "null"], "format": "int32", "minimum": 0 },
+					"sort": { "oneOf": [{ "type": "null" }, { "$ref": "#/components/schemas/PostSortOrder" }] }
+				}
 			},
-			"Body_banner-upload_banner": {
+			"GetPostsResponse": {
+				"type": "object",
+				"required": ["posts", "current_page", "page_size", "has_more"],
 				"properties": {
-					"user_uuid": { "type": "string", "title": "User Uuid" },
-					"user_handle": { "type": "string", "title": "User Handle" },
-					"filename": { "type": "string", "title": "Filename" },
-					"file": { "type": "string", "format": "binary", "title": "File" }
-				},
-				"type": "object",
-				"required": ["user_uuid", "user_handle", "filename", "file"],
-				"title": "Body_banner-upload_banner"
+					"current_page": { "type": "integer", "format": "int32", "minimum": 0 },
+					"has_more": { "type": "boolean" },
+					"page_size": { "type": "integer", "format": "int32", "minimum": 0 },
+					"posts": { "type": "array", "items": { "$ref": "#/components/schemas/PostListItem" } },
+					"total_count": { "type": ["integer", "null"], "format": "int64", "minimum": 0 }
+				}
 			},
-			"Body_thumbnail-delete_thumbnail": {
+			"GetUserPostsRequest": {
+				"type": "object",
+				"required": ["user_handle"],
+				"properties": { "user_handle": { "type": "string" } }
+			},
+			"GetUserProfileRequest": {
+				"type": "object",
+				"required": ["handle"],
+				"properties": { "handle": { "type": "string" } }
+			},
+			"GithubLoginRequest": {
+				"type": "object",
+				"required": ["code"],
+				"properties": { "code": { "type": "string" }, "handle": { "type": ["string", "null"] } }
+			},
+			"GoogleLoginRequest": {
+				"type": "object",
+				"required": ["code"],
+				"properties": { "code": { "type": "string" }, "handle": { "type": ["string", "null"] } }
+			},
+			"HandleCheckResponse": {
+				"type": "object",
+				"required": ["is_available"],
+				"properties": { "is_available": { "type": "boolean" } }
+			},
+			"PostAuthor": {
+				"type": "object",
+				"required": ["handle", "name"],
 				"properties": {
-					"user_uuid": { "type": "string", "title": "User Uuid" },
-					"post_id": { "type": "string", "title": "Post Id" }
-				},
-				"type": "object",
-				"required": ["user_uuid", "post_id"],
-				"title": "Body_thumbnail-delete_thumbnail"
+					"handle": { "type": "string" },
+					"name": { "type": "string" },
+					"profile_image": { "type": ["string", "null"] }
+				}
 			},
-			"Body_thumbnail-update_thumbnail": {
+			"PostInfoResponse": {
+				"type": "object",
+				"required": [
+					"title",
+					"content",
+					"author",
+					"created_at",
+					"like_count",
+					"comment_count",
+					"view_count",
+					"slug",
+					"tags"
+				],
 				"properties": {
-					"user_uuid": { "type": "string", "title": "User Uuid" },
-					"post_id": { "type": "string", "title": "Post Id" },
-					"filename": { "type": "string", "title": "Filename" },
-					"file": { "type": "string", "format": "binary", "title": "File" }
-				},
-				"type": "object",
-				"required": ["user_uuid", "post_id", "filename", "file"],
-				"title": "Body_thumbnail-update_thumbnail"
+					"author": { "$ref": "#/components/schemas/PostAuthor" },
+					"comment_count": { "type": "integer", "format": "int32" },
+					"content": { "type": "string" },
+					"created_at": { "type": "string", "format": "date-time" },
+					"like_count": { "type": "integer", "format": "int32" },
+					"published_at": { "type": ["string", "null"], "format": "date-time" },
+					"slug": { "type": "string" },
+					"summary": { "type": ["string", "null"] },
+					"tags": { "type": "array", "items": { "type": "string" } },
+					"title": { "type": "string" },
+					"updated_at": { "type": ["string", "null"], "format": "date-time" },
+					"view_count": { "type": "integer", "format": "int32" }
+				}
 			},
-			"Body_thumbnail-upload_thumbnail": {
+			"PostListItem": {
+				"type": "object",
+				"required": [
+					"title",
+					"user_handle",
+					"user_name",
+					"created_at",
+					"like_count",
+					"comment_count",
+					"view_count",
+					"slug",
+					"hashtags"
+				],
 				"properties": {
-					"user_uuid": { "type": "string", "title": "User Uuid" },
-					"post_id": { "type": "string", "title": "Post Id" },
-					"filename": { "type": "string", "title": "Filename" },
-					"file": { "type": "string", "format": "binary", "title": "File" }
-				},
-				"type": "object",
-				"required": ["user_uuid", "post_id", "filename", "file"],
-				"title": "Body_thumbnail-upload_thumbnail"
+					"comment_count": { "type": "integer", "format": "int32" },
+					"created_at": { "type": "string", "format": "date-time" },
+					"hashtags": { "type": "array", "items": { "type": "string" } },
+					"like_count": { "type": "integer", "format": "int32" },
+					"slug": { "type": "string" },
+					"summary": { "type": ["string", "null"] },
+					"thumbnail_image": { "type": ["string", "null"] },
+					"title": { "type": "string" },
+					"user_avatar": { "type": ["string", "null"] },
+					"user_handle": { "type": "string" },
+					"user_name": { "type": "string" },
+					"view_count": { "type": "integer", "format": "int32" }
+				}
 			},
-			"HTTPValidationError": {
+			"PostSortOrder": { "type": "string", "enum": ["latest", "popular", "oldest"] },
+			"PostThumbnailForm": {
+				"type": "object",
+				"required": ["slug", "file"],
 				"properties": {
-					"detail": { "items": { "$ref": "#/components/schemas/ValidationError" }, "type": "array", "title": "Detail" }
-				},
-				"type": "object",
-				"title": "HTTPValidationError"
+					"file": { "type": "string", "format": "binary", "contentMediaType": "image/*" },
+					"slug": { "type": "string" }
+				}
 			},
-			"PostIndexRequest": {
-				"properties": { "post_id": { "type": "string", "title": "Post Id" } },
+			"ProfileAvatarForm": {
 				"type": "object",
-				"required": ["post_id"],
-				"title": "PostIndexRequest"
+				"required": ["file"],
+				"properties": { "file": { "type": "string", "format": "binary", "contentMediaType": "image/*" } }
 			},
-			"ProfileImageDeleteRequest": {
-				"properties": { "user_id": { "type": "string", "title": "User Id" } },
+			"ProfileBannerForm": {
 				"type": "object",
-				"required": ["user_id"],
-				"title": "ProfileImageDeleteRequest"
+				"required": ["file"],
+				"properties": { "file": { "type": "string", "format": "binary", "contentMediaType": "image/*" } }
 			},
-			"ProfileImageOauthUploadRequest": {
+			"SearchPostsRequest": {
+				"type": "object",
 				"properties": {
-					"user_id": { "type": "string", "title": "User Id" },
-					"image_url": { "type": "string", "title": "Image Url" }
-				},
-				"type": "object",
-				"required": ["user_id", "image_url"],
-				"title": "ProfileImageOauthUploadRequest"
-			},
-			"TaskResponse": {
-				"properties": {
-					"task_id": { "type": "string", "title": "Task Id" },
-					"status": { "type": "string", "title": "Status" },
-					"message": { "type": "string", "title": "Message" }
-				},
-				"type": "object",
-				"required": ["task_id", "status", "message"],
-				"title": "TaskResponse"
-			},
-			"TaskStatusResponse": {
-				"properties": {
-					"task_id": { "type": "string", "title": "Task Id" },
-					"status": { "type": "string", "title": "Status" },
-					"result": { "additionalProperties": true, "type": "object", "title": "Result" },
-					"error": { "type": "string", "title": "Error" }
-				},
-				"type": "object",
-				"required": ["task_id", "status"],
-				"title": "TaskStatusResponse"
-			},
-			"ValidationError": {
-				"properties": {
-					"loc": {
-						"items": { "anyOf": [{ "type": "string" }, { "type": "integer" }] },
-						"type": "array",
-						"title": "Location"
+					"date_from": {
+						"type": ["string", "null"],
+						"format": "date-time",
+						"description": "날짜 범위 필터링 - 시작일"
 					},
-					"msg": { "type": "string", "title": "Message" },
-					"type": { "type": "string", "title": "Error Type" }
-				},
+					"date_to": { "type": ["string", "null"], "format": "date-time", "description": "날짜 범위 필터링 - 종료일" },
+					"hashtags": {
+						"type": ["array", "null"],
+						"items": { "type": "string" },
+						"description": "특정 해시태그로 필터링"
+					},
+					"min_likes": { "type": ["integer", "null"], "format": "int32", "description": "최소 좋아요 수" },
+					"page": { "type": ["integer", "null"], "format": "int32", "description": "페이지 번호", "minimum": 0 },
+					"page_size": { "type": ["integer", "null"], "format": "int32", "description": "페이지 크기", "minimum": 0 },
+					"query": { "type": ["string", "null"], "description": "검색 쿼리 (제목, 내용, 해시태그, 사용자명에서 검색)" },
+					"sort": {
+						"oneOf": [{ "type": "null" }, { "$ref": "#/components/schemas/PostSortOrder", "description": "정렬 방식" }]
+					},
+					"user_handle": { "type": ["string", "null"], "description": "특정 사용자로 필터링" }
+				}
+			},
+			"TrendingHashtagsRequest": {
 				"type": "object",
-				"required": ["loc", "msg", "type"],
-				"title": "ValidationError"
+				"properties": {
+					"days": { "type": ["integer", "null"], "format": "int64" },
+					"limit": { "type": ["integer", "null"], "format": "int64", "minimum": 0 }
+				}
+			},
+			"TrendingHashtagsResponse": {
+				"type": "object",
+				"required": ["hashtags"],
+				"properties": { "hashtags": { "type": "array", "items": { "type": "string" } } }
+			},
+			"UpdateProfileRequest": {
+				"type": "object",
+				"properties": {
+					"bio": { "type": ["string", "null"] },
+					"handle": { "type": ["string", "null"] },
+					"location": { "type": ["string", "null"] },
+					"name": { "type": ["string", "null"] },
+					"password": { "type": ["string", "null"] },
+					"website": { "type": ["string", "null"] }
+				}
+			},
+			"UserInfoResponse": {
+				"type": "object",
+				"required": ["name", "handle", "email", "created_at"],
+				"properties": {
+					"banner_image": { "type": ["string", "null"] },
+					"bio": { "type": ["string", "null"] },
+					"created_at": { "type": "string", "format": "date-time" },
+					"email": { "type": "string" },
+					"handle": { "type": "string" },
+					"location": { "type": ["string", "null"] },
+					"name": { "type": "string" },
+					"profile_image": { "type": ["string", "null"] },
+					"website": { "type": ["string", "null"] }
+				}
+			},
+			"UserPostsResponse": {
+				"type": "object",
+				"required": ["posts"],
+				"properties": { "posts": { "type": "array", "items": { "$ref": "#/components/schemas/PostListItem" } } }
 			}
+		},
+		"securitySchemes": {
+			"anonymous_id_cookie": { "type": "apiKey", "in": "cookie", "name": "anonymous_user_id" },
+			"bearer_auth": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" },
+			"refresh_token_cookie": { "type": "apiKey", "in": "cookie", "name": "refresh_token" }
 		}
-	}
+	},
+	"tags": [
+		{ "name": "Auth", "description": "Authentication endpoints" },
+		{ "name": "User", "description": "User endpoints" },
+		{ "name": "Post", "description": "Post endpoints" },
+		{ "name": "Follow", "description": "Follow endpoints" },
+		{ "name": "Hashtag", "description": "Hashtag endpoints" }
+	]
 }

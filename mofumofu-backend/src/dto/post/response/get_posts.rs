@@ -27,7 +27,7 @@ pub struct GetPostsResponse {
     pub current_page: u32,
     pub page_size: u32,
     pub has_more: bool,
-    pub total_count: Option<u64>,
+    pub total_count: u64,
 }
 
 impl IntoResponse for GetPostsResponse {

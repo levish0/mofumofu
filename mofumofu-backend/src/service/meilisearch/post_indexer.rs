@@ -70,7 +70,7 @@ pub async fn search_posts(
     sort: &str,
     page: u32,
     page_size: u32,
-) -> Result<Vec<MeilisearchPost>, meilisearch_sdk::errors::Error> {
+) -> Result<(Vec<MeilisearchPost>, u64), meilisearch_sdk::errors::Error> {
     let posts_index = meilisearch.get_client().index("posts");
     let offset = (page - 1) * page_size;
 
@@ -141,6 +141,8 @@ pub async fn search_posts(
     };
 
     let results = search_results;
+    let total_hits = results.estimated_total_hits.unwrap_or(0) as u64;
+    let posts = results.hits.into_iter().map(|hit| hit.result).collect();
 
-    Ok(results.hits.into_iter().map(|hit| hit.result).collect())
+    Ok((posts, total_hits))
 }

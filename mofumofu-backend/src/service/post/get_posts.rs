@@ -26,7 +26,7 @@ where
             current_page: page,
             page_size,
             has_more: false,
-            total_count: Some(0),
+            total_count: 0,
         });
     }
 
@@ -65,7 +65,7 @@ where
     }
 
     let has_more = post_items.len() == page_size as usize;
-    let total_count = Some(repository_get_posts_count(conn).await?);
+    let total_count = repository_get_posts_count(conn).await?;
 
     Ok(GetPostsResponse {
         posts: post_items,

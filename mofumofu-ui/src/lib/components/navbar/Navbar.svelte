@@ -128,7 +128,7 @@
 					<Icon src={Bell} size="20" class="text-black dark:text-white" />
 				</Button>
 
-				<Button href="/" variant="icon" aria-label="search">
+				<Button href="/search" variant="icon" aria-label="search">
 					<Icon src={MagnifyingGlass} size="20" class="text-black dark:text-white" />
 				</Button>
 
