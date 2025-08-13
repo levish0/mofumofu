@@ -2,14 +2,14 @@
 	import '$lib/styles/markdown.css';
 	import { getContext, onMount } from 'svelte';
 	import type { PageData } from './$types';
-	import { processMarkdown, type TocItem } from '$lib/utils/markdown';
 	import { Heart, Icon } from 'svelte-hero-icons';
 	import { incrementPostView } from '$lib/api/post/postApi';
 
 	const { data }: { data: PageData } = $props();
 
-	let htmlContent = $state('');
-	let tocItems: TocItem[] = $state([]);
+	// 서버에서 처리된 HTML과 TOC 사용
+	const htmlContent = data.post.htmlContent;
+	const tocItems = data.post.tocItems;
 
 	type NavbarContext = {
 		isVisible: () => boolean;
@@ -18,14 +18,6 @@
 
 	const navbar = getContext<NavbarContext>('navbar');
 	const topPosition = $derived(navbar.isVisible() ? '68px' : '8px');
-
-	$effect(() => {
-		(async () => {
-			const result = await processMarkdown(data.post.content);
-			htmlContent = result.htmlContent;
-			tocItems = result.tocItems;
-		})();
-	});
 
 	onMount(() => {
 		incrementPostView({ handle: data.handle, slug: data.slug }).catch((error) => {

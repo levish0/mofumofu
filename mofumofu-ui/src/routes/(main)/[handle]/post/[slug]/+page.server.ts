@@ -1,6 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import { getPostByHandleAndSlug } from '$lib/api/post/postApi';
+import { processMarkdown } from '$lib/utils/markdown';
 
 export const load: PageServerLoad = async ({ params }) => {
 	if (!params.handle || !params.slug) {
@@ -17,8 +18,15 @@ export const load: PageServerLoad = async ({ params }) => {
 			slug: params.slug
 		});
 
+		// Process markdown on server side for SEO
+		const { htmlContent, tocItems } = await processMarkdown(postData.content);
+
 		return {
-			post: postData,
+			post: {
+				...postData,
+				htmlContent,
+				tocItems
+			},
 			author: postData.author,
 			handle,
 			slug: params.slug
