@@ -10,6 +10,7 @@ celery_app = Celery(
         "app.tasks.token_tasks",
         "app.tasks.post_tasks",
         "app.tasks.search_tasks",
+        "app.tasks.markdown_tasks",
     ],
 )
 

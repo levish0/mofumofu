@@ -1,13 +1,16 @@
 use crate::dto::post::response::post_info::{PostAuthor, PostInfoResponse, TocItem};
-use crate::microservices::markdown_client::render_markdown;
+use crate::microservices::markdown_cache_client::{get_cached_markdown, render_and_cache_markdown};
 use crate::repository::post::get_post_by_handle_and_slug::repository_get_post_by_handle_and_slug;
 use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
 use crate::service::error::errors::Errors;
+use redis::aio::ConnectionManager;
 use reqwest::Client;
 use sea_orm::{ConnectionTrait, Iden, TransactionTrait};
+use tracing::{info, warn};
 
 pub async fn service_get_post_by_handle_and_slug<C>(
     conn: &C,
+    redis_conn: &mut ConnectionManager,
     http_client: &Client,
     handle: &str,
     slug: &str,
@@ -22,9 +25,31 @@ where
         .await?
         .ok_or(Errors::UserNotFound)?;
 
-    // Render markdown to HTML
-    let rendered_result = render_markdown(http_client, &post.content).await
-        .map_err(|_| Errors::SysInternalError("".to_string()))?;
+    // 마크다운 캐시 렌더링 시도
+    info!("포스트 마크다운 렌더링 시작 (handle: {}, slug: {})", handle, slug);
+    
+    let rendered_result = match get_cached_markdown(redis_conn, &post.id.to_string()).await {
+        Ok(Some(cached_result)) => {
+            info!("캐시된 마크다운 사용 (post_id: {}, handle: {}, slug: {})", post.id, handle, slug);
+            cached_result
+        }
+        Ok(None) => {
+            info!("캐시 미스 - 새로 렌더링 (post_id: {}, handle: {}, slug: {})", post.id, handle, slug);
+            render_and_cache_markdown(http_client, &post.id.to_string(), &post.content, Some(86400)).await
+                .map_err(|e| {
+                    warn!("마크다운 렌더링 실패: {}", e);
+                    Errors::SysInternalError("마크다운 렌더링 실패".to_string())
+                })?
+        }
+        Err(e) => {
+            warn!("캐시 조회 중 오류, 직접 렌더링 시도: {}", e);
+            render_and_cache_markdown(http_client, &post.id.to_string(), &post.content, Some(86400)).await
+                .map_err(|e| {
+                    warn!("마크다운 렌더링 실패: {}", e);
+                    Errors::SysInternalError("마크다운 렌더링 실패".to_string())
+                })?
+        }
+    };
 
     let toc_items: Vec<TocItem> = rendered_result
         .toc_items

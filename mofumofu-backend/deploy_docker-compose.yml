@@ -75,9 +75,6 @@ services:
 
   # FastAPI 태스크 서버
   tasks-api:
-    build:
-      context: tasks
-      dockerfile: Dockerfile
     image: ghcr.io/levish0/mofumofu-tasks:0.4.5
     container_name: tasks-api
     extra_hosts:

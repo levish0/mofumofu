@@ -9,9 +9,12 @@ class Settings(BaseSettings):
     )
     API_STR: str = "/tasks"
 
-    # Celery 설정
+    # Celery 설정 (DB 0 사용)
     CELERY_BROKER_URL: str = "redis://localhost:6379/0"
     CELERY_RESULT_BACKEND: str = "redis://localhost:6379/0"
+    
+    # Redis 백엔드 캐시 설정 (DB 1 사용)
+    REDIS_BACKEND_URL: str = "redis://localhost:6379/1"
 
     # Cloudflare R2 설정
     R2_ACCOUNT_ID: str = ""
@@ -30,6 +33,9 @@ class Settings(BaseSettings):
     # Meilisearch 설정
     MEILISEARCH_HOST: str = "http://localhost:7700"
     MEILISEARCH_API_KEY: str = ""
+    
+    # Markdown 서비스 설정
+    MARKDOWN_SERVICE_HOST: str = "http://localhost:6700"
 
 
 settings = Settings()

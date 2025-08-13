@@ -15,7 +15,7 @@ services:
     networks:
       - mofumofu-network
     depends_on:
-      redis-backend:
+      redis:
         condition: service_healthy
       markdown-service:
         condition: service_healthy
@@ -34,40 +34,21 @@ services:
     volumes:
       - meili_data:/meili_data
 
-  # 백엔드용 redis
-  redis-backend:
+  # 통합 Redis (백엔드 캐시 + Celery 브로커)
+  redis:
     image: redis:8.0.2
-    container_name: redis-backend
+    container_name: redis
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
       - "6379:6379"
     volumes:
-      - redis-backend-data:/data
+      - redis-data:/data
     networks:
       - mofumofu-network
     restart: unless-stopped
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # Redis (Celery 브로커)
-  redis-celery:
-    image: redis:8.0.2
-    container_name: redis-celery
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    ports:
-      - "6380:6379"
-    volumes:
-      - redis-celery-data:/data
-    networks:
-      - mofumofu-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -87,7 +68,7 @@ services:
     networks:
       - mofumofu-network
     depends_on:
-      redis-celery:
+      redis:
         condition: service_healthy
     restart: unless-stopped
 
@@ -104,7 +85,7 @@ services:
     networks:
       - mofumofu-network
     depends_on:
-      redis-celery:
+      redis:
         condition: service_healthy
       tasks-api:
         condition: service_started
@@ -126,7 +107,7 @@ services:
     networks:
       - mofumofu-network
     depends_on:
-      redis-celery:
+      redis:
         condition: service_healthy
       tasks-api:
         condition: service_started
@@ -138,7 +119,7 @@ services:
       context: tasks
       dockerfile: Dockerfile
     container_name: flower
-    command: ["uv", "run", "celery", "-A", "app.core.celery_app", "--broker=redis://redis-celery:6379/0", "flower", "--port=5555"]
+    command: ["uv", "run", "celery", "-A", "app.core.celery_app", "--broker=redis://redis:6379/0", "flower", "--port=5555"]
     ports:
       - "5555:5555"
     env_file:
@@ -146,7 +127,7 @@ services:
     networks:
       - mofumofu-network
     depends_on:
-      redis-celery:
+      redis:
         condition: service_healthy
     restart: unless-stopped
 
@@ -171,5 +152,4 @@ services:
 
 volumes:
   meili_data:
-  redis-celery-data:
-  redis-backend-data:
+  redis-data:
