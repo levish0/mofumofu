@@ -6,6 +6,8 @@ services:
   mofumofu-backend:
     build: .
     container_name: mofumofu-backend
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     env_file:
       - docker.env
     ports:
@@ -21,6 +23,8 @@ services:
   meilisearch:
     image: getmeili/meilisearch:latest
     container_name: meilisearch
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     env_file:
       - docker.env
     ports:
@@ -34,6 +38,8 @@ services:
   redis-backend:
     image: redis:8.0.2
     container_name: redis-backend
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "6379:6379"
     volumes:
@@ -51,6 +57,8 @@ services:
   redis-celery:
     image: redis:8.0.2
     container_name: redis-celery
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "6380:6379"
     volumes:
@@ -70,6 +78,8 @@ services:
       context: tasks
       dockerfile: Dockerfile
     container_name: tasks-api
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "7000:7000"
     env_file:
@@ -87,6 +97,8 @@ services:
       context: tasks
       dockerfile: Dockerfile
     command: ["python", "start_worker.py"]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     env_file:
       - docker.env
     networks:
@@ -107,6 +119,8 @@ services:
       dockerfile: Dockerfile
     container_name: celery-beat
     command: ["uv", "run", "celery", "-A", "app.core.celery_app", "beat", "--loglevel=info"]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     env_file:
       - docker.env
     networks:
@@ -142,6 +156,8 @@ services:
       context: markdown-service
       dockerfile: Dockerfile
     container_name: markdown-service
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "6700:6700"
     networks:
