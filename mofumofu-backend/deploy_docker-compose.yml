@@ -5,7 +5,7 @@ networks:
 services:
   mofumofu-backend:
     # build: .
-    image: ghcr.io/levish0/mofumofu-backend:0.4.5
+    image: ghcr.io/levish0/mofumofu-backend:0.4.9
     container_name: mofumofu-backend
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -57,7 +57,7 @@ services:
 
   # FastAPI 태스크 서버
   tasks-api:
-    image: ghcr.io/levish0/mofumofu-tasks:0.4.5
+    image: ghcr.io/levish0/mofumofu-tasks:0.4.9
     container_name: tasks-api
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -74,7 +74,7 @@ services:
 
   # Celery Worker
   celery-worker:
-    image: ghcr.io/levish0/mofumofu-tasks:0.4.5
+    image: ghcr.io/levish0/mofumofu-tasks:0.4.9
     command: ["python", "start_worker.py"]
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -93,7 +93,7 @@ services:
 
   # Celery Beat (스케줄러)
   celery-beat:
-    image: ghcr.io/levish0/mofumofu-tasks:0.4.5
+    image: ghcr.io/levish0/mofumofu-tasks:0.4.9
     container_name: celery-beat
     command: ["uv", "run", "celery", "-A", "app.core.celery_app", "beat", "--loglevel=info"]
     extra_hosts:
@@ -111,7 +111,7 @@ services:
 
   # Celery Flower (모니터링)
   flower:
-    image: ghcr.io/levish0/mofumofu-tasks:0.4.5
+    image: ghcr.io/levish0/mofumofu-tasks:0.4.9
     container_name: flower
     command: ["uv", "run", "celery", "-A", "app.core.celery_app", "--broker=redis://redis:6379/0", "flower", "--port=5555"]
     ports:
@@ -127,7 +127,7 @@ services:
 
   # Markdown Service (Bun + Elysia)
   markdown-service:
-    image: ghcr.io/levish0/mofumofu-markdown:0.4.5
+    image: ghcr.io/levish0/mofumofu-markdown:0.4.9
     container_name: markdown-service
     extra_hosts:
       - "host.docker.internal:host-gateway"
