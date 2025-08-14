@@ -1,7 +1,7 @@
 use crate::connection::meilisearch::MeilisearchClient;
 use crate::dto::post::request::{PostSortOrder, SearchPostsRequest};
 use crate::dto::post::response::{GetPostsResponse, PostListItem};
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 use crate::service::meilisearch::post_indexer;
 use chrono::{DateTime, Utc};
 use sea_orm::{ConnectionTrait, TransactionTrait};
@@ -10,7 +10,7 @@ pub async fn service_search_posts<C>(
     _conn: &C,
     meilisearch: &MeilisearchClient,
     request: SearchPostsRequest,
-) -> Result<GetPostsResponse, Errors>
+) -> ServiceResult<GetPostsResponse>
 where
     C: ConnectionTrait + TransactionTrait,
 {

@@ -1,13 +1,13 @@
 use crate::repository::follow::get_follower_count::repository_get_follower_count;
 use crate::repository::user::get_user_by_handle::repository_get_user_by_handle;
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 use sea_orm::ConnectionTrait;
 use sea_orm::TransactionTrait;
 
 pub async fn service_get_follower_count<C>(
     conn: &C,
     user_handle: &str,
-) -> anyhow::Result<u64, Errors>
+) -> ServiceResult<u64>
 where
     C: ConnectionTrait + TransactionTrait,
 {

@@ -3,11 +3,9 @@ use crate::entity::common::{ActionType, OAuthProvider, TargetType};
 use crate::entity::user_refresh_tokens::ActiveModel as RefreshTokenActiveModel;
 use crate::repository::system_events::log_event::repository_log_event;
 use crate::service::auth::jwt::{create_jwt_access_token, create_jwt_refresh_token};
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 use crate::service::oauth::find_or_create_oauth_user::service_find_or_create_oauth_user;
-use crate::service::oauth::provider::common::exchange_oauth_code;
 use crate::service::oauth::provider::github::client::{exchange_github_code, get_github_user_info};
-use crate::service::oauth::provider::google::client::{exchange_google_code, get_google_user_info};
 use crate::microservices::profile_client::queue_oauth_avatar_upload;
 use reqwest::Client as ReqwestClient;
 use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
@@ -20,7 +18,7 @@ pub async fn service_github_sign_in<C>(
     ip_address: Option<String>,
     auth_code: &str,
     handle: Option<&str>,
-) -> Result<AuthJWTResponse, Errors>
+) -> ServiceResult<AuthJWTResponse>
 where
     C: ConnectionTrait + TransactionTrait,
 {
@@ -30,10 +28,7 @@ where
     // 2. GitHub에서 유저 정보 획득
     let github_user = get_github_user_info(http_client, &access_token).await?;
     // 3. 이메일이 없으면 에러
-    let email = github_user.email.ok_or_else(|| {
-        error!("GitHub user has no email address");
-        Errors::OauthUserInfoParseFailed
-    })?;
+    let email = github_user.email.ok_or(Errors::OauthUserInfoParseFailed)?;
 
     // 4. 유저 찾기 또는 생성
     let oauth_result = service_find_or_create_oauth_user(
@@ -79,12 +74,10 @@ where
 
     // 5. JWT 토큰 생성 (Google과 동일한 로직)
     let access_token = create_jwt_access_token(&oauth_result.user.id).map_err(|e| {
-        error!("Failed to create access token: {:?}", e);
         Errors::TokenCreationError(e.to_string())
     })?;
 
     let refresh_token = create_jwt_refresh_token(&oauth_result.user.id).map_err(|e| {
-        error!("Failed to create refresh token: {:?}", e);
         Errors::TokenCreationError(e.to_string())
     })?;
 
@@ -101,7 +94,6 @@ where
     };
 
     refresh_model.insert(txn).await.map_err(|e| {
-        error!("Failed to save refresh token: {:?}", e);
         Errors::DatabaseError(e.to_string())
     })?;
 

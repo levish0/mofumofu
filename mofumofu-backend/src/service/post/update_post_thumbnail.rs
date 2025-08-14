@@ -1,5 +1,5 @@
 use crate::repository::post::get_post_by_user_and_slug::repository_get_post_by_user_and_slug;
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 use crate::microservices::post_client::queue_post_thumbnail_update;
 use axum::extract::Multipart;
 use chrono::Utc;
@@ -13,7 +13,7 @@ pub async fn service_update_post_thumbnail<C>(
     http_client: &Client,
     user_uuid: &Uuid,
     mut multipart: Multipart,
-) -> Result<(), Errors>
+) -> ServiceResult<()>
 where
     C: ConnectionTrait,
 {

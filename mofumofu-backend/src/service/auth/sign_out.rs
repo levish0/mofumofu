@@ -3,10 +3,9 @@ use crate::entity::common::{ActionType, TargetType};
 use crate::repository::auth::find_refresh_token_by_jti_and_token::repository_find_refresh_token_by_jti_and_token;
 use crate::repository::auth::revoke_refresh_token::repository_revoke_refresh_token;
 use crate::repository::system_events::log_event::repository_log_event;
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 use chrono::Utc;
 use sea_orm::{ConnectionTrait, TransactionTrait};
-use tracing::error;
 
 pub async fn service_sign_out<C>(
     conn: &C,
@@ -14,16 +13,12 @@ pub async fn service_sign_out<C>(
     ip_address: Option<String>,
     refresh_token: String,
     refresh_token_claims: RefreshTokenClaims,
-) -> Result<(), Errors>
+) -> ServiceResult<()>
 where
     C: ConnectionTrait + TransactionTrait,
 {
     let now = Utc::now().timestamp();
     if refresh_token_claims.exp < now {
-        error!(
-            "Refresh token has expired: token_exp={}, now={}",
-            refresh_token_claims.exp, now
-        );
         return Err(Errors::UserTokenExpired);
     }
 
@@ -33,19 +28,13 @@ where
         refresh_token,
     )
     .await?
-    .ok_or_else(|| {
-        error!("Refresh token not found or already revoked");
-        Errors::UserInvalidToken
-    })?;
+    .ok_or(Errors::UserInvalidToken)?;
 
     let result =
         repository_revoke_refresh_token(conn, stored_token, ip_address, user_agent, Utc::now())
             .await
             .map(|_| ())
-            .map_err(|e| {
-                error!("Failed to revoke refresh token: {:?}", e);
-                e
-            });
+            .map_err(|e| e);
 
     // 로그아웃 성공 시 이벤트 로깅
     if result.is_ok() {

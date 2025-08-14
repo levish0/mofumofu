@@ -2,10 +2,10 @@ use crate::dto::user::request::create::CreateUserRequest;
 use crate::entity::common::{ActionType, TargetType};
 use crate::repository::system_events::log_event::repository_log_event;
 use crate::repository::user::create_user::repository_create_user;
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 use sea_orm::{ConnectionTrait, DatabaseConnection, TransactionTrait};
 
-pub async fn service_create_user<C>(conn: &C, payload: CreateUserRequest) -> Result<(), Errors>
+pub async fn service_create_user<C>(conn: &C, payload: CreateUserRequest) -> ServiceResult<()>
 where
     C: ConnectionTrait + TransactionTrait,
 {

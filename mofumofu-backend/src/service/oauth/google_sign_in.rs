@@ -3,7 +3,7 @@ use crate::entity::common::{ActionType, OAuthProvider, TargetType};
 use crate::entity::user_refresh_tokens::ActiveModel as RefreshTokenActiveModel;
 use crate::repository::system_events::log_event::repository_log_event;
 use crate::service::auth::jwt::{create_jwt_access_token, create_jwt_refresh_token};
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 use crate::service::oauth::find_or_create_oauth_user::service_find_or_create_oauth_user;
 use crate::service::oauth::provider::google::client::{exchange_google_code, get_google_user_info};
 use crate::microservices::profile_client::queue_oauth_avatar_upload;
@@ -18,7 +18,7 @@ pub async fn service_google_sign_in<C>(
     ip_address: Option<String>,
     auth_code: &str,
     handle: Option<&str>,
-) -> Result<AuthJWTResponse, Errors>
+) -> ServiceResult<AuthJWTResponse>
 where
     C: ConnectionTrait + TransactionTrait,
 {

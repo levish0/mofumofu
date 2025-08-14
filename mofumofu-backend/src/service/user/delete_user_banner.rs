@@ -1,5 +1,5 @@
 use crate::repository::user::get_user_by_uuid::repository_get_user_by_uuid;
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 use crate::microservices::profile_client::queue_user_banner_delete;
 use reqwest::Client;
 use sea_orm::ConnectionTrait;
@@ -10,7 +10,7 @@ pub async fn service_delete_user_banner<C>(
     conn: &C,
     http_client: &Client,
     user_uuid: &Uuid,
-) -> Result<(), Errors>
+) -> ServiceResult<()>
 where
     C: ConnectionTrait,
 {

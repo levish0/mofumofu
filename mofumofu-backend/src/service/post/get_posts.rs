@@ -3,13 +3,13 @@ use crate::dto::post::response::{GetPostsResponse, PostListItem};
 use crate::repository::hashtag::get_hashtags_by_post::repository_get_hashtags_by_posts;
 use crate::repository::post::get_posts::{repository_get_posts, repository_get_posts_count};
 use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 use sea_orm::{ConnectionTrait, TransactionTrait};
 
 pub async fn service_get_posts<C>(
     conn: &C,
     request: GetPostsRequest,
-) -> Result<GetPostsResponse, Errors>
+) -> ServiceResult<GetPostsResponse>
 where
     C: ConnectionTrait + TransactionTrait,
 {

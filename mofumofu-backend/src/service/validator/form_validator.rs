@@ -1,4 +1,4 @@
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 use axum::Form;
 use axum::extract::rejection::FormRejection;
 use axum::extract::{FromRequest, Request};

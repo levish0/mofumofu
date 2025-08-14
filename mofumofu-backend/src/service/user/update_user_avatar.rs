@@ -1,5 +1,5 @@
 use crate::repository::user::get_user_by_uuid::repository_get_user_by_uuid;
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 use crate::microservices::profile_client::queue_user_avatar_update;
 use axum::extract::Multipart;
 use chrono::Utc;
@@ -13,7 +13,7 @@ pub async fn service_update_user_avatar<C>(
     http_client: &Client,
     user_uuid: &Uuid,
     mut multipart: Multipart,
-) -> Result<(), Errors>
+) -> ServiceResult<()>
 where
     C: ConnectionTrait,
 {

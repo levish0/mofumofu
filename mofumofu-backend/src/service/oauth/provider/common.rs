@@ -1,5 +1,4 @@
-use crate::config::db_config::DbConfig;
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 use oauth2::basic::{
     BasicClient, BasicErrorResponse, BasicRevocationErrorResponse, BasicTokenIntrospectionResponse,
     BasicTokenResponse,
@@ -8,7 +7,6 @@ use oauth2::{
     AccessToken, AuthUrl, AuthorizationCode, Client, ClientId, ClientSecret, EndpointNotSet,
     EndpointSet, RedirectUrl, StandardRevocableToken, TokenResponse, TokenUrl,
 };
-use tracing::error;
 
 pub fn build_oauth_client(
     client_id: &str,
@@ -46,7 +44,7 @@ pub fn build_oauth_client(
     Ok(client)
 }
 
-pub fn create_http_client() -> Result<reqwest::Client, Errors> {
+pub fn create_http_client() -> ServiceResult<reqwest::Client> {
     reqwest::ClientBuilder::new()
         .redirect(reqwest::redirect::Policy::none()) // SSRF 방지
         .build()
@@ -69,17 +67,14 @@ pub async fn exchange_oauth_code(
     >,
     code: &str,
     provider: &str,
-) -> Result<AccessToken, Errors> {
+) -> ServiceResult<AccessToken> {
     let http_client = create_http_client()?;
 
     let token_result = oauth_client
         .exchange_code(AuthorizationCode::new(code.to_string()))
         .request_async(&http_client)
         .await
-        .map_err(|e| {
-            error!("Failed to exchange {} code: {:?}", provider, e);
-            Errors::OauthTokenExchangeFailed
-        })?;
+        .map_err(|_e| Errors::OauthTokenExchangeFailed)?;
 
     Ok(token_result.access_token().clone())
 }

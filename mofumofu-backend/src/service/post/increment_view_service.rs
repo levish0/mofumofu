@@ -2,7 +2,7 @@ use crate::entity::common::{ActionType, TargetType};
 use crate::repository::post::get_post_by_handle_and_slug::repository_get_post_by_handle_and_slug;
 use crate::repository::post::increment_view_count::repository_increment_view_count;
 use crate::repository::system_events::log_event::repository_log_event;
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 use crate::state::AppState;
 use redis::AsyncCommands;
 use sea_orm::ConnectionTrait;
@@ -17,7 +17,7 @@ pub async fn service_increment_view<C>(
     handle: &str,
     slug: &str,
     anonymous_user_id: Option<&str>,
-) -> Result<(), Errors>
+) -> ServiceResult<()>
 where
     C: ConnectionTrait,
 {
@@ -35,7 +35,7 @@ pub async fn increment_view_count_with_redis_check<C>(
     conn: &C,
     post_id: &Uuid,
     anonymous_user_id: Option<&str>,
-) -> Result<(), Errors>
+) -> ServiceResult<()>
 where
     C: ConnectionTrait,
 {

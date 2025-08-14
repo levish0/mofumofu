@@ -5,14 +5,14 @@ use crate::repository::follow::create_follow::repository_create_follow;
 use crate::repository::system_events::log_event::repository_log_event;
 use crate::repository::user::find_user_by_handle::repository_find_user_by_handle;
 use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 use sea_orm::ConnectionTrait;
 use sea_orm::TransactionTrait;
 
 pub async fn service_create_follow_by_handle<C>(
     conn: &C,
     payload: CreateFollow,
-) -> anyhow::Result<(), Errors>
+) -> ServiceResult<()>
 where
     C: ConnectionTrait + TransactionTrait,
 {

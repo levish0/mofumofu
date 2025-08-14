@@ -3,13 +3,13 @@ use crate::repository::hashtag::get_hashtags_by_post::repository_get_hashtags_by
 use crate::repository::post::get_user_posts::repository_get_user_posts;
 use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
 use crate::repository::user::get_user_by_handle::repository_get_user_by_handle;
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 use sea_orm::{ConnectionTrait, TransactionTrait};
 
 pub async fn service_get_user_posts<C>(
     conn: &C,
     user_handle: &str,
-) -> Result<UserPostsResponse, Errors>
+) -> ServiceResult<UserPostsResponse>
 where
     C: ConnectionTrait + TransactionTrait,
 {

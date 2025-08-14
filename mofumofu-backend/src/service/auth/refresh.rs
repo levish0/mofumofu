@@ -6,10 +6,9 @@ use crate::repository::auth::find_refresh_token_by_jti_and_token::repository_fin
 use crate::repository::auth::revoke_refresh_token::repository_revoke_refresh_token;
 use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
 use crate::service::auth::jwt::{create_jwt_access_token, create_jwt_refresh_token};
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 use chrono::Utc;
 use sea_orm::{ConnectionTrait, DatabaseConnection, Set, TransactionTrait};
-use tracing::error;
 
 pub async fn service_refresh(
     conn: &DatabaseConnection,
@@ -17,13 +16,9 @@ pub async fn service_refresh(
     ip_address: Option<String>,
     refresh_token: String,
     refresh_token_claims: RefreshTokenClaims,
-) -> Result<AuthJWTResponse, Errors> {
+) -> ServiceResult<AuthJWTResponse> {
     let now = Utc::now().timestamp();
     if refresh_token_claims.exp < now {
-        error!(
-            "Refresh token has expired: token_exp={}, now={}",
-            refresh_token_claims.exp, now
-        );
         return Err(Errors::UserTokenExpired);
     }
 
@@ -33,27 +28,19 @@ pub async fn service_refresh(
         refresh_token,
     )
     .await?
-    .ok_or_else(|| {
-        error!("Refresh token not found or revoked");
-        Errors::UserInvalidToken
-    })?;
+    .ok_or(Errors::UserInvalidToken)?;
 
     let user = repository_find_user_by_uuid(conn, &refresh_token_claims.sub)
         .await?
-        .ok_or_else(|| {
-            error!("User not found for refresh token");
-            Errors::UserNotFound
-        })?;
+        .ok_or(Errors::UserNotFound)?;
 
     repository_revoke_refresh_token(conn, stored_token, None, None, Utc::now()).await?;
 
     let new_access_token = create_jwt_access_token(&user.id).map_err(|e| {
-        error!("Failed to create new access token: {:?}", e);
         Errors::TokenCreationError(e.to_string())
     })?;
 
     let new_refresh_token = create_jwt_refresh_token(&user.id).map_err(|e| {
-        error!("Failed to create new refresh token: {:?}", e);
         Errors::TokenCreationError(e.to_string())
     })?;
 
@@ -74,8 +61,5 @@ pub async fn service_refresh(
             access_token: new_access_token,
             cookie_refresh_token: new_refresh_token.token,
         })
-        .map_err(|e| {
-            error!("Failed to login user: {:?}", e);
-            e
-        })
+        .map_err(|e| e)
 }

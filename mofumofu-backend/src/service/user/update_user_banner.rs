@@ -1,4 +1,4 @@
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 
 use crate::repository::user::get_user_by_uuid::repository_get_user_by_uuid;
 use crate::microservices::profile_client::queue_user_banner_update;
@@ -14,7 +14,7 @@ pub async fn service_update_user_banner<C>(
     http_client: &Client,
     user_uuid: &Uuid,
     mut multipart: Multipart,
-) -> Result<(), Errors>
+) -> ServiceResult<()>
 where
     C: ConnectionTrait,
 {

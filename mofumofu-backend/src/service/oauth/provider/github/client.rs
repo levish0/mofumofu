@@ -1,6 +1,6 @@
 use crate::config::db_config::DbConfig;
 use crate::dto::oauth::internal::github::{GithubEmail, GithubUserInfo};
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 use crate::service::oauth::provider::common::{build_oauth_client, exchange_oauth_code};
 use oauth2::basic::{
     BasicErrorResponse, BasicRevocationErrorResponse, BasicTokenIntrospectionResponse,
@@ -8,7 +8,6 @@ use oauth2::basic::{
 };
 use oauth2::{AccessToken, Client, EndpointNotSet, EndpointSet, StandardRevocableToken};
 use reqwest::Client as ReqwestClient;
-use tracing::error;
 
 const GITHUB_AUTH_URL: &str = "https://github.com/login/oauth/authorize";
 const GITHUB_TOKEN_URL: &str = "https://github.com/login/oauth/access_token";
@@ -41,7 +40,7 @@ fn build_github_client() -> Result<
     )
 }
 
-pub async fn exchange_github_code(code: &str) -> Result<AccessToken, Errors> {
+pub async fn exchange_github_code(code: &str) -> ServiceResult<AccessToken> {
     let client = build_github_client()?;
     exchange_oauth_code(client, code, "GitHub").await
 }
@@ -49,20 +48,16 @@ pub async fn exchange_github_code(code: &str) -> Result<AccessToken, Errors> {
 pub async fn get_github_user_info(
     http_client: &ReqwestClient,
     access_token: &AccessToken,
-) -> Result<GithubUserInfo, Errors> {
+) -> ServiceResult<GithubUserInfo> {
     let response = http_client
         .get(GITHUB_USERINFO_URL)
         .bearer_auth(access_token.secret())
         .header("User-Agent", GITHUB_USER_AGENT)
         .send()
         .await
-        .map_err(|e| {
-            error!("Failed to fetch GitHub user info: {:?}", e);
-            Errors::OauthUserInfoFetchFailed
-        })?;
+        .map_err(|_e| Errors::OauthUserInfoFetchFailed)?;
 
-    let mut user_info: GithubUserInfo = response.json().await.map_err(|e| {
-        error!("Failed to parse Google user info: {:?}", e);
+    let mut user_info: GithubUserInfo = response.json().await.map_err(|_e| {
         Errors::OauthUserInfoParseFailed
     })?;
 

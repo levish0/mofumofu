@@ -6,7 +6,7 @@ use crate::repository::oauth::create_oauth_user::repository_create_oauth_user;
 use crate::repository::oauth::find_user_by_oauth::repository_find_user_by_oauth;
 use crate::repository::user::find_user_by_email::repository_find_user_by_email;
 use crate::repository::user::find_user_by_handle::repository_find_user_by_handle;
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use tracing::{error, info};
 
@@ -18,7 +18,7 @@ pub async fn service_find_or_create_oauth_user<C>(
     provider: OAuthProvider,
     profile_image: Option<String>,
     handle: Option<&str>,
-) -> Result<OAuthUserResult, Errors>
+) -> ServiceResult<OAuthUserResult>
 where
     C: ConnectionTrait + TransactionTrait,
 {

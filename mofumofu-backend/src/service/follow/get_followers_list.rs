@@ -1,7 +1,7 @@
 use crate::entity::users::Entity as UsersEntity;
 use crate::entity::users::{GetFollowersLink, Model as UsersModel};
 use crate::repository::user::get_user_by_handle::repository_get_user_by_handle;
-use crate::service::error::errors::Errors;
+use crate::service::error::errors::{Errors, ServiceResult};
 use sea_orm::ConnectionTrait;
 use sea_orm::EntityTrait;
 use sea_orm::QuerySelect;
@@ -12,7 +12,7 @@ pub async fn service_get_followers<C>(
     user_handle: &str,
     offset: u64,
     limit: u64,
-) -> anyhow::Result<Vec<UsersModel>, Errors>
+) -> ServiceResult<Vec<UsersModel>>
 where
     C: ConnectionTrait + TransactionTrait,
 {
