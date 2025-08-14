@@ -18,10 +18,12 @@ use std::net::SocketAddr;
     path = "/v0/auth/google",
     request_body = GoogleLoginRequest,
     responses(
-        (status = StatusCode::OK, description = "Google OAuth login successful", body = AuthJWTResponse),
-        (status = StatusCode::BAD_REQUEST, description = "Invalid authorization code"),
-        (status = StatusCode::UNAUTHORIZED, description = "OAuth authentication failed"),
-        (status = StatusCode::INTERNAL_SERVER_ERROR, description = "Internal server error")
+        (status = 200, description = "Google OAuth login successful", body = AuthJWTResponse),
+        (status = 400, description = "Invalid authorization code"),
+        (status = 401, description = "OAuth authentication failed"),
+        (status = 409, description = "Handle already exists"),
+        (status = 422, description = "Validation error"),
+        (status = 500, description = "Internal server error")
     ),
     tag = "Auth"
 )]

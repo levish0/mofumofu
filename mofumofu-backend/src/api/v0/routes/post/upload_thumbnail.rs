@@ -17,7 +17,10 @@ use tracing::info;
         (status = 204, description = "Thumbnail image upload queued successfully"),
         (status = 400, description = "Invalid file or parameters"),
         (status = 401, description = "Unauthorized"),
+        (status = 403, description = "Not the owner of the post"),
         (status = 404, description = "Post not found"),
+        (status = 413, description = "File too large"),
+        (status = 422, description = "Unsupported image format"),
         (status = 500, description = "Internal server error")
     ),
     security(

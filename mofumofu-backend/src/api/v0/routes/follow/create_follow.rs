@@ -15,9 +15,13 @@ use axum::{Extension, Json};
     path = "/v0/follow",
     request_body = CreateFollowRequest,
     responses(
-        (status = StatusCode::NO_CONTENT, description = "Successfully followed user"),
-        (status = StatusCode::BAD_REQUEST, description = "Bad request"),
-        (status = StatusCode::NOT_FOUND, description = "User not found"),
+        (status = 204, description = "Successfully followed user"),
+        (status = 400, description = "Bad request"),
+        (status = 401, description = "Unauthorized"),
+        (status = 404, description = "User not found"),
+        (status = 409, description = "Already following this user"),
+        (status = 422, description = "Cannot follow yourself"),
+        (status = 500, description = "Internal server error")
     ),
     security(
         ("bearer_auth" = [])

@@ -16,11 +16,13 @@ use tracing::{error, info, warn};
     path = "/v0/user/profile",
     request_body = UpdateProfileRequest,
     responses(
-        (status = StatusCode::OK, description = "Profile updated successfully"),
-        (status = StatusCode::BAD_REQUEST, description = "Invalid input"),
-        (status = StatusCode::UNAUTHORIZED, description = "Unauthorized"),
-        (status = StatusCode::NOT_FOUND, description = "User not found"),
-        (status = StatusCode::INTERNAL_SERVER_ERROR, description = "Internal Server Error")
+        (status = 200, description = "Profile updated successfully", body = UserInfoResponse),
+        (status = 400, description = "Invalid input"),
+        (status = 401, description = "Unauthorized"),
+        (status = 404, description = "User not found"),
+        (status = 409, description = "Handle already exists"),
+        (status = 422, description = "Validation error"),
+        (status = 500, description = "Internal server error")
     ),
     security(
         ("bearer_auth" = [])
@@ -39,5 +41,5 @@ pub async fn update_profile(
 
     let updated_user = service_update_user_profile(&state.conn, &claims.sub, payload).await?;
 
-    Ok(StatusCode::NO_CONTENT)
+    Ok(updated_user)
 }

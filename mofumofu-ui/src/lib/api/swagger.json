@@ -23,6 +23,8 @@
 					},
 					"400": { "description": "Invalid authorization code" },
 					"401": { "description": "OAuth authentication failed" },
+					"409": { "description": "Handle already exists" },
+					"422": { "description": "Validation error" },
 					"500": { "description": "Internal server error" }
 				}
 			}
@@ -42,6 +44,8 @@
 					},
 					"400": { "description": "Invalid authorization code" },
 					"401": { "description": "OAuth authentication failed" },
+					"409": { "description": "Handle already exists" },
+					"422": { "description": "Validation error" },
 					"500": { "description": "Internal server error" }
 				}
 			}
@@ -79,6 +83,7 @@
 					"400": { "description": "Invalid request" },
 					"401": { "description": "Invalid credentials" },
 					"404": { "description": "User not found" },
+					"422": { "description": "Validation error" },
 					"500": { "description": "Internal server error" }
 				}
 			}
@@ -88,7 +93,7 @@
 				"tags": ["Auth"],
 				"operationId": "sign_out",
 				"responses": {
-					"204": { "description": "Sign out Successful" },
+					"204": { "description": "Sign out successful (refresh token cookie deleted)" },
 					"400": { "description": "No refresh token cookie found" },
 					"401": { "description": "Refresh token cookie exists but is invalid or malformed" },
 					"404": { "description": "User not found" },
@@ -108,7 +113,11 @@
 				"responses": {
 					"204": { "description": "Successfully followed user" },
 					"400": { "description": "Bad request" },
-					"404": { "description": "User not found" }
+					"401": { "description": "Unauthorized" },
+					"404": { "description": "User not found" },
+					"409": { "description": "Already following this user" },
+					"422": { "description": "Cannot follow yourself" },
+					"500": { "description": "Internal server error" }
 				},
 				"security": [{ "bearer_auth": [] }]
 			}
@@ -308,7 +317,10 @@
 					"204": { "description": "Thumbnail image upload queued successfully" },
 					"400": { "description": "Invalid file or parameters" },
 					"401": { "description": "Unauthorized" },
+					"403": { "description": "Not the owner of the post" },
 					"404": { "description": "Post not found" },
+					"413": { "description": "File too large" },
+					"422": { "description": "Unsupported image format" },
 					"500": { "description": "Internal server error" }
 				},
 				"security": [{ "bearer_auth": [] }]
@@ -365,7 +377,9 @@
 						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetPostsResponse" } } }
 					},
 					"400": { "description": "Invalid search parameters" },
-					"500": { "description": "Search service error" }
+					"422": { "description": "Validation error" },
+					"500": { "description": "Internal server error" },
+					"503": { "description": "Search service unavailable" }
 				}
 			}
 		},
@@ -415,7 +429,9 @@
 				"responses": {
 					"204": { "description": "User created successfully" },
 					"400": { "description": "Invalid input" },
-					"500": { "description": "Internal Server Error" }
+					"409": { "description": "Handle already exists" },
+					"422": { "description": "Validation error" },
+					"500": { "description": "Internal server error" }
 				}
 			}
 		},
@@ -469,7 +485,9 @@
 					"400": { "description": "Invalid input" },
 					"401": { "description": "Unauthorized" },
 					"404": { "description": "User not found" },
-					"500": { "description": "Internal Server Error" }
+					"409": { "description": "Handle already exists" },
+					"422": { "description": "Validation error" },
+					"500": { "description": "Internal server error" }
 				},
 				"security": [{ "bearer_auth": [] }]
 			},

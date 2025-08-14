@@ -14,9 +14,11 @@ use tracing::info;
     path = "/v0/posts/search",
     request_body = SearchPostsRequest,
     responses(
-        (status = StatusCode::OK, description = "Posts search completed successfully", body = GetPostsResponse),
-        (status = StatusCode::BAD_REQUEST, description = "Invalid search parameters"),
-        (status = StatusCode::INTERNAL_SERVER_ERROR, description = "Search service error")
+        (status = 200, description = "Posts search completed successfully", body = GetPostsResponse),
+        (status = 400, description = "Invalid search parameters"),
+        (status = 422, description = "Validation error"),
+        (status = 500, description = "Internal server error"),
+        (status = 503, description = "Search service unavailable")
     ),
     tag = "Post"
 )]

@@ -23,6 +23,8 @@ pub struct ImageUploadResponse {
         (status = 200, description = "Image upload queued successfully", body = ImageUploadResponse),
         (status = 400, description = "Invalid file or parameters"),
         (status = 401, description = "Unauthorized"),
+        (status = 413, description = "File too large"),
+        (status = 422, description = "Unsupported image format"),
         (status = 500, description = "Internal server error")
     ),
     security(

@@ -42,5 +42,9 @@ celery_app.conf.update(
             "task": "check_meilisearch_health",
             "schedule": 1800.0,  # 30분마다 헬스체크 (1800초)
         },
+        "cleanup-old-system-events": {
+            "task": "cleanup_old_system_events",
+            "schedule": 86400.0,  # 24시간마다 실행 (86400초 = 1일)
+        },
     },
 )

@@ -6,7 +6,7 @@ use crate::state::AppState;
 use crate::utils::extract_ip_address::extract_ip_address;
 use crate::utils::extract_user_agent::extract_user_agent;
 use axum::extract::{ConnectInfo, State};
-use axum::http::HeaderMap;
+use axum::http::{HeaderMap, StatusCode};
 use axum::response::IntoResponse;
 use axum::Extension;
 use axum_extra::headers::UserAgent;
@@ -17,11 +17,11 @@ use std::net::SocketAddr;
     post,
     path = "/v0/auth/sign_out",
     responses(
-        (status = StatusCode::NO_CONTENT, description = "Sign out Successful"),
-        (status = StatusCode::UNAUTHORIZED, description = "Refresh token cookie exists but is invalid or malformed"),
-        (status = StatusCode::BAD_REQUEST, description = "No refresh token cookie found"),
-        (status = StatusCode::NOT_FOUND, description = "User not found"),
-        (status = StatusCode::INTERNAL_SERVER_ERROR, description = "Internal server error")
+        (status = 204, description = "Sign out successful (refresh token cookie deleted)"),
+        (status = 400, description = "No refresh token cookie found"),
+        (status = 401, description = "Refresh token cookie exists but is invalid or malformed"),
+        (status = 404, description = "User not found"),
+        (status = 500, description = "Internal server error")
     ),
     security(
         ("refresh_token_cookie" = [])

@@ -14,9 +14,11 @@ use tracing::info;
     path = "/v0/user",
     request_body = CreateUserRequest,
     responses(
-        (status = StatusCode::NO_CONTENT, description = "User created successfully"),
-        (status = StatusCode::BAD_REQUEST, description = "Invalid input"),
-        (status = StatusCode::INTERNAL_SERVER_ERROR, description = "Internal Server Error")
+        (status = 204, description = "User created successfully"),
+        (status = 400, description = "Invalid input"),
+        (status = 409, description = "Handle already exists"),
+        (status = 422, description = "Validation error"),
+        (status = 500, description = "Internal server error")
     ),
     tag = "User"
 )]

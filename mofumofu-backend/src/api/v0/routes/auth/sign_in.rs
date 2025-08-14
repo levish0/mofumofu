@@ -17,11 +17,12 @@ use std::net::SocketAddr;
     path = "/v0/auth/sign_in",
     request_body = AuthLoginRequest,
     responses(
-        (status = StatusCode::OK, description = "Login successful", body = AuthJWTResponse),
-        (status = StatusCode::UNAUTHORIZED, description = "Invalid credentials"),
-        (status = StatusCode::NOT_FOUND, description = "User not found"),
-        (status = StatusCode::BAD_REQUEST, description = "Invalid request"),
-        (status = StatusCode::INTERNAL_SERVER_ERROR, description = "Internal server error")
+        (status = 200, description = "Login successful", body = AuthJWTResponse),
+        (status = 400, description = "Invalid request"),
+        (status = 401, description = "Invalid credentials"),
+        (status = 404, description = "User not found"),
+        (status = 422, description = "Validation error"),
+        (status = 500, description = "Internal server error")
     ),
     tag = "Auth"
 )]
