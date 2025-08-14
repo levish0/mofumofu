@@ -6,6 +6,7 @@ from .post import Post, post_hash_tags
 from .hashtag import HashTag
 from .comment import Comment
 from .refresh_token import UserRefreshToken
+from .system_event import SystemEvent
 
 # 모든 클래스가 로드된 후 관계 설정
 # User 관계
