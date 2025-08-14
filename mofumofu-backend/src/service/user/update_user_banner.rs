@@ -1,21 +1,22 @@
 use crate::service::error::errors::{Errors, ServiceResult};
 use crate::repository::user::get_user_by_uuid::repository_get_user_by_uuid;
-use crate::microservices::profile_client::queue_user_banner_update;
+use crate::repository::user::update_user::repository_update_user;
+use crate::dto::user::internal::update_user::UpdateUserFields;
 use crate::utils::image_validator::{generate_image_hash, validate_and_get_image_info};
+use crate::connection::cloudflare_r2::R2Client;
 use axum::extract::Multipart;
-use reqwest::Client;
-use sea_orm::ConnectionTrait;
+use sea_orm::{ConnectionTrait, TransactionTrait};
 use tracing::{error, info, warn};
 use uuid::Uuid;
 
 pub async fn service_update_user_banner<C>(
     conn: &C,
-    http_client: &Client,
+    r2_client: &R2Client,
     user_uuid: &Uuid,
     mut multipart: Multipart,
 ) -> ServiceResult<String>
 where
-    C: ConnectionTrait,
+    C: ConnectionTrait + TransactionTrait,
 {
     info!("Processing banner image upload for user: {}", user_uuid);
 
@@ -49,22 +50,43 @@ where
                 data.len()
             );
 
-            // 태스크 큐에 업데이트 요청 (기존 삭제 후 새 업로드)
-            queue_user_banner_update(
-                http_client,
-                &user_uuid,
-                &user.handle,
-                &filename,
-                data.to_vec(),
-                &content_type,
-            )
-            .await
-            .map_err(|e| {
-                error!("Failed to queue banner image upload task: {}", e);
-                Errors::SysInternalError("Failed to queue banner image upload task".to_string())
-            })?;
+            // Delete existing banner if exists
+            if let Some(existing_image_url) = &user.banner_image {
+                if !existing_image_url.is_empty() {
+                    // Extract key from URL and delete from R2
+                    let key = format!("profiles/{}/banner/{}", user.handle, filename);
+                    if let Err(e) = r2_client.delete(&key).await {
+                        warn!("Failed to delete existing banner from R2: {}", e);
+                    }
+                }
+            }
 
-            info!("Banner image upload task queued for user: {}", user_uuid);
+            // Upload to R2
+            let r2_key = format!("profiles/{}/banner/{}", user.handle, filename);
+            r2_client.upload_with_content_type(&r2_key, data.to_vec(), &content_type)
+                .await
+                .map_err(|e| {
+                    error!("Failed to upload banner to R2: {}", e);
+                    Errors::SysInternalError("Failed to upload banner image".to_string())
+                })?;
+
+            // Get public URL
+            let public_url = r2_client.get_r2_public_url(&r2_key);
+
+            // Update user banner image in database
+            let update_fields = UpdateUserFields {
+                banner_image: Some(Some(public_url.clone())),
+                ..Default::default()
+            };
+
+            repository_update_user(conn, user_uuid, update_fields)
+                .await
+                .map_err(|e| {
+                    error!("Failed to update user banner image in database: {:?}", e);
+                    Errors::SysInternalError("Failed to update user profile".to_string())
+                })?;
+
+            info!("Banner image uploaded successfully: {}", public_url);
             return Ok(filename);
         }
     }

@@ -35,7 +35,7 @@ pub async fn upload_banner(
         claims.sub
     );
 
-    let filename = service_update_user_banner(&state.conn, &state.http_client, &claims.sub, multipart).await?;
+    let filename = service_update_user_banner(&state.conn, &state.cloudflare_r2, &claims.sub, multipart).await?;
 
     Ok(ImageUploadResponse { filename })
 }

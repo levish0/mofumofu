@@ -18,7 +18,7 @@
 	import { fly, scale } from 'svelte/transition';
 	import { Button } from '../ui/button';
 	import { invalidateAll } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { postsStore } from '$lib/stores/posts.svelte';
 	import * as m from '../../../paraglide/messages';
 	import { cn } from '$lib/utils';
@@ -26,12 +26,12 @@
 	let { isVisible, isAtTop } = $props();
 
 	// 현재 경로에 따른 활성 상태 확인
-	const isHomePage = $derived($page.url.pathname === '/');
-	const isLatestPage = $derived($page.url.pathname === '/latest');
+	const isHomePage = $derived(page.url.pathname === '/');
+	const isLatestPage = $derived(page.url.pathname === '/latest');
 
 	// 네비게이션 클릭 시 postsStore 리셋 (다른 페이지로 이동할 때만)
 	const handleNavClick = (targetPath: string) => {
-		if ($page.url.pathname !== targetPath) {
+		if (page.url.pathname !== targetPath) {
 			postsStore.reset();
 		}
 	};
@@ -41,6 +41,10 @@
 
 	const userInfo = $derived(userStore.user);
 	const isLoading = $derived(userStore.isLoading);
+	
+	let profileImageError = $state(false);
+	let profileImageRetryCount = $state(0);
+	let profileImageRetryTimer: ReturnType<typeof setTimeout> | null = null;
 
 	onMount(() => {
 		userStore.loadProfile();
@@ -74,6 +78,31 @@
 			closeTimer = null;
 		}, 100);
 	}
+	
+	function handleProfileImageError() {
+		if (profileImageRetryCount < 3) {
+			// Retry after 2, 4, 8 seconds
+			const retryDelay = Math.pow(2, profileImageRetryCount + 1) * 1000;
+			profileImageRetryTimer = setTimeout(() => {
+				profileImageRetryCount++;
+				profileImageError = false; // Force re-render
+			}, retryDelay);
+		} else {
+			profileImageError = true; // Give up and show fallback
+		}
+	}
+	
+	// Reset error state and retry count when profile image URL changes
+	$effect(() => {
+		if (userInfo?.profile_image) {
+			profileImageError = false;
+			profileImageRetryCount = 0;
+			if (profileImageRetryTimer) {
+				clearTimeout(profileImageRetryTimer);
+				profileImageRetryTimer = null;
+			}
+		}
+	});
 </script>
 
 <nav
@@ -143,11 +172,16 @@
 				>
 					<button class="flex h-9 items-center space-x-1 rounded-lg" aria-label="profile_menu">
 						<div class="h-9 w-9 overflow-hidden rounded-full">
-							{#if userInfo.profile_image}
-								<img src={userInfo.profile_image} alt="{userInfo.handle}의 프로필" class="h-full w-full object-cover" />
+							{#if userInfo.profile_image && !profileImageError}
+								<img 
+									src={userInfo.profile_image} 
+									alt="{userInfo.handle}의 프로필" 
+									class="h-full w-full object-cover" 
+									onerror={handleProfileImageError}
+								/>
 							{:else}
 								<span
-									class="flex h-full w-full items-center justify-center text-sm font-medium text-black dark:text-white"
+									class="flex h-full w-full items-center justify-center text-sm font-medium text-black dark:text-white bg-gray-200 dark:bg-gray-700"
 								>
 									{userInfo.handle.charAt(0).toUpperCase()}
 								</span>

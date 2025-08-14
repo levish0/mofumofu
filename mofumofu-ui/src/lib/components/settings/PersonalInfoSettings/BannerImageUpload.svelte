@@ -16,6 +16,9 @@
 	let showCrop = $state(false);
 	let tempImageSrc = $state('');
 	let imageLoading = $state(true);
+	let imageError = $state(false);
+	let retryCount = $state(0);
+	let retryTimer: ReturnType<typeof setTimeout> | null = null;
 
 	const { cropImage, cleanupTempImage, handleFileRead } = useImageCrop();
 
@@ -37,7 +40,7 @@
 	async function handleCrop(data: { croppedAreaPixels: { x: number; y: number; width: number; height: number } }) {
 		try {
 			const { blob, url } = await cropImage(tempImageSrc, data, {
-				maxFileSizeMB: 5,
+				maxFileSizeMB: 8,
 				resizeOptions: { width: 1000, height: 250 },
 				quality: 0.9
 			});
@@ -62,18 +65,38 @@
 
 	function handleImageLoad() {
 		imageLoading = false;
+		imageError = false;
 	}
 
 	function handleImageError() {
-		imageLoading = false;
+		// Only retry for server URLs, not blob URLs
+		if (bannerImage && !bannerImage.startsWith('blob:') && retryCount < 3) {
+			const retryDelay = Math.pow(2, retryCount + 1) * 1000;
+			retryTimer = setTimeout(() => {
+				retryCount++;
+				imageLoading = true;
+				imageError = false;
+			}, retryDelay);
+		} else {
+			imageLoading = false;
+			imageError = true;
+		}
 	}
 
-	// Reset loading state when image URL changes (only for non-blob URLs)
+	// Reset loading state and retry count when image URL changes
 	$effect(() => {
 		if (bannerImage && !bannerImage.startsWith('blob:')) {
 			imageLoading = true;
+			imageError = false;
+			retryCount = 0;
+			if (retryTimer) {
+				clearTimeout(retryTimer);
+				retryTimer = null;
+			}
 		} else if (bannerImage && bannerImage.startsWith('blob:')) {
 			imageLoading = false; // Blob URLs load instantly
+			imageError = false;
+			retryCount = 0;
 		}
 	});
 </script>
@@ -82,7 +105,7 @@
 	<h2 class="text-2xl font-semibold">{m.settings_banner_image()}</h2>
 	<div class="group relative transition-all">
 		<div class="bg-mofu-dark-800 relative aspect-[4/1] w-full overflow-hidden rounded-lg group-hover:opacity-75">
-			{#if bannerImage}
+			{#if bannerImage && !imageError}
 				<!-- Skeleton shimmer while loading (only for server URLs) -->
 				{#if imageLoading && !bannerImage.startsWith('blob:')}
 					<div class="shimmer absolute inset-0 rounded-lg"></div>
@@ -96,6 +119,14 @@
 					onload={handleImageLoad}
 					onerror={handleImageError}
 				/>
+			{:else if imageError}
+				<!-- Error fallback -->
+				<div class="flex h-full w-full items-center justify-center bg-gradient-to-r from-blue-400 to-purple-500">
+					<span class="text-sm text-white opacity-75">Image failed to load</span>
+				</div>
+			{/if}
+			
+			{#if bannerImage || imageError}
 				<label
 					for="banner-upload"
 					class="dark:text-mofu-dark-300 absolute inset-0 flex cursor-pointer items-center justify-center hover:text-gray-300"

@@ -16,7 +16,15 @@
 	const { profile, isOwnProfile, isLoading, topPosition }: Props = $props();
 
 	let bannerLoaded = $state(false);
+	let bannerError = $state(false);
+	let bannerRetryCount = $state(0);
+	let bannerRetryTimer: ReturnType<typeof setTimeout> | null = null;
+	
 	let profileImageLoaded = $state(false);
+	let profileImageError = $state(false);
+	let profileImageRetryCount = $state(0);
+	let profileImageRetryTimer: ReturnType<typeof setTimeout> | null = null;
+	
 	let isFollowing = $state(false);
 	let followLoading = $state(false);
 	let followStatusLoaded = $state(false);
@@ -62,16 +70,71 @@
 		}
 	}
 
+	function handleBannerError() {
+		if (bannerRetryCount < 3) {
+			// Retry after 2, 4, 8 seconds
+			const retryDelay = Math.pow(2, bannerRetryCount + 1) * 1000;
+			bannerRetryTimer = setTimeout(() => {
+				bannerRetryCount++;
+				bannerError = false; // Force re-render
+				bannerLoaded = false;
+			}, retryDelay);
+		} else {
+			bannerError = true; // Give up and show fallback
+			bannerLoaded = true;
+		}
+	}
+
+	function handleProfileImageError() {
+		if (profileImageRetryCount < 3) {
+			// Retry after 2, 4, 8 seconds
+			const retryDelay = Math.pow(2, profileImageRetryCount + 1) * 1000;
+			profileImageRetryTimer = setTimeout(() => {
+				profileImageRetryCount++;
+				profileImageError = false; // Force re-render
+				profileImageLoaded = false;
+			}, retryDelay);
+		} else {
+			profileImageError = true; // Give up and show fallback
+			profileImageLoaded = true;
+		}
+	}
+
 	// Load follow status when component mounts or authentication state changes
 	$effect(() => {
 		loadFollowStatus();
+	});
+
+	// Reset error states and retry counts when image URLs change
+	$effect(() => {
+		if (profile.banner_image) {
+			bannerError = false;
+			bannerLoaded = false;
+			bannerRetryCount = 0;
+			if (bannerRetryTimer) {
+				clearTimeout(bannerRetryTimer);
+				bannerRetryTimer = null;
+			}
+		}
+	});
+
+	$effect(() => {
+		if (profile.profile_image) {
+			profileImageError = false;
+			profileImageLoaded = false;
+			profileImageRetryCount = 0;
+			if (profileImageRetryTimer) {
+				clearTimeout(profileImageRetryTimer);
+				profileImageRetryTimer = null;
+			}
+		}
 	});
 </script>
 
 <div class="transition-all duration-100 ease-out">
 	<!-- Banner Section -->
 	<div class="relative aspect-[3/1] w-full">
-		{#if profile.banner_image}
+		{#if profile.banner_image && !bannerError}
 			{#if !bannerLoaded}
 				<div class="shimmer dark:bg-mofu-dark-900 bg-mofu-light-100 absolute inset-0 overflow-hidden rounded-xl"></div>
 			{/if}
@@ -83,7 +146,7 @@
 				class:opacity-100={bannerLoaded}
 				loading="lazy"
 				onload={() => (bannerLoaded = true)}
-				onerror={() => (bannerLoaded = true)}
+				onerror={handleBannerError}
 			/>
 		{:else}
 			<div class="h-full w-full overflow-hidden rounded-xl bg-gradient-to-r from-blue-400 to-purple-500"></div>
@@ -120,7 +183,7 @@
 		<!-- Profile Image (overlapping banner) -->
 		<div class="absolute -bottom-12 left-4 z-10">
 			<div class="relative h-24 w-24">
-				{#if profile.profile_image}
+				{#if profile.profile_image && !profileImageError}
 					{#if !profileImageLoaded}
 						<div
 							class="shimmer dark:border-mofu-dark-900 dark:bg-mofu-dark-900 bg-mofu-light-100 border-mofu-light-100 absolute inset-0 rounded-full border-4"
@@ -134,7 +197,7 @@
 						class:opacity-100={profileImageLoaded}
 						loading="lazy"
 						onload={() => (profileImageLoaded = true)}
-						onerror={() => (profileImageLoaded = true)}
+						onerror={handleProfileImageError}
 					/>
 				{:else}
 					<div

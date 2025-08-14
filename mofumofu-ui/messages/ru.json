@@ -42,7 +42,7 @@
 	"settings_banner_image_recommended": "Рекомендуется: 1600x400px",
 	"settings_profile_image": "Изображение профиля",
 	"settings_profile_image_recommended": "Рекомендуется: 400x400px",
-	"settings_profile_image_max_size": "Макс. размер файла: 5MB",
+	"settings_profile_image_max_size": "Макс. размер файла: 4MB",
 	"auth_go_back": "← Назад",
 	"auth_sign_in": "Войти",
 	"auth_sign_up": "Регистрация",

@@ -14,5 +14,5 @@ class SystemEvent(Base):
     action_type = Column(String, nullable=False)
     target_id = Column(UUID(as_uuid=True), nullable=True)
     target_type = Column(String, nullable=True)  # "post", "hashtag", "user", "comment" 등
-    metadata = Column(JSON, nullable=True)  # 추가 정보
+    event_metadata = Column("metadata", JSON, nullable=True)  # 추가 정보
     created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())

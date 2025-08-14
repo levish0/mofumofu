@@ -28,7 +28,6 @@ pub async fn get_post_by_handle_and_slug(
     let mut redis_conn = state.redis.clone();
     let post = service_get_post_by_handle_and_slug(
         &state.conn,
-        &mut redis_conn,
         &state.http_client,
         &req_body.handle,
         &req_body.slug,

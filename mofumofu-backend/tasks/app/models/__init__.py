@@ -28,6 +28,12 @@ Comment.user = relationship("User")
 # UserRefreshToken 관계
 UserRefreshToken.user = relationship("User", back_populates="refresh_tokens")
 
+# SystemEvent 관계
+SystemEvent.user = relationship("User", back_populates="system_events")
+
+# User에 system_events 관계 추가
+User.system_events = relationship("SystemEvent", back_populates="user", lazy="select")
+
 __all__ = [
     'Base',
     'User',
@@ -35,5 +41,6 @@ __all__ = [
     'HashTag',
     'Comment',
     'UserRefreshToken',
+    'SystemEvent',
     'post_hash_tags'
 ]

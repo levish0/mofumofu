@@ -11,7 +11,6 @@ use crate::microservices::markdown_client::{queue_render_markdown, render_markdo
 
 pub async fn service_get_post_by_handle_and_slug<C>(
     conn: &C,
-    redis_conn: &mut ConnectionManager,
     http_client: &Client,
     handle: &str,
     slug: &str,

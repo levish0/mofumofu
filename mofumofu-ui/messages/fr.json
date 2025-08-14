@@ -42,7 +42,7 @@
 	"settings_banner_image_recommended": "Recommandé : 1600x400px",
 	"settings_profile_image": "Image de profil",
 	"settings_profile_image_recommended": "Recommandé : 400x400px",
-	"settings_profile_image_max_size": "Taille max du fichier : 5MB",
+	"settings_profile_image_max_size": "Taille max du fichier : 4MB",
 	"auth_go_back": "← Retour",
 	"auth_sign_in": "Se connecter",
 	"auth_sign_up": "S'inscrire",

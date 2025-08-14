@@ -42,7 +42,7 @@
 	"settings_banner_image_recommended": "권장: 1600x400px",
 	"settings_profile_image": "프로필 이미지",
 	"settings_profile_image_recommended": "권장: 400x400px",
-	"settings_profile_image_max_size": "최대 파일 크기: 5MB",
+	"settings_profile_image_max_size": "최대 파일 크기: 4MB",
 	"auth_go_back": "← 돌아가기",
 	"auth_sign_in": "로그인",
 	"auth_sign_up": "가입하기",

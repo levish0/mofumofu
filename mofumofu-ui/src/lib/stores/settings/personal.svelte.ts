@@ -261,32 +261,31 @@ export class PersonalSettingsStore {
 					personalData.password = accountPassword;
 				}
 
-				await updateProfile(personalData);
+				const updatedProfile = await updateProfile(personalData);
+				console.log('updateProfile response:', updatedProfile);
 
-				// Refresh user store to get updated profile data
-				await userStore.refresh();
+				// Update the personal info with the response from updateProfile
+				// Keep current blob URLs if they exist, otherwise use server URLs from the response
+				this.state = {
+					...this.state,
+					handle: updatedProfile.handle,
+					name: updatedProfile.name,
+					bio: updatedProfile.bio || '',
+					location: updatedProfile.location || '',
+					website: updatedProfile.website || '',
+					profileImage: this.state.profileImage || updatedProfile.profile_image || null,
+					bannerImage: this.state.bannerImage || updatedProfile.banner_image || null,
+					profileImageFile: null, // Clear file after successful upload
+					bannerImageFile: null // Clear file after successful upload
+				};
 
-				// Get the updated profile from user store
-				const updatedProfile = userStore.user;
-				if (updatedProfile) {
-					// Update the personal info with the response from the API
-					// Keep current blob URLs if they exist, otherwise use server URLs
-					this.state = {
-						...this.state,
-						handle: updatedProfile.handle,
-						name: updatedProfile.name,
-						bio: updatedProfile.bio || '',
-						location: updatedProfile.location || '',
-						website: updatedProfile.website || '',
-						profileImage: this.state.profileImage || updatedProfile.profile_image || null,
-						bannerImage: this.state.bannerImage || updatedProfile.banner_image || null,
-						profileImageFile: null, // Clear file after successful upload
-						bannerImageFile: null // Clear file after successful upload
-					};
+				// Update original state
+				this.originalState = JSON.parse(JSON.stringify(this.state));
 
-					// Update original state
-					this.originalState = JSON.parse(JSON.stringify(this.state));
-				}
+				// Update user store with the latest profile data
+				console.log('Updating userStore with:', updatedProfile);
+				userStore.updateUser(updatedProfile);
+				console.log('userStore after update:', userStore.user);
 				this.errors = {};
 			}
 
