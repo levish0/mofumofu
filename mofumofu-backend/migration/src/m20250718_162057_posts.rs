@@ -58,6 +58,16 @@ impl MigrationTrait for Migration {
                             .string_len(80)
                             .not_null()
                     ) // URL 슬러그
+                    .col(
+                        ColumnDef::new(Posts::Render)
+                            .text()
+                            .null()
+                    ) // 렌더링된 HTML 콘텐츠
+                    .col(
+                        ColumnDef::new(Posts::Toc)
+                            .json()
+                            .null()
+                    ) // TOC 데이터 (JSON)
                     // 작성자와의 외래키
                     .foreign_key(
                         ForeignKey::create()
@@ -138,6 +148,8 @@ enum Posts {
     CommentCount,
     ViewCount,
     Slug,
+    Render,
+    Toc,
 }
 #[derive(DeriveIden)]
 enum Users {

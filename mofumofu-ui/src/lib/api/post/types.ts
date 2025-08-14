@@ -25,7 +25,6 @@ export interface TocItem {
 
 export interface PostInfoResponse {
 	title: string;
-	content: string;
 	rendered: string;
 	toc_items: TocItem[];
 	author: PostAuthor;

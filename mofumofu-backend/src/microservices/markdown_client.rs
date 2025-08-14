@@ -3,10 +3,17 @@ use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::sync::LazyLock;
 use tracing::{error, info};
+use uuid::Uuid;
 
 #[derive(Serialize)]
 struct MarkdownRequest {
     markdown: String,
+}
+
+#[derive(Serialize)]
+struct MarkdownRenderRequest {
+    post_id: String,
+    content: String,
 }
 
 #[derive(Deserialize)]
@@ -53,9 +60,23 @@ static MARKDOWN_SERVICE_URL: LazyLock<String> = LazyLock::new(|| {
     )
 });
 
+/// 태스크 서비스 URL을 캐시하는 정적 변수
+static TASKS_SERVICE_URL: LazyLock<String> = LazyLock::new(|| {
+    let config = DbConfig::get();
+    format!(
+        "http://{}:{}",
+        config.task_server_host, config.task_server_port
+    )
+});
+
 /// 마크다운 서비스 URL을 가져오는 함수
 fn get_markdown_service_url() -> &'static str {
     &MARKDOWN_SERVICE_URL
+}
+
+/// 태스크 서비스 URL을 가져오는 함수
+fn get_tasks_service_url() -> &'static str {
+    &TASKS_SERVICE_URL
 }
 
 /// 마크다운을 HTML로 렌더링
@@ -115,16 +136,37 @@ pub async fn render_markdown(
     })
 }
 
-/// 마크다운 서비스 헬스 체크
-pub async fn check_markdown_service_health(
+/// 마크다운 렌더링 태스크를 큐에 추가
+pub async fn queue_render_markdown(
     http_client: &Client,
-) -> Result<bool, Box<dyn std::error::Error + Send + Sync>> {
-    let service_url = get_markdown_service_url();
+    post_id: &Uuid,
+    content: &str,
+) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    let service_url = get_tasks_service_url();
     
+    info!("마크다운 렌더링 태스크 큐에 추가: post_id={}", post_id);
+
+    let request = MarkdownRenderRequest {
+        post_id: post_id.to_string(),
+        content: content.to_string(),
+    };
+
     let response = http_client
-        .get(&format!("{}/health", service_url))
+        .post(&format!("{}/tasks/markdown/render", service_url))
+        .json(&request)
         .send()
         .await?;
 
-    Ok(response.status().is_success())
+    if !response.status().is_success() {
+        let status = response.status();
+        let error_text = response
+            .text()
+            .await
+            .unwrap_or_else(|_| "Unknown error".to_string());
+        error!("마크다운 렌더링 태스크 큐 추가 실패: {} - {}", status, error_text);
+        return Err(format!("마크다운 렌더링 태스크 큐 추가 실패: {} - {}", status, error_text).into());
+    }
+
+    info!("마크다운 렌더링 태스크 큐에 추가 완료: post_id={}", post_id);
+    Ok(())
 }

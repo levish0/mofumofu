@@ -28,11 +28,11 @@
 
 <svelte:head>
 	<title>{data.post.title} - {data.author.name} - Mofumofu</title>
-	<meta name="description" content={data.post.content.slice(0, 160)} />
+	<meta name="description" content={data.post.summary || data.post.title} />
 
 	<!-- Open Graph -->
 	<meta property="og:title" content="{data.post.title} - {data.author.name}" />
-	<meta property="og:description" content={data.post.summary} />
+	<meta property="og:description" content={data.post.summary || data.post.title} />
 	<meta property="og:type" content="article" />
 	<meta property="og:url" content="https://mofumofu.ink/{data.author.handle}/post/{data.post.slug}" />
 	<meta property="og:image" content="https://mofumofu.ink/og-default.png" />
@@ -46,7 +46,7 @@
 	<!-- Twitter Card -->
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content="{data.post.title} - {data.author.name}" />
-	<meta name="twitter:description" content={data.post.content.slice(0, 160)} />
+	<meta name="twitter:description" content={data.post.summary || data.post.title} />
 	<meta name="twitter:image" content="https://mofumofu.ink/og-default.png" />
 </svelte:head>
 

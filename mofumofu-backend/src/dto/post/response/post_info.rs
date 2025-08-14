@@ -1,7 +1,7 @@
 use axum::Json;
 use axum::response::{IntoResponse, Response};
 use chrono::{DateTime, Utc};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 use uuid::Uuid;
 
@@ -9,7 +9,6 @@ use uuid::Uuid;
 pub struct PostInfoResponse {
     pub title: String,
     pub summary: Option<String>,
-    pub content: String,
     pub rendered: String,
     pub toc_items: Vec<TocItem>,
     pub author: PostAuthor,
@@ -23,7 +22,7 @@ pub struct PostInfoResponse {
     pub tags: Vec<String>,
 }
 
-#[derive(Debug, Clone, Serialize, ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct TocItem {
     pub level: i32,
     pub text: String,

@@ -76,6 +76,52 @@ class PostService:
                 session.rollback()
                 return False
 
+    def update_post_render_and_toc(self, post_id: str, html_content: str, toc_items: list) -> bool:
+        """
+        포스트의 렌더링된 HTML과 TOC를 업데이트합니다.
+        
+        Args:
+            post_id: 포스트 UUID
+            html_content: 렌더링된 HTML 콘텐츠
+            toc_items: TOC 아이템 리스트
+            
+        Returns:
+            bool: 업데이트 성공 여부
+        """
+        with self.db.session_factory() as session:
+            try:
+                logger.info(f"포스트 조회 시작: post_id={post_id}")
+                post = session.query(Post).filter(Post.id == post_id).first()
+                
+                if post:
+                    logger.info(f"포스트 찾음: post_id={post_id}, 기존 render 길이={len(post.render) if post.render else 0}")
+                    
+                    # 업데이트 전 값 로깅
+                    old_render = post.render
+                    old_toc = post.toc
+                    
+                    post.render = html_content
+                    post.toc = toc_items
+                    
+                    logger.info(f"업데이트 시도: render 길이={len(html_content)}, toc_count={len(toc_items)}")
+                    session.commit()
+                    logger.info("세션 커밋 완료")
+                    
+                    # 업데이트 확인
+                    session.refresh(post)
+                    logger.info(f"업데이트 후 확인: render 길이={len(post.render) if post.render else 0}, toc_count={len(post.toc) if post.toc else 0}")
+                    
+                    return True
+                else:
+                    logger.warning(f"포스트를 찾을 수 없음: post_id={post_id}")
+                    return False
+                    
+            except Exception as e:
+                logger.error(f"포스트 render/toc 업데이트 실패: {str(e)}")
+                logger.exception(e)  # 전체 스택 트레이스 로깅
+                session.rollback()
+                return False
+
     def get_all_posts_for_indexing(self) -> List[Dict[str, Any]]:
         """
         Meilisearch 색인을 위해 모든 포스트 데이터를 조회합니다.

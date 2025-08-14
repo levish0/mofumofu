@@ -670,7 +670,6 @@
 				"type": "object",
 				"required": [
 					"title",
-					"content",
 					"rendered",
 					"toc_items",
 					"author",
@@ -684,7 +683,6 @@
 				"properties": {
 					"author": { "$ref": "#/components/schemas/PostAuthor" },
 					"comment_count": { "type": "integer", "format": "int32" },
-					"content": { "type": "string" },
 					"created_at": { "type": "string", "format": "date-time" },
 					"like_count": { "type": "integer", "format": "int32" },
 					"published_at": { "type": ["string", "null"], "format": "date-time" },

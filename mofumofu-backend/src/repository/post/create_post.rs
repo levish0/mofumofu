@@ -26,6 +26,8 @@ where
         comment_count: Set(0),
         view_count: Set(0),
         slug: Set(payload.slug),
+        render: Set(None),
+        toc: Set(None),
     };
 
     // Insert the new post

@@ -39,6 +39,12 @@ pub struct Model {
 
     #[sea_orm(column_type = "Text", nullable, string_len = 255)]
     pub slug: String,
+
+    #[sea_orm(column_type = "Text", nullable)]
+    pub render: Option<String>,
+
+    #[sea_orm(column_type = "Json", nullable)]
+    pub toc: Option<serde_json::Value>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

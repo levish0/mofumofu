@@ -12,9 +12,6 @@ class Settings(BaseSettings):
     # Celery 설정 (DB 0 사용)
     CELERY_BROKER_URL: str = "redis://localhost:6379/0"
     CELERY_RESULT_BACKEND: str = "redis://localhost:6379/0"
-    
-    # Redis 백엔드 캐시 설정 (DB 1 사용)
-    REDIS_BACKEND_URL: str = "redis://localhost:6379/1"
 
     # Cloudflare R2 설정
     R2_ACCOUNT_ID: str = ""

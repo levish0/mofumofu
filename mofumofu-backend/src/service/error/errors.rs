@@ -23,13 +23,17 @@ use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 use sea_orm::{DbErr, TransactionError};
 use serde::Serialize;
-use tracing::error;
+use tracing::{error, warn, debug};
 use utoipa::ToSchema;
 // 이 모듈은 애플리케이션의 오류 처리 시스템을 구현합니다.
 // 주요 기능:
 // 1. 다양한 오류 유형 정의 (사용자, 문서, 권한, 시스템 등)
 // 2. 오류를 HTTP 응답으로 변환하는 메커니즘
 // 3. 데이터베이스 오류를 애플리케이션 오류로 변환하는 기능
+
+// 표준화된 Result 타입 정의
+pub type ServiceResult<T> = Result<T, Errors>;
+pub type ApiResult<T> = Result<T, Errors>;
 
 // ErrorResponse 구조체: API 응답에서 오류를 표현하기 위한 구조체
 // status: HTTP 상태 코드
@@ -53,7 +57,7 @@ impl IntoResponse for ErrorResponse {
 // 이를 통해 ? 연산자를 사용하여 데이터베이스 오류를 자동으로 처리할 수 있음
 impl From<DbErr> for Errors {
     fn from(err: sea_orm::DbErr) -> Self {
-        error!("Database error: {}", err);
+        // 로깅은 IntoResponse에서 중앙집중화하여 처리하므로 여기서는 제거
         Errors::DatabaseError(err.to_string())
     }
 }
@@ -61,7 +65,7 @@ impl From<DbErr> for Errors {
 // 트랜잭션 오류를 애플리케이션 오류로 변환
 impl From<TransactionError<DbErr>> for Errors {
     fn from(err: TransactionError<DbErr>) -> Self {
-        error!("Transaction error: {}", err);
+        // 로깅은 IntoResponse에서 중앙집중화하여 처리하므로 여기서는 제거
         Errors::TransactionError(err.to_string())
     }
 }
@@ -112,8 +116,55 @@ pub enum Errors {
 
 // IntoResponse 트레이트 구현: Errors를 HTTP 응답으로 변환
 // 각 오류 유형에 적절한 HTTP 상태 코드와 오류 코드를 매핑
+// 중앙집중식 로깅도 여기서 처리
 impl IntoResponse for Errors {
     fn into_response(self) -> Response {
+        // 에러 레벨에 따른 중앙집중식 로깅
+        match &self {
+            // 시스템 심각도 에러 - error! 레벨
+            Errors::SysInternalError(_) | 
+            Errors::DatabaseError(_) | 
+            Errors::TransactionError(_) |
+            Errors::HashingError(_) |
+            Errors::TokenCreationError(_) |
+            Errors::UserHandleGenerationFailed |
+            Errors::OauthUserInfoParseFailed => {
+                error!("System error occurred: {:?}", self);
+            }
+            
+            // 리소스 찾을 수 없음 - warn! 레벨
+            Errors::UserNotFound | 
+            Errors::PostNotFound | 
+            Errors::NotFound(_) |
+            Errors::FollowNotExist => {
+                warn!("Resource not found: {:?}", self);
+            }
+            
+            // 비즈니스 로직 에러 - debug! 레벨 (클라이언트 실수)
+            Errors::UserInvalidPassword |
+            Errors::UserNotVerified |
+            Errors::UserUnauthorized |
+            Errors::UserHandleAlreadyExists |
+            Errors::UserTokenExpired |
+            Errors::UserNoRefreshToken |
+            Errors::UserInvalidToken |
+            Errors::FollowCannotFollowSelf |
+            Errors::FollowAlreadyFollowing |
+            Errors::BadRequestError(_) |
+            Errors::ValidationError(_) => {
+                debug!("Client error: {:?}", self);
+            }
+            
+            // OAuth 에러 - warn! 레벨 (외부 서비스 관련)
+            Errors::OauthInvalidAuthUrl |
+            Errors::OauthInvalidTokenUrl |
+            Errors::OauthInvalidRedirectUrl |
+            Errors::OauthTokenExchangeFailed |
+            Errors::OauthUserInfoFetchFailed => {
+                warn!("OAuth error: {:?}", self);
+            }
+        }
+
         // 오류 유형에 따라 상태 코드, 오류 코드, 상세 정보를 결정
         let (status, code, details) = match self {
             // 사용자 관련 오류 - 주로 401 Unauthorized 또는 404 Not Found
@@ -217,12 +268,6 @@ pub async fn handler_404<B>(req: Request<B>) -> impl IntoResponse {
     let path = req.uri().path();
     let method = req.method().to_string();
 
-    // 로그에 404 오류 기록
-    error!(
-        "404 Error: Requested path {} with method {} not found.",
-        path, method
-    );
-
-    // NotFound 오류 반환 - 이는 IntoResponse를 통해 적절한 HTTP 응답으로 변환됨
-    Errors::NotFound("The requested resource was not found.".to_string())
+    // NotFound 오류 반환 - 로깅은 IntoResponse에서 중앙집중화하여 처리
+    Errors::NotFound(format!("Path {} with method {} not found", path, method))
 }

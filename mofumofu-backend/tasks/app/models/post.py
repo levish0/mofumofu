@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, Text, Integer, DateTime, ForeignKey, Table
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID, JSON
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from .base import Base
@@ -31,5 +31,7 @@ class Post(Base):
     comment_count = Column(Integer, default=0, nullable=False)
     view_count = Column(Integer, default=0, nullable=False)
     slug = Column(String(80), nullable=False)
+    render = Column(Text, nullable=True)
+    toc = Column(JSON, nullable=True)
     
     # 관계 정의는 __init__.py에서 모든 모델 로드 후 설정
