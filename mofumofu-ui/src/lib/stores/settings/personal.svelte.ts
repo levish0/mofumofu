@@ -270,7 +270,7 @@ export class PersonalSettingsStore {
 				const updatedProfile = userStore.user;
 				if (updatedProfile) {
 					// Update the personal info with the response from the API
-					// Keep the current blob URLs if they exist, otherwise use server URLs
+					// Keep current blob URLs if they exist, otherwise use server URLs
 					this.state = {
 						...this.state,
 						handle: updatedProfile.handle,

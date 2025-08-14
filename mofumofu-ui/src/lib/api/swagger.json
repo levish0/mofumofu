@@ -499,9 +499,13 @@
 					"required": true
 				},
 				"responses": {
-					"204": { "description": "Profile image upload queued successfully" },
+					"200": {
+						"description": "Profile image upload queued successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ImageUploadResponse" } } }
+					},
 					"400": { "description": "Invalid file or parameters" },
 					"401": { "description": "Unauthorized" },
+					"413": { "description": "File too large" },
 					"500": { "description": "Internal server error" }
 				},
 				"security": [{ "bearer_auth": [] }]
@@ -516,9 +520,13 @@
 					"required": true
 				},
 				"responses": {
-					"204": { "description": "Banner image upload queued successfully" },
+					"200": {
+						"description": "Banner image upload queued successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ImageUploadResponse" } } }
+					},
 					"400": { "description": "Invalid file or parameters" },
 					"401": { "description": "Unauthorized" },
+					"413": { "description": "File too large" },
 					"500": { "description": "Internal server error" }
 				},
 				"security": [{ "bearer_auth": [] }]
@@ -656,6 +664,11 @@
 				"type": "object",
 				"required": ["is_available"],
 				"properties": { "is_available": { "type": "boolean" } }
+			},
+			"ImageUploadResponse": {
+				"type": "object",
+				"required": ["filename"],
+				"properties": { "filename": { "type": "string" } }
 			},
 			"PostAuthor": {
 				"type": "object",

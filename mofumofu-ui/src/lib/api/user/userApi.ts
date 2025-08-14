@@ -2,7 +2,7 @@
 
 import { privateApi } from '../private';
 import { publicApi } from '../public';
-import type { UserInfoResponse, GetUserProfileRequest, UpdateProfileRequest, HandleCheckResponse } from './types';
+import type { UserInfoResponse, GetUserProfileRequest, UpdateProfileRequest, HandleCheckResponse, ImageUploadResponse } from './types';
 
 export async function getMyProfile(): Promise<UserInfoResponse> {
 	try {
@@ -35,34 +35,36 @@ export async function updateProfile(data: UpdateProfileRequest): Promise<void> {
 	}
 }
 
-export async function uploadAvatar(file: File): Promise<void> {
+export async function uploadAvatar(file: File): Promise<ImageUploadResponse> {
 	try {
 		const formData = new FormData();
 		formData.append('file', file);
 
-		await privateApi.post('v0/user/profile/avatar', {
+		const response = await privateApi.post('v0/user/profile/avatar', {
 			body: formData,
 			headers: {
 				'Content-Type': undefined // Remove default Content-Type header
 			}
 		});
+		return await response.json<ImageUploadResponse>();
 	} catch (error) {
 		console.error('Avatar upload failed:', error);
 		throw error;
 	}
 }
 
-export async function uploadBanner(file: File): Promise<void> {
+export async function uploadBanner(file: File): Promise<ImageUploadResponse> {
 	try {
 		const formData = new FormData();
 		formData.append('file', file);
 
-		await privateApi.post('v0/user/profile/banner', {
+		const response = await privateApi.post('v0/user/profile/banner', {
 			body: formData,
 			headers: {
 				'Content-Type': undefined // Remove default Content-Type header
 			}
 		});
+		return await response.json<ImageUploadResponse>();
 	} catch (error) {
 		console.error('Banner upload failed:', error);
 		throw error;

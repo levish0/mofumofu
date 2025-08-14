@@ -2,6 +2,7 @@ pub mod create_post;
 pub mod get_by_handle_and_slug;
 pub mod get_posts;
 pub mod get_user_posts;
+pub mod image_upload;
 pub mod search_posts;
 pub mod thumbnail_image;
 

@@ -16,7 +16,7 @@ use tracing::{error, info, warn};
     path = "/v0/user/profile",
     request_body = UpdateProfileRequest,
     responses(
-        (status = StatusCode::OK, description = "Profile updated successfully", body = UserInfoResponse),
+        (status = StatusCode::OK, description = "Profile updated successfully"),
         (status = StatusCode::BAD_REQUEST, description = "Invalid input"),
         (status = StatusCode::UNAUTHORIZED, description = "Unauthorized"),
         (status = StatusCode::NOT_FOUND, description = "User not found"),

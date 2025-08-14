@@ -1,24 +1,23 @@
 use crate::dto::auth::internal::access_token::AccessTokenClaims;
 use crate::dto::user::request::banner_image::ProfileBannerForm;
+use crate::dto::user::response::image_upload::ImageUploadResponse;
 use crate::service::error::errors::Errors;
-use crate::service::user::service_update_user_banner;
+use crate::service::user::update_user_banner::service_update_user_banner;
 use crate::state::AppState;
 use axum::extract::{Multipart, State};
-use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::Extension;
-use serde::Deserialize;
 use tracing::info;
-use utoipa::ToSchema;
 
 #[utoipa::path(
     post,
     path = "/v0/user/profile/banner",
     request_body(content = ProfileBannerForm, content_type = "multipart/form-data"),
     responses(
-        (status = 204, description = "Banner image upload queued successfully"),
+        (status = 200, description = "Banner image upload queued successfully", body = ImageUploadResponse),
         (status = 400, description = "Invalid file or parameters"),
         (status = 401, description = "Unauthorized"),
+        (status = 413, description = "File too large"),
         (status = 500, description = "Internal server error")
     ),
     security(
@@ -36,7 +35,7 @@ pub async fn upload_banner(
         claims.sub
     );
 
-    service_update_user_banner(&state.conn, &state.http_client, &claims.sub, multipart).await?;
+    let filename = service_update_user_banner(&state.conn, &state.http_client, &claims.sub, multipart).await?;
 
-    Ok(StatusCode::NO_CONTENT)
+    Ok(ImageUploadResponse { filename })
 }

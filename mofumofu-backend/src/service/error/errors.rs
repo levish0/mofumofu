@@ -104,6 +104,7 @@ pub enum Errors {
     // 일반 오류
     BadRequestError(String), // 잘못된 요청 (추가 정보 포함)
     ValidationError(String), // 유효성 검사 오류 (추가 정보 포함)
+    FileTooLargeError(String), // 파일 크기 초과 오류
 
     // 시스템 오류
     SysInternalError(String),
@@ -151,7 +152,8 @@ impl IntoResponse for Errors {
             Errors::FollowCannotFollowSelf |
             Errors::FollowAlreadyFollowing |
             Errors::BadRequestError(_) |
-            Errors::ValidationError(_) => {
+            Errors::ValidationError(_) |
+            Errors::FileTooLargeError(_) => {
                 debug!("Client error: {:?}", self);
             }
             
@@ -218,6 +220,7 @@ impl IntoResponse for Errors {
             // 일반 오류 - 400 Bad Request
             Errors::BadRequestError(msg) => (StatusCode::BAD_REQUEST, BAD_REQUEST, Some(msg)),
             Errors::ValidationError(msg) => (StatusCode::BAD_REQUEST, VALIDATION_ERROR, Some(msg)),
+            Errors::FileTooLargeError(msg) => (StatusCode::PAYLOAD_TOO_LARGE, "FILE_TOO_LARGE", Some(msg)),
 
             // 시스템 오류 - 주로 500 Internal Server Error
             Errors::SysInternalError(msg) => {

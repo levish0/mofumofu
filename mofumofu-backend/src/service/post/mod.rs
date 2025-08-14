@@ -5,3 +5,4 @@ pub mod get_user_posts;
 pub mod increment_view_service;
 pub mod search_posts;
 pub mod update_post_thumbnail;
+pub mod upload_image;
