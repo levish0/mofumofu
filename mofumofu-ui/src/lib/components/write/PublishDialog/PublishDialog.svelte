@@ -241,3 +241,15 @@
 		</div>
 	</Dialog.Content>
 </Dialog.Root>
+
+<!-- 출간 중 전체 화면 로딩 오버레이 -->
+{#if isLoading}
+	<div class="fixed inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+		<div class="flex flex-col items-center space-y-4">
+			<!-- 스피너 -->
+			<div class="border-mofu h-12 w-12 animate-spin rounded-full border-4 border-t-transparent"></div>
+			<!-- 로딩 텍스트 -->
+			<p class="text-lg font-medium text-white">출간 중...</p>
+		</div>
+	</div>
+{/if}
