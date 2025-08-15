@@ -5,7 +5,7 @@
 		"description": "",
 		"contact": { "name": "Levi Lim", "email": "shiueo.csh@gmail.com" },
 		"license": { "name": "" },
-		"version": "0.5.2"
+		"version": "0.5.4"
 	},
 	"paths": {
 		"/v0/auth/github": {

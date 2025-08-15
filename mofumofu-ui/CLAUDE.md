@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is **mofumofu-ui**, a Svelte 5 component library for a social media application called "mofu". The project is structured as a SvelteKit library that can be packaged and distributed, with a showcase/demo app in the routes directory.
+This is **mofumofu-ui**, a Svelte 5 component library for a blogging platform called "Mofumofu". The project is structured as a SvelteKit library that can be packaged and distributed, with a showcase/demo app in the routes directory.
 
 ## Development Commands
 

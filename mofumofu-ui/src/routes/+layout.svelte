@@ -10,15 +10,15 @@
 	<title>Mofumofu - A soft and simple blogging platform for everyone.</title>
 	<meta
 		name="description"
-		content="Mofumofu is a new social media platform. Connect with diverse people and share content."
+		content="Mofumofu is an open-source, minimalist blogging platform. Write essays, tutorials, or daily thoughts and focus on what matters most."
 	/>
-	<meta name="keywords" content="social media, SNS, community, communication, content" />
+	<meta name="keywords" content="blogging, writing, essays, tutorials, minimalist, open-source, blog platform" />
 
 	<!-- Open Graph -->
-	<meta property="og:title" content="Mofumofu - Social Media Platform" />
+	<meta property="og:title" content="Mofumofu - A soft and simple blogging platform for everyone" />
 	<meta
 		property="og:description"
-		content="Mofumofu is a new social media platform. Connect with diverse people and share content."
+		content="Mofumofu is an open-source, minimalist blogging platform. Write essays, tutorials, or daily thoughts and focus on what matters most."
 	/>
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://mofumofu.ink" />
@@ -27,10 +27,10 @@
 
 	<!-- Twitter Card -->
 	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:title" content="Mofumofu - Social Media Platform" />
+	<meta name="twitter:title" content="Mofumofu - A soft and simple blogging platform for everyone" />
 	<meta
 		name="twitter:description"
-		content="Mofumofu is a new social media platform. Connect with diverse people and share content."
+		content="Mofumofu is an open-source, minimalist blogging platform. Write essays, tutorials, or daily thoughts and focus on what matters most."
 	/>
 	<meta name="twitter:image" content="https://mofumofu.ink/og-default.png" />
 
