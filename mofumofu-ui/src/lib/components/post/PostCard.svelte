@@ -33,6 +33,7 @@
 <!-- 카드 전체 -->
 <a
 	href={post ? `/@${post.user_handle}/post/${post.slug}` : '#'}
+	data-sveltekit-preload-data="false"
 	class="dark:bg-mofu-dark-800 dark:border-mofu-dark-800 border-mofu-light-300 group flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border bg-white transition-all duration-200 hover:-translate-y-1 hover:opacity-75 hover:shadow-lg md:min-h-[300px]"
 >
 	<!-- 이미지 영역 (스켈레톤이거나 이미지가 있을 때만) -->
