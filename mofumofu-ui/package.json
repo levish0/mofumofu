@@ -71,7 +71,7 @@
 		"remark-parse": "^11.0.0",
 		"remark-rehype": "^11.1.2",
 		"remark-toc": "^9.0.0",
-		"svelte": "^5.38.0",
+		"svelte": "^5.38.1",
 		"svelte-check": "^4.3.1",
 		"svelte-easy-crop": "^4.0.1",
 		"svelte-hero-icons": "^5.2.0",
