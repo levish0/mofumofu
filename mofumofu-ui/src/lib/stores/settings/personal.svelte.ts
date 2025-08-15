@@ -225,10 +225,12 @@ export class PersonalSettingsStore {
 			}
 
 			if (this.hasPersonalChanges() || (accountPassword && accountPassword.trim() !== '')) {
-				// Upload profile image if file exists
+				// Upload profile image if file exists and use the returned URL
 				if (this.state.profileImageFile) {
 					try {
-						await uploadAvatar(this.state.profileImageFile as File);
+						const profileUploadResult = await uploadAvatar(this.state.profileImageFile as File);
+						// Update the profileImage with the server URL immediately
+						this.state.profileImage = profileUploadResult.public_url;
 					} catch (error) {
 						console.error('Profile image upload failed:', error);
 						this.errors = { general: 'Failed to upload profile image.' };
@@ -236,10 +238,12 @@ export class PersonalSettingsStore {
 					}
 				}
 
-				// Upload banner image if file exists
+				// Upload banner image if file exists and use the returned URL
 				if (this.state.bannerImageFile) {
 					try {
-						await uploadBanner(this.state.bannerImageFile as File);
+						const bannerUploadResult = await uploadBanner(this.state.bannerImageFile as File);
+						// Update the bannerImage with the server URL immediately
+						this.state.bannerImage = bannerUploadResult.public_url;
 					} catch (error) {
 						console.error('Banner image upload failed:', error);
 						this.errors = { general: 'Failed to upload banner image.' };
@@ -265,7 +269,6 @@ export class PersonalSettingsStore {
 				console.log('updateProfile response:', updatedProfile);
 
 				// Update the personal info with the response from updateProfile
-				// Keep current blob URLs if they exist, otherwise use server URLs from the response
 				this.state = {
 					...this.state,
 					handle: updatedProfile.handle,
@@ -273,6 +276,7 @@ export class PersonalSettingsStore {
 					bio: updatedProfile.bio || '',
 					location: updatedProfile.location || '',
 					website: updatedProfile.website || '',
+					// Use server URLs from the response (images already updated from upload)
 					profileImage: this.state.profileImage || updatedProfile.profile_image || null,
 					bannerImage: this.state.bannerImage || updatedProfile.banner_image || null,
 					profileImageFile: null, // Clear file after successful upload
@@ -299,14 +303,6 @@ export class PersonalSettingsStore {
 
 	// Reset to original state
 	reset() {
-		// Clean up blob URLs before resetting
-		if (this.state.profileImage && this.state.profileImage.startsWith('blob:')) {
-			URL.revokeObjectURL(this.state.profileImage);
-		}
-		if (this.state.bannerImage && this.state.bannerImage.startsWith('blob:')) {
-			URL.revokeObjectURL(this.state.bannerImage);
-		}
-
 		this.state = JSON.parse(JSON.stringify(this.originalState));
 		this.errors = {};
 		this.validationErrors = {};

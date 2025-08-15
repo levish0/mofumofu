@@ -16,9 +16,6 @@
 	let showCrop = $state(false);
 	let tempImageSrc = $state('');
 	let imageLoading = $state(true);
-	let imageError = $state(false);
-	let retryCount = $state(0);
-	let retryTimer: ReturnType<typeof setTimeout> | null = null;
 
 	const { cropImage, cleanupTempImage, handleFileRead } = useImageCrop();
 
@@ -65,38 +62,12 @@
 
 	function handleImageLoad() {
 		imageLoading = false;
-		imageError = false;
 	}
 
-	function handleImageError() {
-		// Only retry for server URLs, not blob URLs
-		if (profileImage && !profileImage.startsWith('blob:') && retryCount < 3) {
-			const retryDelay = Math.pow(2, retryCount + 1) * 1000;
-			retryTimer = setTimeout(() => {
-				retryCount++;
-				imageLoading = true;
-				imageError = false;
-			}, retryDelay);
-		} else {
-			imageLoading = false;
-			imageError = true;
-		}
-	}
-
-	// Reset loading state and retry count when image URL changes
+	// Reset loading state when image URL changes
 	$effect(() => {
-		if (profileImage && !profileImage.startsWith('blob:')) {
+		if (profileImage) {
 			imageLoading = true;
-			imageError = false;
-			retryCount = 0;
-			if (retryTimer) {
-				clearTimeout(retryTimer);
-				retryTimer = null;
-			}
-		} else if (profileImage && profileImage.startsWith('blob:')) {
-			imageLoading = false; // Blob URLs load instantly
-			imageError = false;
-			retryCount = 0;
 		}
 	});
 </script>
@@ -106,28 +77,22 @@
 	<div class="flex items-center space-x-4">
 		<div class="group relative transition-all">
 			<div class="bg-mofu-dark-800 relative h-24 w-24 overflow-hidden rounded-full group-hover:opacity-75">
-				{#if profileImage && !imageError}
-					<!-- Skeleton shimmer while loading (only for server URLs) -->
-					{#if imageLoading && !profileImage.startsWith('blob:')}
+				{#if profileImage}
+					<!-- Skeleton shimmer while loading -->
+					{#if imageLoading}
 						<div class="shimmer absolute inset-0 rounded-full"></div>
 					{/if}
 					<img
 						src={profileImage}
 						alt="Profile preview"
-						class="h-full w-full object-cover {imageLoading && !profileImage.startsWith('blob:')
+						class="h-full w-full object-cover {imageLoading
 							? 'opacity-0'
 							: 'opacity-100'} transition-opacity duration-200"
 						onload={handleImageLoad}
-						onerror={handleImageError}
 					/>
-				{:else if imageError}
-					<!-- Error fallback -->
-					<div class="flex h-full w-full items-center justify-center bg-gray-200 dark:bg-gray-700">
-						<span class="text-xs text-gray-600 dark:text-gray-400">Failed</span>
-					</div>
 				{/if}
-				
-				{#if profileImage || imageError}
+
+				{#if profileImage}
 					<label
 						for="profile-upload"
 						class="dark:text-mofu-dark-300 absolute inset-0 flex cursor-pointer items-center justify-center"

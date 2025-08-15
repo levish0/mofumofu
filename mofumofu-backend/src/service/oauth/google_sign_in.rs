@@ -6,13 +6,15 @@ use crate::service::auth::jwt::{create_jwt_access_token, create_jwt_refresh_toke
 use crate::service::error::errors::{Errors, ServiceResult};
 use crate::service::oauth::find_or_create_oauth_user::service_find_or_create_oauth_user;
 use crate::service::oauth::provider::google::client::{exchange_google_code, get_google_user_info};
-use crate::microservices::profile_client::queue_oauth_avatar_upload;
+use crate::service::oauth::oauth_avatar_upload::upload_oauth_avatar;
+use crate::connection::cloudflare_r2::R2Client;
 use reqwest::Client;
 use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
 use tracing::{error, info, warn};
 
 pub async fn service_google_sign_in<C>(
     txn: &C,
+    r2_client: &R2Client,
     http_client: &Client,
     user_agent: Option<String>,
     ip_address: Option<String>,
@@ -41,7 +43,9 @@ where
 
     // 4. 프로필 이미지 처리 - 새로 생성된 유저에게만 적용
     if oauth_result.is_new_user {
-        match queue_oauth_avatar_upload(
+        match upload_oauth_avatar(
+            txn,
+            r2_client,
             http_client,
             &oauth_result.user.id,
             &oauth_result.user.handle,
@@ -49,15 +53,15 @@ where
         )
         .await
         {
-            Ok(task_id) => {
+            Ok(filename) => {
                 info!(
-                    "Profile image upload task queued for new user {}: task_id={}",
-                    oauth_result.user.id, task_id
+                    "Profile image uploaded successfully for new user {}: filename={}",
+                    oauth_result.user.id, filename
                 );
             }
             Err(e) => {
                 warn!(
-                    "Failed to queue profile image upload task for new user {}: {:?}",
+                    "Failed to upload profile image for new user {}: {:?}",
                     oauth_result.user.id, e
                 );
             }

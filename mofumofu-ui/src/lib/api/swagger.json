@@ -314,7 +314,10 @@
 					"required": true
 				},
 				"responses": {
-					"204": { "description": "Thumbnail image upload queued successfully" },
+					"200": {
+						"description": "Thumbnail image uploaded successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ThumbnailUploadResponse" } } }
+					},
 					"400": { "description": "Invalid file or parameters" },
 					"401": { "description": "Unauthorized" },
 					"403": { "description": "Not the owner of the post" },
@@ -685,8 +688,8 @@
 			},
 			"ImageUploadResponse": {
 				"type": "object",
-				"required": ["filename"],
-				"properties": { "filename": { "type": "string" } }
+				"required": ["public_url"],
+				"properties": { "public_url": { "type": "string" } }
 			},
 			"PostAuthor": {
 				"type": "object",
@@ -797,6 +800,11 @@
 					},
 					"user_handle": { "type": ["string", "null"], "description": "특정 사용자로 필터링" }
 				}
+			},
+			"ThumbnailUploadResponse": {
+				"type": "object",
+				"required": ["public_url"],
+				"properties": { "public_url": { "type": "string" } }
 			},
 			"TocItem": {
 				"type": "object",

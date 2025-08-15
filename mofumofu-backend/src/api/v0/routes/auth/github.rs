@@ -39,6 +39,7 @@ pub async fn github_sign_in(
 
     let res = service_github_sign_in(
         &state.conn,
+        &state.cloudflare_r2,
         &state.http_client,
         Some(ua_str),
         Some(ip_str),

@@ -35,7 +35,7 @@ pub async fn upload_avatar(
         claims.sub
     );
 
-    let filename = service_update_user_avatar(&state.conn, &state.cloudflare_r2, &claims.sub, multipart).await?;
+    let public_url = service_update_user_avatar(&state.conn, &state.cloudflare_r2, &claims.sub, multipart).await?;
 
-    Ok(ImageUploadResponse { filename })
+    Ok(ImageUploadResponse { public_url })
 }

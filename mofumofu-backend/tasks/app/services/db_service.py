@@ -1,6 +1,5 @@
 # 하위 호환성을 위한 기존 db_service 인터페이스 유지
 from app.services.base_db_service import base_db_service
-from app.services.user_service import user_service
 from app.services.post_service import post_service
 from app.services.token_service import token_service
 from app.services.system_event_service import system_event_service
@@ -19,7 +18,6 @@ class DatabaseService:
 
     def __init__(self):
         self.base = base_db_service
-        self.users = user_service
         self.posts = post_service
         self.tokens = token_service
         self.system_events = system_event_service
@@ -30,30 +28,6 @@ class DatabaseService:
 
     def close(self):
         return self.base.close()
-
-    # 사용자 관련 메서드들 (user_service로 위임)
-    def update_user_profile_image(
-        self, user_handle: str, profile_image_url: Optional[str]
-    ) -> bool:
-        return self.users.update_user_profile_image(user_handle, profile_image_url)
-
-    def update_user_profile_image_by_uuid(
-        self, user_uuid: str, profile_image_url: Optional[str]
-    ) -> bool:
-        return self.users.update_user_profile_image_by_uuid(
-            user_uuid, profile_image_url
-        )
-
-    def get_user_by_uuid(self, user_uuid: str):
-        return self.users.get_user_by_uuid(user_uuid)
-
-    def get_user_by_handle(self, user_handle: str):
-        return self.users.get_user_by_handle(user_handle)
-
-    def update_user_banner_image_by_uuid(
-        self, user_uuid: str, banner_image_url: Optional[str]
-    ) -> bool:
-        return self.users.update_user_banner_image_by_uuid(user_uuid, banner_image_url)
 
     # 포스트 관련 메서드들 (post_service로 위임)
     def get_post_by_id(self, post_id: str):

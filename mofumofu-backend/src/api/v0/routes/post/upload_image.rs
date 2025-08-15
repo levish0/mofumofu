@@ -1,26 +1,20 @@
 use crate::dto::auth::internal::access_token::AccessTokenClaims;
 use crate::dto::post::request::image_upload::ImageUploadForm;
+use crate::dto::post::response::ImageUploadResponse;
 use crate::service::error::errors::Errors;
 use crate::service::post::upload_image::service_upload_image;
 use crate::state::AppState;
 use axum::extract::{Multipart, State};
 use axum::response::IntoResponse;
-use axum::{Extension, Json};
-use serde::Serialize;
+use axum::Extension;
 use tracing::info;
-use utoipa::ToSchema;
-
-#[derive(Serialize, ToSchema)]
-pub struct ImageUploadResponse {
-    pub filename: String,
-}
 
 #[utoipa::path(
     post,
     path = "/v0/post/image",
     request_body(content = ImageUploadForm, content_type = "multipart/form-data"),
     responses(
-        (status = 200, description = "Image upload queued successfully", body = ImageUploadResponse),
+        (status = 200, description = "Image uploaded successfully", body = ImageUploadResponse),
         (status = 400, description = "Invalid file or parameters"),
         (status = 401, description = "Unauthorized"),
         (status = 413, description = "File too large"),
@@ -42,7 +36,7 @@ pub async fn upload_image(
         claims.sub
     );
 
-    let filename = service_upload_image(&state.http_client, &claims.sub.to_string(), multipart).await?;
+    let public_url = service_upload_image(&state.http_client, &claims.sub.to_string(), multipart).await?;
 
-    Ok(Json(ImageUploadResponse { filename }))
+    Ok(ImageUploadResponse { public_url })
 }

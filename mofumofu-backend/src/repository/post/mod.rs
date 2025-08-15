@@ -6,3 +6,4 @@ pub mod get_post_by_uuid;
 pub mod get_posts;
 pub mod get_user_posts;
 pub mod increment_view_count;
+pub mod update_post_thumbnail;

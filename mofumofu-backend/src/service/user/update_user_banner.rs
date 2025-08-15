@@ -87,7 +87,7 @@ where
                 })?;
 
             info!("Banner image uploaded successfully: {}", public_url);
-            return Ok(filename);
+            return Ok(public_url);
         }
     }
 

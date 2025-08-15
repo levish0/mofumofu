@@ -1,21 +1,21 @@
 use crate::repository::post::get_post_by_user_and_slug::repository_get_post_by_user_and_slug;
+use crate::repository::post::update_post_thumbnail::repository_update_post_thumbnail;
 use crate::service::error::errors::{Errors, ServiceResult};
-use crate::microservices::post_client::queue_post_thumbnail_update;
+use crate::utils::image_validator::{generate_image_hash, validate_and_get_image_info};
+use crate::connection::cloudflare_r2::R2Client;
 use axum::extract::Multipart;
-use chrono::Utc;
-use reqwest::Client;
-use sea_orm::ConnectionTrait;
+use sea_orm::{ConnectionTrait, TransactionTrait};
 use tracing::{error, info, warn};
 use uuid::Uuid;
 
 pub async fn service_update_post_thumbnail<C>(
     conn: &C,
-    http_client: &Client,
+    r2_client: &R2Client,
     user_uuid: &Uuid,
     mut multipart: Multipart,
-) -> ServiceResult<()>
+) -> ServiceResult<String>
 where
-    C: ConnectionTrait,
+    C: ConnectionTrait + TransactionTrait,
 {
     info!("Processing thumbnail image upload by user: {}", user_uuid);
 
@@ -79,55 +79,54 @@ where
         Errors::BadRequestError("Image file is required".to_string())
     })?;
 
-    // 파일 크기 검증 (8MB)
-    const MAX_FILE_SIZE: usize = 8 * 1024 * 1024;
-    if file_data.len() > MAX_FILE_SIZE {
-        return Err(Errors::BadRequestError(format!(
-            "Image too large: {} bytes (max: {} bytes)",
-            file_data.len(),
-            MAX_FILE_SIZE
-        )));
-    }
-
-    if file_data.is_empty() {
-        return Err(Errors::BadRequestError(
-            "Empty file not allowed".to_string(),
-        ));
-    }
-
-    // Content-Type 설정 (기본값: image/jpeg)
-    let content_type = content_type.unwrap_or_else(|| "image/jpeg".to_string());
+    // Validate image and get info (8MB limit for thumbnails)
+    const MAX_THUMBNAIL_SIZE: usize = 8 * 1024 * 1024;
+    let (content_type, extension) = validate_and_get_image_info(&file_data, MAX_THUMBNAIL_SIZE)?;
+    
+    // Generate hash-based filename
+    let hash = generate_image_hash(&file_data);
+    let filename = format!("thumbnail_{}.{}", hash, extension);
 
     info!(
-        "Processing thumbnail image upload: post_slug={}, user_uuid={}, content_type={}, size={} bytes",
+        "Processing thumbnail image upload: post_slug={}, user_uuid={}, filename={}, content_type={}, size={} bytes",
         slug,
         user_uuid,
+        filename,
         content_type,
         file_data.len()
     );
 
-    let timestamp = Utc::now().format("%Y%m%d_%H%M%S_%3f");
-    let filename = format!("thumbnail_{}", timestamp);
+    // Delete existing thumbnail if exists
+    if let Some(existing_thumbnail_url) = &post.thumbnail_image {
+        if !existing_thumbnail_url.is_empty() {
+            // Extract key from URL and delete from R2
+            let key = format!("posts/{}/thumbnail/{}", post.id, filename);
+            if let Err(e) = r2_client.delete(&key).await {
+                warn!("Failed to delete existing thumbnail from R2: {}", e);
+            }
+        }
+    }
 
-    // 태스크 큐에 업로드 요청
-    queue_post_thumbnail_update(
-        http_client,
-        user_uuid,
-        &post.id,
-        &filename,
-        file_data,
-        &content_type,
-    )
-    .await
-    .map_err(|e| {
-        error!("Failed to queue thumbnail image upload task: {}", e);
-        Errors::SysInternalError("Failed to queue thumbnail image upload task".to_string())
-    })?;
+    // Upload to R2
+    let r2_key = format!("posts/{}/thumbnail/{}", post.id, filename);
+    r2_client.upload_with_content_type(&r2_key, file_data, &content_type)
+        .await
+        .map_err(|e| {
+            error!("Failed to upload thumbnail to R2: {}", e);
+            Errors::SysInternalError("Failed to upload thumbnail image".to_string())
+        })?;
 
-    info!(
-        "Thumbnail image upload task queued for post slug: {} by user: {}",
-        slug, user_uuid
-    );
+    // Get public URL
+    let public_url = r2_client.get_r2_public_url(&r2_key);
 
-    Ok(())
+    // Update post thumbnail in database
+    repository_update_post_thumbnail(conn, &post.id, Some(public_url.clone()))
+        .await
+        .map_err(|e| {
+            error!("Failed to update post thumbnail in database: {:?}", e);
+            Errors::SysInternalError("Failed to update post thumbnail".to_string())
+        })?;
+
+    info!("Thumbnail image uploaded successfully: {}", public_url);
+    Ok(public_url)
 }

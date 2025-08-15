@@ -101,3 +101,7 @@ export interface ThumbnailUploadRequest {
 	slug: string;
 	file: File;
 }
+
+export interface ThumbnailUploadResponse {
+	public_url: string;
+}

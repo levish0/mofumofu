@@ -35,5 +35,5 @@ export interface UpdateProfileRequest {
 }
 
 export interface ImageUploadResponse {
-	filename: string;
+	public_url: string;
 }

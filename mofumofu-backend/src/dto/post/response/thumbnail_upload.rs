@@ -4,11 +4,11 @@ use serde::Serialize;
 use utoipa::ToSchema;
 
 #[derive(Serialize, ToSchema)]
-pub struct ImageUploadResponse {
+pub struct ThumbnailUploadResponse {
     pub public_url: String,
 }
 
-impl IntoResponse for ImageUploadResponse {
+impl IntoResponse for ThumbnailUploadResponse {
     fn into_response(self) -> Response {
         Json(self).into_response()
     }

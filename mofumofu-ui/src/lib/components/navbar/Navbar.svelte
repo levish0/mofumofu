@@ -42,10 +42,6 @@
 	const userInfo = $derived(userStore.user);
 	const isLoading = $derived(userStore.isLoading);
 	
-	let profileImageError = $state(false);
-	let profileImageRetryCount = $state(0);
-	let profileImageRetryTimer: ReturnType<typeof setTimeout> | null = null;
-
 	onMount(() => {
 		userStore.loadProfile();
 	});
@@ -78,31 +74,6 @@
 			closeTimer = null;
 		}, 100);
 	}
-	
-	function handleProfileImageError() {
-		if (profileImageRetryCount < 3) {
-			// Retry after 2, 4, 8 seconds
-			const retryDelay = Math.pow(2, profileImageRetryCount + 1) * 1000;
-			profileImageRetryTimer = setTimeout(() => {
-				profileImageRetryCount++;
-				profileImageError = false; // Force re-render
-			}, retryDelay);
-		} else {
-			profileImageError = true; // Give up and show fallback
-		}
-	}
-	
-	// Reset error state and retry count when profile image URL changes
-	$effect(() => {
-		if (userInfo?.profile_image) {
-			profileImageError = false;
-			profileImageRetryCount = 0;
-			if (profileImageRetryTimer) {
-				clearTimeout(profileImageRetryTimer);
-				profileImageRetryTimer = null;
-			}
-		}
-	});
 </script>
 
 <nav
@@ -172,12 +143,11 @@
 				>
 					<button class="flex h-9 items-center space-x-1 rounded-lg" aria-label="profile_menu">
 						<div class="h-9 w-9 overflow-hidden rounded-full">
-							{#if userInfo.profile_image && !profileImageError}
+							{#if userInfo.profile_image}
 								<img 
 									src={userInfo.profile_image} 
 									alt="{userInfo.handle}의 프로필" 
 									class="h-full w-full object-cover" 
-									onerror={handleProfileImageError}
 								/>
 							{:else}
 								<span
