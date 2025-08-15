@@ -2,11 +2,11 @@
   <img src="./assets/mofumofu_kawaii_mini.svg" alt="もふもふ" width="500"/>
 </p>
 
-# Mofu
+# Mofumofu
 
 > A soft and simple blogging platform for everyone.
 
-Mofu is an open-source, minimalist blogging platform.  
+Mofumofu is an open-source, minimalist blogging platform.  
 
 Whether you're writing essays, tutorials, or daily thoughts,  
 Mofu helps you focus on what matters most.
