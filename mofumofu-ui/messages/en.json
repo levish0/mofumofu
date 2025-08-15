@@ -162,8 +162,8 @@
 	"auth_email_placeholder": "email@mofu.com",
 	"auth_password_placeholder": "p4ssw@rd!",
 	"auth_password_requirements": "Must include at least 8 characters with uppercase, lowercase, numbers, and special characters",
-	"oauth_github_error": "An error occurred during GitHub login",
-	"oauth_google_error": "An error occurred during Google login",
+	"oauth_github_error": "An error occurred while proceeding with GitHub login",
+	"oauth_google_error": "An error occurred while proceeding with Google login",
 	"oauth_signup_github_title": "Sign up with GitHub account",
 	"oauth_signup_google_title": "Sign up with Google account",
 	"settings_writing_editor_preferences_title": "Editor Preferences",
@@ -184,5 +184,15 @@
 	"footer_terms_of_service": "Terms of Service",
 	"publish_slug_label": "Slug",
 	"publish_summary_label": "Summary (optional)",
-	"publish_tags_label": "Tags"
+	"publish_tags_label": "Tags",
+	"oauth_enter_handle": "Please enter the handle you want to use",
+	"oauth_check_button": "Check",
+	"oauth_handle_available": "This handle is available",
+	"oauth_handle_unavailable": "This handle is already in use",
+	"oauth_handle_check_required": "Handle availability check required",
+	"oauth_handle_requirements": "3-20 characters, letters, numbers, and underscores only",
+	"oauth_google_continuing": "Continuing with Google...",
+	"oauth_github_continuing": "Continuing with GitHub...",
+	"oauth_continue_with_google": "Continue with Google",
+	"oauth_continue_with_github": "Continue with GitHub"
 }

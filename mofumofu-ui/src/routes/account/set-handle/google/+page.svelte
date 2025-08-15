@@ -64,7 +64,7 @@
 			window.location.href = getGoogleOAuthUrl();
 		} catch (error) {
 			console.error('Failed to proceed with Google OAuth:', error);
-			proceedError = 'Google 로그인 진행 중 오류가 발생했습니다';
+			proceedError = m.oauth_google_error();
 			proceeding = false;
 		}
 	}
@@ -101,7 +101,7 @@
 				</div>
 			</div>
 			<h1 class="text-3xl font-bold">{m.oauth_signup_google_title()}</h1>
-			<p class="text-mofu-dark-300 mt-2">사용할 핸들을 입력해주세요</p>
+			<p class="text-mofu-dark-300 mt-2">{m.oauth_enter_handle()}</p>
 		</div>
 
 		<div class="space-y-6">
@@ -139,7 +139,7 @@
 								></path>
 							</svg>
 						{:else}
-							확인
+							{m.oauth_check_button()}
 						{/if}
 					</button>
 				</div>
@@ -152,17 +152,17 @@
 				{:else if verificationState === 'verified'}
 					<p class="flex items-center gap-1 text-xs text-green-400">
 						<Icon src={CheckCircle} size="14" />
-						사용 가능한 핸들입니다
+						{m.oauth_handle_available()}
 					</p>
 				{:else if verificationState === 'unavailable'}
 					<p class="flex items-center gap-1 text-xs text-rose-400">
 						<Icon src={ExclamationTriangle} size="14" />
-						이미 사용중인 핸들입니다
+						{m.oauth_handle_unavailable()}
 					</p>
 				{:else if handle.trim() !== ''}
-					<p class="text-xs text-orange-400">핸들 중복 확인이 필요합니다</p>
+					<p class="text-xs text-orange-400">{m.oauth_handle_check_required()}</p>
 				{:else}
-					<p class="text-mofu-dark-400 text-xs">3-20자의 영문, 숫자, 언더스코어만 사용 가능합니다</p>
+					<p class="text-mofu-dark-400 text-xs">{m.oauth_handle_requirements()}</p>
 				{/if}
 			</div>
 
@@ -190,7 +190,7 @@
 								d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
 							></path>
 						</svg>
-						Google로 계속하는 중...
+						{m.oauth_google_continuing()}
 					{:else}
 						<!-- Google 아이콘 -->
 						<svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5">
@@ -211,7 +211,7 @@
 								fill="#34A853"
 							/>
 						</svg>
-						Google로 계속하기
+						{m.oauth_continue_with_google()}
 					{/if}
 				</Button>
 
@@ -220,7 +220,7 @@
 					variant="ghost"
 					class="text-mofu-dark-300 hover:text-mofu-dark-200 hover:bg-mofu-dark-800 w-full"
 				>
-					← 뒤로 가기
+					← {m.common_back()}
 				</Button>
 			</div>
 		</div>

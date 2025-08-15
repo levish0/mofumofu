@@ -184,5 +184,17 @@
 	"footer_terms_of_service": "서비스 이용약관",
 	"publish_slug_label": "슬러그",
 	"publish_summary_label": "요약",
-	"publish_tags_label": "태그"
+	"publish_tags_label": "태그",
+	"oauth_enter_handle": "사용할 핸들을 입력해주세요",
+	"oauth_check_button": "확인",
+	"oauth_handle_available": "사용 가능한 핸들입니다",
+	"oauth_handle_unavailable": "이미 사용중인 핸들입니다",
+	"oauth_handle_check_required": "핸들 중복 확인이 필요합니다",
+	"oauth_handle_requirements": "3-20자의 영문, 숫자, 언더스코어만 사용 가능합니다",
+	"oauth_google_error": "Google 로그인 진행 중 오류가 발생했습니다",
+	"oauth_github_error": "GitHub 로그인 진행 중 오류가 발생했습니다",
+	"oauth_google_continuing": "Google로 계속하는 중...",
+	"oauth_github_continuing": "GitHub로 계속하는 중...",
+	"oauth_continue_with_google": "Google로 계속하기",
+	"oauth_continue_with_github": "GitHub로 계속하기"
 }

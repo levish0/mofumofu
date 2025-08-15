@@ -52,7 +52,7 @@
 	}
 
 	function handleSaveDraft() {
-		console.log('임시저장:', { title, tags, content });
+		console.log('Draft saved:', { title, tags, content });
 	}
 
 	async function handlePublished() {
@@ -99,14 +99,14 @@
 
 	<!-- Open Graph -->
 	<meta property="og:title" content="글 수정 - Mofumofu" />
-	<meta property="og:description" content="포스트를 수정합니다." />
+	<meta property="og:description" content={m.edit_page_description()} />
 	<meta property="og:type" content="website" />
 	<meta property="og:site_name" content="Mofumofu" />
 
 	<!-- Twitter Card -->
 	<meta name="twitter:card" content="summary" />
 	<meta name="twitter:title" content="글 수정 - Mofumofu" />
-	<meta name="twitter:description" content="포스트를 수정합니다." />
+	<meta name="twitter:description" content={m.edit_page_description()} />
 </svelte:head>
 
 <div class="flex h-full w-full bg-gray-900 break-all text-white dark:bg-gray-900">
@@ -131,7 +131,7 @@
 		<!-- Resizer (드래그 핸들) -->
 		<button
 			type="button"
-			aria-label="크기 조정"
+			aria-label={m.write_resize_handle()}
 			class="w-1 flex-shrink-0 cursor-col-resize bg-gray-700 p-0 transition-colors"
 			onmousedown={resizableHook?.handleMouseDown}
 			class:bg-gray-400={resizableHook?.isDragging()}
