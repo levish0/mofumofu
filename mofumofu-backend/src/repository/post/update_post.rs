@@ -3,12 +3,15 @@ use crate::entity::posts::{ActiveModel as PostActiveModel, Column, Entity as Pos
 use crate::service::error::errors::Errors;
 use chrono::Utc;
 use sea_orm::{ActiveModelTrait, ColumnTrait, ConnectionTrait, EntityTrait, QueryFilter, Set, TransactionTrait};
+use serde_json::Value as JsonValue;
 use uuid::Uuid;
 
 pub async fn repository_update_post<C>(
     conn: &C,
     payload: UpdatePostRequest,
     user_uuid: &Uuid,
+    render_html: Option<String>,
+    toc_json: Option<JsonValue>,
 ) -> Result<PostModel, Errors>
 where
     C: ConnectionTrait + TransactionTrait,
@@ -32,6 +35,14 @@ where
     
     if let Some(content) = payload.content {
         active_post.content = Set(content);
+        
+        // render_html과 toc_json이 제공된 경우 업데이트
+        if let Some(html) = render_html {
+            active_post.render = Set(Some(html));
+        }
+        if let Some(toc) = toc_json {
+            active_post.toc = Set(Some(toc));
+        }
     }
     
     if let Some(new_slug) = payload.new_slug {

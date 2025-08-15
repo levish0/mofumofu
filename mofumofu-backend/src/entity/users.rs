@@ -26,6 +26,10 @@ pub struct Model {
     pub profile_image: Option<String>,
     #[sea_orm(column_type = "Text", nullable)]
     pub banner_image: Option<String>,
+    #[sea_orm(column_type = "Integer", not_null, default_value = "0")]
+    pub follower_count: i32,
+    #[sea_orm(column_type = "Integer", not_null, default_value = "0")]
+    pub following_count: i32,
     #[sea_orm(column_type = "TimestampWithTimeZone", not_null)]
     pub created_at: DateTimeUtc,
 }

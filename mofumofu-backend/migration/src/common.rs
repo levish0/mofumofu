@@ -39,6 +39,10 @@ pub enum ActionType {
     FollowCreated,
     #[sea_orm(iden = "follow_deleted")]
     FollowDeleted,
+    #[sea_orm(iden = "like_created")]
+    LikeCreated,
+    #[sea_orm(iden = "like_deleted")]
+    LikeDeleted,
     #[sea_orm(iden = "comment_created")]
     CommentCreated,
     #[sea_orm(iden = "comment_updated")]

@@ -3,12 +3,15 @@ use crate::entity::posts::{ActiveModel as PostActiveModel, Model as PostModel};
 use crate::service::error::errors::Errors;
 use chrono::Utc;
 use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
+use serde_json::Value as JsonValue;
 use uuid::Uuid;
 
 pub async fn repository_create_post<C>(
     txn: &C,
     payload: CreatePostRequest,
     user_uuid: &Uuid,
+    render_html: Option<String>,
+    toc_json: Option<JsonValue>,
 ) -> Result<PostModel, Errors>
 where
     C: ConnectionTrait + TransactionTrait,
@@ -26,8 +29,8 @@ where
         comment_count: Set(0),
         view_count: Set(0),
         slug: Set(payload.slug),
-        render: Set(None),
-        toc: Set(None),
+        render: Set(render_html),
+        toc: Set(toc_json),
     };
 
     // Insert the new post

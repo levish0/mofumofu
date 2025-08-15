@@ -26,6 +26,8 @@ where
         is_verified: Set(true),
         profile_image: Set(profile_image),
         banner_image: Set(None),
+        follower_count: Set(0),
+        following_count: Set(0),
         created_at: Default::default(),
     };
 

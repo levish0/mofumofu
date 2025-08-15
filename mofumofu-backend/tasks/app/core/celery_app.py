@@ -10,6 +10,7 @@ celery_app = Celery(
         "app.tasks.post_tasks",
         "app.tasks.search_tasks",
         "app.tasks.markdown_tasks",
+        "app.tasks.count_tasks",
     ],
 )
 
@@ -44,6 +45,10 @@ celery_app.conf.update(
         "cleanup-old-system-events": {
             "task": "cleanup_old_system_events",
             "schedule": 86400.0,  # 24시간마다 실행 (86400초 = 1일)
+        },
+        "sync-all-counts-daily": {
+            "task": "sync_all_counts",
+            "schedule": 86400.0,  # 24시간마다 실행 (86400초 = 1일) - like/follow 개수 동기화
         },
     },
 )

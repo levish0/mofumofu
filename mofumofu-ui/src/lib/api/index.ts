@@ -6,3 +6,4 @@ export * from './follow/followApi';
 export * from './user/userApi';
 export * from './post/postApi';
 export * from './auth/authApi';
+export * from './like/likeApi';

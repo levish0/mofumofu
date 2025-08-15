@@ -5,7 +5,7 @@
 		"description": "",
 		"contact": { "name": "Levi Lim", "email": "shiueo.csh@gmail.com" },
 		"license": { "name": "" },
-		"version": "0.5.0"
+		"version": "0.5.2"
 	},
 	"paths": {
 		"/v0/auth/github": {
@@ -118,6 +118,20 @@
 					"409": { "description": "Already following this user" },
 					"422": { "description": "Cannot follow yourself" },
 					"500": { "description": "Internal server error" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			},
+			"delete": {
+				"tags": ["Follow"],
+				"operationId": "api_delete_follow",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/DeleteFollowRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"204": { "description": "Successfully unfollowed user" },
+					"400": { "description": "Bad request" },
+					"404": { "description": "User not found" }
 				},
 				"security": [{ "bearer_auth": [] }]
 			}
@@ -294,6 +308,26 @@
 					"204": { "description": "Post unliked successfully" },
 					"400": { "description": "Invalid input or like not found" },
 					"404": { "description": "Post not found" },
+					"500": { "description": "Internal Server Error" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/like/status": {
+			"post": {
+				"tags": ["Like"],
+				"operationId": "check_like_status",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CheckLikeStatusRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Like status retrieved successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/LikeStatusResponse" } } }
+					},
+					"400": { "description": "Invalid input" },
+					"401": { "description": "Unauthorized" },
 					"500": { "description": "Internal Server Error" }
 				},
 				"security": [{ "bearer_auth": [] }]
@@ -509,22 +543,6 @@
 				}
 			}
 		},
-		"/v0/unfollow": {
-			"post": {
-				"tags": ["Follow"],
-				"operationId": "api_delete_follow",
-				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/DeleteFollowRequest" } } },
-					"required": true
-				},
-				"responses": {
-					"204": { "description": "Successfully unfollowed user" },
-					"400": { "description": "Bad request" },
-					"404": { "description": "User not found" }
-				},
-				"security": [{ "bearer_auth": [] }]
-			}
-		},
 		"/v0/user": {
 			"post": {
 				"tags": ["User"],
@@ -675,6 +693,11 @@
 				"required": ["handle"],
 				"properties": { "handle": { "type": "string" } }
 			},
+			"CheckLikeStatusRequest": {
+				"type": "object",
+				"required": ["handle", "slug"],
+				"properties": { "handle": { "type": "string" }, "slug": { "type": "string" } }
+			},
 			"CreateFollowRequest": {
 				"type": "object",
 				"required": ["followee_handle"],
@@ -682,8 +705,8 @@
 			},
 			"CreateLikeRequest": {
 				"type": "object",
-				"required": ["post_id"],
-				"properties": { "post_id": { "type": "string", "format": "uuid" } }
+				"required": ["handle", "slug"],
+				"properties": { "handle": { "type": "string" }, "slug": { "type": "string" } }
 			},
 			"CreatePostRequest": {
 				"type": "object",
@@ -713,8 +736,8 @@
 			},
 			"DeleteLikeRequest": {
 				"type": "object",
-				"required": ["post_id"],
-				"properties": { "post_id": { "type": "string", "format": "uuid" } }
+				"required": ["handle", "slug"],
+				"properties": { "handle": { "type": "string" }, "slug": { "type": "string" } }
 			},
 			"DeletePostRequest": { "type": "object", "required": ["slug"], "properties": { "slug": { "type": "string" } } },
 			"ErrorResponse": {
@@ -816,6 +839,11 @@
 				"required": ["public_url"],
 				"properties": { "public_url": { "type": "string" } }
 			},
+			"LikeStatusResponse": {
+				"type": "object",
+				"required": ["is_liked"],
+				"properties": { "is_liked": { "type": "boolean" } }
+			},
 			"PostAuthor": {
 				"type": "object",
 				"required": ["handle", "name"],
@@ -857,7 +885,6 @@
 					"comment_count": { "type": "integer", "format": "int32" },
 					"created_at": { "type": "string", "format": "date-time" },
 					"like_count": { "type": "integer", "format": "int32" },
-					"published_at": { "type": ["string", "null"], "format": "date-time" },
 					"rendered": { "type": "string" },
 					"slug": { "type": "string" },
 					"summary": { "type": ["string", "null"] },
@@ -1020,6 +1047,7 @@
 		{ "name": "User", "description": "User endpoints" },
 		{ "name": "Post", "description": "Post endpoints" },
 		{ "name": "Follow", "description": "Follow endpoints" },
-		{ "name": "Hashtag", "description": "Hashtag endpoints" }
+		{ "name": "Hashtag", "description": "Hashtag endpoints" },
+		{ "name": "Like", "description": "Like endpoints" }
 	]
 }

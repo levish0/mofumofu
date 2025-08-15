@@ -6,8 +6,9 @@ use crate::repository::post::update_post::repository_update_post;
 use crate::repository::system_events::log_event::repository_log_event;
 use crate::service::error::errors::{Errors, ServiceResult};
 use crate::microservices::search_client;
-use crate::microservices::markdown_client::queue_render_markdown;
+use crate::microservices::markdown_client::render_markdown;
 use sea_orm::{ConnectionTrait, TransactionTrait};
+use serde_json::json;
 use tracing::{info, warn};
 use uuid::Uuid;
 
@@ -20,9 +21,32 @@ pub async fn service_update_post<C>(
 where
     C: ConnectionTrait + TransactionTrait,
 {
+    // 마크다운 렌더링 (content가 변경되는 경우에만)
+    let (render_html, toc_json) = if let Some(ref content) = payload.content {
+        info!("마크다운 렌더링 시작 (content length: {})", content.len());
+        let rendered = render_markdown(http_client, content).await
+            .map_err(|e| Errors::BadRequestError(format!("마크다운 렌더링 실패: {}", e)))?;
+        
+        info!("마크다운 렌더링 성공 (TOC items: {})", rendered.toc_items.len());
+        
+        // TOC를 JSON으로 변환
+        let toc_items: Vec<serde_json::Value> = rendered.toc_items
+            .into_iter()
+            .map(|item| json!({
+                "level": item.level,
+                "text": item.text,
+                "id": item.id
+            }))
+            .collect();
+        
+        (Some(rendered.html_content), Some(json!(toc_items)))
+    } else {
+        (None, None)
+    };
+
     let txn = conn.begin().await?;
 
-    let updated_post = repository_update_post(&txn, payload.clone(), user_uuid).await?;
+    let updated_post = repository_update_post(&txn, payload.clone(), user_uuid, render_html, toc_json).await?;
 
     if let Some(ref hashtags) = payload.hashtags {
         repository_remove_post_hashtags(&txn, updated_post.id).await?;
@@ -38,14 +62,7 @@ where
         warn!("Failed to queue post search update task: {}", e);
     }
 
-    if payload.content.is_some() {
-        info!("글 수정 완료, 마크다운 렌더링 태스크 큐에 추가 (post_id: {})", updated_post.id);
-        if let Err(e) = queue_render_markdown(http_client, &updated_post.id, &updated_post.content).await {
-            warn!("Failed to queue markdown rendering task for post {}: {}", updated_post.id, e);
-        } else {
-            info!("마크다운 렌더링 태스크 큐에 추가 완료 (post_id: {})", updated_post.id);
-        }
-    }
+    info!("글 수정 완료 (post_id: {})", updated_post.id);
 
     repository_log_event(
         conn,

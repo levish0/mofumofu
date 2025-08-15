@@ -1,6 +1,7 @@
 use crate::entity::common::{ActionType, TargetType};
 use crate::repository::like::delete_like::repository_delete_like_by_handle_and_slug;
 use crate::repository::post::find_post_by_handle_and_slug::repository_find_post_by_handle_and_slug;
+use crate::repository::post::update_like_count::repository_decrement_post_like_count;
 use crate::repository::system_events::log_event::repository_log_event;
 use crate::service::error::errors::{Errors, ServiceResult};
 use sea_orm::{ConnectionTrait, TransactionTrait};
@@ -28,6 +29,9 @@ where
     if !deleted {
         return Err(Errors::BadRequestError("Like not found".to_string()));
     }
+
+    // 포스트 좋아요 개수 감소
+    repository_decrement_post_like_count(&txn, post.id).await?;
 
     txn.commit().await?;
 

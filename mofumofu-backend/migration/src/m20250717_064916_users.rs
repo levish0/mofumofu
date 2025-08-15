@@ -46,6 +46,18 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Users::ProfileImage).text().null())
                     .col(ColumnDef::new(Users::BannerImage).text().null())
                     .col(
+                        ColumnDef::new(Users::FollowerCount)
+                            .integer()
+                            .not_null()
+                            .default(0),
+                    )
+                    .col(
+                        ColumnDef::new(Users::FollowingCount)
+                            .integer()
+                            .not_null()
+                            .default(0),
+                    )
+                    .col(
                         ColumnDef::new(Users::CreatedAt)
                             .timestamp_with_time_zone()
                             .not_null()
@@ -99,5 +111,7 @@ enum Users {
     IsVerified,
     ProfileImage,
     BannerImage,
+    FollowerCount,
+    FollowingCount,
     CreatedAt,
 }

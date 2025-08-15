@@ -126,7 +126,8 @@ use utoipa::{
         (name = "User", description = "User endpoints"),
         (name = "Post", description = "Post endpoints"),
         (name = "Follow", description = "Follow endpoints"),
-        (name = "Hashtag", description = "Hashtag endpoints")
+        (name = "Hashtag", description = "Hashtag endpoints"),
+        (name = "Like", description = "Like endpoints")
     ),
     modifiers(&SecurityAddon) // 보안 스키마 등록
 )]

@@ -3,6 +3,7 @@ from app.services.base_db_service import base_db_service
 from app.services.post_service import post_service
 from app.services.token_service import token_service
 from app.services.system_event_service import system_event_service
+from app.services.count_service import count_service
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 import logging
@@ -21,6 +22,7 @@ class DatabaseService:
         self.posts = post_service
         self.tokens = token_service
         self.system_events = system_event_service
+        self.counts = count_service
 
     # 기본 데이터베이스 메서드들
     def get_session(self):
@@ -49,6 +51,16 @@ class DatabaseService:
     # 시스템 이벤트 관련 메서드들 (system_event_service로 위임)
     def cleanup_old_system_events(self, current_time: datetime) -> dict:
         return self.system_events.cleanup_old_system_events(current_time)
+    
+    # 카운트 동기화 관련 메서드들 (count_service로 위임)
+    def sync_post_like_counts(self) -> dict:
+        return self.counts.sync_post_like_counts()
+    
+    def sync_user_follow_counts(self) -> dict:
+        return self.counts.sync_user_follow_counts()
+        
+    def sync_all_counts(self) -> dict:
+        return self.counts.sync_all_counts()
 
 
 # 전역 데이터베이스 서비스 인스턴스 (기존 코드와 호환)

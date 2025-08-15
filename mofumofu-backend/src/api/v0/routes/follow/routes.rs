@@ -8,7 +8,7 @@ use crate::api::v0::routes::follow::get_following_list::get_following;
 use crate::middleware::auth::access_jwt_auth;
 use crate::state::AppState;
 use axum::middleware::from_fn;
-use axum::routing::{get, post};
+use axum::routing::{delete as axum_delete, get, post};
 use axum::Router;
 
 pub fn follow_routes() -> Router<AppState> {
@@ -18,8 +18,8 @@ pub fn follow_routes() -> Router<AppState> {
             post(api_create_follow).route_layer(from_fn(access_jwt_auth)),
         )
         .route(
-            "/unfollow",
-            post(api_delete_follow).route_layer(from_fn(access_jwt_auth)),
+            "/follow",
+            axum_delete(api_delete_follow).route_layer(from_fn(access_jwt_auth)),
         )
         .route(
             "/follow/status",

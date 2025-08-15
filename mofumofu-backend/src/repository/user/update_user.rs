@@ -35,6 +35,8 @@ where
         is_verified: fields.is_verified.map_or(NotSet, Set),
         profile_image: fields.profile_image.map_or(NotSet, Set),
         banner_image: fields.banner_image.map_or(NotSet, Set),
+        follower_count: NotSet,
+        following_count: NotSet,
         created_at: NotSet,
     };
 

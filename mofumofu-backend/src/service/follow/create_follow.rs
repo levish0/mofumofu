@@ -5,6 +5,7 @@ use crate::repository::follow::create_follow::repository_create_follow;
 use crate::repository::system_events::log_event::repository_log_event;
 use crate::repository::user::find_user_by_handle::repository_find_user_by_handle;
 use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
+use crate::repository::user::update_follow_count::{repository_increment_user_follower_count, repository_increment_user_following_count};
 use crate::service::error::errors::{Errors, ServiceResult};
 use sea_orm::ConnectionTrait;
 use sea_orm::TransactionTrait;
@@ -38,6 +39,10 @@ where
 
     // Insert the new follow relationship
     let _created_follow = repository_create_follow(&txn, follower.id, followee.id).await?;
+
+    // Update follow counts
+    repository_increment_user_following_count(&txn, follower.id).await?;
+    repository_increment_user_follower_count(&txn, followee.id).await?;
 
     // Commit the transaction
     txn.commit().await?;

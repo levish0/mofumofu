@@ -19,7 +19,7 @@ export async function createLike(request: CreateLikeRequest) {
 
 export async function deleteLike(request: DeleteLikeRequest) {
 	try {
-		await privateApi.post('v0/unlike', {
+		await privateApi.delete('v0/like', {
 			json: request
 		});
 	} catch (error) {

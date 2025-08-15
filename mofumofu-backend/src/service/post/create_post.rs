@@ -5,8 +5,9 @@ use crate::repository::post::create_post::repository_create_post;
 use crate::repository::system_events::log_event::repository_log_event;
 use crate::service::error::errors::{Errors, ServiceResult};
 use crate::microservices::search_client;
-use crate::microservices::markdown_client::queue_render_markdown;
+use crate::microservices::markdown_client::render_markdown;
 use sea_orm::{ConnectionTrait, TransactionTrait};
+use serde_json::json;
 use tracing::{info, warn};
 use uuid::Uuid;
 
@@ -19,9 +20,29 @@ pub async fn service_create_post<C>(
 where
     C: ConnectionTrait + TransactionTrait,
 {
-    let txn = conn.begin().await?;
-
     let hashtags = payload.hashtags.clone();
+    let content = payload.content.clone();
+
+    // 마크다운 렌더링 (필수)
+    info!("마크다운 렌더링 시작 (content length: {})", content.len());
+    let rendered = render_markdown(http_client, &content).await
+        .map_err(|e| Errors::BadRequestError(format!("마크다운 렌더링 실패: {}", e)))?;
+    
+    info!("마크다운 렌더링 성공 (TOC items: {})", rendered.toc_items.len());
+    
+    // TOC를 JSON으로 변환
+    let toc_items: Vec<serde_json::Value> = rendered.toc_items
+        .into_iter()
+        .map(|item| json!({
+            "level": item.level,
+            "text": item.text,
+            "id": item.id
+        }))
+        .collect();
+    
+    let (render_html, toc_json) = (Some(rendered.html_content), Some(json!(toc_items)));
+
+    let txn = conn.begin().await?;
 
     let post = CreatePostRequest {
         title: payload.title,
@@ -31,7 +52,7 @@ where
         hashtags: payload.hashtags,
     };
 
-    let created_post = repository_create_post(&txn, post, user_uuid).await?;
+    let created_post = repository_create_post(&txn, post, user_uuid, render_html, toc_json).await?;
 
     let hashtag_ids = if let Some(ref tags) = hashtags {
         if !tags.is_empty() {
@@ -51,14 +72,7 @@ where
         warn!("Failed to queue post indexing task: {}", e);
     }
 
-    // 마크다운 렌더링 태스크 큐에 추가 (백그라운드, 실패해도 무시)
-    info!("글 생성 완료, 마크다운 렌더링 태스크 큐에 추가 (post_id: {})", created_post.id);
-    if let Err(e) = queue_render_markdown(http_client, &created_post.id, &created_post.content).await {
-        warn!("Failed to queue markdown rendering task for post {}: {}", created_post.id, e);
-        // 실패해도 글 생성은 성공으로 처리
-    } else {
-        info!("마크다운 렌더링 태스크 큐에 추가 완료 (post_id: {})", created_post.id);
-    }
+    info!("글 생성 완료 (post_id: {})", created_post.id);
 
     // 이벤트 로깅 - 포스트 생성
     repository_log_event(

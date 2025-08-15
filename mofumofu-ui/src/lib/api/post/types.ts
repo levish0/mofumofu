@@ -34,7 +34,6 @@ export interface PostInfoResponse {
 	view_count: number;
 	slug: string;
 	summary?: string | null;
-	published_at?: string | null;
 	updated_at?: string | null;
 	tags: string[];
 }

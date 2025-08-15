@@ -22,7 +22,7 @@ export async function createFollow(request: CreateFollowRequest) {
 
 export async function deleteFollow(request: DeleteFollowRequest) {
 	try {
-		await privateApi.post('v0/unfollow', {
+		await privateApi.delete('v0/follow', {
 			json: request
 		});
 	} catch (error) {

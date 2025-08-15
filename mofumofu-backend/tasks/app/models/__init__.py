@@ -7,6 +7,8 @@ from .hashtag import HashTag
 from .comment import Comment
 from .refresh_token import UserRefreshToken
 from .system_event import SystemEvent
+from .like import Like
+from .follow import Follow
 
 # 모든 클래스가 로드된 후 관계 설정
 # User 관계
@@ -34,6 +36,14 @@ SystemEvent.user = relationship("User", back_populates="system_events")
 # User에 system_events 관계 추가
 User.system_events = relationship("SystemEvent", back_populates="user", lazy="select")
 
+# Like 관계
+Like.user = relationship("User")
+Like.post = relationship("Post")
+
+# Follow 관계
+Follow.follower = relationship("User", foreign_keys=[Follow.follower_id])
+Follow.followee = relationship("User", foreign_keys=[Follow.followee_id])
+
 __all__ = [
     'Base',
     'User',
@@ -42,5 +52,7 @@ __all__ = [
     'Comment',
     'UserRefreshToken',
     'SystemEvent',
+    'Like',
+    'Follow',
     'post_hash_tags'
 ]

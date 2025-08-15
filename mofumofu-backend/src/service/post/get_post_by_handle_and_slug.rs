@@ -7,7 +7,7 @@ use redis::aio::ConnectionManager;
 use reqwest::Client;
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use tracing::{info, warn};
-use crate::microservices::markdown_client::{queue_render_markdown, render_markdown};
+use crate::microservices::markdown_client::render_markdown;
 
 pub async fn service_get_post_by_handle_and_slug<C>(
     conn: &C,
@@ -43,13 +43,9 @@ where
             (rendered_html.clone(), toc_items)
         }
         _ => {
-            info!("렌더링 결과 없음 - 백그라운드 렌더링 큐에 추가 (post_id: {}, handle: {}, slug: {})", post.id, handle, slug);
-            // 백그라운드 태스크로 렌더링 큐에 추가
-            if let Err(e) = queue_render_markdown(http_client, &post.id, &post.content).await {
-                warn!("마크다운 렌더링 태스크 큐 추가 실패: {}", e);
-            }
+            info!("렌더링 결과 없음 - 즉시 렌더링 수행 (post_id: {}, handle: {}, slug: {})", post.id, handle, slug);
             
-            // 즉시 렌더링 (임시)
+            // 마크다운 직접 렌더링
             match render_markdown(http_client, &post.content).await {
                 Ok(rendered_result) => {
                     let toc_items: Vec<TocItem> = rendered_result
@@ -64,7 +60,7 @@ where
                     (rendered_result.html_content, toc_items)
                 }
                 Err(e) => {
-                    warn!("마크다운 즉시 렌더링 실패: {}", e);
+                    warn!("마크다운 렌더링 실패: {}", e);
                     (post.content.clone(), Vec::new()) // 원본 마크다운 반환
                 }
             }
@@ -83,7 +79,6 @@ where
         },
         created_at: post.created_at,
         updated_at: post.updated_at,
-        published_at: None,
         like_count: post.like_count,
         comment_count: post.comment_count,
         view_count: post.view_count,

@@ -162,7 +162,10 @@
 			// Navigate to the published post
 			const userHandle = userStore.user?.handle;
 			if (userHandle) {
-				await goto(`/@${userHandle}/post/${publishData.slug.trim()}`);
+				const redirectUrl = `/@${userHandle}/post/${publishData.slug.trim()}`;
+				await goto(redirectUrl);
+			} else {
+				toast.error('사용자 정보를 찾을 수 없습니다. 페이지를 새로고침해주세요.');
 			}
 		} catch (error) {
 			console.error('출간 실패:', error);

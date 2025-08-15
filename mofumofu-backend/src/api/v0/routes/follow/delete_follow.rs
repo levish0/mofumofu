@@ -11,8 +11,8 @@ use axum::{Extension, Json};
 
 // 팔로우 취소
 #[utoipa::path(
-    post,
-    path = "/v0/unfollow",
+    delete,
+    path = "/v0/follow",
     request_body = DeleteFollowRequest,
     responses(
         (status = StatusCode::NO_CONTENT, description = "Successfully unfollowed user"),

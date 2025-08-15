@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Boolean, Text
+from sqlalchemy import Column, String, Boolean, Text, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from .base import Base
@@ -16,6 +16,8 @@ class User(Base):
     is_verified = Column(Boolean, nullable=False, default=False)
     profile_image = Column(Text, nullable=True)
     banner_image = Column(Text, nullable=True)
+    follower_count = Column(Integer, default=0, nullable=False)
+    following_count = Column(Integer, default=0, nullable=False)
     
     # 관계 정의는 __init__.py에서 모든 모델 로드 후 설정
 
