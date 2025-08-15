@@ -7,6 +7,7 @@
 	import { updatePost } from '$lib/api/post/postApi';
 	import { userStore } from '$lib/stores/user.svelte';
 	import { goto } from '$app/navigation';
+	import { toast } from 'svelte-sonner';
 	import type { PageData } from './$types';
 
 	const { data }: { data: PageData } = $props();
@@ -65,13 +66,15 @@
 				summary: data.post.summary || null,
 			});
 
+			toast.success('포스트가 성공적으로 수정되었습니다.');
+			
 			// 수정 완료 후 포스트 페이지로 이동 - 현재 사용자 핸들 필요
 			if (currentUser) {
 				goto(`/@${currentUser.handle}/post/${data.slug}`);
 			}
 		} catch (error) {
 			console.error('Failed to update post:', error);
-			alert('포스트 수정에 실패했습니다. 다시 시도해주세요.');
+			toast.error('포스트 수정에 실패했습니다. 다시 시도해주세요.');
 		}
 	}
 

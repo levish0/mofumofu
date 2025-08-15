@@ -8,6 +8,7 @@
 	import { Icon, PaperAirplane } from 'svelte-hero-icons';
 	import { goto } from '$app/navigation';
 	import { userStore } from '$lib/stores/user.svelte';
+	import { toast } from 'svelte-sonner';
 
 	import TitleInput from './TitleInput.svelte';
 	import SlugInput from './SlugInput.svelte';
@@ -156,6 +157,8 @@
 			isOpen = false;
 			onPublished?.();
 
+			toast.success('포스트가 성공적으로 출간되었습니다.');
+
 			// Navigate to the published post
 			const userHandle = userStore.user?.handle;
 			if (userHandle) {
@@ -163,7 +166,7 @@
 			}
 		} catch (error) {
 			console.error('출간 실패:', error);
-			alert('출간에 실패했습니다. 다시 시도해주세요.');
+			toast.error('출간에 실패했습니다. 다시 시도해주세요.');
 		} finally {
 			isLoading = false;
 		}

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import { ModeWatcher } from 'mode-watcher';
+	import { Toaster } from '$lib/components/ui/sonner/index.js';
 
 	let { children } = $props();
 </script>
@@ -40,6 +41,7 @@
 </svelte:head>
 
 <ModeWatcher defaultMode="system" />
+<Toaster />
 <div class="dark:bg-mofu-dark-900 font-pretendard bg-mofu-light-100 min-h-screen max-w-screen">
 	<main>
 		{@render children()}

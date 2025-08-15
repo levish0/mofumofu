@@ -10,6 +10,7 @@
 	import { goto } from '$app/navigation';
 	import { deletePost } from '$lib/api/post/postApi';
 	import * as Dialog from '$lib/components/ui/dialog';
+	import { toast } from 'svelte-sonner';
 
 	const { data }: { data: PageData } = $props();
 
@@ -62,13 +63,12 @@
 		try {
 			isDeleting = true;
 			await deletePost({ slug: data.slug });
-			isDeleteModalOpen = false;
+			toast.success('포스트가 성공적으로 삭제되었습니다.');
 			// 삭제 후 사용자 프로필 페이지로 이동
 			goto(`/@${data.author.handle}/profile`);
 		} catch (error) {
 			console.error('Failed to delete post:', error);
-			// TODO: 에러 처리
-			alert('포스트 삭제에 실패했습니다. 다시 시도해주세요.');
+			toast.error('포스트 삭제에 실패했습니다. 다시 시도해주세요.');
 		} finally {
 			isDeleting = false;
 		}
@@ -245,7 +245,7 @@
 
 <!-- 삭제 확인 Dialog -->
 <Dialog.Root bind:open={isDeleteModalOpen}>
-	<Dialog.Content class="p-2 text-black sm:max-w-md dark:bg-gray-800 dark:text-white">
+	<Dialog.Content class="dark:bg-mofu-dark-800 p-2 text-black sm:max-w-md dark:text-white">
 		<div class="rounded-lg px-2 pt-4">
 			<Dialog.Header class="mb-2 p-0">
 				<Dialog.Title class="text-lg font-semibold">포스트 삭제</Dialog.Title>
@@ -268,9 +268,9 @@
 
 <!-- 삭제 중 로딩 오버레이 -->
 {#if isDeleting}
-	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+	<div class="fixed inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm">
 		<div class="flex flex-col items-center space-y-4">
-			<div class="h-12 w-12 animate-spin rounded-full border-4 border-red-500 border-t-transparent"></div>
+			<div class="border-mofu h-12 w-12 animate-spin rounded-full border-4 border-t-transparent"></div>
 			<p class="text-lg font-medium text-white">삭제 중...</p>
 		</div>
 	</div>
