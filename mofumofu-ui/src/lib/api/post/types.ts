@@ -106,6 +106,14 @@ export interface ThumbnailUploadResponse {
 	public_url: string;
 }
 
+export interface ImageUploadRequest {
+	file: File;
+}
+
+export interface PostImageUploadResponse {
+	public_url: string;
+}
+
 export interface UpdatePostRequest {
 	slug: string;
 	title?: string | null;

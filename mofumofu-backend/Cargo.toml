@@ -1,6 +1,6 @@
 [package]
 name = "mofumofu-backend"
-version = "0.4.0"
+version = "0.5.0"
 authors = [
     "Levi Lim <shiueo.csh@gmail.com>",
 ]
@@ -8,7 +8,7 @@ edition = "2024"
 rust-version = "1.86.0"
 
 [dependencies]
-anyhow = "1.0.98"
+anyhow = "1.0.99"
 axum = { version = "0.8.4", features = ["multipart", "macros"] }
 dotenvy = "0.15.7"
 sea-orm = {version = "1.1.11", features = ["sqlx-postgres", "runtime-tokio-native-tls"]}
@@ -23,16 +23,16 @@ utoipa-swagger-ui = { version = "9.0.2", features = ["axum", "debug-embed"]}
 argon2 = "0.5.3"
 jsonwebtoken = "9.3.1"
 chrono = { version = "0.4.41", features = ["serde"] }
-uuid = { version = "1.17.0", features = ["v4"] }
+uuid = { version = "1.18.0", features = ["v4"] }
 cookie = "0.18.1"
 axum-extra = { version = "0.10.1", features = ["typed-header"] }
 serde_json = "1.0.142"
 tracing-appender = "0.2.3"
 oauth2 = { version = "5.0.0", features = ["reqwest"] }
-reqwest = { version = "0.12.22", features = ["json", "multipart"] }
+reqwest = { version = "0.12.23", features = ["json", "multipart"] }
 rand = "0.9.2"
-aws-sdk-s3 = "1.101.0"
-aws-config = { version = "1.8.4", features = ["behavior-version-latest"] }
+aws-sdk-s3 = "1.103.0"
+aws-config = { version = "1.8.5", features = ["behavior-version-latest"] }
 meilisearch-sdk = "0.29.1"
 redis = { version = "0.32.5", features = ["tokio-comp", "tokio-native-tls-comp", "connection-manager"] }
 infer = "0.19.0"

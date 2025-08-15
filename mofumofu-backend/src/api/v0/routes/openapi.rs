@@ -14,11 +14,12 @@ use crate::dto::post::request::delete_post::DeletePostRequest;
 use crate::dto::post::request::get_by_handle_and_slug::GetPostByHandleAndSlugRequest;
 use crate::dto::post::request::get_post_for_edit::GetPostForEditRequest;
 use crate::dto::post::request::update_post::UpdatePostRequest;
+use crate::dto::post::request::image_upload::ImageUploadForm;
 use crate::dto::post::request::thumbnail_image::PostThumbnailForm;
 use crate::dto::post::request::{GetPostsRequest, GetUserPostsRequest, PostSortOrder, SearchPostsRequest};
 use crate::dto::post::response::post_edit_info::PostEditInfoResponse;
 use crate::dto::post::response::post_info::{PostAuthor, PostInfoResponse};
-use crate::dto::post::response::{GetPostsResponse, PostListItem, UserPostsResponse};
+use crate::dto::post::response::{GetPostsResponse, ImageUploadResponse, PostListItem, UserPostsResponse};
 use crate::dto::user::request::avatar_image::ProfileAvatarForm;
 use crate::dto::user::request::banner_image::ProfileBannerForm;
 use crate::dto::user::request::create::CreateUserRequest;
@@ -57,6 +58,7 @@ use utoipa::{
         crate::api::v0::routes::post::get_user_posts::get_user_posts,
         crate::api::v0::routes::post::increment_view::increment_view,
         crate::api::v0::routes::post::search_posts::search_posts,
+        crate::api::v0::routes::post::upload_image::upload_image,
         crate::api::v0::routes::post::upload_thumbnail::upload_thumbnail,
         crate::api::v0::routes::follow::check_follow_status::api_check_follow_status,
         crate::api::v0::routes::follow::create_follow::api_create_follow,
@@ -86,6 +88,7 @@ use utoipa::{
             PostAuthor,
             PostListItem,
             GetPostsResponse,
+            ImageUploadResponse,
             UserPostsResponse,
             CheckFollowStatusRequest,
             CreateFollowRequest,
@@ -99,6 +102,7 @@ use utoipa::{
             HandleCheckResponse,
             UserInfoResponse,
             ErrorResponse,
+            ImageUploadForm,
             ProfileAvatarForm,
             ProfileBannerForm,
             PostThumbnailForm,

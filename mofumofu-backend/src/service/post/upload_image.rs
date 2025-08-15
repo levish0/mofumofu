@@ -1,14 +1,15 @@
-use crate::service::error::errors::Errors;
+use crate::connection::cloudflare_r2::R2Client;
+use crate::service::error::errors::{Errors, ServiceResult};
 use crate::utils::image_validator::{generate_image_hash, validate_and_get_image_info};
 use axum::extract::Multipart;
-use reqwest::Client;
 use tracing::{error, info};
+use uuid::Uuid;
 
 pub async fn service_upload_image(
-    http_client: &Client,
-    user_uuid: &str,
+    r2_client: &R2Client,
+    user_uuid: &Uuid,
     mut multipart: Multipart,
-) -> Result<String, Errors> {
+) -> ServiceResult<String> {
     while let Some(field) = multipart
         .next_field()
         .await
@@ -26,33 +27,28 @@ pub async fn service_upload_image(
             
             // Generate hash-based filename
             let hash = generate_image_hash(&data);
-            let hash_filename = format!("{}.{}", hash, extension);
-            
-            // Send to tasks service
-            let form = reqwest::multipart::Form::new()
-                .text("user_uuid", user_uuid.to_string())
-                .text("filename", hash_filename.clone())
-                .part("file", reqwest::multipart::Part::bytes(data.to_vec()).mime_str(&content_type)
-                    .map_err(|e| Errors::BadRequestError(format!("Invalid MIME type: {}", e)))?);
+            let filename = format!("post_image_{}.{}", hash, extension);
 
-            let response = http_client
-                .post("http://localhost:7000/post/image/upload")
-                .multipart(form)
-                .send()
-                .await
-                .map_err(|e| {
-                    error!("Failed to send request to tasks service: {}", e);
-                    Errors::SysInternalError("Failed to upload image".to_string())
-                })?;
+            info!(
+                "Processing post image upload: user_uuid={}, filename={}, content_type={}, size={} bytes",
+                user_uuid,
+                filename,
+                content_type,
+                data.len()
+            );
 
-            if !response.status().is_success() {
-                error!("Tasks service returned error: {}", response.status());
-                return Err(Errors::SysInternalError("Failed to upload image".to_string()));
+            // Upload to R2
+            let key = format!("post-images/{}", filename);
+            match r2_client.upload_with_content_type(&key, data.to_vec(), &content_type).await {
+                Ok(_) => {
+                    info!("Successfully uploaded post image to R2: {}", filename);
+                    return Ok(filename);
+                }
+                Err(e) => {
+                    error!("Failed to upload post image to R2: {}", e);
+                    return Err(Errors::SysInternalError("Failed to upload image to storage".to_string()));
+                }
             }
-
-            // Return the hash-based filename immediately
-            info!("Image upload queued with filename: {}", hash_filename);
-            return Ok(hash_filename);
         }
     }
 

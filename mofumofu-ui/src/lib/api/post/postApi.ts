@@ -14,7 +14,9 @@ import type {
 	UpdatePostRequest,
 	DeletePostRequest,
 	GetPostForEditRequest,
-	PostEditInfoResponse
+	PostEditInfoResponse,
+	ImageUploadRequest,
+	PostImageUploadResponse
 } from './types';
 
 export async function createPost(postData: CreatePostRequest): Promise<void> {
@@ -127,6 +129,25 @@ export async function getPostForEdit(request: GetPostForEditRequest): Promise<Po
 		return response.json<PostEditInfoResponse>();
 	} catch (error) {
 		console.error('Failed to get post for edit:', error);
+		throw error;
+	}
+}
+
+export async function uploadImage(request: ImageUploadRequest): Promise<PostImageUploadResponse> {
+	try {
+		const formData = new FormData();
+		formData.append('file', request.file);
+
+		const response = await privateApi.post('v0/post/image', {
+			body: formData,
+			headers: {
+				'Content-Type': undefined
+			}
+		});
+
+		return response.json<PostImageUploadResponse>();
+	} catch (error) {
+		console.error('Failed to upload image:', error);
 		throw error;
 	}
 }

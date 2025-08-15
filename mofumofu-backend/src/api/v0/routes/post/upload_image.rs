@@ -36,7 +36,8 @@ pub async fn upload_image(
         claims.sub
     );
 
-    let public_url = service_upload_image(&state.http_client, &claims.sub.to_string(), multipart).await?;
+    let filename = service_upload_image(&state.cloudflare_r2, &claims.sub, multipart).await?;
+    let public_url = state.cloudflare_r2.get_r2_public_url(&format!("post-images/{}", filename));
 
     Ok(ImageUploadResponse { public_url })
 }
