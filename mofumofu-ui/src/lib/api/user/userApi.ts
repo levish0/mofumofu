@@ -2,7 +2,13 @@
 
 import { privateApi } from '../private';
 import { publicApi } from '../public';
-import type { UserInfoResponse, GetUserProfileRequest, UpdateProfileRequest, HandleCheckResponse, ImageUploadResponse } from './types';
+import type {
+	UserInfoResponse,
+	GetUserProfileRequest,
+	UpdateProfileRequest,
+	HandleCheckResponse,
+	ImageUploadResponse
+} from './types';
 
 export async function getMyProfile(): Promise<UserInfoResponse> {
 	try {

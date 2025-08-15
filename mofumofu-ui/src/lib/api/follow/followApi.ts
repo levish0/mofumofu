@@ -1,6 +1,13 @@
 import { privateApi } from '../private';
 import { publicApi } from '../public';
-import type { CreateFollowRequest, DeleteFollowRequest, GetFollowCountRequest, FollowCountResponse, CheckFollowStatusRequest, FollowStatusResponse } from './types';
+import type {
+	CreateFollowRequest,
+	DeleteFollowRequest,
+	GetFollowCountRequest,
+	FollowCountResponse,
+	CheckFollowStatusRequest,
+	FollowStatusResponse
+} from './types';
 
 export async function createFollow(request: CreateFollowRequest) {
 	try {

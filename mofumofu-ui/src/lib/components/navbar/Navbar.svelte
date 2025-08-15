@@ -41,7 +41,7 @@
 
 	const userInfo = $derived(userStore.user);
 	const isLoading = $derived(userStore.isLoading);
-	
+
 	onMount(() => {
 		userStore.loadProfile();
 	});
@@ -144,14 +144,10 @@
 					<button class="flex h-9 items-center space-x-1 rounded-lg" aria-label="profile_menu">
 						<div class="h-9 w-9 overflow-hidden rounded-full">
 							{#if userInfo.profile_image}
-								<img 
-									src={userInfo.profile_image} 
-									alt="{userInfo.handle}의 프로필" 
-									class="h-full w-full object-cover" 
-								/>
+								<img src={userInfo.profile_image} alt="{userInfo.handle}의 프로필" class="h-full w-full object-cover" />
 							{:else}
 								<span
-									class="flex h-full w-full items-center justify-center text-sm font-medium text-black dark:text-white bg-gray-200 dark:bg-gray-700"
+									class="flex h-full w-full items-center justify-center bg-gray-200 text-sm font-medium text-black dark:bg-gray-700 dark:text-white"
 								>
 									{userInfo.handle.charAt(0).toUpperCase()}
 								</span>

@@ -84,11 +84,13 @@
 				<img
 					src={bannerImage}
 					alt="Banner preview"
-					class="h-full w-full object-cover {imageLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-200"
+					class="h-full w-full object-cover {imageLoading
+						? 'opacity-0'
+						: 'opacity-100'} transition-opacity duration-200"
 					onload={handleImageLoad}
 				/>
 			{/if}
-			
+
 			{#if bannerImage}
 				<label
 					for="banner-upload"

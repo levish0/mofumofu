@@ -18,9 +18,9 @@
 		if (!createdAt) return 'Joined August 2017'; // 기본값
 
 		const date = new Date(createdAt);
-		const options: Intl.DateTimeFormatOptions = { 
-			year: 'numeric', 
-			month: 'long' 
+		const options: Intl.DateTimeFormatOptions = {
+			year: 'numeric',
+			month: 'long'
 		};
 		return `Joined ${date.toLocaleDateString('en-US', options)}`;
 	}

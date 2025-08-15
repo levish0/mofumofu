@@ -17,7 +17,7 @@
 
 	let bannerLoaded = $state(false);
 	let profileImageLoaded = $state(false);
-	
+
 	let isFollowing = $state(false);
 	let followLoading = $state(false);
 	let followStatusLoaded = $state(false);
