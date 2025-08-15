@@ -1,5 +1,6 @@
 pub mod get_posts;
 pub mod image_upload;
+pub mod post_edit_info;
 pub mod post_info;
 pub mod thumbnail_upload;
 pub mod user_posts;

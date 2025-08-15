@@ -13,6 +13,7 @@
 		onExit: () => void;
 		onSaveDraft: () => void;
 		onPublished: () => void;
+		isEditMode?: boolean;
 	}
 
 	const {
@@ -24,7 +25,8 @@
 		onContentChange,
 		onExit,
 		onSaveDraft,
-		onPublished
+		onPublished,
+		isEditMode = false
 	}: Props = $props();
 
 	let contentTextarea: HTMLTextAreaElement;
@@ -74,5 +76,5 @@
 	</div>
 
 	<!-- 에디터 영역 하단 버튼들 -->
-	<WriteActions {title} {content} {tags} {onExit} {onSaveDraft} {onPublished} />
+	<WriteActions {title} {content} {tags} {onExit} {onSaveDraft} {onPublished} {isEditMode} />
 </div>

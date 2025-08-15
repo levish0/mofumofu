@@ -1,9 +1,12 @@
 pub mod create_post;
+pub mod delete_post;
 pub mod get_post_by_handle_and_slug;
+pub mod get_post_for_edit;
 pub mod get_posts;
 pub mod get_user_posts;
 pub mod increment_view;
 pub mod routes;
 pub mod search_posts;
+pub mod update_post;
 pub mod upload_image;
 pub mod upload_thumbnail;

@@ -2,8 +2,14 @@
 	import '$lib/styles/markdown.css';
 	import { getContext, onMount } from 'svelte';
 	import type { PageData } from './$types';
-	import { Heart, Icon } from 'svelte-hero-icons';
+	import { Heart, Icon, EllipsisVertical, PencilSquare, Trash } from 'svelte-hero-icons';
 	import { incrementPostView } from '$lib/api/post/postApi';
+	import { userStore } from '$lib/stores/user.svelte';
+	import { fly } from 'svelte/transition';
+	import { Button } from '$lib/components/ui/button';
+	import { goto } from '$app/navigation';
+	import { deletePost } from '$lib/api/post/postApi';
+	import * as Dialog from '$lib/components/ui/dialog';
 
 	const { data }: { data: PageData } = $props();
 
@@ -18,6 +24,59 @@
 
 	const navbar = getContext<NavbarContext>('navbar');
 	const topPosition = $derived(navbar.isVisible() ? '68px' : '8px');
+
+	// 작성자 확인 및 드롭다운 상태
+	const currentUser = $derived(userStore.user);
+	const isAuthor = $derived(currentUser?.handle === data.author.handle);
+	let isDropdownOpen = $state(false);
+	let isDeleteModalOpen = $state(false);
+	let isDeleting = $state(false);
+	let closeTimer: ReturnType<typeof setTimeout> | null = null;
+
+	function openDropdown() {
+		if (closeTimer) {
+			clearTimeout(closeTimer);
+			closeTimer = null;
+		}
+		isDropdownOpen = true;
+	}
+
+	function scheduleClose() {
+		closeTimer = setTimeout(() => {
+			isDropdownOpen = false;
+			closeTimer = null;
+		}, 100);
+	}
+
+	function handleEdit() {
+		isDropdownOpen = false;
+		goto(`/edit/${data.slug}`);
+	}
+
+	function handleDelete() {
+		isDropdownOpen = false;
+		isDeleteModalOpen = true;
+	}
+
+	async function confirmDelete() {
+		try {
+			isDeleting = true;
+			await deletePost({ slug: data.slug });
+			isDeleteModalOpen = false;
+			// 삭제 후 사용자 프로필 페이지로 이동
+			goto(`/@${data.author.handle}/profile`);
+		} catch (error) {
+			console.error('Failed to delete post:', error);
+			// TODO: 에러 처리
+			alert('포스트 삭제에 실패했습니다. 다시 시도해주세요.');
+		} finally {
+			isDeleting = false;
+		}
+	}
+
+	function cancelDelete() {
+		isDeleteModalOpen = false;
+	}
 
 	onMount(() => {
 		incrementPostView({ handle: data.handle, slug: data.slug }).catch((error) => {
@@ -88,21 +147,57 @@
 								</div>
 							</div>
 
-							<div class="flex items-center gap-3">
+							<div class="flex items-center gap-2">
 								<!-- Like Button -->
 								<button
-									class="text-mofu-dark-300 flex items-center gap-2 rounded-full px-4 py-2 transition-colors hover:text-rose-600 dark:hover:text-red-400"
+									class="dark:text-mofu-dark-400 text-mofu-light-800 flex items-center gap-2 rounded-full px-4 py-2 transition-colors hover:text-rose-600 dark:hover:text-rose-500"
 								>
 									<Icon src={Heart} class="h-5 w-5" solid />
 									<span class="text-sm">{data.post.like_count || 0}</span>
 								</button>
 
-								<!-- Follow Button -->
-								<button
-									class="rounded-full bg-green-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-600"
-								>
-									팔로우
-								</button>
+								{#if isAuthor}
+									<!-- Author Options Dropdown -->
+									<div
+										class="relative"
+										role="button"
+										tabindex="0"
+										onmouseenter={openDropdown}
+										onmouseleave={scheduleClose}
+									>
+										<Button variant="ghost" class="dark:text-mofu-dark-400 h-9 w-9 p-2">
+											<Icon src={EllipsisVertical} class="h-5 w-5" />
+										</Button>
+
+										{#if isDropdownOpen}
+											<div
+												class="dark:bg-mofu-dark-800 absolute top-12 right-0 z-50 w-48 rounded-lg bg-white text-sm font-bold shadow-lg"
+												transition:fly={{ y: -8, duration: 150 }}
+												style="transform-origin: top right;"
+											>
+												<div class="py-1">
+													<button
+														class="dark:text-mofu-dark-200 text-mofu-light-800 flex w-full items-center px-4 py-2 hover:opacity-70"
+														onclick={handleEdit}
+													>
+														<Icon src={PencilSquare} solid size="16" class="mr-3" />
+														수정하기
+													</button>
+													<button
+														class="flex w-full items-center px-4 py-2 text-rose-600 hover:opacity-70 dark:text-rose-500"
+														onclick={handleDelete}
+													>
+														<Icon src={Trash} solid size="16" class="mr-3" />
+														삭제하기
+													</button>
+												</div>
+											</div>
+										{/if}
+									</div>
+								{:else}
+									<!-- Follow Button -->
+									<Button variant="outline" class="px-4 py-2">팔로우</Button>
+								{/if}
 							</div>
 						</div>
 
@@ -147,3 +242,36 @@
 		</div>
 	</div>
 </div>
+
+<!-- 삭제 확인 Dialog -->
+<Dialog.Root bind:open={isDeleteModalOpen}>
+	<Dialog.Content class="p-2 text-black sm:max-w-md dark:bg-gray-800 dark:text-white">
+		<div class="rounded-lg px-2 pt-4">
+			<Dialog.Header class="mb-2 p-0">
+				<Dialog.Title class="text-lg font-semibold">포스트 삭제</Dialog.Title>
+				<Dialog.Description class="text-gray-600 dark:text-gray-300">
+					이 포스트를 정말 삭제하시겠습니까?<br />
+					삭제된 포스트는 복구할 수 없습니다.
+				</Dialog.Description>
+			</Dialog.Header>
+		</div>
+
+		<!-- 버튼 영역 -->
+		<div class="flex justify-end gap-3 rounded-b-lg px-2 py-2">
+			<Button variant="ghost" onclick={cancelDelete} disabled={isDeleting}>취소</Button>
+			<Button variant="destructive" onclick={confirmDelete} disabled={isDeleting}>
+				{isDeleting ? '삭제 중...' : '삭제하기'}
+			</Button>
+		</div>
+	</Dialog.Content>
+</Dialog.Root>
+
+<!-- 삭제 중 로딩 오버레이 -->
+{#if isDeleting}
+	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+		<div class="flex flex-col items-center space-y-4">
+			<div class="h-12 w-12 animate-spin rounded-full border-4 border-red-500 border-t-transparent"></div>
+			<p class="text-lg font-medium text-white">삭제 중...</p>
+		</div>
+	</div>
+{/if}

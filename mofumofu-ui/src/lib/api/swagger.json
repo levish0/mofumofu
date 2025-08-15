@@ -268,6 +268,21 @@
 			}
 		},
 		"/v0/post": {
+			"put": {
+				"tags": ["Post"],
+				"operationId": "update_post",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdatePostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"204": { "description": "Post updated successfully" },
+					"400": { "description": "Invalid input" },
+					"404": { "description": "Post not found" },
+					"500": { "description": "Internal Server Error" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			},
 			"post": {
 				"tags": ["Post"],
 				"operationId": "create_post",
@@ -278,6 +293,41 @@
 				"responses": {
 					"204": { "description": "Post created successfully" },
 					"400": { "description": "Invalid input" },
+					"500": { "description": "Internal Server Error" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			},
+			"delete": {
+				"tags": ["Post"],
+				"operationId": "delete_post",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/DeletePostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"204": { "description": "Post deleted successfully" },
+					"400": { "description": "Invalid input" },
+					"404": { "description": "Post not found" },
+					"500": { "description": "Internal Server Error" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/post/edit": {
+			"post": {
+				"tags": ["Post"],
+				"operationId": "get_post_for_edit",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetPostForEditRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Post retrieved for editing successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/PostEditInfoResponse" } } }
+					},
+					"400": { "description": "Invalid input" },
+					"404": { "description": "Post not found" },
 					"500": { "description": "Internal Server Error" }
 				},
 				"security": [{ "bearer_auth": [] }]
@@ -602,6 +652,7 @@
 				"required": ["followee_handle"],
 				"properties": { "followee_handle": { "type": "string" } }
 			},
+			"DeletePostRequest": { "type": "object", "required": ["slug"], "properties": { "slug": { "type": "string" } } },
 			"ErrorResponse": {
 				"type": "object",
 				"required": ["status", "code"],
@@ -641,6 +692,11 @@
 				"type": "object",
 				"required": ["handle", "slug"],
 				"properties": { "handle": { "type": "string" }, "slug": { "type": "string" } }
+			},
+			"GetPostForEditRequest": {
+				"type": "object",
+				"required": ["slug"],
+				"properties": { "slug": { "type": "string" } }
 			},
 			"GetPostsRequest": {
 				"type": "object",
@@ -698,6 +754,19 @@
 					"handle": { "type": "string" },
 					"name": { "type": "string" },
 					"profile_image": { "type": ["string", "null"] }
+				}
+			},
+			"PostEditInfoResponse": {
+				"type": "object",
+				"required": ["title", "content", "created_at", "slug", "tags"],
+				"properties": {
+					"content": { "type": "string" },
+					"created_at": { "type": "string", "format": "date-time" },
+					"slug": { "type": "string" },
+					"summary": { "type": ["string", "null"] },
+					"tags": { "type": "array", "items": { "type": "string" } },
+					"title": { "type": "string" },
+					"updated_at": { "type": ["string", "null"], "format": "date-time" }
 				}
 			},
 			"PostInfoResponse": {
@@ -826,6 +895,18 @@
 				"type": "object",
 				"required": ["hashtags"],
 				"properties": { "hashtags": { "type": "array", "items": { "type": "string" } } }
+			},
+			"UpdatePostRequest": {
+				"type": "object",
+				"required": ["slug"],
+				"properties": {
+					"content": { "type": ["string", "null"] },
+					"hashtags": { "type": ["array", "null"], "items": { "type": "string" } },
+					"new_slug": { "type": ["string", "null"] },
+					"slug": { "type": "string" },
+					"summary": { "type": ["string", "null"] },
+					"title": { "type": ["string", "null"] }
+				}
 			},
 			"UpdateProfileRequest": {
 				"type": "object",

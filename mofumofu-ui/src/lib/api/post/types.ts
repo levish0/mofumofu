@@ -105,3 +105,30 @@ export interface ThumbnailUploadRequest {
 export interface ThumbnailUploadResponse {
 	public_url: string;
 }
+
+export interface UpdatePostRequest {
+	slug: string;
+	title?: string | null;
+	content?: string | null;
+	summary?: string | null;
+	hashtags?: string[] | null;
+	new_slug?: string | null;
+}
+
+export interface DeletePostRequest {
+	slug: string;
+}
+
+export interface GetPostForEditRequest {
+	slug: string;
+}
+
+export interface PostEditInfoResponse {
+	title: string;
+	content: string;
+	created_at: string;
+	slug: string;
+	tags: string[];
+	summary?: string | null;
+	updated_at?: string | null;
+}

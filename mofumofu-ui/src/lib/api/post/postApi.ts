@@ -10,7 +10,11 @@ import type {
 	GetPostsResponse,
 	ThumbnailUploadRequest,
 	GetUserPostsRequest,
-	UserPostsResponse
+	UserPostsResponse,
+	UpdatePostRequest,
+	DeletePostRequest,
+	GetPostForEditRequest,
+	PostEditInfoResponse
 } from './types';
 
 export async function createPost(postData: CreatePostRequest): Promise<void> {
@@ -95,6 +99,34 @@ export async function getUserPosts(request: GetUserPostsRequest): Promise<UserPo
 		return response.json<UserPostsResponse>();
 	} catch (error) {
 		console.error('Failed to get user posts:', error);
+		throw error;
+	}
+}
+
+export async function updatePost(request: UpdatePostRequest): Promise<void> {
+	try {
+		await privateApi.put('v0/post', { json: request });
+	} catch (error) {
+		console.error('Failed to update post:', error);
+		throw error;
+	}
+}
+
+export async function deletePost(request: DeletePostRequest): Promise<void> {
+	try {
+		await privateApi.delete('v0/post', { json: request });
+	} catch (error) {
+		console.error('Failed to delete post:', error);
+		throw error;
+	}
+}
+
+export async function getPostForEdit(request: GetPostForEditRequest): Promise<PostEditInfoResponse> {
+	try {
+		const response = await privateApi.post('v0/post/edit', { json: request });
+		return response.json<PostEditInfoResponse>();
+	} catch (error) {
+		console.error('Failed to get post for edit:', error);
 		throw error;
 	}
 }

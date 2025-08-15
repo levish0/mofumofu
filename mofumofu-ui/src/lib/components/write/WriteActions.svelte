@@ -11,9 +11,10 @@
 		onExit: () => void;
 		onSaveDraft: () => void;
 		onPublished: () => void;
+		isEditMode?: boolean;
 	}
 
-	const { title, content, tags, onExit, onSaveDraft, onPublished }: Props = $props();
+	const { title, content, tags, onExit, onSaveDraft, onPublished, isEditMode = false }: Props = $props();
 </script>
 
 <div class="bg-mofu-dark-950 p-4">
@@ -36,7 +37,19 @@
 				<Icon src={ClipboardDocumentList} class="h-5 w-5" solid />
 				임시저장
 			</Button>
-			<PublishDialog {title} {content} {tags} {onPublished} />
+			
+			{#if isEditMode}
+				<Button
+					onclick={onPublished}
+					variant="ghost"
+					class="dark:text-mofu-dark-950 dark:hover:bg-mofu bg-mofu flex items-center gap-2 rounded px-4 py-2 text-lg"
+				>
+					<Icon src={PaperAirplane} class="h-5 w-5" solid />
+					수정하기
+				</Button>
+			{:else}
+				<PublishDialog {title} {content} {tags} {onPublished} />
+			{/if}
 		</div>
 	</div>
 </div>
