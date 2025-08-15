@@ -4,6 +4,7 @@
 	import WriteEditor from '$lib/components/write/WriteEditor.svelte';
 	import WritePreview from '$lib/components/write/WritePreview.svelte';
 	import { processMarkdown } from '$lib/utils/markdown';
+	import * as m from '../../paraglide/messages';
 
 	let title = $state('');
 	let tags = $state('');
@@ -55,20 +56,20 @@
 </script>
 
 <svelte:head>
-	<title>글 작성 - Mofu</title>
-	<meta name="description" content="Mofu에서 새로운 글을 작성하고 다른 사람들과 공유하세요." />
+	<title>{m.write_page_title()}</title>
+	<meta name="description" content={m.write_page_description()} />
 	<meta name="robots" content="noindex, nofollow" />
 
 	<!-- Open Graph -->
-	<meta property="og:title" content="글 작성 - Mofu" />
-	<meta property="og:description" content="Mofu에서 새로운 글을 작성하고 다른 사람들과 공유하세요." />
+	<meta property="og:title" content={m.write_page_title()} />
+	<meta property="og:description" content={m.write_page_description()} />
 	<meta property="og:type" content="website" />
 	<meta property="og:site_name" content="Mofu" />
 
 	<!-- Twitter Card -->
 	<meta name="twitter:card" content="summary" />
-	<meta name="twitter:title" content="글 작성 - Mofu" />
-	<meta name="twitter:description" content="Mofu에서 새로운 글을 작성하고 다른 사람들과 공유하세요." />
+	<meta name="twitter:title" content={m.write_page_title()} />
+	<meta name="twitter:description" content={m.write_page_description()} />
 </svelte:head>
 
 <div class="bg-mofu-dark-900 flex h-full w-full break-all text-white">
@@ -92,7 +93,7 @@
 		<!-- Resizer (드래그 핸들) -->
 		<button
 			type="button"
-			aria-label="크기 조정"
+			aria-label={m.write_resize_handle()}
 			class="bg-mofu-dark-700 w-1 flex-shrink-0 cursor-col-resize p-0 transition-colors"
 			onmousedown={resizableHook?.handleMouseDown}
 			class:bg-gray-400={resizableHook?.isDragging()}

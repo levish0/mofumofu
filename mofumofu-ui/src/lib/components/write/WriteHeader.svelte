@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Badge } from '../ui/badge';
+	import * as m from '../../../paraglide/messages';
 
 	interface Props {
 		title: string;
@@ -47,7 +48,7 @@
 
 			// 8개 제한 체크
 			if (currentTags.size >= 8) {
-				alert('태그는 최대 8개까지 추가할 수 있습니다.');
+				alert('태그는 최대 8개까지 추가할 수 있습니다.'); // TODO: 이것도 i18n 필요
 				return;
 			}
 
@@ -79,7 +80,7 @@
 			<input
 				value={title}
 				oninput={(e) => onTitleChange((e.target as HTMLInputElement).value)}
-				placeholder="제목을 입력하세요"
+				placeholder={m.write_title_placeholder()}
 				class="placeholder:text-mofu-dark-600 text-mofu-dark-200 h-auto w-full border-none bg-transparent p-0 text-4xl font-bold outline-none {titleOverLimit
 					? 'text-red-400'
 					: ''}"
@@ -111,7 +112,7 @@
 				<input
 					bind:value={currentInput}
 					onkeydown={handleTagKeyPress}
-					placeholder="태그를 입력하세요"
+					placeholder={m.write_tags_placeholder()}
 					class="placeholder:text-mofu-dark-600 text-mofu-dark-200 min-w-[120px] flex-1 border-none bg-transparent p-0 outline-none"
 				/>
 			{/if}

@@ -3,6 +3,7 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import * as v from 'valibot';
 	import { createPostSchema } from '$lib/schemas/post';
+	import * as m from '../../../../paraglide/messages';
 
 	interface Props {
 		value: string;
@@ -76,7 +77,7 @@
 </script>
 
 <div>
-	<label for="tags" class="text-mofu-dark-100 mb-2 block text-sm font-medium">태그</label>
+	<label for="tags" class="text-mofu-dark-100 mb-2 block text-sm font-medium">{m.publish_tags_label()}</label>
 	<div class="space-y-2">
 		<!-- 기존 태그들 표시 -->
 		{#if tagArray.length > 0}
@@ -99,7 +100,7 @@
 				<Input
 					bind:value={currentTagInput}
 					onkeydown={handleTagKeyPress}
-					placeholder="태그를 입력하고 Enter 또는 쉼표를 누르세요"
+					placeholder={m.publish_tags_placeholder()}
 					class="dark:bg-mofu-dark-700 border-mofu-dark-600 placeholder:text-mofu-dark-400 pr-12 text-white"
 				/>
 				<div

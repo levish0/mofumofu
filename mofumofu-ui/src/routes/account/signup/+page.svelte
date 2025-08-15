@@ -97,7 +97,7 @@
 								type="email"
 								name="email"
 								required
-								placeholder="email@mofu.com"
+								placeholder={m.auth_email_placeholder()}
 								value={email}
 								oninput={handleEmailInput}
 								autocomplete="email"
@@ -115,7 +115,7 @@
 					</div>
 
 					<div>
-						<label for="handle" class="block text-sm/6 font-medium">핸들</label>
+						<label for="handle" class="block text-sm/6 font-medium">{m.settings_handle()}</label>
 						<div class="mt-2 space-y-2">
 							<div class="relative flex">
 								<span class="bg-mofu-dark-800 inline-flex items-center rounded-l-lg border-r-0 px-3 text-sm">@</span>
@@ -125,7 +125,7 @@
 										type="text"
 										name="handle"
 										required
-										placeholder="mofumofu"
+										placeholder={m.settings_handle_placeholder()}
 										value={handle}
 										oninput={handleHandleInput}
 										class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-l-none rounded-r-none border-r-0 px-3 py-1.5 pr-12 text-base outline-none sm:text-sm/6 {handleValidationError
@@ -152,7 +152,7 @@
 											></path>
 										</svg>
 									{:else}
-										확인
+										{m.settings_handle_check()}
 									{/if}
 								</button>
 							</div>
@@ -165,17 +165,17 @@
 							{:else if handleVerificationState === 'verified'}
 								<p class="flex items-center gap-1 text-xs text-green-400">
 									<Icon src={CheckCircle} size="14" />
-									사용 가능한 핸들입니다
+									{m.settings_handle_available()}
 								</p>
 							{:else if handleVerificationState === 'unavailable'}
 								<p class="flex items-center gap-1 text-xs text-rose-400">
 									<Icon src={ExclamationTriangle} size="14" />
-									이미 사용중인 핸들입니다
+									{m.settings_handle_taken()}
 								</p>
 							{:else if handle.trim() !== ''}
-								<p class="text-xs text-orange-400">핸들 중복 확인이 필요합니다</p>
+								<p class="text-xs text-orange-400">{m.settings_handle_verification_required()}</p>
 							{:else}
-								<p class="text-mofu-dark-400 text-xs">3-20자의 영문, 숫자, 언더스코어만 사용 가능합니다</p>
+								<p class="text-mofu-dark-400 text-xs">{m.settings_handle_description()}</p>
 							{/if}
 						</div>
 					</div>
@@ -187,7 +187,7 @@
 								id="password"
 								type="password"
 								name="password"
-								placeholder="p4ssw@rd!"
+								placeholder={m.auth_password_placeholder()}
 								value={password}
 								oninput={handlePasswordInput}
 								required
@@ -202,7 +202,7 @@
 									{passwordValidationError}
 								</p>
 							{:else}
-								<p class="text-mofu-dark-400 text-xs">8자 이상, 대소문자, 숫자, 특수문자를 포함해주세요</p>
+								<p class="text-mofu-dark-400 text-xs">{m.auth_password_requirements()}</p>
 							{/if}
 						</div>
 					</div>

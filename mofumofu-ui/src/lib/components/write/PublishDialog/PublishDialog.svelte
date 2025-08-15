@@ -16,6 +16,7 @@
 	import SummaryInput from './SummaryInput.svelte';
 	import ThumbnailUpload from './ThumbnailUpload.svelte';
 	import { ArrowLeft } from '@lucide/svelte';
+	import * as m from '../../../../paraglide/messages';
 
 	interface Props {
 		title: string;
@@ -157,7 +158,7 @@
 			isOpen = false;
 			onPublished?.();
 
-			toast.success('포스트가 성공적으로 출간되었습니다.');
+			toast.success(m.publish_success_message());
 
 			// Navigate to the published post
 			const userHandle = userStore.user?.handle;
@@ -165,11 +166,11 @@
 				const redirectUrl = `/@${userHandle}/post/${publishData.slug.trim()}`;
 				await goto(redirectUrl);
 			} else {
-				toast.error('사용자 정보를 찾을 수 없습니다. 페이지를 새로고침해주세요.');
+				toast.error(m.publish_user_info_error());
 			}
 		} catch (error) {
 			console.error('출간 실패:', error);
-			toast.error('출간에 실패했습니다. 다시 시도해주세요.');
+			toast.error(m.publish_error_message());
 		} finally {
 			isLoading = false;
 		}
@@ -185,7 +186,7 @@
 	class="dark:text-mofu-dark-950 dark:hover:bg-mofu bg-mofu flex items-center gap-2 rounded px-4 py-2 text-lg"
 >
 	<Icon src={PaperAirplane} class="h-5 w-5" solid />
-	출간하기
+	{m.publish_button()}
 </Button>
 
 <Dialog.Root bind:open={isOpen}>
@@ -193,8 +194,8 @@
 		<!-- Dialog main content with rounded-b-none -->
 		<div class="rounded-t-lg rounded-b-none px-2 pt-4">
 			<Dialog.Header class="mb-2 p-0">
-				<Dialog.Title>포스트 출간</Dialog.Title>
-				<Dialog.Description class="text-mofu-dark-300">포스트 정보를 확인하고 수정한 후 출간하세요.</Dialog.Description>
+				<Dialog.Title>{m.publish_dialog_title()}</Dialog.Title>
+				<Dialog.Description class="text-mofu-dark-300">{m.publish_dialog_description()}</Dialog.Description>
 			</Dialog.Header>
 
 			<div class="hide-scrollbar max-h-[64vh] space-y-4 overflow-y-auto">
@@ -233,7 +234,7 @@
 				class="dark:text-mofu-dark-200 text-md flex items-center gap-2 rounded px-4 py-2"
 			>
 				<ArrowLeft class="h-5 w-5" />
-				취소
+				{m.common_cancel()}
 			</Button>
 			<Button
 				onclick={handlePublish}
@@ -242,7 +243,7 @@
 				class="dark:text-mofu-dark-950 dark:hover:bg-mofu bg-mofu text-md flex items-center gap-2 rounded px-4 py-2"
 			>
 				<Icon src={PaperAirplane} class="h-5 w-5" solid />
-				{isLoading ? '출간 중...' : '출간하기'}
+				{isLoading ? m.publish_loading() : m.publish_button()}
 			</Button>
 		</div>
 	</Dialog.Content>
@@ -255,7 +256,7 @@
 			<!-- 스피너 -->
 			<div class="border-mofu h-12 w-12 animate-spin rounded-full border-4 border-t-transparent"></div>
 			<!-- 로딩 텍스트 -->
-			<p class="text-lg font-medium text-white">출간 중...</p>
+			<p class="text-lg font-medium text-white">{m.publish_loading_overlay()}</p>
 		</div>
 	</div>
 {/if}

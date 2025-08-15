@@ -2,6 +2,7 @@
 	import { Textarea } from '$lib/components/ui/textarea';
 	import * as v from 'valibot';
 	import { createPostSchema } from '$lib/schemas/post';
+	import * as m from '../../../../paraglide/messages';
 
 	interface Props {
 		value: string;
@@ -45,7 +46,7 @@
 </script>
 
 <div>
-	<label for="summary" class="text-mofu-dark-100 mb-2 block text-sm font-medium">요약 (선택사항)</label>
+	<label for="summary" class="text-mofu-dark-100 mb-2 block text-sm font-medium">{m.publish_summary_label()}</label>
 	<div class="relative">
 		<Textarea
 			id="summary"

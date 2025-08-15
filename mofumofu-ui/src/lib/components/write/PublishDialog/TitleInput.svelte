@@ -2,6 +2,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import * as v from 'valibot';
 	import { createPostSchema } from '$lib/schemas/post';
+	import * as m from '../../../../paraglide/messages';
 
 	interface Props {
 		value: string;
@@ -46,13 +47,13 @@
 </script>
 
 <div>
-	<label for="title" class="text-mofu-dark-100 mb-2 block text-sm font-medium">제목</label>
+	<label for="title" class="text-mofu-dark-100 mb-2 block text-sm font-medium">{m.publish_title_label()}</label>
 	<div class="relative">
 		<Input
 			id="title"
 			{value}
 			oninput={handleInput}
-			placeholder="포스트 제목을 입력하세요"
+			placeholder={m.publish_title_placeholder()}
 			class="dark:bg-mofu-dark-700 border-mofu-dark-600 placeholder:text-mofu-dark-400 pr-12 text-white {validationError
 				? 'border-red-500'
 				: ''}"

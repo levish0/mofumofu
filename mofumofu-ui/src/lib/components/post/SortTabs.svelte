@@ -2,6 +2,7 @@
 	import { postsStore } from '$lib/stores/posts.svelte';
 	import { cn } from '$lib/utils';
 	import { ArrowTrendingUp, Clock, Icon } from 'svelte-hero-icons';
+	import * as m from '../../../paraglide/messages';
 
 	interface Props {
 		onSortChange?: (sortBy: string, timeRange?: string) => void;
@@ -16,11 +17,11 @@
 	const showTimeRange = $derived(currentSort === 'popular');
 
 	const timeRangeOptions = [
-		{ value: 'all', label: '전체 기간' },
-		{ value: 'today', label: '오늘' },
-		{ value: 'week', label: '이번 주' },
-		{ value: 'month', label: '이번 달' },
-		{ value: 'year', label: '올해' }
+		{ value: 'all', label: m.time_range_all() },
+		{ value: 'today', label: m.time_range_today() },
+		{ value: 'week', label: m.time_range_week() },
+		{ value: 'month', label: m.time_range_month() },
+		{ value: 'year', label: m.time_range_year() }
 	];
 
 	const handleSortClick = (sortBy: string) => {
@@ -53,7 +54,7 @@
 				onclick={() => handleSortClick('popular')}
 			>
 				<Icon src={ArrowTrendingUp} class="h-5 w-5" solid />
-				트렌딩
+				{m.post_sort_trending()}
 			</button>
 
 			<button
@@ -63,7 +64,7 @@
 				onclick={() => handleSortClick('recent')}
 			>
 				<Icon src={Clock} class="h-5 w-5" solid />
-				최신
+				{m.post_sort_recent()}
 			</button>
 		</div>
 

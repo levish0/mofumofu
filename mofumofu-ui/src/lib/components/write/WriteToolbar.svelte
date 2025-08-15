@@ -19,7 +19,7 @@
 	import { uploadImage } from '$lib/api/post/postApi';
 	import { toast } from 'svelte-sonner';
 	import { compressImage } from '$lib/utils/imageCompress';
-
+	import * as m from '../../../paraglide/messages';
 	interface Props {
 		onInsertText: (before: string, after?: string) => void;
 		showStickyToolbar: boolean;
@@ -38,7 +38,7 @@
 			if (!file) return;
 
 			try {
-				toast.loading('이미지 압축 및 업로드 중...');
+				toast.loading(m.write_image_uploading());
 
 				// 이미지 압축 (원본 크기 유지)
 				const { blob, cleanup } = await compressImage(file, {
@@ -56,13 +56,13 @@
 				cleanup();
 
 				toast.dismiss();
-				toast.success('이미지 업로드 완료!');
+				toast.success(m.write_image_upload_success());
 
 				const markdownImage = `![${file.name}](${response.public_url})`;
 				onInsertText(markdownImage);
 			} catch (error) {
 				toast.dismiss();
-				toast.error('이미지 업로드 실패');
+				toast.error(m.write_image_upload_error());
 				console.error('Image upload failed:', error);
 			}
 		};
@@ -109,7 +109,7 @@
 				variant="ghost"
 				onclick={() => onInsertText('**', '**')}
 				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2 "
-				title="굵게"
+				title={m.write_toolbar_bold()}
 			>
 				<Bold class="h-5 w-5" />
 			</Button>
@@ -117,7 +117,7 @@
 				variant="ghost"
 				onclick={() => onInsertText('*', '*')}
 				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
-				title="기울임"
+				title={m.write_toolbar_italic()}
 			>
 				<Italic class="h-5 w-5" />
 			</Button>
@@ -125,7 +125,7 @@
 				variant="ghost"
 				onclick={() => onInsertText('~~', '~~')}
 				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
-				title="취소선"
+				title={m.write_toolbar_strikethrough()}
 			>
 				<Strikethrough class="h-5 w-5" />
 			</Button>
@@ -136,7 +136,7 @@
 				variant="ghost"
 				onclick={() => onInsertText('> ')}
 				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
-				title="인용"
+				title={m.write_toolbar_quote()}
 			>
 				<Quote class="h-5 w-5" />
 			</Button>
@@ -144,7 +144,7 @@
 				variant="ghost"
 				onclick={() => onInsertText('[', '](url)')}
 				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
-				title="링크"
+				title={m.write_toolbar_link()}
 			>
 				<Link class="h-5 w-5" />
 			</Button>
@@ -152,7 +152,7 @@
 				variant="ghost"
 				onclick={handleImageUpload}
 				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
-				title="이미지 업로드"
+				title={m.write_toolbar_image_upload()}
 			>
 				<Image class="h-5 w-5" />
 			</Button>
@@ -160,7 +160,7 @@
 				variant="ghost"
 				onclick={() => onInsertText('$$\n', '\n$$')}
 				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
-				title="수식"
+				title={m.write_toolbar_math()}
 			>
 				<Sigma class="h-5 w-5" />
 			</Button>
@@ -168,7 +168,7 @@
 				variant="ghost"
 				onclick={() => onInsertText('```', '\n```')}
 				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
-				title="코드"
+				title={m.write_toolbar_code()}
 			>
 				<Code class="h-5 w-5" />
 			</Button>
@@ -179,7 +179,7 @@
 			variant="ghost"
 			onclick={onToggleHeader}
 			class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
-			title={showStickyToolbar ? '헤더 보이기' : '헤더 숨기기'}
+			title={showStickyToolbar ? m.write_toolbar_show_header() : m.write_toolbar_hide_header()}
 		>
 			{#if showStickyToolbar}
 				<ChevronDown class="h-5 w-5" />

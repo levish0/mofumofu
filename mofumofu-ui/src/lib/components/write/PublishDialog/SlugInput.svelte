@@ -3,6 +3,7 @@
 	import * as v from 'valibot';
 	import { createPostSchema } from '$lib/schemas/post';
 	import { userStore } from '$lib/stores/user.svelte';
+	import * as m from '../../../../paraglide/messages';
 
 	interface Props {
 		value: string;
@@ -61,13 +62,13 @@
 </script>
 
 <div>
-	<label for="slug" class="text-mofu-dark-100 mb-2 block text-sm font-medium">슬러그</label>
+	<label for="slug" class="text-mofu-dark-100 mb-2 block text-sm font-medium">{m.publish_slug_label()}</label>
 	<div class="relative">
 		<Input
 			id="slug"
 			{value}
 			oninput={handleInput}
-			placeholder="URL에 사용될 슬러그"
+			placeholder={m.publish_slug_placeholder()}
 			class="dark:bg-mofu-dark-700 border-mofu-dark-600 placeholder:text-mofu-dark-400 pr-12 text-white {validationError
 				? 'border-red-500'
 				: ''}"

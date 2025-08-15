@@ -2,6 +2,7 @@
 	import WriteHeader from './WriteHeader.svelte';
 	import WriteToolbar from './WriteToolbar.svelte';
 	import WriteActions from './WriteActions.svelte';
+	import * as m from '../../../paraglide/messages';
 
 	interface Props {
 		title: string;
@@ -69,7 +70,7 @@
 			bind:this={contentTextarea}
 			value={content}
 			oninput={(e) => onContentChange((e.target as HTMLInputElement).value)}
-			placeholder="It's a beautiful day outside. Birds are singing, flowers are blooming..."
+			placeholder={m.write_editor_placeholder()}
 			class="placeholder:text-mofu-dark-600 w-full flex-1 resize-none border-none bg-transparent px-6 py-0 text-lg leading-relaxed outline-none"
 			spellcheck="false"
 		></textarea>

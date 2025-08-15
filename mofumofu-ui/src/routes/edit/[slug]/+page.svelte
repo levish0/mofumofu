@@ -9,6 +9,7 @@
 	import { goto } from '$app/navigation';
 	import { toast } from 'svelte-sonner';
 	import type { PageData } from './$types';
+	import * as m from '../../../paraglide/messages';
 
 	const { data }: { data: PageData } = $props();
 
@@ -69,7 +70,7 @@
 				summary: data.post.summary || null
 			});
 
-			toast.success('포스트가 성공적으로 수정되었습니다.');
+			toast.success(m.edit_success_message());
 
 			// 수정 완료 후 포스트 페이지로 이동 - 현재 사용자 핸들 필요
 			if (currentUser) {
@@ -77,7 +78,7 @@
 			}
 		} catch (error) {
 			console.error('Failed to update post:', error);
-			toast.error('포스트 수정에 실패했습니다. 다시 시도해주세요.');
+			toast.error(m.edit_error_message());
 		}
 	}
 
@@ -92,8 +93,8 @@
 </script>
 
 <svelte:head>
-	<title>글 수정 - {data.post.title} - Mofumofu</title>
-	<meta name="description" content="포스트를 수정합니다." />
+	<title>{m.edit_page_title({ title: data.post.title })}</title>
+	<meta name="description" content={m.edit_page_description()} />
 	<meta name="robots" content="noindex, nofollow" />
 
 	<!-- Open Graph -->

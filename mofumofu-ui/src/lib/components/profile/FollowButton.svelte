@@ -78,7 +78,7 @@
 		{:else if !authStore.isAuthenticated}
 			{m.profile_sign_in_to_follow()}
 		{:else if isFollowing}
-			Unfollow
+			{m.profile_unfollow()}
 		{:else}
 			{m.profile_follow()}
 		{/if}
