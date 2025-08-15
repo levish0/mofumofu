@@ -10,6 +10,7 @@
 	import { oauthHandleStore } from '$lib/stores/oauthHandle.svelte';
 	import { ApiError } from '$lib/api/error/common_error';
 	import { ExclamationTriangle, CheckCircle, Icon } from 'svelte-hero-icons';
+	import * as m from '../../../../paraglide/messages';
 
 	let handle = $state('');
 	let validationError = $state<string | undefined>();
@@ -88,7 +89,7 @@
 					</svg>
 				</div>
 			</div>
-			<h1 class="text-3xl font-bold">GitHub 계정으로 가입</h1>
+			<h1 class="text-3xl font-bold">{m.oauth_signup_github_title()}</h1>
 			<p class="text-mofu-dark-300 mt-2">사용할 핸들을 입력해주세요</p>
 		</div>
 
