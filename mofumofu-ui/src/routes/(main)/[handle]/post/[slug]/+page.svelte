@@ -11,6 +11,8 @@
 	import { deletePost } from '$lib/api/post/postApi';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { toast } from 'svelte-sonner';
+	import FollowButton from '$lib/components/profile/FollowButton.svelte';
+	import { Badge } from '$lib/components/ui/badge';
 
 	const { data }: { data: PageData } = $props();
 
@@ -116,14 +118,17 @@
 			<div class="min-w-0 flex-1">
 				<article class="rounded-lg">
 					<!-- Post Header -->
-					<header class=" mb-8">
+					<header>
 						<h1 class="dark:text-mofu-200 mb-4 text-4xl font-bold break-all">
 							{data.post.title}
 						</h1>
 
 						<!-- Author Info -->
 						<div class="mb-4 flex items-center justify-between">
-							<div class="flex items-center gap-4">
+							<a
+								href="/@{data.author.handle}/profile"
+								class="flex items-center gap-4 transition-opacity hover:opacity-80"
+							>
 								{#if data.author.profile_image}
 									<img
 										src={data.author.profile_image}
@@ -145,7 +150,7 @@
 										{data.post.created_at}
 									</p>
 								</div>
-							</div>
+							</a>
 
 							<div class="flex items-center gap-2">
 								<!-- Like Button -->
@@ -196,19 +201,17 @@
 									</div>
 								{:else}
 									<!-- Follow Button -->
-									<Button variant="outline" class="px-4 py-2">팔로우</Button>
+									<FollowButton handle={data.author.handle} />
 								{/if}
 							</div>
 						</div>
 
 						<!-- Tags -->
-						<div class="mb-4 flex flex-wrap gap-2">
+						<div class="flex flex-wrap gap-2">
 							{#each data.post.tags as tag}
-								<span
-									class="rounded-full border border-green-200 bg-green-100 px-3 py-1 text-sm text-green-800 dark:border-green-800 dark:bg-green-900/20 dark:text-green-300"
-								>
-									{tag}
-								</span>
+								<Badge class="bg-mofu/10 text-mofu rounded-full px-2 py-1 text-xs font-medium">
+									#{tag}
+								</Badge>
 							{/each}
 						</div>
 					</header>

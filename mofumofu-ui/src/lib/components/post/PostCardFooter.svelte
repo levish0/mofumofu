@@ -4,12 +4,14 @@
 	const {
 		author_name = '',
 		author_avatar = '',
+		author_handle = '',
 		likes = 0,
 		views = 0,
 		isSkeleton = false
 	}: {
 		author_name: string;
 		author_avatar: string;
+		author_handle: string;
 		likes: number;
 		views: number;
 		isSkeleton?: boolean;
@@ -27,13 +29,17 @@
 			<div class="shimmer h-3 w-6 rounded"></div>
 		</div>
 	{:else}
-		<div class="flex items-center gap-1.5">
+		<a 
+			href="/@{author_handle}/profile"
+			class="flex items-center gap-1.5 hover:opacity-80 transition-opacity"
+			onclick={(e) => e.stopPropagation()}
+		>
 			<img src={author_avatar} alt={author_name} class="h-6 w-6 rounded-full object-cover" />
 			<div class="gap-1">
 				<span class="dark:text-mofu-dark-300 truncate text-xs">by</span>
 				<span class="text-xs font-semibold">{author_name}</span>
 			</div>
-		</div>
+		</a>
 		<div class="dark:text-mofu-dark-200 flex items-center gap-3 text-xs">
 			<div class="flex items-center gap-1">
 				<Icon src={Eye} solid size="16" class="text-mofu-dark-200" />

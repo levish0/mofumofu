@@ -13,6 +13,8 @@ mod m20250719_031841_follows;
 mod m20250811_004451_action_types;
 mod m20250811_004808_system_events;
 mod m20250811_004802_target_types;
+mod m20250815_103031_create_likes_table;
+
 
 
 pub struct Migrator;
@@ -34,6 +36,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20250811_004451_action_types::Migration),
             Box::new(m20250811_004802_target_types::Migration),
             Box::new(m20250811_004808_system_events::Migration),
+            Box::new(m20250815_103031_create_likes_table::Migration),
         ]
     }
 }

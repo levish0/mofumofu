@@ -56,18 +56,21 @@
 
 	async function handlePublished() {
 		try {
-			const hashtags = tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
-			
+			const hashtags = tags
+				.split(',')
+				.map((tag) => tag.trim())
+				.filter((tag) => tag.length > 0);
+
 			await updatePost({
 				slug: data.slug,
 				title: title || null,
 				content: content || null,
 				hashtags: hashtags.length > 0 ? hashtags : null,
-				summary: data.post.summary || null,
+				summary: data.post.summary || null
 			});
 
 			toast.success('포스트가 성공적으로 수정되었습니다.');
-			
+
 			// 수정 완료 후 포스트 페이지로 이동 - 현재 사용자 핸들 필요
 			if (currentUser) {
 				goto(`/@${currentUser.handle}/post/${data.slug}`);
@@ -105,7 +108,7 @@
 	<meta name="twitter:description" content="포스트를 수정합니다." />
 </svelte:head>
 
-<div class="bg-gray-900 flex h-full w-full break-all text-white dark:bg-gray-900">
+<div class="flex h-full w-full bg-gray-900 break-all text-white dark:bg-gray-900">
 	<!-- 메인 컨텐츠 영역 -->
 	<div bind:this={containerElement} class="flex flex-1 overflow-hidden">
 		<!-- 에디터 영역 -->

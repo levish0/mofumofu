@@ -2,6 +2,7 @@ use super::openapi::ApiDoc;
 use crate::api::v0::routes::auth::routes::auth_routes;
 use crate::api::v0::routes::follow::routes::follow_routes;
 use crate::api::v0::routes::hashtag::routes::hashtag_routes;
+use crate::api::v0::routes::like::routes::like_routes;
 use crate::api::v0::routes::post::routes::post_routes;
 use crate::api::v0::routes::user::routes::user_routes;
 use crate::service::error::errors::handler_404;
@@ -18,6 +19,7 @@ pub fn api_routes() -> Router<AppState> {
         .nest("/v0", user_routes())
         .nest("/v0", post_routes())
         .nest("/v0", follow_routes())
+        .nest("/v0", like_routes())
         .nest("/v0/hashtag", hashtag_routes())
         .fallback(handler_404)
 }

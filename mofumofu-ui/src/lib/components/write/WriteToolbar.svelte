@@ -18,8 +18,7 @@
 	import { Button } from '../ui/button';
 	import { uploadImage } from '$lib/api/post/postApi';
 	import { toast } from 'svelte-sonner';
-	import ImageCropModal from '../modal/ImageCropModal.svelte';
-	import { useImageCrop } from '../settings/PersonalInfoSettings/useImageCrop';
+	import { compressImage } from '$lib/utils/imageCompress';
 
 	interface Props {
 		onInsertText: (before: string, after?: string) => void;
@@ -29,64 +28,46 @@
 
 	const { onInsertText, showStickyToolbar, onToggleHeader }: Props = $props();
 
-	let showCrop = $state(false);
-	let tempImageSrc = $state('');
-	let originalFileName = $state('');
-
-	const { cropImage, cleanupTempImage, handleFileRead } = useImageCrop();
-
 	async function handleImageUpload() {
 		const input = document.createElement('input');
 		input.type = 'file';
 		input.accept = 'image/*';
-		
+
 		input.onchange = async (e) => {
 			const file = (e.target as HTMLInputElement).files?.[0];
 			if (!file) return;
 
 			try {
-				originalFileName = file.name;
-				tempImageSrc = await handleFileRead(file);
-				showCrop = true;
+				toast.loading('이미지 압축 및 업로드 중...');
+
+				// 이미지 압축 (원본 크기 유지)
+				const { blob, cleanup } = await compressImage(file, {
+					maxFileSizeMB: 8,
+					quality: 0.9
+				});
+
+				// 압축된 이미지로 새 파일 생성
+				const compressedFile = new File([blob], file.name, { type: blob.type });
+
+				// API에 업로드
+				const response = await uploadImage({ file: compressedFile });
+
+				// 리소스 정리
+				cleanup();
+
+				toast.dismiss();
+				toast.success('이미지 업로드 완료!');
+
+				const markdownImage = `![${file.name}](${response.public_url})`;
+				onInsertText(markdownImage);
 			} catch (error) {
-				console.error('Failed to read image file:', error);
-				toast.error('이미지 파일을 읽을 수 없습니다');
+				toast.dismiss();
+				toast.error('이미지 업로드 실패');
+				console.error('Image upload failed:', error);
 			}
 		};
-		
+
 		input.click();
-	}
-
-	async function handleCrop(data: { croppedAreaPixels: { x: number; y: number; width: number; height: number } }) {
-		try {
-			toast.loading('이미지 업로드 중...');
-			
-			const { blob } = await cropImage(tempImageSrc, data, {
-				maxFileSizeMB: 4,
-				resizeOptions: { width: 800, height: 600 },
-				quality: 0.8
-			});
-
-			const file = new File([blob], originalFileName, { type: blob.type });
-			const response = await uploadImage({ file });
-			
-			toast.dismiss();
-			toast.success('이미지 업로드 완료!');
-			
-			const markdownImage = `![${originalFileName}](${response.public_url})`;
-			onInsertText(markdownImage);
-			
-			tempImageSrc = '';
-		} catch (error) {
-			toast.dismiss();
-			toast.error('이미지 업로드 실패');
-			console.error('Image upload failed:', error);
-		}
-	}
-
-	function handleCropCancel() {
-		cleanupTempImage(tempImageSrc);
-		tempImageSrc = '';
 	}
 </script>
 
@@ -208,12 +189,3 @@
 		</Button>
 	</div>
 </div>
-
-<ImageCropModal
-	bind:isOpen={showCrop}
-	imageSrc={tempImageSrc}
-	aspectRatio={1000}
-	cropShape="rect"
-	onCrop={handleCrop}
-	onCancel={handleCropCancel}
-/>

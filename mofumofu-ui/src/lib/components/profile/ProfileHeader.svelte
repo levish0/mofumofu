@@ -3,7 +3,7 @@
 	import { authStore } from '$lib/stores/auth.svelte.js';
 	import { Button } from '../ui/button';
 	import type { UserInfoResponse } from '$lib/api/user/types';
-	import { checkFollowStatus, createFollow, deleteFollow } from '$lib/api';
+	import FollowButton from './FollowButton.svelte';
 	import * as m from '../../../paraglide/messages';
 
 	type Props = {
@@ -18,55 +18,9 @@
 	let bannerLoaded = $state(false);
 	let profileImageLoaded = $state(false);
 
-	let isFollowing = $state(false);
-	let followLoading = $state(false);
-	let followStatusLoaded = $state(false);
-
 	function handleEditProfile() {
 		goto('/settings');
 	}
-
-	async function loadFollowStatus() {
-		if (!authStore.isAuthenticated || isOwnProfile) {
-			return;
-		}
-
-		try {
-			const status = await checkFollowStatus({ handle: profile.handle });
-			isFollowing = status.is_following;
-		} catch (error) {
-			console.error('Failed to check follow status:', error);
-		} finally {
-			followStatusLoaded = true;
-		}
-	}
-
-	async function handleFollowToggle() {
-		if (!authStore.isAuthenticated) {
-			goto('/account/signin');
-			return;
-		}
-
-		followLoading = true;
-		try {
-			if (isFollowing) {
-				await deleteFollow({ followee_handle: profile.handle });
-				isFollowing = false;
-			} else {
-				await createFollow({ followee_handle: profile.handle });
-				isFollowing = true;
-			}
-		} catch (error) {
-			console.error('Failed to toggle follow:', error);
-		} finally {
-			followLoading = false;
-		}
-	}
-
-	// Load follow status when component mounts or authentication state changes
-	$effect(() => {
-		loadFollowStatus();
-	});
 
 	// Reset loading states when image URLs change
 	$effect(() => {
@@ -103,25 +57,8 @@
 				<div class="shimmer h-10 w-20 rounded-full"></div>
 			{:else if isOwnProfile}
 				<Button variant="outline" onclick={handleEditProfile} class=" bg-transparent px-3 py-0">Edit Profile</Button>
-			{:else if !followStatusLoaded}
-				<div class="shimmer h-10 w-20 rounded-full"></div>
 			{:else}
-				<Button
-					onclick={handleFollowToggle}
-					disabled={followLoading}
-					variant={isFollowing ? 'outline' : 'default'}
-					class="px-3 py-0 {isFollowing ? 'bg-transparent' : 'dark:text-mofu-dark-900'}"
-				>
-					{#if followLoading}
-						...
-					{:else if !authStore.isAuthenticated}
-						{m.profile_sign_in_to_follow()}
-					{:else if isFollowing}
-						Unfollow
-					{:else}
-						{m.profile_follow()}
-					{/if}
-				</Button>
+				<FollowButton handle={profile.handle} />
 			{/if}
 		</div>
 

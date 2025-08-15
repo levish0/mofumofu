@@ -44,6 +44,10 @@ pub enum ActionType {
     CommentUpdated,
     #[sea_orm(string_value = "comment_deleted")]
     CommentDeleted,
+    #[sea_orm(string_value = "like_created")]
+    LikeCreated,
+    #[sea_orm(string_value = "like_deleted")]
+    LikeDeleted,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum, Serialize, Deserialize)]

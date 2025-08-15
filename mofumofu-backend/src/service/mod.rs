@@ -2,6 +2,7 @@ pub mod auth;
 pub mod error;
 pub mod follow;
 pub mod hashtag;
+pub mod like;
 pub mod meilisearch;
 pub mod oauth;
 pub mod post;

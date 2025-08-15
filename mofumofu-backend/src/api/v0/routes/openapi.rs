@@ -9,6 +9,10 @@ use crate::dto::follow::response::follow_list::FollowListResponse;
 use crate::dto::follow::response::follow_status::FollowStatusResponse;
 use crate::dto::hashtag::request::trending_hashtags::TrendingHashtagsRequest;
 use crate::dto::hashtag::response::trending_hashtags::TrendingHashtagsResponse;
+use crate::dto::like::request::check_like_status::CheckLikeStatusRequest;
+use crate::dto::like::request::create_like::CreateLikeRequest;
+use crate::dto::like::request::delete_like::DeleteLikeRequest;
+use crate::dto::like::response::like_status::LikeStatusResponse;
 use crate::dto::post::request::create_post::CreatePostRequest;
 use crate::dto::post::request::delete_post::DeletePostRequest;
 use crate::dto::post::request::get_by_handle_and_slug::GetPostByHandleAndSlugRequest;
@@ -67,7 +71,10 @@ use utoipa::{
         crate::api::v0::routes::follow::get_followers_list::get_followers,
         crate::api::v0::routes::follow::get_following_count::api_get_following_count,
         crate::api::v0::routes::follow::get_following_list::get_following,
-        crate::api::v0::routes::hashtag::trending_hashtags::trending_hashtags
+        crate::api::v0::routes::hashtag::trending_hashtags::trending_hashtags,
+        crate::api::v0::routes::like::check_like_status::check_like_status,
+        crate::api::v0::routes::like::create_like::create_like,
+        crate::api::v0::routes::like::delete_like::delete_like
     ),
     components(
         schemas(
@@ -108,6 +115,10 @@ use utoipa::{
             PostThumbnailForm,
             TrendingHashtagsRequest,
             TrendingHashtagsResponse,
+            CheckLikeStatusRequest,
+            CreateLikeRequest,
+            DeleteLikeRequest,
+            LikeStatusResponse,
         )
     ),
     tags(

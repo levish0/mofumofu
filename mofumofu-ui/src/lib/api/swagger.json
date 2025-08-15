@@ -5,7 +5,7 @@
 		"description": "",
 		"contact": { "name": "Levi Lim", "email": "shiueo.csh@gmail.com" },
 		"license": { "name": "" },
-		"version": "0.4.0"
+		"version": "0.5.0"
 	},
 	"paths": {
 		"/v0/auth/github": {
@@ -265,6 +265,38 @@
 					"400": { "description": "Invalid input" },
 					"500": { "description": "Internal Server Error" }
 				}
+			}
+		},
+		"/v0/like": {
+			"post": {
+				"tags": ["Like"],
+				"operationId": "create_like",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateLikeRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"204": { "description": "Post liked successfully" },
+					"400": { "description": "Invalid input or already liked" },
+					"404": { "description": "Post not found" },
+					"500": { "description": "Internal Server Error" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			},
+			"delete": {
+				"tags": ["Like"],
+				"operationId": "delete_like",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/DeleteLikeRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"204": { "description": "Post unliked successfully" },
+					"400": { "description": "Invalid input or like not found" },
+					"404": { "description": "Post not found" },
+					"500": { "description": "Internal Server Error" }
+				},
+				"security": [{ "bearer_auth": [] }]
 			}
 		},
 		"/v0/post": {
@@ -648,6 +680,11 @@
 				"required": ["followee_handle"],
 				"properties": { "followee_handle": { "type": "string" } }
 			},
+			"CreateLikeRequest": {
+				"type": "object",
+				"required": ["post_id"],
+				"properties": { "post_id": { "type": "string", "format": "uuid" } }
+			},
 			"CreatePostRequest": {
 				"type": "object",
 				"required": ["title", "content", "slug"],
@@ -673,6 +710,11 @@
 				"type": "object",
 				"required": ["followee_handle"],
 				"properties": { "followee_handle": { "type": "string" } }
+			},
+			"DeleteLikeRequest": {
+				"type": "object",
+				"required": ["post_id"],
+				"properties": { "post_id": { "type": "string", "format": "uuid" } }
 			},
 			"DeletePostRequest": { "type": "object", "required": ["slug"], "properties": { "slug": { "type": "string" } } },
 			"ErrorResponse": {
