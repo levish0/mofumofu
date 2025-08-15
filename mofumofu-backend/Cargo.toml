@@ -1,6 +1,6 @@
 [package]
 name = "mofumofu-backend"
-version = "0.5.1"
+version = "0.5.2"
 authors = [
     "Levi Lim <shiueo.csh@gmail.com>",
 ]

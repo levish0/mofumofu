@@ -33,7 +33,7 @@ pub async fn create_like(
     info!("Received request to like post: {:?}", payload);
     let user_uuid = claims.sub.clone();
 
-    service_create_like(&state.conn, &user_uuid, &payload.post_id).await?;
+    service_create_like(&state.conn, &user_uuid, &payload.handle, &payload.slug).await?;
 
     Ok(StatusCode::NO_CONTENT)
 }

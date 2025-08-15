@@ -13,6 +13,8 @@
 	import { toast } from 'svelte-sonner';
 	import FollowButton from '$lib/components/profile/FollowButton.svelte';
 	import { Badge } from '$lib/components/ui/badge';
+	import { createLike, deleteLike, checkLikeStatus } from '$lib/api/like/likeApi';
+	import { authStore } from '$lib/stores/auth.svelte';
 
 	const { data }: { data: PageData } = $props();
 
@@ -35,6 +37,12 @@
 	let isDeleteModalOpen = $state(false);
 	let isDeleting = $state(false);
 	let closeTimer: ReturnType<typeof setTimeout> | null = null;
+
+	// Like 관련 상태
+	let isLiked = $state(false);
+	let likeCount = $state(data.post.like_count || 0);
+	let isLikeLoading = $state(true);
+	let isLikeSubmitting = $state(false);
 
 	function openDropdown() {
 		if (closeTimer) {
@@ -80,10 +88,67 @@
 		isDeleteModalOpen = false;
 	}
 
+	// Like 상태 확인
+	async function loadLikeStatus() {
+		if (!authStore.isAuthenticated) {
+			isLikeLoading = false;
+			return;
+		}
+
+		try {
+			const response = await checkLikeStatus({ 
+				handle: data.author.handle, 
+				slug: data.post.slug 
+			});
+			isLiked = response.is_liked;
+		} catch (error) {
+			console.error('Failed to check like status:', error);
+		} finally {
+			isLikeLoading = false;
+		}
+	}
+
+	// Like 토글
+	async function toggleLike() {
+		if (!authStore.isAuthenticated) {
+			goto('/account/signin');
+			return;
+		}
+
+		if (isLikeSubmitting) return;
+
+		isLikeSubmitting = true;
+		try {
+			if (isLiked) {
+				await deleteLike({ 
+					handle: data.author.handle, 
+					slug: data.post.slug 
+				});
+				isLiked = false;
+				likeCount = Math.max(0, likeCount - 1);
+			} else {
+				await createLike({ 
+					handle: data.author.handle, 
+					slug: data.post.slug 
+				});
+				isLiked = true;
+				likeCount += 1;
+			}
+		} catch (error) {
+			console.error('Failed to toggle like:', error);
+			toast.error('좋아요 처리에 실패했습니다');
+		} finally {
+			isLikeSubmitting = false;
+		}
+	}
+
 	onMount(() => {
 		incrementPostView({ handle: data.handle, slug: data.slug }).catch((error) => {
 			console.warn('Failed to increment view count:', error);
 		});
+		
+		// Like 상태 로드
+		loadLikeStatus();
 	});
 </script>
 
@@ -154,12 +219,24 @@
 
 							<div class="flex items-center gap-2">
 								<!-- Like Button -->
-								<button
-									class="dark:text-mofu-dark-400 text-mofu-light-800 flex items-center gap-2 rounded-full px-4 py-2 transition-colors hover:text-rose-600 dark:hover:text-rose-500"
-								>
-									<Icon src={Heart} class="h-5 w-5" solid />
-									<span class="text-sm">{data.post.like_count || 0}</span>
-								</button>
+								{#if isLikeLoading}
+									<div class="flex items-center gap-2 rounded-full px-4 py-2">
+										<div class="h-5 w-5 animate-pulse rounded bg-gray-300 dark:bg-gray-600"></div>
+										<span class="text-sm">{likeCount}</span>
+									</div>
+								{:else}
+									<button
+										onclick={toggleLike}
+										disabled={isLikeSubmitting}
+										class="flex items-center gap-2 rounded-full px-4 py-2 transition-colors {isLiked 
+											? 'text-rose-600 dark:text-rose-500' 
+											: 'dark:text-mofu-dark-400 text-mofu-light-800 hover:text-rose-600 dark:hover:text-rose-500'} 
+										{isLikeSubmitting ? 'opacity-50 cursor-not-allowed' : ''}"
+									>
+										<Icon src={Heart} class="h-5 w-5" solid />
+										<span class="text-sm">{likeCount}</span>
+									</button>
+								{/if}
 
 								{#if isAuthor}
 									<!-- Author Options Dropdown -->
