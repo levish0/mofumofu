@@ -37,7 +37,7 @@
 				<Icon src={ClipboardDocumentList} class="h-5 w-5" solid />
 				임시저장
 			</Button>
-			
+
 			{#if isEditMode}
 				<Button
 					onclick={onPublished}

@@ -7,7 +7,7 @@ export const load: PageLoad = async ({ params }) => {
 
 	try {
 		const post = await getPostForEdit({ slug });
-		
+
 		return {
 			post,
 			slug

@@ -31,7 +31,7 @@ export async function compressImage(
 	options: CompressOptions = {}
 ): Promise<{ blob: Blob; url: string; cleanup: () => void }> {
 	const { maxFileSizeMB = 4, resizeOptions = { width: 800, height: 600 }, quality = 0.8 } = options;
-	
+
 	// Create image from file
 	const imageSrc = URL.createObjectURL(file);
 	let sourceImage: HTMLImageElement | null = null;
@@ -41,7 +41,7 @@ export async function compressImage(
 
 	try {
 		sourceImage = await createImage(imageSrc);
-		
+
 		// Create source canvas with original image
 		sourceCanvas = document.createElement('canvas');
 		const sourceCtx = sourceCanvas.getContext('2d');
@@ -59,7 +59,7 @@ export async function compressImage(
 
 		// Create destination canvas with resize options
 		destCanvas = document.createElement('canvas');
-		
+
 		// Calculate aspect ratio preserving dimensions
 		const aspectRatio = sourceImage.width / sourceImage.height;
 		if (aspectRatio > resizeOptions.width / resizeOptions.height) {
@@ -139,7 +139,7 @@ export async function compressFromCanvas(
 	options: CompressOptions = {}
 ): Promise<{ blob: Blob; url: string; cleanup: () => void }> {
 	const { maxFileSizeMB = 4, resizeOptions, quality = 0.8 } = options;
-	
+
 	let destCanvas: HTMLCanvasElement | null = null;
 	let objectUrl: string | null = null;
 

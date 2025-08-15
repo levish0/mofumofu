@@ -96,9 +96,9 @@
 		}
 
 		try {
-			const response = await checkLikeStatus({ 
-				handle: data.author.handle, 
-				slug: data.post.slug 
+			const response = await checkLikeStatus({
+				handle: data.author.handle,
+				slug: data.post.slug
 			});
 			isLiked = response.is_liked;
 		} catch (error) {
@@ -120,16 +120,16 @@
 		isLikeSubmitting = true;
 		try {
 			if (isLiked) {
-				await deleteLike({ 
-					handle: data.author.handle, 
-					slug: data.post.slug 
+				await deleteLike({
+					handle: data.author.handle,
+					slug: data.post.slug
 				});
 				isLiked = false;
 				likeCount = Math.max(0, likeCount - 1);
 			} else {
-				await createLike({ 
-					handle: data.author.handle, 
-					slug: data.post.slug 
+				await createLike({
+					handle: data.author.handle,
+					slug: data.post.slug
 				});
 				isLiked = true;
 				likeCount += 1;
@@ -146,7 +146,7 @@
 		incrementPostView({ handle: data.handle, slug: data.slug }).catch((error) => {
 			console.warn('Failed to increment view count:', error);
 		});
-		
+
 		// Like 상태 로드
 		loadLikeStatus();
 	});
@@ -228,10 +228,10 @@
 									<button
 										onclick={toggleLike}
 										disabled={isLikeSubmitting}
-										class="flex items-center gap-2 rounded-full px-4 py-2 transition-colors {isLiked 
-											? 'text-rose-600 dark:text-rose-500' 
+										class="flex items-center gap-2 rounded-full px-4 py-2 transition-colors {isLiked
+											? 'text-rose-600 dark:text-rose-500'
 											: 'dark:text-mofu-dark-400 text-mofu-light-800 hover:text-rose-600 dark:hover:text-rose-500'} 
-										{isLikeSubmitting ? 'opacity-50 cursor-not-allowed' : ''}"
+										{isLikeSubmitting ? 'cursor-not-allowed opacity-50' : ''}"
 									>
 										<Icon src={Heart} class="h-5 w-5" solid />
 										<span class="text-sm">{likeCount}</span>

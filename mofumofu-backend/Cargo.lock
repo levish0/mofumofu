@@ -2425,7 +2425,7 @@ dependencies = [
 
 [[package]]
 name = "mofumofu-backend"
-version = "0.5.2"
+version = "0.5.4"
 dependencies = [
  "anyhow",
  "argon2",

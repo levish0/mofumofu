@@ -1,10 +1,5 @@
 import { privateApi } from '../private';
-import type {
-	CreateLikeRequest,
-	DeleteLikeRequest,
-	CheckLikeStatusRequest,
-	LikeStatusResponse
-} from './types';
+import type { CreateLikeRequest, DeleteLikeRequest, CheckLikeStatusRequest, LikeStatusResponse } from './types';
 
 export async function createLike(request: CreateLikeRequest) {
 	try {

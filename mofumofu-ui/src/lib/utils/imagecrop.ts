@@ -9,7 +9,6 @@ export interface CroppedArea {
 
 export interface CropOptions extends CompressOptions {}
 
-
 /**
  * Creates a cropped image from the original image and crop area using imageCompress for high quality resizing
  */

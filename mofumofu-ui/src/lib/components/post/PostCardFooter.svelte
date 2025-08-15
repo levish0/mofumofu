@@ -36,9 +36,9 @@
 		}
 
 		try {
-			const response = await checkLikeStatus({ 
-				handle: author_handle, 
-				slug: post_slug 
+			const response = await checkLikeStatus({
+				handle: author_handle,
+				slug: post_slug
 			});
 			isLiked = response.is_liked;
 		} catch (error) {
@@ -52,7 +52,7 @@
 	async function toggleLike(e: Event) {
 		e.preventDefault();
 		e.stopPropagation();
-		
+
 		if (!authStore.isAuthenticated) {
 			goto('/account/signin');
 			return;
@@ -63,16 +63,16 @@
 		isLikeSubmitting = true;
 		try {
 			if (isLiked) {
-				await deleteLike({ 
-					handle: author_handle, 
-					slug: post_slug 
+				await deleteLike({
+					handle: author_handle,
+					slug: post_slug
 				});
 				isLiked = false;
 				likeCount = Math.max(0, likeCount - 1);
 			} else {
-				await createLike({ 
-					handle: author_handle, 
-					slug: post_slug 
+				await createLike({
+					handle: author_handle,
+					slug: post_slug
 				});
 				isLiked = true;
 				likeCount += 1;
@@ -113,7 +113,7 @@
 				<Icon src={Eye} solid size="16" class="text-mofu-dark-200" />
 				<span>{views}</span>
 			</div>
-			
+
 			{#if isLikeLoading}
 				<div class="flex items-center gap-1">
 					<div class="h-4 w-4 animate-pulse rounded bg-gray-300 dark:bg-gray-600"></div>
@@ -123,10 +123,10 @@
 				<button
 					onclick={toggleLike}
 					disabled={isLikeSubmitting}
-					class="flex items-center gap-1 transition-colors {isLiked 
-						? 'text-rose-600 dark:text-rose-500' 
+					class="flex items-center gap-1 transition-colors {isLiked
+						? 'text-rose-600 dark:text-rose-500'
 						: 'hover:text-rose-600 dark:hover:text-rose-500'} 
-					{isLikeSubmitting ? 'opacity-50 cursor-not-allowed' : ''}"
+					{isLikeSubmitting ? 'cursor-not-allowed opacity-50' : ''}"
 				>
 					<Icon src={Heart} size="16" solid />
 					<span>{likeCount}</span>
