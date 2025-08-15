@@ -29,11 +29,7 @@
 			<div class="shimmer h-3 w-6 rounded"></div>
 		</div>
 	{:else}
-		<a 
-			href="/@{author_handle}/profile"
-			class="flex items-center gap-1.5 hover:opacity-80 transition-opacity"
-			onclick={(e) => e.stopPropagation()}
-		>
+		<a href="/@{author_handle}/profile" class="flex items-center gap-1.5 transition-opacity hover:opacity-80">
 			<img src={author_avatar} alt={author_name} class="h-6 w-6 rounded-full object-cover" />
 			<div class="gap-1">
 				<span class="dark:text-mofu-dark-300 truncate text-xs">by</span>

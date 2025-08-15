@@ -31,25 +31,26 @@
 </script>
 
 <!-- 카드 전체 -->
-<a
-	href={post ? `/@${post.user_handle}/post/${post.slug}` : '#'}
+<div
 	data-sveltekit-preload-data="false"
 	class="dark:bg-mofu-dark-800 dark:border-mofu-dark-800 border-mofu-light-300 group flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border bg-white transition-all duration-200 hover:-translate-y-1 hover:opacity-75 hover:shadow-lg md:min-h-[300px]"
 >
-	<!-- 이미지 영역 (스켈레톤이거나 이미지가 있을 때만) -->
-	{#if isSkeleton || post?.thumbnail_image}
-		<PostCardImage image={post?.thumbnail_image || undefined} title={post?.title || ''} {isSkeleton} />
-	{/if}
+	<a href={post ? `/@${post.user_handle}/post/${post.slug}` : '#'} class="flex flex-grow flex-col">
+		<!-- 이미지 영역 (스켈레톤이거나 이미지가 있을 때만) -->
+		{#if isSkeleton || post?.thumbnail_image}
+			<PostCardImage image={post?.thumbnail_image || undefined} title={post?.title || ''} {isSkeleton} />
+		{/if}
 
-	<!-- 텍스트 영역 -->
-	<PostCardContent
-		title={post?.title || ''}
-		summary={post?.summary || ''}
-		date={formattedDate}
-		comments={post?.comment_count || 0}
-		hashtags={post?.hashtags || []}
-		{isSkeleton}
-	/>
+		<!-- 텍스트 영역 -->
+		<PostCardContent
+			title={post?.title || ''}
+			summary={post?.summary || ''}
+			date={formattedDate}
+			comments={post?.comment_count || 0}
+			hashtags={post?.hashtags || []}
+			{isSkeleton}
+		/>
+	</a>
 
 	<!-- 구분선과 푸터 -->
 	<div class="dark:border-mofu-dark-600 border-mofu-light-400 border-t">
@@ -62,4 +63,4 @@
 			{isSkeleton}
 		/>
 	</div>
-</a>
+</div>
