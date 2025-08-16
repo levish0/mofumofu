@@ -1,6 +1,6 @@
 {
 	"name": "mofumofu-ui",
-	"version": "0.5.9",
+	"version": "0.6.0",
 	"description": "A soft and simple blogging platform for everyone.",
 	"scripts": {
 		"dev": "vite dev",
