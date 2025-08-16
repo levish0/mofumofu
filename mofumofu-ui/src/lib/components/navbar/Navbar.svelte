@@ -88,11 +88,11 @@
 		<div class="flex items-center space-x-2">
 			<a
 				href="/"
-				class="text-3xl font-bold whitespace-nowrap text-black dark:text-white"
-				onclick={() => handleNavClick('/')}>もふもふ(づ￣ ³￣)づ。</a
+				class="text-3xl font-bold whitespace-nowrap text-black sm:mr-4 dark:text-white"
+				onclick={() => handleNavClick('/')}>もふもふ</a
 			>
 
-			<div class="flex items-center space-x-5">
+			<div class="hidden items-center space-x-5 sm:flex">
 				<Button
 					variant="ghost"
 					href="/"
