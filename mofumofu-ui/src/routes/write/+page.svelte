@@ -5,13 +5,20 @@
 	import WritePreview from '$lib/components/write/WritePreview.svelte';
 	import { processMarkdown } from '$lib/utils/markdown';
 	import * as m from '../../paraglide/messages';
+	import { authStore } from '$lib/stores/auth.svelte';
+	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
+	import LoadingOverlay from '$lib/components/common/LoadingOverlay.svelte';
+	import AuthErrorScreen from '$lib/components/common/AuthErrorScreen.svelte';
 
 	let title = $state('');
 	let tags = $state('');
 	let content = $state('');
 	let htmlOutput = $state('');
-	let containerElement: HTMLElement;
+	let containerElement: HTMLElement | undefined = $state();
 	let isPreviewMode = $state(false); // 모바일에서 프리뷰 모드인지
+	let isAuthChecking = $state(true); // 인증 체크 중인지
+	let authError = $state(false); // 인증 실패 상태
 
 	// Resizable hook
 	let resizableHook = $state<ReturnType<typeof useResizable> | null>(null);
@@ -52,6 +59,23 @@
 	function handleTogglePreviewMode(isPreview: boolean) {
 		isPreviewMode = isPreview;
 	}
+
+	// 인증 체크
+	onMount(async () => {
+		try {
+			// 토큰이 없으면 refresh 시도
+			if (!authStore.isAuthenticated) {
+				const refreshSuccess = await authStore.tryRefreshToken();
+				
+				if (!refreshSuccess) {
+					authError = true;
+					return;
+				}
+			}
+		} finally {
+			isAuthChecking = false;
+		}
+	});
 </script>
 
 <svelte:head>
@@ -71,7 +95,15 @@
 	<meta name="twitter:description" content={m.write_page_description()} />
 </svelte:head>
 
-<div class="bg-mofu-dark-900 flex h-full w-full break-all text-white">
+<LoadingOverlay isVisible={isAuthChecking} message="에디터를 준비중입니다." />
+
+<AuthErrorScreen 
+	isVisible={authError} 
+	description="글 작성 기능을 이용하려면 로그인해 주세요." 
+/>
+
+{#if !authError}
+	<div class="bg-mofu-dark-900 flex h-full w-full break-all text-white">
 	<!-- 메인 컨텐츠 영역 -->
 	<div bind:this={containerElement} class="flex flex-1 overflow-hidden">
 		<!-- 모바일/태블릿: 전체 화면, 데스크톱: 분할 -->
@@ -128,3 +160,4 @@
 		</div>
 	</div>
 </div>
+{/if}

@@ -38,7 +38,7 @@
 		htmlOutput = ''
 	}: Props = $props();
 
-	let contentTextarea: HTMLTextAreaElement;
+	let contentTextarea: HTMLTextAreaElement | undefined = $state();
 	let showStickyToolbar = $state(false);
 
 	function insertText(before: string, after: string = '') {
@@ -52,8 +52,10 @@
 		onContentChange(newText);
 
 		setTimeout(() => {
-			contentTextarea.focus();
-			contentTextarea.setSelectionRange(start + before.length, start + before.length + selectedText.length);
+			if (contentTextarea) {
+				contentTextarea.focus();
+				contentTextarea.setSelectionRange(start + before.length, start + before.length + selectedText.length);
+			}
 		}, 0);
 	}
 </script>

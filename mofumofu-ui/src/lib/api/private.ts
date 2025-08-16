@@ -6,7 +6,7 @@ import type { ErrorResponse } from './error/types';
 import { ErrorClassMap } from './error/error_class_map';
 import { authStore } from '$lib/stores/auth.svelte';
 import { ApiError, ErrorCodes } from './error/common_error';
-import { refreshAccessToken } from './auth/authApi';
+import { refreshAccessToken, signOut } from './auth/authApi';
 
 export const privateApi = ky.create({
 	prefixUrl: API_URL,
@@ -55,7 +55,14 @@ export const privateApi = ky.create({
 							return ky(originalRequest);
 						} catch (refreshError) {
 							console.error('Failed to refresh access token:', refreshError);
-							authStore.clearToken();
+							// refresh token도 만료된 경우 완전한 로그아웃 처리
+							try {
+								await signOut();
+							} catch (logoutError) {
+								console.error('Logout API failed:', logoutError);
+							} finally {
+								authStore.clearToken();
+							}
 							throw createApiError(errorBody);
 						}
 					}

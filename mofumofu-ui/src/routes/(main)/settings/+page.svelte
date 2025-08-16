@@ -17,6 +17,8 @@
 	import { settingsStore } from '$lib/stores/settings.svelte';
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { userStore } from '$lib/stores/user.svelte';
+	import { goto } from '$app/navigation';
+	import LoadingOverlay from '$lib/components/common/LoadingOverlay.svelte';
 	import MobileSettingsLayout from '$lib/components/settings/layouts/MobileSettingsLayout.svelte';
 	import DesktopSettingsLayout from '$lib/components/settings/layouts/DesktopSettingsLayout.svelte';
 	import ImageCropModal from '$lib/components/modal/ImageCropModal.svelte';
@@ -24,6 +26,8 @@
 
 	let selectedSection = $state(authStore.isAuthenticated ? 'personal' : 'display');
 	let saveSuccess = $state(false);
+	let isAuthChecking = $state(true); // 인증 체크 중인지
+	let authError = $state(false); // 인증 실패 상태
 
 	// 이미지 크롭 관련 상태
 	let showImageCrop = $state(false);
@@ -101,7 +105,24 @@
 		return authStore.isAuthenticated ? 'personal' : 'display';
 	};
 
-	onMount(() => {
+	onMount(async () => {
+		// 인증 체크
+		try {
+			// 토큰이 없으면 refresh 시도
+			if (!authStore.isAuthenticated) {
+				const refreshSuccess = await authStore.tryRefreshToken();
+				
+				if (!refreshSuccess) {
+					// 인증 실패시 display 섹션으로 리다이렉트
+					authError = false; // settings 페이지는 인증 없어도 display 섹션은 접근 가능
+					selectedSection = 'display';
+					accordionValue = 'display';
+				}
+			}
+		} finally {
+			isAuthChecking = false;
+		}
+
 		// URL 해시에서 초기 섹션 설정
 		selectedSection = getInitialSection();
 
@@ -212,7 +233,10 @@
 	/>
 </svelte:head>
 
-<!-- 데스크톱 레이아웃 -->
+<LoadingOverlay isVisible={isAuthChecking} message="설정을 불러오는 중..." />
+
+{#if !isAuthChecking}
+	<!-- 데스크톱 레이아웃 -->
 <DesktopSettingsLayout
 	{sections}
 	{selectedSection}
@@ -236,3 +260,4 @@
 	onCrop={handleCropComplete}
 	onCancel={handleCropCancel}
 />
+{/if}

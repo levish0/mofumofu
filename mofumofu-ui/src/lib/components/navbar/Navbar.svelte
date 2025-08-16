@@ -41,9 +41,19 @@
 
 	const userInfo = $derived(userStore.user);
 	const isLoading = $derived(userStore.isLoading);
+	const isAuthenticated = $derived(authStore.isAuthenticated);
 
-	onMount(() => {
-		userStore.loadProfile();
+	onMount(async () => {
+		// 인증 상태 확인 후 프로필 로드
+		if (authStore.isAuthenticated) {
+			await userStore.loadProfile();
+		} else {
+			// 토큰이 없는 경우 refresh 시도
+			const refreshSuccess = await authStore.tryRefreshToken();
+			if (refreshSuccess) {
+				await userStore.loadProfile();
+			}
+		}
 	});
 
 	async function handleLogout() {
@@ -123,7 +133,7 @@
 				<div class="shimmer hidden h-9 w-28 rounded-full sm:block"></div>
 				<div class="shimmer hidden h-9 w-9 rounded-full sm:block"></div>
 				<div class="shimmer hidden h-9 w-9 rounded-full sm:block"></div>
-			{:else if userInfo}
+			{:else if isAuthenticated && userInfo}
 				<Button href="/" variant="icon" aria-label="notifications">
 					<Icon src={Bell} size="20" class="text-black dark:text-white" />
 				</Button>
