@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import { createPost, uploadThumbnail } from '$lib/api/post/postApi';
-	import type { CreatePostRequest } from '$lib/api/post/types';
+	import { createPost, updatePost, uploadThumbnail } from '$lib/api/post/postApi';
+	import type { CreatePostRequest, UpdatePostRequest } from '$lib/api/post/types';
 	import * as v from 'valibot';
 	import { createPostSchema } from '$lib/schemas/post';
 	import { Icon, PaperAirplane } from 'svelte-hero-icons';
@@ -23,9 +23,11 @@
 		content: string;
 		tags: string;
 		onPublished?: () => void;
+		isEditMode?: boolean;
+		editSlug?: string;
 	}
 
-	let { title, content, tags, onPublished }: Props = $props();
+	let { title, content, tags, onPublished, isEditMode = false, editSlug }: Props = $props();
 
 	let isOpen = $state(false);
 	let isLoading = $state(false);
@@ -56,7 +58,7 @@
 	function openDialog() {
 		publishData = {
 			title: title,
-			slug: generateSlug(title),
+			slug: isEditMode && editSlug ? editSlug : generateSlug(title),
 			content: content,
 			summary: '',
 			tags: tags,
@@ -122,26 +124,48 @@
 		try {
 			isLoading = true;
 
-			const postRequest: CreatePostRequest = {
-				title: publishData.title.trim(),
-				content: publishData.content.trim(),
-				slug: publishData.slug.trim(),
-				summary: publishData.summary.trim() || null,
-				hashtags: publishData.tags.trim()
-					? publishData.tags
-							.split(/[,\n]/)
-							.map((tag) => tag.trim())
-							.filter((tag) => tag.length > 0)
-					: null
-			};
+			if (isEditMode && editSlug) {
+				// 수정 모드
+				const updateRequest: UpdatePostRequest = {
+					slug: editSlug,
+					title: publishData.title.trim(),
+					content: publishData.content.trim(),
+					summary: publishData.summary.trim() || null,
+					hashtags: publishData.tags.trim()
+						? publishData.tags
+								.split(/[,\n]/)
+								.map((tag) => tag.trim())
+								.filter((tag) => tag.length > 0)
+						: null,
+					new_slug: publishData.slug.trim() !== editSlug ? publishData.slug.trim() : null
+				};
 
-			await createPost(postRequest);
+				await updatePost(updateRequest);
+			} else {
+				// 새 포스트 생성
+				const postRequest: CreatePostRequest = {
+					title: publishData.title.trim(),
+					content: publishData.content.trim(),
+					slug: publishData.slug.trim(),
+					summary: publishData.summary.trim() || null,
+					hashtags: publishData.tags.trim()
+						? publishData.tags
+								.split(/[,\n]/)
+								.map((tag) => tag.trim())
+								.filter((tag) => tag.length > 0)
+						: null
+				};
+
+				await createPost(postRequest);
+			}
 
 			// Upload thumbnail if provided
 			if (publishData.thumbnailFile) {
 				try {
+					const finalSlug =
+						isEditMode && editSlug && publishData.slug.trim() === editSlug ? editSlug : publishData.slug.trim();
 					await uploadThumbnail({
-						slug: publishData.slug.trim(),
+						slug: finalSlug,
 						file: new File([publishData.thumbnailFile], 'thumbnail.jpg', { type: publishData.thumbnailFile.type })
 					});
 				} catch (thumbnailError) {
@@ -158,19 +182,21 @@
 			isOpen = false;
 			onPublished?.();
 
-			toast.success(m.publish_success_message());
+			toast.success(isEditMode ? '포스트가 성공적으로 수정되었습니다!' : m.publish_success_message());
 
 			// Navigate to the published post
 			const userHandle = userStore.user?.handle;
 			if (userHandle) {
-				const redirectUrl = `/@${userHandle}/post/${publishData.slug.trim()}`;
+				const finalSlug =
+					isEditMode && editSlug && publishData.slug.trim() === editSlug ? editSlug : publishData.slug.trim();
+				const redirectUrl = `/@${userHandle}/post/${finalSlug}`;
 				await goto(redirectUrl);
 			} else {
 				toast.error(m.publish_user_info_error());
 			}
 		} catch (error) {
-			console.error('출간 실패:', error);
-			toast.error(m.publish_error_message());
+			console.error(isEditMode ? '수정 실패:' : '출간 실패:', error);
+			toast.error(isEditMode ? '포스트 수정에 실패했습니다. 다시 시도해주세요.' : m.publish_error_message());
 		} finally {
 			isLoading = false;
 		}
@@ -186,7 +212,7 @@
 	class="dark:text-mofu-dark-950 dark:hover:bg-mofu bg-mofu flex items-center gap-2 rounded px-4 py-2 text-lg"
 >
 	<Icon src={PaperAirplane} class="h-5 w-5" solid />
-	{m.publish_button()}
+	{isEditMode ? '수정하기' : m.publish_button()}
 </Button>
 
 <Dialog.Root bind:open={isOpen}>
@@ -194,8 +220,10 @@
 		<!-- Dialog main content with rounded-b-none -->
 		<div class="rounded-t-lg rounded-b-none px-2 pt-4">
 			<Dialog.Header class="mb-2 p-0">
-				<Dialog.Title>{m.publish_dialog_title()}</Dialog.Title>
-				<Dialog.Description class="text-mofu-dark-300">{m.publish_dialog_description()}</Dialog.Description>
+				<Dialog.Title>{isEditMode ? '포스트 수정' : m.publish_dialog_title()}</Dialog.Title>
+				<Dialog.Description class="text-mofu-dark-300">
+					{isEditMode ? '포스트 정보를 확인하고 수정하세요.' : m.publish_dialog_description()}
+				</Dialog.Description>
 			</Dialog.Header>
 
 			<div class="hide-scrollbar max-h-[64vh] space-y-4 overflow-y-auto">
@@ -243,7 +271,7 @@
 				class="dark:text-mofu-dark-950 dark:hover:bg-mofu bg-mofu text-md flex items-center gap-2 rounded px-4 py-2"
 			>
 				<Icon src={PaperAirplane} class="h-5 w-5" solid />
-				{isLoading ? m.publish_loading() : m.publish_button()}
+				{isLoading ? (isEditMode ? '수정 중...' : m.publish_loading()) : isEditMode ? '수정하기' : m.publish_button()}
 			</Button>
 		</div>
 	</Dialog.Content>
@@ -256,7 +284,9 @@
 			<!-- 스피너 -->
 			<div class="border-mofu h-12 w-12 animate-spin rounded-full border-4 border-t-transparent"></div>
 			<!-- 로딩 텍스트 -->
-			<p class="text-lg font-medium text-white">{m.publish_loading_overlay()}</p>
+			<p class="text-lg font-medium text-white">
+				{isEditMode ? '포스트를 수정하고 있습니다...' : m.publish_loading_overlay()}
+			</p>
 		</div>
 	</div>
 {/if}

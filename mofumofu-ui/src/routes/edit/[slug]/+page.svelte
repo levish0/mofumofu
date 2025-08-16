@@ -55,33 +55,6 @@
 		console.log('Draft saved:', { title, tags, content });
 	}
 
-	async function handlePublished() {
-		try {
-			const hashtags = tags
-				.split(',')
-				.map((tag) => tag.trim())
-				.filter((tag) => tag.length > 0);
-
-			await updatePost({
-				slug: data.slug,
-				title: title || null,
-				content: content || null,
-				hashtags: hashtags.length > 0 ? hashtags : null,
-				summary: data.post.summary || null
-			});
-
-			toast.success(m.edit_success_message());
-
-			// 수정 완료 후 포스트 페이지로 이동 - 현재 사용자 핸들 필요
-			if (currentUser) {
-				goto(`/@${currentUser.handle}/post/${data.slug}`);
-			}
-		} catch (error) {
-			console.error('Failed to update post:', error);
-			toast.error(m.edit_error_message());
-		}
-	}
-
 	function handleExit() {
 		// 뒤로 가기 또는 홈으로
 		if (currentUser) {
@@ -123,8 +96,9 @@
 				onContentChange={handleContentChange}
 				onExit={handleExit}
 				onSaveDraft={handleSaveDraft}
-				onPublished={handlePublished}
+				onPublished={() => {}}
 				isEditMode={true}
+				editSlug={data.slug}
 			/>
 		</div>
 
