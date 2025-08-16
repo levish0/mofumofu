@@ -183,7 +183,7 @@
 			</Button>
 		</div>
 
-		<div class="flex items-center gap-3 ml-auto">
+		<div class="ml-auto flex items-center gap-3">
 			<!-- 모바일/태블릿 전용 에디터/프리뷰 모드 스위치 -->
 			{#if onTogglePreviewMode}
 				<div class="flex items-center gap-2 lg:hidden">
