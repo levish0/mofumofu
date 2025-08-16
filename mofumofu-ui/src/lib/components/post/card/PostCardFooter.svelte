@@ -116,10 +116,7 @@
 			</div>
 
 			{#if isLikeLoading}
-				<div class="flex items-center gap-1">
-					<div class="h-4 w-4 animate-pulse rounded bg-gray-300 dark:bg-gray-600"></div>
-					<span>{likeCount}</span>
-				</div>
+				<div class="shimmer h-4 w-8 rounded"></div>
 			{:else}
 				<button
 					onclick={toggleLike}
