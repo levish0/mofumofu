@@ -80,7 +80,7 @@
 			<div class="relative mx-auto max-w-2xl">
 				<div class="relative">
 					<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-						<svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<svg class="text-mofu-dark-300 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path
 								stroke-linecap="round"
 								stroke-linejoin="round"
@@ -94,7 +94,7 @@
 						bind:value={inputQuery}
 						onkeydown={handleInputKeydown}
 						placeholder="Search posts..."
-						class="w-full rounded-xl border border-gray-300 bg-white py-3 pr-4 pl-10 text-lg text-gray-900 placeholder-gray-500 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400"
+						class="dark:bg-mofu-dark-800 dark:text-mofu-dark-300 dark:placeholder-mofu-dark-400  w-full rounded-xl bg-white py-3 pr-4 pl-10  text-lg text-gray-900 placeholder-gray-500"
 					/>
 				</div>
 			</div>
@@ -102,15 +102,15 @@
 
 		<!-- Results Count -->
 		{#if hasSearched && !loading && posts.length > 0}
-			<div class="mb-6 text-center text-gray-600 dark:text-gray-400">
-				총 {totalResults.toLocaleString()}개의 포스트를 찾았습니다.
+			<div class="dark:text-mofu-dark-400 text-mofu-light-700 mb-6 text-center">
+				총 {totalResults}개의 포스트를 찾았습니다.
 			</div>
 		{/if}
 
 		<!-- No Results -->
 		{#if hasSearched && !loading && posts.length === 0}
-			<div class="py-12 text-center">
-				<div class="text-lg text-gray-500 dark:text-gray-400">
+			<div class=" text-center">
+				<div class="dark:text-mofu-dark-400 text-lg text-gray-500">
 					"{searchQuery}"에 대한 검색 결과가 없습니다.
 				</div>
 			</div>

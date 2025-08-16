@@ -15,6 +15,8 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import { createLike, deleteLike, checkLikeStatus } from '$lib/api/like/likeApi';
 	import { authStore } from '$lib/stores/auth.svelte';
+	import FloatingTOC from '$lib/components/post/FloatingTOC.svelte';
+	import FloatingNavigation from '$lib/components/post/FloatingNavigation.svelte';
 
 	const { data }: { data: PageData } = $props();
 
@@ -300,8 +302,8 @@
 				</article>
 			</div>
 
-			<!-- Right Column: TOC -->
-			<div class="border-mofu-dark-800 w-80 flex-shrink-0 border-l">
+			<!-- Right Column: TOC (데스크톱에서만 표시) -->
+			<div class="border-mofu-dark-800 hidden w-80 flex-shrink-0 border-l md:block">
 				<div class="sticky transition-all duration-100 ease-out" style="top: {topPosition}">
 					<div class="px-4">
 						<h3 class="dark:text-mofu-dark-200 mb-2 text-xl font-semibold">목차</h3>
@@ -322,6 +324,10 @@
 		</div>
 	</div>
 </div>
+
+<!-- 모바일용 플로팅 컴포넌트들 -->
+<FloatingTOC {tocItems} />
+<FloatingNavigation />
 
 <!-- 삭제 확인 Dialog -->
 <Dialog.Root bind:open={isDeleteModalOpen}>

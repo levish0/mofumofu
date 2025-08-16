@@ -105,7 +105,7 @@
 		<a href="/@{author_handle}/profile" class="flex items-center gap-1.5 transition-opacity hover:opacity-80">
 			<img src={author_avatar} alt={author_name} class="h-6 w-6 rounded-full object-cover" />
 			<div class="gap-1">
-				<span class="dark:text-mofu-dark-300 truncate text-xs">{m.post_author_by()}</span>
+				<span class="dark:text-mofu-dark-300 truncate text-xs">by</span>
 				<span class="text-xs font-semibold">{author_name}</span>
 			</div>
 		</a>
