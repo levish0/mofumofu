@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Icon, Photo } from 'svelte-hero-icons';
-	import ImageCropModal from '../../modal/ImageCropModal.svelte';
+	import ImageCropModal from '../../../modal/ImageCropModal.svelte';
 	import { useImageCrop } from './useImageCrop';
-	import * as m from '../../../../paraglide/messages';
+	import * as m from '../../../../../paraglide/messages';
 
 	interface Props {
 		bannerImage: string | null;

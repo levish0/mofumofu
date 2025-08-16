@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Textarea } from '../../ui/textarea';
+	import { Textarea } from '../../../ui/textarea';
 	import * as v from 'valibot';
 	import { createPersonalInfoSchema } from '$lib/schemas/personal-info';
-	import * as m from '../../../../paraglide/messages';
+	import * as m from '../../../../../paraglide/messages';
 
 	interface Props {
 		bio: string | null;

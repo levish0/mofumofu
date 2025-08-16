@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Icon, Camera } from 'svelte-hero-icons';
-	import ImageCropModal from '../../modal/ImageCropModal.svelte';
+	import ImageCropModal from '../../../modal/ImageCropModal.svelte';
 	import { useImageCrop } from './useImageCrop';
-	import * as m from '../../../../paraglide/messages';
+	import * as m from '../../../../../paraglide/messages';
 
 	interface Props {
 		profileImage: string | null;

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Icon, Photo } from 'svelte-hero-icons';
 	import ImageCropModal from '../../modal/ImageCropModal.svelte';
-	import { useImageCrop } from '../../settings/PersonalInfoSettings/useImageCrop';
+	import { useImageCrop } from '../../settings/forms/PersonalInfoSettings/useImageCrop';
 
 	interface Props {
 		thumbnail: string | null;

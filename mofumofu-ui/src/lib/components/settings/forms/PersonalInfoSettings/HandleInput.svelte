@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Input } from '../../ui/input';
+	import { Input } from '../../../ui/input';
 	import * as v from 'valibot';
 	import { createPersonalInfoSchema } from '$lib/schemas/personal-info';
-	import * as m from '../../../../paraglide/messages';
+	import * as m from '../../../../../paraglide/messages';
 	import { personalSettingsStore } from '$lib/stores/settings.svelte';
 
 	interface Props {

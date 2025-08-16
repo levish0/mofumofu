@@ -40,12 +40,12 @@ export { default as ProfilePostGrid } from './components/profile/ProfilePostGrid
 export { default as ImageCropModal } from './components/modal/ImageCropModal.svelte';
 
 // Settings Components
-export { default as AccountSettings } from './components/settings/AccountSettings.svelte';
-export { default as DisplaySettings } from './components/settings/DisplaySettings.svelte';
-export { default as NotificationSettings } from './components/settings/NotificationSettings.svelte';
-export { default as PersonalInfoSettings } from './components/settings/PersonalInfoSettings/PersonalInfoSettings.svelte';
-export { default as PrivacySettings } from './components/settings/PrivacySettings.svelte';
-export { default as WritingSettings } from './components/settings/WritingSettings.svelte';
+export { default as AccountSettings } from './components/settings/forms/AccountSettings.svelte';
+export { default as DisplaySettings } from './components/settings/forms/DisplaySettings.svelte';
+export { default as NotificationSettings } from './components/settings/forms/NotificationSettings.svelte';
+export { default as PersonalInfoSettings } from './components/settings/forms/PersonalInfoSettings/PersonalInfoSettings.svelte';
+export { default as PrivacySettings } from './components/settings/forms/PrivacySettings.svelte';
+export { default as WritingSettings } from './components/settings/forms/WritingSettings.svelte';
 
 // Write Components
 export { default as WriteEditor } from './components/write/WriteEditor.svelte';

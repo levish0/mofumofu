@@ -1,6 +1,6 @@
 <script lang="ts">
 	import * as Select from '$lib/components/ui/select';
-	import * as m from '../../../../paraglide/messages';
+	import * as m from '../../../../../paraglide/messages';
 	import { mode, setMode } from 'mode-watcher';
 
 	let selectedTheme = $state(mode.current || 'system');

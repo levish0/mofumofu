@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Select from '$lib/components/ui/select';
-	import * as m from '../../../../paraglide/messages';
-	import { setLocale, getLocale } from '../../../../paraglide/runtime';
+	import * as m from '../../../../../paraglide/messages';
+	import { setLocale, getLocale } from '../../../../../paraglide/runtime';
 	import { onMount } from 'svelte';
 
 	let selectedLanguage = $state('en');

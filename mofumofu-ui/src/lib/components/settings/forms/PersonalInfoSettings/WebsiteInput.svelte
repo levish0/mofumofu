@@ -1,22 +1,22 @@
 <script lang="ts">
-	import { Input } from '../../ui/input';
+	import { Input } from '../../../ui/input';
 	import * as v from 'valibot';
 	import { createPersonalInfoSchema } from '$lib/schemas/personal-info';
-	import * as m from '../../../../paraglide/messages';
+	import * as m from '../../../../../paraglide/messages';
 
 	interface Props {
-		name: string | null;
-		onUpdate: (name: string) => void;
+		website: string | null;
+		onUpdate: (website: string) => void;
 		onValidationChange: (error?: string) => void;
 	}
 
-	let { name, onUpdate, onValidationChange }: Props = $props();
+	let { website, onUpdate, onValidationChange }: Props = $props();
 
 	let localError = $state<string | undefined>();
 
-	function validateName(value: string): string | undefined {
+	function validateWebsite(value: string): string | undefined {
 		const schema = createPersonalInfoSchema();
-		const result = v.safeParse(schema.entries.name, value.trim());
+		const result = v.safeParse(schema.entries.website, value.trim());
 		return result.success ? undefined : result.issues?.[0]?.message;
 	}
 
@@ -24,38 +24,38 @@
 		const value = (e.target as HTMLInputElement).value;
 		onUpdate(value);
 
-		const error = validateName(value);
+		const error = validateWebsite(value);
 		localError = error;
 		onValidationChange(error);
 	}
 
-	const characterCount = $derived((name || '').length);
-	const isOverLimit = $derived(characterCount > 20);
+	const characterCount = $derived((website || '').length);
+	const isOverLimit = $derived(characterCount > 50);
 </script>
 
 <div class="space-y-4">
-	<h2 class="text-2xl font-semibold">{m.settings_display_name()}</h2>
+	<h2 class="text-2xl font-semibold">{m.settings_website()}</h2>
 	<div class="space-y-2">
 		<div class="relative">
 			<Input
-				id="name"
-				placeholder={m.settings_display_name_placeholder()}
+				id="website"
+				placeholder={m.settings_website_placeholder()}
 				class="dark:bg-mofu-dark-800 text-mofu-dark-200 placeholder:text-mofu-dark-300 pr-12 {localError
 					? 'border-red-500'
 					: ''}"
-				value={name || ''}
+				value={website || ''}
 				oninput={handleInput}
 			/>
 			<div
 				class="absolute top-1/2 right-3 -translate-y-1/2 text-xs {isOverLimit ? 'text-red-400' : 'text-mofu-dark-400'}"
 			>
-				{characterCount}/20
+				{characterCount}/50
 			</div>
 		</div>
 		{#if localError}
 			<p class="text-xs text-rose-400">{localError}</p>
 		{:else}
-			<p class="text-mofu-dark-400 text-xs">{m.settings_display_name_description()}</p>
+			<p class="text-mofu-dark-400 text-xs">{m.settings_website_description()}</p>
 		{/if}
 	</div>
 </div>
