@@ -6,7 +6,12 @@
 	interface Props {
 		profileImage: string | null;
 		onUpdate: (data: { profileImageFile: Blob; profileImage: string }) => void;
-		openImageCrop: (imageSrc: string, aspectRatio?: number, shape?: 'rect' | 'round', onComplete?: (data: any) => void) => void;
+		openImageCrop: (
+			imageSrc: string,
+			aspectRatio?: number,
+			shape?: 'rect' | 'round',
+			onComplete?: (data: any) => void
+		) => void;
 	}
 
 	let { profileImage, onUpdate, openImageCrop }: Props = $props();
@@ -23,28 +28,33 @@
 		if (file && file.type.startsWith('image/')) {
 			try {
 				const tempImageSrc = await handleFileRead(file);
-				
-				openImageCrop(tempImageSrc, 1, 'round', async (data: { croppedAreaPixels: { x: number; y: number; width: number; height: number } }) => {
-					try {
-						const { blob, url } = await cropImage(tempImageSrc, data, {
-							maxFileSizeMB: 4,
-							resizeOptions: { width: 400, height: 400 },
-							quality: 0.9
-						});
 
-						onUpdate({
-							profileImageFile: blob,
-							profileImage: url
-						});
-						cleanupTempImage(tempImageSrc);
-					} catch (error) {
-						console.error('Error cropping profile image:', error);
-						if (error instanceof Error) {
-							alert(`Profile crop failed: ${error.message}`);
+				openImageCrop(
+					tempImageSrc,
+					1,
+					'round',
+					async (data: { croppedAreaPixels: { x: number; y: number; width: number; height: number } }) => {
+						try {
+							const { blob, url } = await cropImage(tempImageSrc, data, {
+								maxFileSizeMB: 4,
+								resizeOptions: { width: 400, height: 400 },
+								quality: 0.9
+							});
+
+							onUpdate({
+								profileImageFile: blob,
+								profileImage: url
+							});
+							cleanupTempImage(tempImageSrc);
+						} catch (error) {
+							console.error('Error cropping profile image:', error);
+							if (error instanceof Error) {
+								alert(`Profile crop failed: ${error.message}`);
+							}
+							cleanupTempImage(tempImageSrc);
 						}
-						cleanupTempImage(tempImageSrc);
 					}
-				});
+				);
 			} catch (error) {
 				console.error('Failed to read image file:', error);
 				alert('Failed to read image file. Please try again.');
@@ -108,4 +118,3 @@
 		</div>
 	</div>
 </div>
-

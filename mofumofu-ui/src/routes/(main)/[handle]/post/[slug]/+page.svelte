@@ -15,8 +15,8 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import { createLike, deleteLike, checkLikeStatus } from '$lib/api/like/likeApi';
 	import { authStore } from '$lib/stores/auth.svelte';
-	import FloatingTOC from '$lib/components/post/FloatingTOC.svelte';
-	import FloatingNavigation from '$lib/components/post/FloatingNavigation.svelte';
+	import FloatingTOC from '$lib/components/post/floating/FloatingTOC.svelte';
+	import FloatingNavigation from '$lib/components/post/floating/FloatingNavigation.svelte';
 
 	const { data }: { data: PageData } = $props();
 
@@ -31,6 +31,19 @@
 
 	const navbar = getContext<NavbarContext>('navbar');
 	const topPosition = $derived(navbar.isVisible() ? '68px' : '8px');
+
+	// 유저의 로케일과 타임존에 맞는 시간 포맷팅
+	const formatDateTime = (dateStr: string) => {
+		const date = new Date(dateStr);
+		return date.toLocaleString(undefined, {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit',
+			timeZoneName: 'short'
+		});
+	};
 
 	// 작성자 확인 및 드롭다운 상태
 	const currentUser = $derived(userStore.user);
@@ -214,7 +227,7 @@
 								<div>
 									<p class="font-medium text-gray-900 dark:text-white">{data.author.name}</p>
 									<p class="dark:text-mofu-dark-400 text-sm text-gray-500">
-										{data.post.created_at}
+										{formatDateTime(data.post.created_at)}
 									</p>
 								</div>
 							</a>

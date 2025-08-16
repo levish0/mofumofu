@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Badge } from '../ui/badge';
+	import { Badge } from '../../ui/badge';
 
 	const {
 		title = '',

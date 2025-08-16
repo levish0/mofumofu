@@ -1,12 +1,17 @@
 <script lang="ts">
 	import { Icon, Photo } from 'svelte-hero-icons';
-		import { useImageCrop } from './useImageCrop';
+	import { useImageCrop } from './useImageCrop';
 	import * as m from '../../../../../paraglide/messages';
 
 	interface Props {
 		bannerImage: string | null;
 		onUpdate: (data: { bannerImageFile: Blob; bannerImage: string }) => void;
-		openImageCrop: (imageSrc: string, aspectRatio?: number, shape?: 'rect' | 'round', onComplete?: (data: any) => void) => void;
+		openImageCrop: (
+			imageSrc: string,
+			aspectRatio?: number,
+			shape?: 'rect' | 'round',
+			onComplete?: (data: any) => void
+		) => void;
 	}
 
 	let { bannerImage, onUpdate, openImageCrop }: Props = $props();
@@ -23,28 +28,33 @@
 		if (file && file.type.startsWith('image/')) {
 			try {
 				const tempImageSrc = await handleFileRead(file);
-				
-				openImageCrop(tempImageSrc, 4, 'rect', async (data: { croppedAreaPixels: { x: number; y: number; width: number; height: number } }) => {
-					try {
-						const { blob, url } = await cropImage(tempImageSrc, data, {
-							maxFileSizeMB: 8,
-							resizeOptions: { width: 1000, height: 250 },
-							quality: 0.9
-						});
 
-						onUpdate({
-							bannerImageFile: blob,
-							bannerImage: url
-						});
-						cleanupTempImage(tempImageSrc);
-					} catch (error) {
-						console.error('Error cropping banner image:', error);
-						if (error instanceof Error) {
-							alert(`Banner crop failed: ${error.message}`);
+				openImageCrop(
+					tempImageSrc,
+					4,
+					'rect',
+					async (data: { croppedAreaPixels: { x: number; y: number; width: number; height: number } }) => {
+						try {
+							const { blob, url } = await cropImage(tempImageSrc, data, {
+								maxFileSizeMB: 8,
+								resizeOptions: { width: 1000, height: 250 },
+								quality: 0.9
+							});
+
+							onUpdate({
+								bannerImageFile: blob,
+								bannerImage: url
+							});
+							cleanupTempImage(tempImageSrc);
+						} catch (error) {
+							console.error('Error cropping banner image:', error);
+							if (error instanceof Error) {
+								alert(`Banner crop failed: ${error.message}`);
+							}
+							cleanupTempImage(tempImageSrc);
 						}
-						cleanupTempImage(tempImageSrc);
 					}
-				});
+				);
 			} catch (error) {
 				console.error('Failed to read image file:', error);
 				alert('Failed to read image file. Please try again.');
@@ -52,7 +62,6 @@
 		}
 		target.value = '';
 	}
-
 
 	function handleImageLoad() {
 		imageLoading = false;
@@ -105,4 +114,3 @@
 		<input id="banner-upload" type="file" accept="image/*" class="hidden" onchange={handleImageChange} />
 	</div>
 </div>
-

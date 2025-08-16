@@ -132,7 +132,7 @@
 		<button
 			type="button"
 			aria-label={m.write_resize_handle()}
-			class="w-1 flex-shrink-0 cursor-col-resize bg-gray-700 p-0 transition-colors"
+			class="bg-mofu-dark-700 w-1 flex-shrink-0 cursor-col-resize p-0 transition-colors"
 			onmousedown={resizableHook?.handleMouseDown}
 			class:bg-gray-400={resizableHook?.isDragging()}
 		></button>

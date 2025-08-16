@@ -24,10 +24,7 @@ where
         .await?
         .ok_or(Errors::PostNotFound)?;
 
-    // 자신의 포스트에는 좋아요를 누를 수 없음
-    if post.user_id == *user_id {
-        return Err(Errors::BadRequestError("Cannot like your own post".to_string()));
-    }
+    // 자신의 포스트에도 좋아요를 누를 수 있음 (제거된 제약)
 
     // 이미 좋아요가 있는지 확인
     let already_liked = repository_check_like_status(&txn, user_id, handle, slug).await?;

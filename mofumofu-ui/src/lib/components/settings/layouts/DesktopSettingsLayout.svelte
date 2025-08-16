@@ -32,8 +32,16 @@
 		handleReset: () => void;
 	};
 
-	const { sections, selectedSection, topPosition, handleSave, saveSuccess, onSectionChange, openImageCrop, handleReset }: Props =
-		$props();
+	const {
+		sections,
+		selectedSection,
+		topPosition,
+		handleSave,
+		saveSuccess,
+		onSectionChange,
+		openImageCrop,
+		handleReset
+	}: Props = $props();
 </script>
 
 <!-- 데스크톱 레이아웃 -->

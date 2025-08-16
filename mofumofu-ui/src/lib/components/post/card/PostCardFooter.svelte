@@ -3,7 +3,7 @@
 	import { createLike, deleteLike, checkLikeStatus } from '$lib/api/like/likeApi';
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { goto } from '$app/navigation';
-	import * as m from '../../../paraglide/messages';
+	import * as m from '../../../../paraglide/messages';
 
 	const {
 		author_name = '',

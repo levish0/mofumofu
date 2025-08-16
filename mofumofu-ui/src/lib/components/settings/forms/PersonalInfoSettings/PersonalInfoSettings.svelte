@@ -11,7 +11,12 @@
 	import WebsiteInput from './WebsiteInput.svelte';
 
 	type Props = {
-		openImageCrop: (imageSrc: string, aspectRatio?: number, shape?: 'rect' | 'round', onComplete?: (data: any) => void) => void;
+		openImageCrop: (
+			imageSrc: string,
+			aspectRatio?: number,
+			shape?: 'rect' | 'round',
+			onComplete?: (data: any) => void
+		) => void;
 	};
 
 	const { openImageCrop }: Props = $props();

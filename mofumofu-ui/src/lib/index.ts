@@ -30,9 +30,9 @@ export {
 };
 
 // Domain Components
-export { default as PostCard } from './components/post/PostCard.svelte';
+export { default as PostCard } from './components/post/card/PostCard.svelte';
 export { default as PostList } from './components/post/PostList.svelte';
-export { default as PostCardSkeleton } from './components/post/PostCardSkeleton.svelte';
+export { default as PostCardSkeleton } from './components/post/card/PostCardSkeleton.svelte';
 export { default as Navbar } from './components/navbar/Navbar.svelte';
 export { default as ProfileHeader } from './components/profile/ProfileHeader.svelte';
 export { default as ProfileInfo } from './components/profile/ProfileInfo.svelte';

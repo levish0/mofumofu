@@ -278,8 +278,8 @@ class SettingsStore {
 		// Reset other settings
 		if (this.originalState) {
 			const originalStateCopy = JSON.parse(JSON.stringify(this.originalState));
-			this.state = { 
-				...this.state, 
+			this.state = {
+				...this.state,
 				...originalStateCopy,
 				// Always ensure these states are properly reset
 				hasChanges: false,

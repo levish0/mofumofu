@@ -1,5 +1,5 @@
 <script lang="ts">
-	import PostCard from '../post/PostCard.svelte';
+	import PostCard from '../post/card/PostCard.svelte';
 	import type { PostListItem } from '$lib/api/post/types';
 	import { Badge } from '../ui/badge';
 	import { getContext } from 'svelte';
