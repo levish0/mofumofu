@@ -1,7 +1,7 @@
 [project]
 name = "tasks"
-version = "0.5.5"
-description = "Add your description here"
+version = "0.5.6"
+description = "A soft and simple blogging platform for everyone."
 requires-python = ">=3.10"
 dependencies = [
     "asyncpg>=0.30.0",
