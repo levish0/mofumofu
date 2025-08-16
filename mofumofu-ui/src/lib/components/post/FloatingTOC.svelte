@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { Bars3, XMark } from 'svelte-hero-icons';
+	import { Bars3 } from 'svelte-hero-icons';
 	import { Icon } from 'svelte-hero-icons';
-	import { fly, fade } from 'svelte/transition';
+	import * as Drawer from '$lib/components/ui/drawer';
+	import { buttonVariants } from '$lib/components/ui/button';
 
 	type TOCItem = {
 		id: string;
@@ -14,64 +15,35 @@
 	};
 
 	const { tocItems }: Props = $props();
-	let isOpen = $state(false);
-
-	function toggleTOC() {
-		isOpen = !isOpen;
-	}
-
-	function closeTOC() {
-		isOpen = false;
-	}
+	let open = $state(false);
 
 	function handleTOCClick() {
-		closeTOC();
+		open = false;
 	}
 </script>
 
 <!-- 플로팅 목차 버튼 (모바일에서만 표시) -->
-<div class="fixed bottom-32 right-4 z-40 md:hidden">
-	<!-- TOC 버튼 -->
-	<button
-		onclick={toggleTOC}
-		class="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl dark:bg-gray-800"
-		aria-label="목차 보기"
-	>
-		<Icon src={Bars3} class="h-6 w-6 text-gray-700 dark:text-gray-300" />
-	</button>
-
-	<!-- TOC 오버레이 -->
-	{#if isOpen}
-		<div
-			class="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm"
-			transition:fade={{ duration: 200 }}
-			onclick={closeTOC}
-		></div>
-
-		<!-- TOC 패널 -->
-		<div
-			class="fixed bottom-0 left-0 right-0 z-50 max-h-[70vh] overflow-hidden rounded-t-xl bg-white shadow-2xl dark:bg-gray-800"
-			transition:fly={{ y: 300, duration: 300 }}
+<div class="fixed right-4 bottom-32 z-50 md:hidden">
+	<Drawer.Root bind:open>
+		<Drawer.Trigger
+			class="dark:bg-mofu-dark-900 flex h-12 w-12 items-center justify-center rounded-full bg-white opacity-70 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+			aria-label="목차 보기"
 		>
-			<!-- 헤더 -->
-			<div class="flex items-center justify-between border-b p-4 dark:border-gray-700">
-				<h3 class="text-lg font-semibold text-gray-900 dark:text-white">목차</h3>
-				<button
-					onclick={closeTOC}
-					class="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
-				>
-					<Icon src={XMark} class="h-5 w-5 text-gray-500 dark:text-gray-400" />
-				</button>
-			</div>
+			<Icon src={Bars3} class="h-6 w-6 text-gray-700 dark:text-gray-300" />
+		</Drawer.Trigger>
 
-			<!-- 목차 내용 -->
-			<div class="max-h-[50vh] overflow-y-auto p-4">
+		<Drawer.Content class="dark:bg-mofu-dark-900 max-h-[70vh] bg-white">
+			<Drawer.Header>
+				<Drawer.Title class="text-left">목차</Drawer.Title>
+			</Drawer.Header>
+
+			<div class="max-h-[50vh] overflow-y-auto px-4 pb-4">
 				<nav class="space-y-2">
 					{#each tocItems as item}
 						<a
 							href="#{item.id}"
 							onclick={handleTOCClick}
-							class="block py-2 text-sm text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+							class=" dark:text-mofu-dark-200 block py-2 text-sm text-gray-600 transition-colors hover:text-gray-900 dark:hover:text-white"
 							style="padding-left: {(item.level - 1) * 16}px"
 						>
 							{item.text}
@@ -79,6 +51,6 @@
 					{/each}
 				</nav>
 			</div>
-		</div>
-	{/if}
+		</Drawer.Content>
+	</Drawer.Root>
 </div>

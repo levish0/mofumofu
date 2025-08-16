@@ -83,6 +83,7 @@
 		"typescript": "^5.9.2",
 		"unified": "^11.0.5",
 		"valibot": "^1.1.0",
+		"vaul-svelte": "1.0.0-next.7",
 		"vite": "^7.1.2"
 	},
 	"keywords": [
