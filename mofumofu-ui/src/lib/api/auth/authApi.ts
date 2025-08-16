@@ -13,15 +13,6 @@ export async function refreshAccessToken(): Promise<RefreshAccessTokenResponse> 
 	}
 }
 
-export async function clearRefreshToken(): Promise<void> {
-	try {
-		await publicApi.post('v0/auth/clear_refresh', {});
-	} catch (error) {
-		console.error('Failed to clear refresh token:', error);
-		throw error;
-	}
-}
-
 export async function signOut(): Promise<void> {
 	try {
 		await privateApi.post('v0/auth/sign_out', {});

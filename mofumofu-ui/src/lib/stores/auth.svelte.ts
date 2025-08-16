@@ -41,7 +41,7 @@ export const authStore = {
 
 	async tryRefreshToken(): Promise<boolean> {
 		if (!browser) return false;
-		
+
 		try {
 			const response = await refreshAccessToken();
 			this.setToken(response.access_token);

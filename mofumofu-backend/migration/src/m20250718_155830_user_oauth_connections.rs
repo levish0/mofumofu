@@ -27,10 +27,7 @@ impl MigrationTrait for Migration {
                     )
                     .col(
                         ColumnDef::new(UserOAuthConnections::Provider)
-                            .enumeration(
-                                OAuthProvider::Table,
-                                OAuthProvider::iter().skip(1)
-                            )
+                            .enumeration(OAuthProvider::Table, OAuthProvider::iter().skip(1))
                             .not_null(),
                     )
                     .col(

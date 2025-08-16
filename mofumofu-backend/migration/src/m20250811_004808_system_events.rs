@@ -33,9 +33,7 @@ impl MigrationTrait for Migration {
                             .null(), // "post", "hashtag", "user", "comment" 등
                     )
                     .col(
-                        ColumnDef::new(SystemEvents::Metadata)
-                            .json_binary()
-                            .null(), // 추가 정보
+                        ColumnDef::new(SystemEvents::Metadata).json_binary().null(), // 추가 정보
                     )
                     .col(
                         ColumnDef::new(SystemEvents::CreatedAt)

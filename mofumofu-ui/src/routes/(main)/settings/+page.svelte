@@ -111,7 +111,7 @@
 			// 토큰이 없으면 refresh 시도
 			if (!authStore.isAuthenticated) {
 				const refreshSuccess = await authStore.tryRefreshToken();
-				
+
 				if (!refreshSuccess) {
 					// 인증 실패시 display 섹션으로 리다이렉트
 					authError = false; // settings 페이지는 인증 없어도 display 섹션은 접근 가능
@@ -237,27 +237,27 @@
 
 {#if !isAuthChecking}
 	<!-- 데스크톱 레이아웃 -->
-<DesktopSettingsLayout
-	{sections}
-	{selectedSection}
-	{topPosition}
-	{handleSave}
-	{saveSuccess}
-	onSectionChange={handleSectionChange}
-	{openImageCrop}
-	{handleReset}
-/>
+	<DesktopSettingsLayout
+		{sections}
+		{selectedSection}
+		{topPosition}
+		{handleSave}
+		{saveSuccess}
+		onSectionChange={handleSectionChange}
+		{openImageCrop}
+		{handleReset}
+	/>
 
-<!-- 모바일 레이아웃 -->
-<MobileSettingsLayout {sections} {handleSave} {saveSuccess} {openImageCrop} {handleReset} />
+	<!-- 모바일 레이아웃 -->
+	<MobileSettingsLayout {sections} {handleSave} {saveSuccess} {openImageCrop} {handleReset} />
 
-<!-- 전역 이미지 크롭 모달 -->
-<ImageCropModal
-	bind:isOpen={showImageCrop}
-	imageSrc={cropImageSrc}
-	aspectRatio={cropAspectRatio}
-	{cropShape}
-	onCrop={handleCropComplete}
-	onCancel={handleCropCancel}
-/>
+	<!-- 전역 이미지 크롭 모달 -->
+	<ImageCropModal
+		bind:isOpen={showImageCrop}
+		imageSrc={cropImageSrc}
+		aspectRatio={cropAspectRatio}
+		{cropShape}
+		onCrop={handleCropComplete}
+		onCancel={handleCropCancel}
+	/>
 {/if}

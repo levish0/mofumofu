@@ -278,7 +278,7 @@
 	</Dialog.Content>
 </Dialog.Root>
 
-<LoadingOverlay 
-	isVisible={isLoading} 
-	message={isEditMode ? '포스트를 수정하고 있습니다...' : m.publish_loading_overlay()} 
+<LoadingOverlay
+	isVisible={isLoading}
+	message={isEditMode ? '포스트를 수정하고 있습니다...' : m.publish_loading_overlay()}
 />

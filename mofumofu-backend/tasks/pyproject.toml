@@ -1,12 +1,12 @@
 [project]
 name = "tasks"
-version = "0.5.8"
+version = "0.5.9"
 description = "A soft and simple blogging platform for everyone."
 requires-python = ">=3.10"
 dependencies = [
     "asyncpg>=0.30.0",
     "bcrypt==4.3.0",
-    "boto3>=1.40.6",
+    "boto3>=1.40.9",
     "celery>=5.5.3",
     "emails>=0.6",
     "fastapi[standard]>=0.116.1",
@@ -19,7 +19,7 @@ dependencies = [
     "psycopg2-binary>=2.9.0",
     "pydantic-settings>=2.10.1",
     "redis>=6.4.0",
-    "sqlalchemy>=2.0.42",
+    "sqlalchemy>=2.0.43",
 ]
 
 [tool.uv]

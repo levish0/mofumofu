@@ -66,7 +66,7 @@
 			// 토큰이 없으면 refresh 시도
 			if (!authStore.isAuthenticated) {
 				const refreshSuccess = await authStore.tryRefreshToken();
-				
+
 				if (!refreshSuccess) {
 					authError = true;
 					return;
@@ -97,37 +97,14 @@
 
 <LoadingOverlay isVisible={isAuthChecking} message="에디터를 준비중입니다." />
 
-<AuthErrorScreen 
-	isVisible={authError} 
-	description="글 작성 기능을 이용하려면 로그인해 주세요." 
-/>
+<AuthErrorScreen isVisible={authError} description="글 작성 기능을 이용하려면 로그인해 주세요." />
 
 {#if !authError}
 	<div class="bg-mofu-dark-900 flex h-full w-full break-all text-white">
-	<!-- 메인 컨텐츠 영역 -->
-	<div bind:this={containerElement} class="flex flex-1 overflow-hidden">
-		<!-- 모바일/태블릿: 전체 화면, 데스크톱: 분할 -->
-		<div class="w-full lg:hidden">
-			<WriteEditor
-				{title}
-				{tags}
-				{content}
-				onTitleChange={handleTitleChange}
-				onTagsChange={handleTagsChange}
-				onContentChange={handleContentChange}
-				onExit={handleExit}
-				onSaveDraft={handleSaveDraft}
-				onPublished={() => {}}
-				{isPreviewMode}
-				onTogglePreviewMode={handleTogglePreviewMode}
-				{htmlOutput}
-			/>
-		</div>
-
-		<!-- 데스크톱: 분할 뷰 -->
-		<div class="hidden lg:flex lg:flex-1 lg:overflow-hidden">
-			<!-- 에디터 영역 -->
-			<div style="width: {resizableHook?.leftWidth() ?? 50}%">
+		<!-- 메인 컨텐츠 영역 -->
+		<div bind:this={containerElement} class="flex flex-1 overflow-hidden">
+			<!-- 모바일/태블릿: 전체 화면, 데스크톱: 분할 -->
+			<div class="w-full lg:hidden">
 				<WriteEditor
 					{title}
 					{tags}
@@ -138,26 +115,46 @@
 					onExit={handleExit}
 					onSaveDraft={handleSaveDraft}
 					onPublished={() => {}}
-					isPreviewMode={false}
-					onTogglePreviewMode={undefined}
-					htmlOutput=""
+					{isPreviewMode}
+					onTogglePreviewMode={handleTogglePreviewMode}
+					{htmlOutput}
 				/>
 			</div>
 
-			<!-- Resizer (드래그 핸들) -->
-			<button
-				type="button"
-				aria-label={m.write_resize_handle()}
-				class="bg-mofu-dark-700 w-1 flex-shrink-0 cursor-col-resize p-0 transition-colors"
-				onmousedown={resizableHook?.handleMouseDown}
-				class:bg-gray-400={resizableHook?.isDragging()}
-			></button>
+			<!-- 데스크톱: 분할 뷰 -->
+			<div class="hidden lg:flex lg:flex-1 lg:overflow-hidden">
+				<!-- 에디터 영역 -->
+				<div style="width: {resizableHook?.leftWidth() ?? 50}%">
+					<WriteEditor
+						{title}
+						{tags}
+						{content}
+						onTitleChange={handleTitleChange}
+						onTagsChange={handleTagsChange}
+						onContentChange={handleContentChange}
+						onExit={handleExit}
+						onSaveDraft={handleSaveDraft}
+						onPublished={() => {}}
+						isPreviewMode={false}
+						onTogglePreviewMode={undefined}
+						htmlOutput=""
+					/>
+				</div>
 
-			<!-- 미리보기 영역 -->
-			<div style="width: {resizableHook?.rightWidth() ?? 50}%">
-				<WritePreview {title} {htmlOutput} />
+				<!-- Resizer (드래그 핸들) -->
+				<button
+					type="button"
+					aria-label={m.write_resize_handle()}
+					class="bg-mofu-dark-700 w-1 flex-shrink-0 cursor-col-resize p-0 transition-colors"
+					onmousedown={resizableHook?.handleMouseDown}
+					class:bg-gray-400={resizableHook?.isDragging()}
+				></button>
+
+				<!-- 미리보기 영역 -->
+				<div style="width: {resizableHook?.rightWidth() ?? 50}%">
+					<WritePreview {title} {htmlOutput} />
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 {/if}

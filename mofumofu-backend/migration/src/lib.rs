@@ -11,11 +11,9 @@ mod m20250718_162101_post_hashtags;
 mod m20250718_162102_comments;
 mod m20250719_031841_follows;
 mod m20250811_004451_action_types;
-mod m20250811_004808_system_events;
 mod m20250811_004802_target_types;
+mod m20250811_004808_system_events;
 mod m20250815_103031_create_likes_table;
-
-
 
 pub struct Migrator;
 
