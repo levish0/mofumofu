@@ -3,11 +3,14 @@ use crate::dto::post::request::{PostSortOrder, SearchPostsRequest};
 use crate::dto::post::response::{GetPostsResponse, PostListItem};
 use crate::service::error::errors::{Errors, ServiceResult};
 use crate::service::meilisearch::post_indexer;
+use crate::repository::post::get_posts::repository_get_posts_by_ids;
+use crate::repository::hashtag::get_hashtags_by_post::repository_get_hashtags_by_posts;
+use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
 use chrono::{DateTime, Utc};
 use sea_orm::{ConnectionTrait, TransactionTrait};
 
 pub async fn service_search_posts<C>(
-    _conn: &C,
+    conn: &C,
     meilisearch: &MeilisearchClient,
     request: SearchPostsRequest,
 ) -> ServiceResult<GetPostsResponse>
@@ -29,8 +32,8 @@ where
         PostSortOrder::Latest => "latest",
     };
 
-    // Meilisearch에서 검색 (일반 페이지네이션)
-    let (meilisearch_posts, total_hits) = post_indexer::search_posts(
+    // Meilisearch에서 post ID 검색
+    let (post_ids, total_hits) = post_indexer::search_posts(
         meilisearch,
         request.query.as_deref(),
         request.hashtags.as_deref(),
@@ -48,7 +51,7 @@ where
         Errors::SysInternalError(format!("Search service error: {}", e))
     })?;
 
-    if meilisearch_posts.is_empty() {
+    if post_ids.is_empty() {
         return Ok(GetPostsResponse {
             posts: Vec::new(),
             current_page: page,
@@ -58,31 +61,43 @@ where
         });
     }
 
-    // MeilisearchPost를 PostListItem으로 변환
-    let post_items: Vec<PostListItem> = meilisearch_posts
+    // DB에서 실제 post 데이터 조회
+    let posts = repository_get_posts_by_ids(conn, &post_ids).await?;
+
+    // DB 결과를 PostListItem으로 변환 (get_posts.rs와 동일한 로직)
+    let post_ids_uuid: Vec<uuid::Uuid> = posts.iter().map(|p| p.id).collect();
+    let post_hashtags_map = repository_get_hashtags_by_posts(conn, &post_ids_uuid)
+        .await?
         .into_iter()
-        .map(|mpost| {
-            // created_at을 Unix timestamp에서 DateTime으로 변환
-            let created_at = DateTime::from_timestamp(mpost.created_at, 0).unwrap_or_else(Utc::now);
+        .collect::<std::collections::HashMap<_, _>>();
 
-            PostListItem {
-                title: mpost.title,
-                summary: mpost.summary,
-                thumbnail_image: mpost.thumbnail_image,
-                user_handle: mpost.user_handle,
-                user_name: mpost.user_name,
-                user_avatar: mpost.user_avatar,
-                created_at,
-                like_count: mpost.like_count,
-                comment_count: mpost.comment_count,
-                view_count: mpost.view_count,
-                slug: mpost.slug,
-                hashtags: mpost.hashtags,
-            }
-        })
-        .collect();
+    let mut post_items = Vec::new();
+    for post in posts {
+        let user = repository_find_user_by_uuid(conn, &post.user_id)
+            .await?
+            .ok_or(Errors::UserNotFound)?;
 
-    // 다음 페이지가 있는지 확인 (일반 페이지네이션)
+        let hashtags = post_hashtags_map
+            .get(&post.id)
+            .map(|tags| tags.iter().map(|tag| tag.name.clone()).collect())
+            .unwrap_or_else(Vec::new);
+
+        post_items.push(PostListItem {
+            title: post.title,
+            summary: post.summary,
+            thumbnail_image: post.thumbnail_image,
+            user_handle: user.handle,
+            user_name: user.name,
+            user_avatar: user.profile_image,
+            created_at: post.created_at,
+            like_count: post.like_count,
+            comment_count: post.comment_count,
+            view_count: post.view_count,
+            slug: post.slug,
+            hashtags,
+        });
+    }
+
     let has_more = post_items.len() == page_size as usize;
 
     Ok(GetPostsResponse {

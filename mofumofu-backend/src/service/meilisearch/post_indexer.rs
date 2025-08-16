@@ -1,4 +1,4 @@
-use crate::connection::meilisearch::{MeilisearchClient, MeilisearchPost};
+use crate::connection::meilisearch::{MeilisearchClient, MeilisearchPost, MeilisearchPostId};
 use tracing::warn;
 
 pub async fn setup_posts_index(
@@ -70,7 +70,7 @@ pub async fn search_posts(
     sort: &str,
     page: u32,
     page_size: u32,
-) -> Result<(Vec<MeilisearchPost>, u64), meilisearch_sdk::errors::Error> {
+) -> Result<(Vec<String>, u64), meilisearch_sdk::errors::Error> {
     let posts_index = meilisearch.get_client().index("posts");
     let offset = (page - 1) * page_size;
 
@@ -118,7 +118,7 @@ pub async fn search_posts(
         _ => vec!["created_at:desc"], // default: latest
     };
 
-    // 검색 쿼리 구성 및 실행
+    // 검색 쿼리 구성 및 실행 (ID만 반환)
     let search_results = if let Some(filter) = filter_str {
         posts_index
             .search()
@@ -127,7 +127,8 @@ pub async fn search_posts(
             .with_sort(&sort_criteria)
             .with_offset(offset as usize)
             .with_limit(page_size as usize)
-            .execute::<MeilisearchPost>()
+            .with_attributes_to_retrieve(meilisearch_sdk::search::Selectors::Some(&["id"]))
+            .execute::<MeilisearchPostId>()
             .await?
     } else {
         posts_index
@@ -136,13 +137,14 @@ pub async fn search_posts(
             .with_sort(&sort_criteria)
             .with_offset(offset as usize)
             .with_limit(page_size as usize)
-            .execute::<MeilisearchPost>()
+            .with_attributes_to_retrieve(meilisearch_sdk::search::Selectors::Some(&["id"]))
+            .execute::<MeilisearchPostId>()
             .await?
     };
 
     let results = search_results;
     let total_hits = results.estimated_total_hits.unwrap_or(0) as u64;
-    let posts = results.hits.into_iter().map(|hit| hit.result).collect();
+    let post_ids = results.hits.into_iter().map(|hit| hit.result.id).collect();
 
-    Ok((posts, total_hits))
+    Ok((post_ids, total_hits))
 }

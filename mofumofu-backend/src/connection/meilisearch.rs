@@ -34,14 +34,16 @@ pub struct MeilisearchPost {
     pub user_id: String,
     pub user_handle: String,
     pub user_name: String,
-    pub user_avatar: Option<String>,
     pub hashtags: Vec<String>,
     pub created_at: i64, // Unix timestamp for filtering/sorting
     pub like_count: i32,
     pub comment_count: i32,
     pub view_count: i32,
-    pub slug: String,
-    pub thumbnail_image: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MeilisearchPostId {
+    pub id: String,
 }
 
 impl MeilisearchPost {
@@ -58,14 +60,11 @@ impl MeilisearchPost {
             user_id: post.user_id.to_string(),
             user_handle: user.handle.clone(),
             user_name: user.name.clone(),
-            user_avatar: user.profile_image.clone(),
             hashtags,
             created_at: post.created_at.timestamp(),
             like_count: post.like_count,
             comment_count: post.comment_count,
             view_count: post.view_count,
-            slug: post.slug.clone(),
-            thumbnail_image: post.thumbnail_image.clone(),
         }
     }
 }

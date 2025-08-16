@@ -188,7 +188,7 @@
 					{/if}
 				</div>
 			{:else}
-				<Button href="/" variant="icon" aria-label="search">
+				<Button href="/search" variant="icon" aria-label="search">
 					<Icon src={MagnifyingGlass} size="20" class="dark:text-white" />
 				</Button>
 				<Button href="/settings" variant="icon" aria-label="settings">

@@ -3,7 +3,8 @@ use crate::entity::common::{ActionType, TargetType};
 use crate::entity::posts::{Column, Entity as PostEntity, Model as PostModel};
 use crate::service::error::errors::Errors;
 use sea_orm::prelude::Expr;
-use sea_orm::{ConnectionTrait, EntityTrait, PaginatorTrait, QueryOrder, QuerySelect};
+use sea_orm::{ConnectionTrait, EntityTrait, PaginatorTrait, QueryOrder, QuerySelect, QueryFilter, ColumnTrait};
+use uuid::Uuid;
 
 pub async fn repository_get_posts<C>(
     conn: &C,
@@ -98,4 +99,31 @@ where
     let count = PostEntity::find().count(conn).await?;
 
     Ok(count)
+}
+
+pub async fn repository_get_posts_by_ids<C>(
+    conn: &C,
+    post_ids: &[String],
+) -> Result<Vec<PostModel>, Errors>
+where
+    C: ConnectionTrait,
+{
+    if post_ids.is_empty() {
+        return Ok(Vec::new());
+    }
+
+    // String ID들을 Uuid로 변환
+    let uuid_ids: Result<Vec<Uuid>, _> = post_ids
+        .iter()
+        .map(|id| Uuid::parse_str(id))
+        .collect();
+
+    let uuid_ids = uuid_ids.map_err(|e| Errors::BadRequestError(format!("Invalid UUID format: {}", e)))?;
+
+    let posts = PostEntity::find()
+        .filter(Column::Id.is_in(uuid_ids))
+        .all(conn)
+        .await?;
+
+    Ok(posts)
 }

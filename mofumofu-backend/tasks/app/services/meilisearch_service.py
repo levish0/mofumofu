@@ -80,7 +80,7 @@ class MeilisearchService:
             # 3. 색인 설정
             self.setup_index()
 
-            # 4. Meilisearch 형태로 변환
+            # 4. Meilisearch 형태로 변환 (경량화 - 검색용 필드만)
             documents = []
             for post in posts:
                 document = {
@@ -91,7 +91,6 @@ class MeilisearchService:
                     "user_id": post["user_id"],
                     "user_handle": post.get("user_handle", ""),
                     "user_name": post.get("user_name", ""),
-                    "user_avatar": post.get("user_avatar"),
                     "hashtags": post.get("hashtags", [])
                     if post.get("hashtags")
                     else [],
@@ -101,8 +100,6 @@ class MeilisearchService:
                     "like_count": post.get("like_count", 0),
                     "comment_count": post.get("comment_count", 0),
                     "view_count": post.get("view_count", 0),
-                    "slug": post.get("slug", ""),
-                    "thumbnail_image": post.get("thumbnail_image"),
                 }
                 documents.append(document)
 
@@ -168,7 +165,7 @@ class MeilisearchService:
         )
 
     def index_single_post(self, post_id: str) -> Dict[str, Any]:
-        """단일 포스트 색인 (Rust index_post와 동일)"""
+        """단일 포스트 색인 (경량화 버전)"""
         try:
             # DB에서 해당 포스트 조회
             posts = db_service.get_posts_by_ids([post_id])
@@ -185,7 +182,6 @@ class MeilisearchService:
                 "user_id": post["user_id"],
                 "user_handle": post.get("user_handle", ""),
                 "user_name": post.get("user_name", ""),
-                "user_avatar": post.get("user_avatar"),
                 "hashtags": post.get("hashtags", []) if post.get("hashtags") else [],
                 "created_at": int(post["created_at"].timestamp())
                 if post.get("created_at")
@@ -193,8 +189,6 @@ class MeilisearchService:
                 "like_count": post.get("like_count", 0),
                 "comment_count": post.get("comment_count", 0),
                 "view_count": post.get("view_count", 0),
-                "slug": post.get("slug", ""),
-                "thumbnail_image": post.get("thumbnail_image"),
             }
 
             index = self.client.index(self.index_name)
@@ -211,7 +205,7 @@ class MeilisearchService:
             return {"status": "error", "error": str(e)}
 
     def update_single_post(self, post_id: str) -> Dict[str, Any]:
-        """단일 포스트 업데이트 (Rust update_post와 동일)"""
+        """단일 포스트 업데이트 (경량화 버전)"""
         try:
             # DB에서 해당 포스트 조회
             posts = db_service.get_posts_by_ids([post_id])
@@ -228,7 +222,6 @@ class MeilisearchService:
                 "user_id": post["user_id"],
                 "user_handle": post.get("user_handle", ""),
                 "user_name": post.get("user_name", ""),
-                "user_avatar": post.get("user_avatar"),
                 "hashtags": post.get("hashtags", []) if post.get("hashtags") else [],
                 "created_at": int(post["created_at"].timestamp())
                 if post.get("created_at")
@@ -236,8 +229,6 @@ class MeilisearchService:
                 "like_count": post.get("like_count", 0),
                 "comment_count": post.get("comment_count", 0),
                 "view_count": post.get("view_count", 0),
-                "slug": post.get("slug", ""),
-                "thumbnail_image": post.get("thumbnail_image"),
             }
 
             index = self.client.index(self.index_name)
