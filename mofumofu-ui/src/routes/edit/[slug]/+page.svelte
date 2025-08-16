@@ -22,6 +22,7 @@
 	let content = $state(data.post.content); // 이제 원본 마크다운을 가져올 수 있음
 	let htmlOutput = $state('');
 	let containerElement: HTMLElement;
+	let isPreviewMode = $state(false); // 모바일에서 프리뷰 모드인지
 
 	// Resizable hook
 	let resizableHook = $state<ReturnType<typeof useResizable> | null>(null);
@@ -63,6 +64,10 @@
 			goto('/');
 		}
 	}
+
+	function handleTogglePreviewMode(isPreview: boolean) {
+		isPreviewMode = isPreview;
+	}
 </script>
 
 <svelte:head>
@@ -85,8 +90,8 @@
 <div class="flex h-full w-full bg-gray-900 break-all text-white dark:bg-gray-900">
 	<!-- 메인 컨텐츠 영역 -->
 	<div bind:this={containerElement} class="flex flex-1 overflow-hidden">
-		<!-- 에디터 영역 -->
-		<div style="width: {resizableHook?.leftWidth() ?? 50}%">
+		<!-- 모바일/태블릿: 전체 화면, 데스크톱: 분할 -->
+		<div class="w-full lg:hidden">
 			<WriteEditor
 				{title}
 				{tags}
@@ -99,21 +104,47 @@
 				onPublished={() => {}}
 				isEditMode={true}
 				editSlug={data.slug}
+				{isPreviewMode}
+				onTogglePreviewMode={handleTogglePreviewMode}
+				{htmlOutput}
 			/>
 		</div>
 
-		<!-- Resizer (드래그 핸들) -->
-		<button
-			type="button"
-			aria-label={m.write_resize_handle()}
-			class="bg-mofu-dark-700 w-1 flex-shrink-0 cursor-col-resize p-0 transition-colors"
-			onmousedown={resizableHook?.handleMouseDown}
-			class:bg-gray-400={resizableHook?.isDragging()}
-		></button>
+		<!-- 데스크톱: 분할 뷰 -->
+		<div class="hidden lg:flex lg:flex-1 lg:overflow-hidden">
+			<!-- 에디터 영역 -->
+			<div style="width: {resizableHook?.leftWidth() ?? 50}%">
+				<WriteEditor
+					{title}
+					{tags}
+					{content}
+					onTitleChange={handleTitleChange}
+					onTagsChange={handleTagsChange}
+					onContentChange={handleContentChange}
+					onExit={handleExit}
+					onSaveDraft={handleSaveDraft}
+					onPublished={() => {}}
+					isEditMode={true}
+					editSlug={data.slug}
+					isPreviewMode={false}
+					onTogglePreviewMode={undefined}
+					htmlOutput=""
+				/>
+			</div>
 
-		<!-- 미리보기 영역 -->
-		<div style="width: {resizableHook?.rightWidth() ?? 50}%">
-			<WritePreview {title} {htmlOutput} />
+			<!-- Resizer (드래그 핸들) -->
+			<button
+				type="button"
+				aria-label={m.write_resize_handle()}
+				class="bg-mofu-dark-700 w-1 flex-shrink-0 cursor-col-resize p-0 transition-colors"
+				onmousedown={resizableHook?.handleMouseDown}
+				class:bg-gray-400={resizableHook?.isDragging()}
+			></button>
+
+			<!-- 미리보기 영역 -->
+			<div style="width: {resizableHook?.rightWidth() ?? 50}%">
+				<WritePreview {title} {htmlOutput} />
+			</div>
 		</div>
 	</div>
 </div>

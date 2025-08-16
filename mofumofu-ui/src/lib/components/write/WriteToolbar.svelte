@@ -16,6 +16,7 @@
 		ChevronDown
 	} from '@lucide/svelte';
 	import { Button } from '../ui/button';
+	import { Switch } from '../ui/switch';
 	import { uploadImage } from '$lib/api/post/postApi';
 	import { toast } from 'svelte-sonner';
 	import { compressImage } from '$lib/utils/imageCompress';
@@ -24,9 +25,17 @@
 		onInsertText: (before: string, after?: string) => void;
 		showStickyToolbar: boolean;
 		onToggleHeader: () => void;
+		isPreviewMode?: boolean;
+		onTogglePreviewMode?: (isPreview: boolean) => void;
 	}
 
-	const { onInsertText, showStickyToolbar, onToggleHeader }: Props = $props();
+	const {
+		onInsertText,
+		showStickyToolbar,
+		onToggleHeader,
+		isPreviewMode = false,
+		onTogglePreviewMode
+	}: Props = $props();
 
 	async function handleImageUpload() {
 		const input = document.createElement('input');
@@ -174,18 +183,29 @@
 			</Button>
 		</div>
 
-		<!-- 헤더 토글 버튼 -->
-		<Button
-			variant="ghost"
-			onclick={onToggleHeader}
-			class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
-			title={showStickyToolbar ? m.write_toolbar_show_header() : m.write_toolbar_hide_header()}
-		>
-			{#if showStickyToolbar}
-				<ChevronDown class="h-5 w-5" />
-			{:else}
-				<ChevronUp class="h-5 w-5" />
+		<div class="flex items-center gap-3 ml-auto">
+			<!-- 모바일/태블릿 전용 에디터/프리뷰 모드 스위치 -->
+			{#if onTogglePreviewMode}
+				<div class="flex items-center gap-2 lg:hidden">
+					<span class="dark:text-mofu-dark-400 text-sm">에디터</span>
+					<Switch checked={isPreviewMode} onCheckedChange={onTogglePreviewMode} />
+					<span class="dark:text-mofu-dark-400 text-sm">프리뷰</span>
+				</div>
 			{/if}
-		</Button>
+
+			<!-- 헤더 토글 버튼 -->
+			<Button
+				variant="ghost"
+				onclick={onToggleHeader}
+				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
+				title={showStickyToolbar ? m.write_toolbar_show_header() : m.write_toolbar_hide_header()}
+			>
+				{#if showStickyToolbar}
+					<ChevronDown class="h-5 w-5" />
+				{:else}
+					<ChevronUp class="h-5 w-5" />
+				{/if}
+			</Button>
+		</div>
 	</div>
 </div>

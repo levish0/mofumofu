@@ -16,6 +16,9 @@
 		onPublished: () => void;
 		isEditMode?: boolean;
 		editSlug?: string;
+		isPreviewMode?: boolean;
+		onTogglePreviewMode?: (isPreview: boolean) => void;
+		htmlOutput?: string;
 	}
 
 	const {
@@ -29,7 +32,10 @@
 		onSaveDraft,
 		onPublished,
 		isEditMode = false,
-		editSlug
+		editSlug,
+		isPreviewMode = false,
+		onTogglePreviewMode,
+		htmlOutput = ''
 	}: Props = $props();
 
 	let contentTextarea: HTMLTextAreaElement;
@@ -52,7 +58,7 @@
 	}
 </script>
 
-<div class="bg-mofu-dark-900 text-mofu-dark-200 flex h-full flex-col">
+<div class="bg-mofu-dark-900 text-mofu-dark-200 flex h-full flex-col overflow-hidden">
 	<!-- 헤더 영역 (sticky) -->
 	<div class="bg-mofu-dark-900 sticky top-0 z-10 overflow-hidden">
 		<!-- 제목/태그 영역 -->
@@ -63,19 +69,31 @@
 			onInsertText={insertText}
 			{showStickyToolbar}
 			onToggleHeader={() => (showStickyToolbar = !showStickyToolbar)}
+			{isPreviewMode}
+			{onTogglePreviewMode}
 		/>
 	</div>
 
-	<!-- 본문 입력 -->
-	<div class="flex flex-1 flex-col">
-		<textarea
-			bind:this={contentTextarea}
-			value={content}
-			oninput={(e) => onContentChange((e.target as HTMLInputElement).value)}
-			placeholder={m.write_editor_placeholder()}
-			class="placeholder:text-mofu-dark-600 w-full flex-1 resize-none border-none bg-transparent px-6 py-0 text-lg leading-relaxed outline-none"
-			spellcheck="false"
-		></textarea>
+	<!-- 본문 입력 또는 프리뷰 -->
+	<div class="flex min-h-0 flex-1 flex-col overflow-hidden">
+		{#if isPreviewMode && onTogglePreviewMode}
+			<!-- 모바일 프리뷰 모드 -->
+			<div class="min-h-0 flex-1 overflow-y-auto px-6 py-4">
+				<div class="prose prose-invert prose-lg text-mofu-dark-200 max-w-none break-all">
+					{@html htmlOutput}
+				</div>
+			</div>
+		{:else}
+			<!-- 에디터 모드 -->
+			<textarea
+				bind:this={contentTextarea}
+				value={content}
+				oninput={(e) => onContentChange((e.target as HTMLInputElement).value)}
+				placeholder={m.write_editor_placeholder()}
+				class="placeholder:text-mofu-dark-600 w-full flex-1 resize-none border-none bg-transparent px-6 py-0 text-lg leading-relaxed outline-none"
+				spellcheck="false"
+			></textarea>
+		{/if}
 	</div>
 
 	<!-- 에디터 영역 하단 버튼들 -->
