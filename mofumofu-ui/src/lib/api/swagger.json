@@ -2,12 +2,19 @@
 	"openapi": "3.1.0",
 	"info": {
 		"title": "mofumofu-backend",
-		"description": "",
+		"description": "A soft and simple blogging platform for everyone.",
 		"contact": { "name": "Levi Lim", "email": "shiueo.csh@gmail.com" },
 		"license": { "name": "" },
-		"version": "0.5.4"
+		"version": "0.5.8"
 	},
 	"paths": {
+		"/v0/auth/clear_refresh": {
+			"post": {
+				"tags": ["Auth"],
+				"operationId": "clear_refresh",
+				"responses": { "204": { "description": "Refresh token cookie deleted successfully." } }
+			}
+		},
 		"/v0/auth/github": {
 			"post": {
 				"tags": ["Auth"],

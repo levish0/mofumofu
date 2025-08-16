@@ -1,13 +1,23 @@
 import { privateApi } from '../private';
+import { publicApi } from '../public';
 import type { GithubAuthRequest, GoogleAuthRequest, RefreshAccessTokenResponse } from './types';
 
+// refreshAccessToken 수정
 export async function refreshAccessToken(): Promise<RefreshAccessTokenResponse> {
 	try {
-		const response = await privateApi.post('v0/auth/refresh', {});
-		const data = response.json<RefreshAccessTokenResponse>();
-		return data;
+		const response = await publicApi.post('v0/auth/refresh', {});
+		return response.json<RefreshAccessTokenResponse>();
 	} catch (error) {
 		console.error('Failed to refresh access token:', error);
+		throw error;
+	}
+}
+
+export async function clearRefreshToken(): Promise<void> {
+	try {
+		await publicApi.post('v0/auth/clear_refresh', {});
+	} catch (error) {
+		console.error('Failed to clear refresh token:', error);
 		throw error;
 	}
 }

@@ -45,6 +45,7 @@ use utoipa::{
         crate::api::v0::routes::auth::google::google_sign_in,
         crate::api::v0::routes::auth::sign_in::sign_in,
         crate::api::v0::routes::auth::sign_out::sign_out,
+        crate::api::v0::routes::auth::clear_refresh::clear_refresh,
         crate::api::v0::routes::auth::refresh::refresh,
         crate::api::v0::routes::user::get_my_profile::get_my_profile,
         crate::api::v0::routes::user::create_user::create_user,
