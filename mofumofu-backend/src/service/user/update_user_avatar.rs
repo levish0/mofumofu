@@ -54,9 +54,12 @@ where
             if let Some(existing_image_url) = &user.profile_image {
                 if !existing_image_url.is_empty() {
                     // Extract key from URL and delete from R2
-                    let key = format!("profiles/{}/avatar/{}", user.handle, filename);
-                    if let Err(e) = r2_client.delete(&key).await {
-                        warn!("Failed to delete existing avatar from R2: {}", e);
+                    let url_parts: Vec<&str> = existing_image_url.split('/').collect();
+                    if url_parts.len() >= 4 {
+                        let key = url_parts[url_parts.len()-4..].join("/");
+                        if let Err(e) = r2_client.delete(&key).await {
+                            warn!("Failed to delete existing avatar from R2: {}", e);
+                        }
                     }
                 }
             }
