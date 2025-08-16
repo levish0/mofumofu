@@ -86,10 +86,12 @@
 					</a>
 				</div>
 			{/if}
+			<!--
 			<div class="flex items-center gap-1">
 				<Icon src={Briefcase} class="h-4 w-4" />
 				<span>mofumofu</span>
 			</div>
+			-->
 			<div class="flex items-center gap-1">
 				<Icon src={CalendarDays} class="h-4 w-4" />
 				<span>{formatJoinDate(profile.created_at)}</span>
