@@ -1,20 +1,18 @@
 <script lang="ts">
 	import { Icon, Camera } from 'svelte-hero-icons';
-	import ImageCropModal from '../../../modal/ImageCropModal.svelte';
 	import { useImageCrop } from './useImageCrop';
 	import * as m from '../../../../../paraglide/messages';
 
 	interface Props {
 		profileImage: string | null;
 		onUpdate: (data: { profileImageFile: Blob; profileImage: string }) => void;
+		openImageCrop: (imageSrc: string, aspectRatio?: number, shape?: 'rect' | 'round', onComplete?: (data: any) => void) => void;
 	}
 
-	let { profileImage, onUpdate }: Props = $props();
+	let { profileImage, onUpdate, openImageCrop }: Props = $props();
 
 	// No cache-busting needed for blob URLs since they're already unique
 
-	let showCrop = $state(false);
-	let tempImageSrc = $state('');
 	let imageLoading = $state(true);
 
 	const { cropImage, cleanupTempImage, handleFileRead } = useImageCrop();
@@ -24,40 +22,35 @@
 		const file = target.files?.[0];
 		if (file && file.type.startsWith('image/')) {
 			try {
-				tempImageSrc = await handleFileRead(file);
-				showCrop = true;
+				const tempImageSrc = await handleFileRead(file);
+				
+				openImageCrop(tempImageSrc, 1, 'round', async (data: { croppedAreaPixels: { x: number; y: number; width: number; height: number } }) => {
+					try {
+						const { blob, url } = await cropImage(tempImageSrc, data, {
+							maxFileSizeMB: 4,
+							resizeOptions: { width: 400, height: 400 },
+							quality: 0.9
+						});
+
+						onUpdate({
+							profileImageFile: blob,
+							profileImage: url
+						});
+						cleanupTempImage(tempImageSrc);
+					} catch (error) {
+						console.error('Error cropping profile image:', error);
+						if (error instanceof Error) {
+							alert(`Profile crop failed: ${error.message}`);
+						}
+						cleanupTempImage(tempImageSrc);
+					}
+				});
 			} catch (error) {
 				console.error('Failed to read image file:', error);
 				alert('Failed to read image file. Please try again.');
 			}
 		}
 		target.value = '';
-	}
-
-	async function handleCrop(data: { croppedAreaPixels: { x: number; y: number; width: number; height: number } }) {
-		try {
-			const { blob, url } = await cropImage(tempImageSrc, data, {
-				maxFileSizeMB: 4,
-				resizeOptions: { width: 400, height: 400 },
-				quality: 0.9
-			});
-
-			onUpdate({
-				profileImageFile: blob,
-				profileImage: url
-			});
-			tempImageSrc = '';
-		} catch (error) {
-			console.error('Error cropping profile image:', error);
-			if (error instanceof Error) {
-				alert(`Profile crop failed: ${error.message}`);
-			}
-		}
-	}
-
-	function handleCropCancel() {
-		cleanupTempImage(tempImageSrc);
-		tempImageSrc = '';
 	}
 
 	function handleImageLoad() {
@@ -116,11 +109,3 @@
 	</div>
 </div>
 
-<ImageCropModal
-	bind:isOpen={showCrop}
-	imageSrc={tempImageSrc}
-	aspectRatio={1}
-	cropShape="round"
-	onCrop={handleCrop}
-	onCancel={handleCropCancel}
-/>

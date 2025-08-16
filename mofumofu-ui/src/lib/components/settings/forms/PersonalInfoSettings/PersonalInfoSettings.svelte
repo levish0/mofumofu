@@ -10,6 +10,12 @@
 	import LocationInput from './LocationInput.svelte';
 	import WebsiteInput from './WebsiteInput.svelte';
 
+	type Props = {
+		openImageCrop: (imageSrc: string, aspectRatio?: number, shape?: 'rect' | 'round', onComplete?: (data: any) => void) => void;
+	};
+
+	const { openImageCrop }: Props = $props();
+
 	const personal = $derived(settingsStore.personal);
 	const { handle, name, profileImage, bannerImage, bio, location, website } = $derived(personal);
 
@@ -83,9 +89,9 @@
 
 <div class="text-mofu-dark-200 min-h-screen">
 	<div class="space-y-4">
-		<BannerImageUpload {bannerImage} onUpdate={handleBannerUpdate} />
+		<BannerImageUpload {bannerImage} onUpdate={handleBannerUpdate} {openImageCrop} />
 
-		<ProfileImageUpload {profileImage} onUpdate={handleProfileUpdate} />
+		<ProfileImageUpload {profileImage} onUpdate={handleProfileUpdate} {openImageCrop} />
 
 		<HandleInput {handle} onUpdate={handleHandleUpdate} onValidationChange={handleHandleValidation} />
 

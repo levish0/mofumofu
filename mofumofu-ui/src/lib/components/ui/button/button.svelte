@@ -7,7 +7,7 @@
 		base: 'px-4 py-2 h-9 inline-flex items-center justify-center whitespace-nowrap rounded-full font-bold outline-none transition-all disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0',
 		variants: {
 			variant: {
-				default: 'dark:bg-white dark:text-black text-white bg-black hover:opacity-75 border-2',
+				default: 'dark:bg-white dark:text-black text-white bg-black hover:opacity-75 ',
 				destructive: 'bg-rose-600 text-white',
 				outline:
 					'bg-transparent border-black hover:bg-black hover:text-white text-black border-2 dark:border-white dark:hover:bg-white dark:hover:text-black dark:text-white',

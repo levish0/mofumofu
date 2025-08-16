@@ -1,9 +1,5 @@
 <script lang="ts">
-	import {
-		CheckCircle,
-		ArrowUturnLeft,
-		Icon
-	} from 'svelte-hero-icons';
+	import { CheckCircle, ArrowUturnLeft, Icon } from 'svelte-hero-icons';
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { settingsStore } from '$lib/stores/settings.svelte';
 	import { PersonalInfoSettings } from '../forms/PersonalInfoSettings';
@@ -27,9 +23,17 @@
 		handleSave: () => Promise<void>;
 		saveSuccess: boolean;
 		onSectionChange: (sectionId: string) => void;
+		openImageCrop: (
+			imageSrc: string,
+			aspectRatio?: number,
+			shape?: 'rect' | 'round',
+			onComplete?: (data: any) => void
+		) => void;
+		handleReset: () => void;
 	};
 
-	const { sections, selectedSection, topPosition, handleSave, saveSuccess, onSectionChange }: Props = $props();
+	const { sections, selectedSection, topPosition, handleSave, saveSuccess, onSectionChange, openImageCrop, handleReset }: Props =
+		$props();
 </script>
 
 <!-- 데스크톱 레이아웃 -->
@@ -59,7 +63,7 @@
 								<h3 class="text-mofu-dark-200 text-md font-bold break-all">{section.label()}</h3>
 							</div>
 						</div>
-						<p class="text-xs text-gray-400 dark:text-mofu-dark-300">{section.description()}</p>
+						<p class="dark:text-mofu-dark-300 text-xs text-gray-400">{section.description()}</p>
 					</button>
 				{/each}
 			</div>
@@ -74,14 +78,7 @@
 			>
 				<div class="flex items-center justify-center gap-2">
 					{#if settingsStore.isLoading}
-						<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-							<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-							<path
-								class="opacity-75"
-								fill="currentColor"
-								d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-							></path>
-						</svg>
+						<div class="border-mofu h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></div>
 						<h3 class="text-mofu-dark-200 text-md font-bold">{m.settings_saving()}</h3>
 					{:else if saveSuccess}
 						<Icon src={CheckCircle} class="h-4 w-4 text-green-400" />
@@ -99,11 +96,11 @@
 			{#if settingsStore.hasChanges}
 				<button
 					class="dark:bg-mofu-dark-800/50 dark:border-mofu-dark-800 group flex w-full cursor-pointer flex-col overflow-hidden rounded-xl border p-2 text-center transition-all duration-200 hover:opacity-75"
-					onclick={() => settingsStore.resetChanges()}
+					onclick={handleReset}
 				>
 					<div class="flex items-center justify-center gap-2">
 						<Icon src={ArrowUturnLeft} class="h-4 w-4" />
-						<span class="text-sm text-gray-400 dark:text-mofu-dark-300">{m.settings_reset_changes()}</span>
+						<span class="dark:text-mofu-dark-300 text-sm text-gray-400">{m.settings_reset_changes()}</span>
 					</div>
 				</button>
 			{/if}
@@ -136,7 +133,7 @@
 	<!-- Main Content -->
 	<div class="flex-1">
 		{#if selectedSection === 'personal'}
-			<PersonalInfoSettings />
+			<PersonalInfoSettings {openImageCrop} />
 		{:else if selectedSection === 'account'}
 			<AccountSettings />
 		{:else if selectedSection === 'display'}

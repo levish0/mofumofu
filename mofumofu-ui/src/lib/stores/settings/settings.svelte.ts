@@ -277,10 +277,16 @@ class SettingsStore {
 
 		// Reset other settings
 		if (this.originalState) {
-			this.state = { ...this.state, ...JSON.parse(JSON.stringify(this.originalState)) };
-			this.state.hasChanges = false;
-			this.state.errors = {};
-			this.state.validationErrors = {};
+			const originalStateCopy = JSON.parse(JSON.stringify(this.originalState));
+			this.state = { 
+				...this.state, 
+				...originalStateCopy,
+				// Always ensure these states are properly reset
+				hasChanges: false,
+				isLoading: false,
+				errors: {},
+				validationErrors: {}
+			};
 		}
 	}
 

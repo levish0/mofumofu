@@ -19,10 +19,18 @@
 	import { userStore } from '$lib/stores/user.svelte';
 	import MobileSettingsLayout from '$lib/components/settings/layouts/MobileSettingsLayout.svelte';
 	import DesktopSettingsLayout from '$lib/components/settings/layouts/DesktopSettingsLayout.svelte';
+	import ImageCropModal from '$lib/components/modal/ImageCropModal.svelte';
 	import * as m from '../../../paraglide/messages';
 
 	let selectedSection = $state(authStore.isAuthenticated ? 'personal' : 'display');
 	let saveSuccess = $state(false);
+
+	// 이미지 크롭 관련 상태
+	let showImageCrop = $state(false);
+	let cropImageSrc = $state('');
+	let cropAspectRatio = $state(1);
+	let cropShape = $state<'rect' | 'round'>('round');
+	let onCropComplete: ((data: any) => void) | null = null;
 
 	// 모바일에서 accordion의 기본 열린 섹션
 	let accordionValue = $state(authStore.isAuthenticated ? 'personal' : 'display');
@@ -130,6 +138,10 @@
 		const result = await settingsStore.saveChanges();
 		if (result.success) {
 			saveSuccess = true;
+			// 3초 후 saveSuccess 상태를 자동으로 초기화
+			setTimeout(() => {
+				saveSuccess = false;
+			}, 1500);
 		} else {
 			saveSuccess = false;
 		}
@@ -144,6 +156,36 @@
 
 	function handleSectionChange(sectionId: string) {
 		selectedSection = sectionId;
+	}
+
+	function handleReset() {
+		settingsStore.resetChanges();
+		saveSuccess = false;
+	}
+
+	// 이미지 크롭 관련 함수들
+	function openImageCrop(
+		imageSrc: string,
+		aspectRatio: number = 1,
+		shape: 'rect' | 'round' = 'round',
+		onComplete?: (data: any) => void
+	) {
+		cropImageSrc = imageSrc;
+		cropAspectRatio = aspectRatio;
+		cropShape = shape;
+		onCropComplete = onComplete || null;
+		showImageCrop = true;
+	}
+
+	function handleCropComplete(data: any) {
+		if (onCropComplete) {
+			onCropComplete(data);
+		}
+		showImageCrop = false;
+	}
+
+	function handleCropCancel() {
+		showImageCrop = false;
 	}
 </script>
 
@@ -171,18 +213,26 @@
 </svelte:head>
 
 <!-- 데스크톱 레이아웃 -->
-<DesktopSettingsLayout 
-	{sections} 
-	{selectedSection} 
-	{topPosition} 
-	{handleSave} 
+<DesktopSettingsLayout
+	{sections}
+	{selectedSection}
+	{topPosition}
+	{handleSave}
 	{saveSuccess}
-	onSectionChange={handleSectionChange} 
+	onSectionChange={handleSectionChange}
+	{openImageCrop}
+	{handleReset}
 />
 
 <!-- 모바일 레이아웃 -->
-<MobileSettingsLayout 
-	{sections} 
-	{handleSave} 
-	{saveSuccess}
+<MobileSettingsLayout {sections} {handleSave} {saveSuccess} {openImageCrop} {handleReset} />
+
+<!-- 전역 이미지 크롭 모달 -->
+<ImageCropModal
+	bind:isOpen={showImageCrop}
+	imageSrc={cropImageSrc}
+	aspectRatio={cropAspectRatio}
+	{cropShape}
+	onCrop={handleCropComplete}
+	onCancel={handleCropCancel}
 />

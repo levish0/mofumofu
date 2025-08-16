@@ -1,9 +1,5 @@
 <script lang="ts">
-	import {
-		CheckCircle,
-		ArrowUturnLeft,
-		Icon
-	} from 'svelte-hero-icons';
+	import { CheckCircle, ArrowUturnLeft, Icon } from 'svelte-hero-icons';
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { settingsStore } from '$lib/stores/settings.svelte';
 	import { PersonalInfoSettings } from '../forms/PersonalInfoSettings';
@@ -26,9 +22,16 @@
 		}>;
 		handleSave: () => Promise<void>;
 		saveSuccess: boolean;
+		openImageCrop: (
+			imageSrc: string,
+			aspectRatio?: number,
+			shape?: 'rect' | 'round',
+			onComplete?: (data: any) => void
+		) => void;
+		handleReset: () => void;
 	};
 
-	const { sections, handleSave, saveSuccess }: Props = $props();
+	const { sections, handleSave, saveSuccess, openImageCrop, handleReset }: Props = $props();
 
 	// 모바일에서 accordion의 기본 열린 섹션
 	let accordionValue = $state(authStore.isAuthenticated ? 'personal' : 'display');
@@ -46,13 +49,13 @@
 						</div>
 						<div>
 							<h3 class="text-mofu-dark-200 text-md font-bold">{section.label()}</h3>
-							<p class="text-xs text-gray-400 dark:text-mofu-dark-300">{section.description()}</p>
+							<p class="dark:text-mofu-dark-300 text-xs text-gray-400">{section.description()}</p>
 						</div>
 					</div>
 				</Accordion.Trigger>
 				<Accordion.Content class="pb-4">
 					{#if section.id === 'personal'}
-						<PersonalInfoSettings />
+						<PersonalInfoSettings {openImageCrop} />
 					{:else if section.id === 'account'}
 						<AccountSettings />
 					{:else if section.id === 'display'}
@@ -94,10 +97,10 @@
 </div>
 
 <!-- 모바일용 하단 고정 Save Changes 버튼 -->
-<div class="fixed right-4 bottom-4 left-4 z-50 space-y-2 text-mofu-dark-200 lg:hidden dark:text-mofu-dark-200">
+<div class="text-mofu-dark-200 dark:text-mofu-dark-200 fixed right-4 bottom-4 left-4 z-50 space-y-2 lg:hidden">
 	<!-- Save Button -->
 	<Button
-		class="group flex w-full cursor-pointer flex-col overflow-hidden rounded-xl border bg-mofu-dark-800 px-6 py-6 text-left transition-all duration-200 hover:opacity-75 hover:shadow-xl dark:bg-mofu-dark-800 {!settingsStore.hasChanges
+		class="group bg-mofu-dark-800 dark:bg-mofu-dark-800 flex w-full cursor-pointer flex-col overflow-hidden rounded-xl border px-6 py-6 text-left transition-all duration-200 hover:opacity-75 hover:shadow-xl {!settingsStore.hasChanges
 			? 'cursor-not-allowed '
 			: ''}"
 		onclick={handleSave}
@@ -105,20 +108,13 @@
 	>
 		<div class="flex items-center justify-center gap-2">
 			{#if settingsStore.isLoading}
-				<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-					<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-					<path
-						class="opacity-75"
-						fill="currentColor"
-						d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-					></path>
-				</svg>
-				<h3 class="text-md font-bold text-mofu-dark-200">{m.settings_saving()}</h3>
+				<div class="border-mofu h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></div>
+				<h3 class="text-md text-mofu-dark-200 font-bold">{m.settings_saving()}</h3>
 			{:else if saveSuccess}
 				<Icon src={CheckCircle} class="h-4 w-4 text-green-400" />
-				<h3 class="text-md font-bold text-mofu-dark-200">{m.settings_saved()}</h3>
+				<h3 class="text-md text-mofu-dark-200 font-bold">{m.settings_saved()}</h3>
 			{:else}
-				<h3 class="text-md font-bold text-mofu-dark-200">{m.settings_save_changes()}</h3>
+				<h3 class="text-md text-mofu-dark-200 font-bold">{m.settings_save_changes()}</h3>
 				{#if settingsStore.hasChanges}
 					<span class="text-xs text-orange-400">•</span>
 				{/if}
@@ -129,12 +125,12 @@
 	<!-- Reset Button (only show if there are changes) -->
 	{#if settingsStore.hasChanges}
 		<Button
-			class="group flex w-full cursor-pointer flex-col overflow-hidden rounded-xl border bg-mofu-dark-800 px-6 py-6 text-center transition-all duration-200 hover:opacity-75 dark:bg-mofu-dark-800"
-			onclick={() => settingsStore.resetChanges()}
+			class="group bg-mofu-dark-800 dark:bg-mofu-dark-800 flex w-full cursor-pointer flex-col overflow-hidden rounded-xl border px-6 py-6 text-center transition-all duration-200 hover:opacity-75"
+			onclick={handleReset}
 		>
 			<div class="flex items-center justify-center gap-2">
-				<Icon src={ArrowUturnLeft} class="h-4 w-4 text-mofu-dark-200 dark:text-mofu-dark-200" />
-				<span class="text-sm text-mofu-dark-200 dark:text-mofu-dark-200">{m.settings_reset_changes()}</span>
+				<Icon src={ArrowUturnLeft} class="text-mofu-dark-200 dark:text-mofu-dark-200 h-4 w-4" />
+				<span class="text-mofu-dark-200 dark:text-mofu-dark-200 text-sm">{m.settings_reset_changes()}</span>
 			</div>
 		</Button>
 	{/if}

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Icon, Photo } from 'svelte-hero-icons';
-	import ImageCropModal from '../../modal/ImageCropModal.svelte';
-	import { useImageCrop } from '../../settings/forms/PersonalInfoSettings/useImageCrop';
+	import { compressImage } from '$lib/utils/imageCompress';
 
 	interface Props {
 		thumbnail: string | null;
@@ -10,51 +9,31 @@
 
 	let { thumbnail, onUpdate }: Props = $props();
 
-	let showCrop = $state(false);
-	let tempImageSrc = $state('');
 	let imageLoading = $state(true);
-
-	const { cropImage, cleanupTempImage, handleFileRead } = useImageCrop();
 
 	async function handleImageChange(event: Event) {
 		const target = event.target as HTMLInputElement;
 		const file = target.files?.[0];
 		if (file && file.type.startsWith('image/')) {
 			try {
-				tempImageSrc = await handleFileRead(file);
-				showCrop = true;
+				const { blob, url, cleanup } = await compressImage(file, {
+					maxFileSizeMB: 8,
+					resizeOptions: { width: 800, height: 450 }, // 16:9 비율
+					quality: 0.9
+				});
+
+				onUpdate({
+					thumbnailFile: blob,
+					thumbnail: url
+				});
 			} catch (error) {
-				console.error('Failed to read image file:', error);
-				alert('이미지 파일을 읽는데 실패했습니다. 다시 시도해주세요.');
+				console.error('Error compressing thumbnail:', error);
+				if (error instanceof Error) {
+					alert(`썸네일 압축 실패: ${error.message}`);
+				}
 			}
 		}
 		target.value = '';
-	}
-
-	async function handleCrop(data: { croppedAreaPixels: { x: number; y: number; width: number; height: number } }) {
-		try {
-			const { blob, url } = await cropImage(tempImageSrc, data, {
-				maxFileSizeMB: 3,
-				resizeOptions: { width: 800, height: 450 }, // 16:9 비율
-				quality: 0.85
-			});
-
-			onUpdate({
-				thumbnailFile: blob,
-				thumbnail: url
-			});
-			tempImageSrc = '';
-		} catch (error) {
-			console.error('Error cropping thumbnail:', error);
-			if (error instanceof Error) {
-				alert(`썸네일 크롭 실패: ${error.message}`);
-			}
-		}
-	}
-
-	function handleCropCancel() {
-		cleanupTempImage(tempImageSrc);
-		tempImageSrc = '';
 	}
 
 	function handleImageLoad() {
@@ -112,7 +91,7 @@
 				>
 					<Icon src={Photo} class="h-10 w-10" />
 					<span class="text-sm">썸네일 이미지 업로드</span>
-					<span class="text-xs">16:9 비율 권장, 최대 3MB</span>
+					<span class="text-xs">16:9 비율 권장, 최대 8MB</span>
 				</label>
 			{/if}
 		</div>
@@ -122,12 +101,3 @@
 		<button onclick={removeThumbnail} class="text-xs text-red-400 underline hover:text-red-300"> 썸네일 제거 </button>
 	{/if}
 </div>
-
-<ImageCropModal
-	bind:isOpen={showCrop}
-	imageSrc={tempImageSrc}
-	aspectRatio={16 / 9}
-	cropShape="rect"
-	onCrop={handleCrop}
-	onCancel={handleCropCancel}
-/>

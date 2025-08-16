@@ -19,6 +19,7 @@
 	// 팔로우 상태 확인
 	async function loadFollowStatus() {
 		if (!authStore.isAuthenticated) {
+			followStatusLoaded = true;
 			return;
 		}
 

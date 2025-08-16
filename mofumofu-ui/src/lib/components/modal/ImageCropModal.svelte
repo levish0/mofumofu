@@ -49,7 +49,7 @@
 </script>
 
 {#if isOpen}
-	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+	<div class="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4">
 		<div class="bg-mofu-dark-800 w-full max-w-2xl rounded-lg p-4">
 			<div class="relative h-96 w-full">
 				<Cropper
