@@ -57,12 +57,7 @@
 	}
 
 	function handleExit() {
-		// 뒤로 가기 또는 홈으로
-		if (currentUser) {
-			goto(`/@${currentUser.handle}/profile`);
-		} else {
-			goto('/');
-		}
+		history.back();
 	}
 
 	function handleTogglePreviewMode(isPreview: boolean) {
