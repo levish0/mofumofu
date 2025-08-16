@@ -7,7 +7,8 @@ import { refreshAccessToken, signOut } from '$lib/api/auth/authApi';
 let _token = $state(browser ? (localStorage.getItem('access_token') ?? '') : '');
 
 // 브라우저에서 초기화 시 토큰이 없으면 userStore도 clear
-if (browser && !_token) {
+const initialToken = browser ? (localStorage.getItem('access_token') ?? '') : '';
+if (browser && !initialToken) {
 	userStore.clear();
 }
 
