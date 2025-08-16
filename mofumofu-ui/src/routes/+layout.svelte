@@ -40,7 +40,7 @@
 	<link rel="canonical" href="https://mofumofu.ink" />
 </svelte:head>
 
-<ModeWatcher defaultMode="system" />
+<ModeWatcher defaultMode="dark" />
 <Toaster />
 <div class="dark:bg-mofu-dark-900 font-pretendard bg-mofu-light-100 min-h-screen max-w-screen">
 	<main>
