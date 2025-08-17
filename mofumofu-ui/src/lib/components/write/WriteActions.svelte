@@ -14,6 +14,7 @@
 		isEditMode?: boolean;
 		editSlug?: string;
 		editPostId?: string;
+		summary?: string;
 	}
 
 	const {
@@ -25,7 +26,8 @@
 		onPublished,
 		isEditMode = false,
 		editSlug,
-		editPostId
+		editPostId,
+		summary
 	}: Props = $props();
 </script>
 
@@ -50,7 +52,7 @@
 				임시저장
 			</Button>
 
-			<PublishDialog {title} {content} {tags} {onPublished} {isEditMode} {editSlug} {editPostId} />
+			<PublishDialog {title} {content} {tags} {onPublished} {isEditMode} {editSlug} {editPostId} {summary} />
 		</div>
 	</div>
 </div>

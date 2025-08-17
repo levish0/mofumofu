@@ -27,9 +27,10 @@
 		isEditMode?: boolean;
 		editSlug?: string;
 		editPostId?: string;
+		summary?: string;
 	}
 
-	let { title, content, tags, onPublished, isEditMode = false, editSlug, editPostId }: Props = $props();
+	let { title, content, tags, onPublished, isEditMode = false, editSlug, editPostId, summary }: Props = $props();
 
 	let isOpen = $state(false);
 	let isLoading = $state(false);
@@ -62,7 +63,7 @@
 			title: title,
 			slug: isEditMode && editSlug ? editSlug : generateSlug(title),
 			content: content,
-			summary: '',
+			summary: summary || '',
 			tags: tags,
 			thumbnail: null,
 			thumbnailFile: null

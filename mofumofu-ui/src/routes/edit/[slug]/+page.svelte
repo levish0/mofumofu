@@ -128,6 +128,7 @@
 					isEditMode={true}
 					editSlug={data.slug}
 					editPostId={data.post.id}
+					summary={data.post.summary || undefined}
 					{isPreviewMode}
 					onTogglePreviewMode={handleTogglePreviewMode}
 					{htmlOutput}
@@ -151,6 +152,7 @@
 						isEditMode={true}
 						editPostId={data.post.id}
 						editSlug={data.slug}
+						summary={data.post.summary || undefined}
 						isPreviewMode={false}
 						onTogglePreviewMode={undefined}
 						htmlOutput=""

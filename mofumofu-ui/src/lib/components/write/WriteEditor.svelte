@@ -20,6 +20,7 @@
 		isPreviewMode?: boolean;
 		onTogglePreviewMode?: (isPreview: boolean) => void;
 		htmlOutput?: string;
+		summary?: string;
 	}
 
 	const {
@@ -37,7 +38,8 @@
 		editPostId,
 		isPreviewMode = false,
 		onTogglePreviewMode,
-		htmlOutput = ''
+		htmlOutput = '',
+		summary
 	}: Props = $props();
 
 	let contentTextarea: HTMLTextAreaElement | undefined = $state();
@@ -101,5 +103,5 @@
 	</div>
 
 	<!-- 에디터 영역 하단 버튼들 -->
-	<WriteActions {title} {content} {tags} {onExit} {onSaveDraft} {onPublished} {isEditMode} {editSlug} {editPostId} />
+	<WriteActions {title} {content} {tags} {onExit} {onSaveDraft} {onPublished} {isEditMode} {editSlug} {editPostId} {summary} />
 </div>
