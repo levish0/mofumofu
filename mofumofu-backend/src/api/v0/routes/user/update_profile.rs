@@ -1,6 +1,7 @@
 use crate::dto::auth::internal::access_token::AccessTokenClaims;
 use crate::dto::user::request::update_profile::UpdateProfileRequest;
 use crate::dto::user::response::info::UserInfoResponse;
+use crate::service::auth::require_verified_user;
 use crate::service::error::errors::Errors;
 use crate::service::user::service_update_user_profile;
 use crate::service::validator::json_validator::ValidatedJson;
@@ -18,7 +19,7 @@ use tracing::{error, info, warn};
     responses(
         (status = 200, description = "Profile updated successfully", body = UserInfoResponse),
         (status = 400, description = "Invalid input"),
-        (status = 401, description = "Unauthorized"),
+        (status = 401, description = "Unauthorized or email not verified"),
         (status = 404, description = "User not found"),
         (status = 409, description = "Handle already exists"),
         (status = 422, description = "Validation error"),
@@ -38,6 +39,8 @@ pub async fn update_profile(
         "Received PUT request to update profile for user: {}",
         claims.sub
     );
+
+    require_verified_user(&state.conn, &claims).await?;
 
     let updated_user = service_update_user_profile(&state.conn, &claims.sub, payload).await?;
 

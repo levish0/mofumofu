@@ -2,6 +2,7 @@ use crate::dto::auth::internal::access_token::AccessTokenClaims;
 use crate::dto::post::request::create_post::CreatePostRequest;
 use crate::dto::post::response::create_post::CreatePostResponse;
 use crate::middleware::auth::access_jwt_auth;
+use crate::service::auth::require_verified_user;
 use crate::service::error::errors::Errors;
 use crate::service::post::create_post::service_create_post;
 use crate::service::validator::json_validator::ValidatedJson;
@@ -28,6 +29,7 @@ pub fn post_routes() -> Router<AppState> {
     responses(
         (status = 201, description = "Post created successfully", body = CreatePostResponse),
         (status = StatusCode::BAD_REQUEST, description = "Invalid input"),
+        (status = StatusCode::UNAUTHORIZED, description = "Unauthorized or email not verified"),
         (status = StatusCode::INTERNAL_SERVER_ERROR, description = "Internal Server Error")
     ),
     security(
@@ -42,6 +44,8 @@ pub async fn create_post(
 ) -> Result<CreatePostResponse, Errors> {
     info!("Received POST request to create post: {:?}", payload);
     let user_uuid = claims.sub.clone();
+
+    require_verified_user(&state.conn, &claims).await?;
 
     let response = service_create_post(&state.conn, &state.http_client, payload, &user_uuid).await?;
 

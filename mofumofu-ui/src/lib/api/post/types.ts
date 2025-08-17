@@ -43,6 +43,7 @@ export interface PostInfoResponse {
 	view_count: number;
 	slug: string;
 	summary?: string | null;
+	thumbnail_image?: string | null;
 	updated_at?: string | null;
 	tags: string[];
 }

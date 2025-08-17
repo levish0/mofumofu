@@ -1,9 +1,12 @@
 use crate::dto::auth::request::forgot_password::ForgotPasswordRequest;
 use crate::dto::auth::request::link_oauth::LinkOAuthRequest;
 use crate::dto::auth::request::login::AuthLoginRequest;
+use crate::dto::auth::request::resend_verification::ResendVerificationRequest;
 use crate::dto::auth::request::reset_password::ResetPasswordRequest;
 use crate::dto::auth::request::set_password::SetPasswordRequest;
+use crate::dto::auth::request::unlink_oauth::UnlinkOAuthRequest;
 use crate::dto::auth::request::verify_email::VerifyEmailRequest;
+use crate::dto::auth::response::oauth_connections::OAuthConnectionsResponse;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
 use crate::entity::common::OAuthProvider;
 use crate::dto::follow::request::check_follow_status::CheckFollowStatusRequest;
@@ -50,14 +53,17 @@ use utoipa::{
 #[openapi(
     paths(
         crate::api::v0::routes::auth::forgot_password::forgot_password,
+        crate::api::v0::routes::auth::get_oauth_connections::get_oauth_connections,
         crate::api::v0::routes::auth::github::github_sign_in,
         crate::api::v0::routes::auth::google::google_sign_in,
         crate::api::v0::routes::auth::link_oauth::link_oauth,
+        crate::api::v0::routes::auth::resend_verification::resend_verification,
         crate::api::v0::routes::auth::reset_password::reset_password,
         crate::api::v0::routes::auth::set_password::set_password,
         crate::api::v0::routes::auth::sign_in::sign_in,
         crate::api::v0::routes::auth::sign_out::sign_out,
         crate::api::v0::routes::auth::sign_up::sign_up,
+        crate::api::v0::routes::auth::unlink_oauth::unlink_oauth,
         crate::api::v0::routes::auth::verify_email::verify_email,
         crate::api::v0::routes::auth::refresh::refresh,
         crate::api::v0::routes::user::get_my_profile::get_my_profile,
@@ -95,7 +101,10 @@ use utoipa::{
             AuthLoginRequest,
             AuthJWTResponse,
             ForgotPasswordRequest,
+            ResendVerificationRequest,
             ResetPasswordRequest,
+            UnlinkOAuthRequest,
+            OAuthConnectionsResponse,
             SetPasswordRequest,
             LinkOAuthRequest,
             VerifyEmailRequest,

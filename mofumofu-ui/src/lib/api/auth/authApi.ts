@@ -8,7 +8,8 @@ import type {
 	VerifyEmailRequest,
 	SigninRequest,
 	ForgotPasswordRequest,
-	ResetPasswordRequest
+	ResetPasswordRequest,
+	ResendVerificationRequest
 } from './types';
 
 // refreshAccessToken 수정
@@ -63,4 +64,9 @@ export async function forgotPassword(email: string): Promise<void> {
 export async function resetPassword(token: string, newPassword: string): Promise<void> {
 	const payload: ResetPasswordRequest = { token, new_password: newPassword };
 	return publicApi.post('v0/auth/reset_password', { json: payload }).then(() => {});
+}
+
+export async function resendVerification(email: string): Promise<void> {
+	const payload: ResendVerificationRequest = { email };
+	return publicApi.post('v0/auth/resend_verification', { json: payload }).then(() => {});
 }

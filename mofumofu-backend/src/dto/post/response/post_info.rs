@@ -10,6 +10,7 @@ pub struct PostInfoResponse {
     pub id: Uuid,
     pub title: String,
     pub summary: Option<String>,
+    pub thumbnail_image: Option<String>,
     pub rendered: String,
     pub toc_items: Vec<TocItem>,
     pub author: PostAuthor,

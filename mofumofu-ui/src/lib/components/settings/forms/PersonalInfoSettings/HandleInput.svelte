@@ -9,9 +9,10 @@
 		handle: string | null;
 		onUpdate: (handle: string) => void;
 		onValidationChange: (error?: string) => void;
+		isVerified: boolean;
 	}
 
-	let { handle, onUpdate, onValidationChange }: Props = $props();
+	let { handle, onUpdate, onValidationChange, isVerified }: Props = $props();
 
 	let localError = $state<string | undefined>();
 
@@ -34,6 +35,11 @@
 	}
 
 	function handleInput(e: Event) {
+		if (!isVerified) {
+			alert('이메일 인증이 필요합니다. 이메일을 확인해주세요.');
+			return;
+		}
+		
 		const value = (e.target as HTMLInputElement).value;
 		onUpdate(value);
 
@@ -59,9 +65,10 @@
 					placeholder={m.settings_handle_placeholder()}
 					class="dark:bg-mofu-dark-800 text-mofu-dark-200 placeholder:text-mofu-dark-300 rounded-l-none rounded-r-none border-r-0 pr-12 {localError
 						? 'border-red-500'
-						: ''}"
+						: ''} {!isVerified ? 'opacity-50 cursor-not-allowed' : ''}"
 					value={handle || ''}
 					oninput={handleInput}
+					disabled={!isVerified}
 				/>
 				<div
 					class="absolute top-1/2 right-3 -translate-y-1/2 text-xs {isOverLimit
@@ -90,7 +97,9 @@
 				{/if}
 			</button>
 		</div>
-		{#if localError}
+		{#if !isVerified}
+			<p class="text-xs text-gray-500">이메일 인증이 필요합니다. 핸들 변경을 위해 이메일을 인증해주세요.</p>
+		{:else if localError}
 			<p class="text-xs text-rose-400">{localError}</p>
 		{:else if handleVerificationState === 'verified' && !needsVerification}
 			<p class="text-xs text-green-400">{m.settings_handle_available()}</p>

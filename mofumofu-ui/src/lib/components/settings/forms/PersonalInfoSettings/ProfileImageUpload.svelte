@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Icon, Camera } from 'svelte-hero-icons';
+	import { Icon, Camera, LockClosed } from 'svelte-hero-icons';
 	import { useImageCrop } from './useImageCrop';
 	import * as m from '../../../../../paraglide/messages';
 
@@ -12,9 +12,10 @@
 			shape?: 'rect' | 'round',
 			onComplete?: (data: any) => void
 		) => void;
+		isVerified: boolean;
 	}
 
-	let { profileImage, onUpdate, openImageCrop }: Props = $props();
+	let { profileImage, onUpdate, openImageCrop, isVerified }: Props = $props();
 
 	// No cache-busting needed for blob URLs since they're already unique
 
@@ -23,6 +24,11 @@
 	const { cropImage, cleanupTempImage, handleFileRead } = useImageCrop();
 
 	async function handleImageChange(event: Event) {
+		if (!isVerified) {
+			alert('이메일 인증이 필요합니다. 이메일을 확인해주세요.');
+			return;
+		}
+		
 		const target = event.target as HTMLInputElement;
 		const file = target.files?.[0];
 		if (file && file.type.startsWith('image/')) {
@@ -97,7 +103,7 @@
 	<h2 class="text-2xl font-semibold">{m.settings_profile_image()}</h2>
 	<div class="flex items-center space-x-4">
 		<div class="group relative transition-all">
-			<div class="bg-mofu-dark-800 relative h-24 w-24 overflow-hidden rounded-full group-hover:opacity-75">
+			<div class="bg-mofu-dark-800 relative h-24 w-24 overflow-hidden rounded-full {isVerified ? 'group-hover:opacity-75' : 'opacity-50'}">
 				{#if profileImage}
 					<!-- Skeleton shimmer while loading -->
 					{#if imageLoading}
@@ -116,23 +122,31 @@
 				{#if profileImage}
 					<label
 						for="profile-upload"
-						class="dark:text-mofu-dark-300 absolute inset-0 flex cursor-pointer items-center justify-center"
+						class="dark:text-mofu-dark-300 absolute inset-0 flex {isVerified ? 'cursor-pointer' : 'cursor-not-allowed'} items-center justify-center"
 					>
+						{#if !isVerified}
+							<Icon src={LockClosed} class="h-6 w-6 text-gray-400" />
+						{/if}
 					</label>
 				{:else}
 					<label
 						for="profile-upload"
-						class="dark:text-mofu-dark-300 flex h-full cursor-pointer items-center justify-center"
+						class="dark:text-mofu-dark-300 flex h-full {isVerified ? 'cursor-pointer' : 'cursor-not-allowed'} items-center justify-center"
 					>
-						<Icon src={Camera} class="h-6 w-6" />
+						<Icon src={isVerified ? Camera : LockClosed} class="h-6 w-6 {isVerified ? '' : 'text-gray-400'}" />
 					</label>
 				{/if}
 			</div>
-			<input id="profile-upload" type="file" accept="image/*" class="hidden" onchange={handleImageChange} />
+			<input id="profile-upload" type="file" accept="image/*" class="hidden" onchange={handleImageChange} disabled={!isVerified} />
 		</div>
 		<div class="text-mofu-dark-400 text-sm">
-			<p>{m.settings_profile_image_recommended()}</p>
-			<p>{m.settings_profile_image_max_size()}</p>
+			{#if isVerified}
+				<p>{m.settings_profile_image_recommended()}</p>
+				<p>{m.settings_profile_image_max_size()}</p>
+			{:else}
+				<p class="text-gray-500">이메일 인증이 필요합니다</p>
+				<p class="text-gray-500">프로필 이미지 업로드를 위해 이메일을 인증해주세요</p>
+			{/if}
 		</div>
 	</div>
 </div>

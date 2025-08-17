@@ -14,6 +14,7 @@
 	import { onMount } from 'svelte';
 	import LoadingOverlay from '$lib/components/common/LoadingOverlay.svelte';
 	import AuthErrorScreen from '$lib/components/common/AuthErrorScreen.svelte';
+	import NotVerifiedScreen from '$lib/components/common/NotVerifiedScreen.svelte';
 
 	const { data }: { data: PageData } = $props();
 
@@ -29,6 +30,7 @@
 	let isPreviewMode = $state(false); // 모바일에서 프리뷰 모드인지
 	let isAuthChecking = $state(true); // 인증 체크 중인지
 	let authError = $state(false); // 인증 실패 상태
+	let verificationError = $state(false); // 이메일 인증 실패 상태
 
 	// Resizable hook
 	let resizableHook = $state<ReturnType<typeof useResizable> | null>(null);
@@ -82,6 +84,13 @@
 					return;
 				}
 			}
+			
+			// 사용자 정보 로드 및 이메일 인증 체크
+			await userStore.loadProfile();
+			if (!userStore.user?.is_verified) {
+				verificationError = true;
+				return;
+			}
 		} finally {
 			isAuthChecking = false;
 		}
@@ -109,7 +118,9 @@
 
 <AuthErrorScreen isVisible={authError} description="글 수정 기능을 이용하려면 로그인해 주세요." />
 
-{#if !authError}
+<NotVerifiedScreen isVisible={verificationError} description="글 수정 기능을 이용하려면 이메일 인증을 완료해 주세요." />
+
+{#if !authError && !verificationError}
 	<div class="flex h-full w-full bg-gray-900 break-all text-white dark:bg-gray-900">
 		<!-- 메인 컨텐츠 영역 -->
 		<div bind:this={containerElement} class="flex flex-1 overflow-hidden">

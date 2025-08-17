@@ -40,8 +40,8 @@ export { default as ProfilePostGrid } from './components/profile/ProfilePostGrid
 export { default as ImageCropModal } from './components/modal/ImageCropModal.svelte';
 
 // Settings Components
-export { default as AccountSettings } from './components/settings/forms/AccountSettings.svelte';
-export { default as DisplaySettings } from './components/settings/forms/DisplaySettings.svelte';
+export { default as AccountSettings } from './components/settings/forms/AccountSettings/AccountSettings.svelte';
+export { default as DisplaySettings } from './components/settings/forms/DisplaySettings/DisplaySettings.svelte';
 export { default as NotificationSettings } from './components/settings/forms/NotificationSettings.svelte';
 export { default as PersonalInfoSettings } from './components/settings/forms/PersonalInfoSettings/PersonalInfoSettings.svelte';
 export { default as PrivacySettings } from './components/settings/forms/PrivacySettings.svelte';

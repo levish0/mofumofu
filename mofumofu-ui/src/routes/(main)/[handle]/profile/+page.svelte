@@ -61,11 +61,7 @@
 	<meta property="og:description" content={data.profile.bio || `${data.profile.name}의 프로필을 확인하세요.`} />
 	<meta property="og:type" content="profile" />
 	<meta property="og:url" content="https://mofumofu.ink/{data.profile.handle}/profile" />
-	{#if data.profile.profile_image}
-		<meta property="og:image" content={data.profile.profile_image} />
-	{:else}
-		<meta property="og:image" content="https://mofumofu.ink/og-default.png" />
-	{/if}
+	<meta property="og:image" content={data.profile.banner_image || data.profile.profile_image || "https://mofumofu.ink/og-default.png"} />
 	<meta property="og:site_name" content="Mofu" />
 	<meta property="profile:username" content={data.profile.handle} />
 
@@ -73,11 +69,7 @@
 	<meta name="twitter:card" content="summary" />
 	<meta name="twitter:title" content="{data.profile.name} (@{data.profile.handle}) - Mofu" />
 	<meta name="twitter:description" content={data.profile.bio || `${data.profile.name}의 프로필을 확인하세요.`} />
-	{#if data.profile.profile_image}
-		<meta name="twitter:image" content={data.profile.profile_image} />
-	{:else}
-		<meta name="twitter:image" content="https://mofumofu.ink/og-default.png" />
-	{/if}
+	<meta name="twitter:image" content={data.profile.banner_image || data.profile.profile_image || "https://mofumofu.ink/og-default.png"} />
 </svelte:head>
 <div class="min-h-screen">
 	<div class="max-w-8xl mx-auto px-4 pt-2">

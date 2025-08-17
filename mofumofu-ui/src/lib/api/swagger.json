@@ -5,7 +5,7 @@
 		"description": "A soft and simple blogging platform for everyone.",
 		"contact": { "name": "Levi Lim", "email": "shiueo.csh@gmail.com" },
 		"license": { "name": "" },
-		"version": "0.6.2"
+		"version": "0.6.9"
 	},
 	"paths": {
 		"/v0/auth/forgot_password": {
@@ -85,6 +85,22 @@
 				"security": [{ "bearer_auth": [] }]
 			}
 		},
+		"/v0/auth/oauth-connections": {
+			"get": {
+				"tags": ["Auth"],
+				"operationId": "get_oauth_connections",
+				"responses": {
+					"200": {
+						"description": "OAuth connections retrieved successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/OAuthConnectionsResponse" } } }
+					},
+					"401": { "description": "Unauthorized" },
+					"404": { "description": "User not found" },
+					"500": { "description": "Internal server error" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
 		"/v0/auth/refresh": {
 			"post": {
 				"tags": ["Auth"],
@@ -100,6 +116,23 @@
 					"500": { "description": "Internal server error" }
 				},
 				"security": [{ "refresh_token_cookie": [] }]
+			}
+		},
+		"/v0/auth/resend_verification": {
+			"post": {
+				"tags": ["Auth"],
+				"operationId": "resend_verification",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ResendVerificationRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": { "description": "Verification email sent successfully" },
+					"400": { "description": "Email already verified or invalid request" },
+					"404": { "description": "User not found" },
+					"422": { "description": "Validation error" },
+					"500": { "description": "Internal server error" }
+				}
 			}
 		},
 		"/v0/auth/reset_password": {
@@ -188,6 +221,25 @@
 					"422": { "description": "Validation error" },
 					"500": { "description": "Internal server error" }
 				}
+			}
+		},
+		"/v0/auth/unlink-oauth": {
+			"delete": {
+				"tags": ["Auth"],
+				"operationId": "unlink_oauth",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/UnlinkOAuthRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": { "description": "OAuth connection removed successfully" },
+					"400": { "description": "Cannot unlink last OAuth connection or connection not found" },
+					"401": { "description": "Unauthorized" },
+					"404": { "description": "User not found" },
+					"422": { "description": "Validation error" },
+					"500": { "description": "Internal server error" }
+				},
+				"security": [{ "bearer_auth": [] }]
 			}
 		},
 		"/v0/auth/verify_email": {
@@ -449,6 +501,7 @@
 				"responses": {
 					"204": { "description": "Post updated successfully" },
 					"400": { "description": "Invalid input" },
+					"401": { "description": "Unauthorized or email not verified" },
 					"404": { "description": "Post not found" },
 					"500": { "description": "Internal Server Error" }
 				},
@@ -467,6 +520,7 @@
 						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreatePostResponse" } } }
 					},
 					"400": { "description": "Invalid input" },
+					"401": { "description": "Unauthorized or email not verified" },
 					"500": { "description": "Internal Server Error" }
 				},
 				"security": [{ "bearer_auth": [] }]
@@ -481,6 +535,7 @@
 				"responses": {
 					"204": { "description": "Post deleted successfully" },
 					"400": { "description": "Invalid input" },
+					"401": { "description": "Unauthorized or email not verified" },
 					"404": { "description": "Post not found" },
 					"500": { "description": "Internal Server Error" }
 				},
@@ -563,7 +618,7 @@
 						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ImageUploadResponse" } } }
 					},
 					"400": { "description": "Invalid file or parameters" },
-					"401": { "description": "Unauthorized" },
+					"401": { "description": "Unauthorized or email not verified" },
 					"413": { "description": "File too large" },
 					"422": { "description": "Unsupported image format" },
 					"500": { "description": "Internal server error" }
@@ -585,7 +640,7 @@
 						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ThumbnailUploadResponse" } } }
 					},
 					"400": { "description": "Invalid file or parameters" },
-					"401": { "description": "Unauthorized" },
+					"401": { "description": "Unauthorized or email not verified" },
 					"403": { "description": "Not the owner of the post" },
 					"404": { "description": "Post not found" },
 					"413": { "description": "File too large" },
@@ -717,7 +772,7 @@
 						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserInfoResponse" } } }
 					},
 					"400": { "description": "Invalid input" },
-					"401": { "description": "Unauthorized" },
+					"401": { "description": "Unauthorized or email not verified" },
 					"404": { "description": "User not found" },
 					"409": { "description": "Handle already exists" },
 					"422": { "description": "Validation error" },
@@ -756,7 +811,7 @@
 						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ImageUploadResponse" } } }
 					},
 					"400": { "description": "Invalid file or parameters" },
-					"401": { "description": "Unauthorized" },
+					"401": { "description": "Unauthorized or email not verified" },
 					"413": { "description": "File too large" },
 					"500": { "description": "Internal server error" }
 				},
@@ -777,7 +832,7 @@
 						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ImageUploadResponse" } } }
 					},
 					"400": { "description": "Invalid file or parameters" },
-					"401": { "description": "Unauthorized" },
+					"401": { "description": "Unauthorized or email not verified" },
 					"413": { "description": "File too large" },
 					"500": { "description": "Internal server error" }
 				},
@@ -973,6 +1028,14 @@
 				"required": ["provider", "code"],
 				"properties": { "code": { "type": "string" }, "provider": { "$ref": "#/components/schemas/OAuthProvider" } }
 			},
+			"OAuthConnectionsResponse": {
+				"type": "object",
+				"required": ["connections", "is_oauth_only"],
+				"properties": {
+					"connections": { "type": "array", "items": { "$ref": "#/components/schemas/OAuthProvider" } },
+					"is_oauth_only": { "type": "boolean" }
+				}
+			},
 			"OAuthProvider": { "type": "string", "enum": ["Google", "Github"] },
 			"PostAuthor": {
 				"type": "object",
@@ -1022,6 +1085,7 @@
 					"slug": { "type": "string" },
 					"summary": { "type": ["string", "null"] },
 					"tags": { "type": "array", "items": { "type": "string" } },
+					"thumbnail_image": { "type": ["string", "null"] },
 					"title": { "type": "string" },
 					"toc_items": { "type": "array", "items": { "$ref": "#/components/schemas/TocItem" } },
 					"updated_at": { "type": ["string", "null"], "format": "date-time" },
@@ -1076,6 +1140,11 @@
 				"type": "object",
 				"required": ["file"],
 				"properties": { "file": { "type": "string", "format": "binary", "contentMediaType": "image/*" } }
+			},
+			"ResendVerificationRequest": {
+				"type": "object",
+				"required": ["email"],
+				"properties": { "email": { "type": "string" } }
 			},
 			"ResetPasswordRequest": {
 				"type": "object",
@@ -1137,6 +1206,11 @@
 				"required": ["hashtags"],
 				"properties": { "hashtags": { "type": "array", "items": { "type": "string" } } }
 			},
+			"UnlinkOAuthRequest": {
+				"type": "object",
+				"required": ["provider"],
+				"properties": { "provider": { "$ref": "#/components/schemas/OAuthProvider" } }
+			},
 			"UpdatePostRequest": {
 				"type": "object",
 				"required": ["post_id"],
@@ -1162,13 +1236,14 @@
 			},
 			"UserInfoResponse": {
 				"type": "object",
-				"required": ["name", "handle", "email", "created_at"],
+				"required": ["name", "handle", "email", "is_verified", "created_at"],
 				"properties": {
 					"banner_image": { "type": ["string", "null"] },
 					"bio": { "type": ["string", "null"] },
 					"created_at": { "type": "string", "format": "date-time" },
 					"email": { "type": "string" },
 					"handle": { "type": "string" },
+					"is_verified": { "type": "boolean" },
 					"location": { "type": ["string", "null"] },
 					"name": { "type": "string" },
 					"profile_image": { "type": ["string", "null"] },

@@ -8,9 +8,10 @@
 		bio: string | null;
 		onUpdate: (bio: string) => void;
 		onValidationChange: (error?: string) => void;
+		isVerified: boolean;
 	}
 
-	let { bio, onUpdate, onValidationChange }: Props = $props();
+	let { bio, onUpdate, onValidationChange, isVerified }: Props = $props();
 
 	let localError = $state<string | undefined>();
 
@@ -21,6 +22,11 @@
 	}
 
 	function handleInput(e: Event) {
+		if (!isVerified) {
+			alert('이메일 인증이 필요합니다. 이메일을 확인해주세요.');
+			return;
+		}
+		
 		const value = (e.target as HTMLTextAreaElement).value;
 		onUpdate(value);
 
@@ -42,15 +48,18 @@
 				placeholder={m.settings_bio_placeholder()}
 				class="dark:bg-mofu-dark-800 text-mofu-dark-200 placeholder:text-mofu-dark-300 min-h-[100px]  {localError
 					? 'border-red-500'
-					: ''}"
+					: ''} {!isVerified ? 'opacity-50 cursor-not-allowed' : ''}"
 				value={bio || ''}
 				oninput={handleInput}
+				disabled={!isVerified}
 			/>
 			<div class="absolute right-2 bottom-2 text-xs {isOverLimit ? 'text-red-400' : 'text-mofu-dark-400'}">
 				{characterCount}/200
 			</div>
 		</div>
-		{#if localError}
+		{#if !isVerified}
+			<p class="text-xs text-gray-500">이메일 인증이 필요합니다. 자기소개 변경을 위해 이메일을 인증해주세요.</p>
+		{:else if localError}
 			<p class="text-xs text-rose-400">{localError}</p>
 		{:else}
 			<p class="text-mofu-dark-400 text-xs">{m.settings_bio_description()}</p>

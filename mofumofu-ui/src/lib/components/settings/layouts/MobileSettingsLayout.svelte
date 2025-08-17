@@ -3,14 +3,14 @@
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { settingsStore } from '$lib/stores/settings.svelte';
 	import { PersonalInfoSettings } from '../forms/PersonalInfoSettings';
-	import AccountSettings from '../forms/AccountSettings.svelte';
-	import DisplaySettings from '../forms/DisplaySettings.svelte';
+	import AccountSettings from '../forms/AccountSettings/AccountSettings.svelte';
 	import WritingSettings from '../forms/WritingSettings.svelte';
 	import PrivacySettings from '../forms/PrivacySettings.svelte';
 	import NotificationSettings from '../forms/NotificationSettings.svelte';
 	import * as Accordion from '$lib/components/ui/accordion';
 	import { Button } from '$lib/components/ui/button';
 	import * as m from '../../../../paraglide/messages';
+	import DisplaySettings from '../forms/DisplaySettings/DisplaySettings.svelte';
 
 	type Props = {
 		sections: Array<{

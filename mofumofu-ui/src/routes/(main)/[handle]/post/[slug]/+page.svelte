@@ -172,8 +172,8 @@
 	<meta property="og:title" content="{data.post.title} - {data.author.name}" />
 	<meta property="og:description" content={data.post.summary || data.post.title} />
 	<meta property="og:type" content="article" />
-	<meta property="og:url" content="https://mofumofu.ink/{data.author.handle}/post/{data.post.slug}" />
-	<meta property="og:image" content="https://mofumofu.ink/og-default.png" />
+	<meta property="og:url" content="https://mofumofu.ink/@{data.author.handle}/post/{data.post.slug}" />
+	<meta property="og:image" content={data.post.thumbnail_image || 'https://mofumofu.ink/og-default.png'} />
 	<meta property="og:site_name" content="Mofumofu" />
 	<meta property="article:author" content={data.author.name} />
 	<meta property="article:published_time" content={data.post.created_at} />
@@ -185,7 +185,7 @@
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content="{data.post.title} - {data.author.name}" />
 	<meta name="twitter:description" content={data.post.summary || data.post.title} />
-	<meta name="twitter:image" content="https://mofumofu.ink/og-default.png" />
+	<meta name="twitter:image" content={data.post.thumbnail_image || 'https://mofumofu.ink/og-default.png'} />
 </svelte:head>
 
 <div class="relative min-h-screen pt-2">

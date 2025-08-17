@@ -37,6 +37,7 @@ where
         id: post.id,
         title: post.title,
         summary: post.summary,
+        thumbnail_image: post.thumbnail_image,
         rendered: post.render.unwrap_or_default(), // 렌더링된 HTML 또는 빈 문자열
         toc_items: Vec::new(), // TODO: TOC 파싱 구현 필요
         author: PostAuthor {

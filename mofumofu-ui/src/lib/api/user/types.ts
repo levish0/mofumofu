@@ -2,6 +2,7 @@ export interface UserInfoResponse {
 	handle: string;
 	name: string;
 	email: string;
+	is_verified: boolean;
 	bio?: string;
 	location?: string;
 	website?: string;

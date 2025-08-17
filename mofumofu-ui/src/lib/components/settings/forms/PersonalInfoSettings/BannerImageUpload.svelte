@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Icon, Photo } from 'svelte-hero-icons';
+	import { Icon, Photo, LockClosed } from 'svelte-hero-icons';
 	import { useImageCrop } from './useImageCrop';
 	import * as m from '../../../../../paraglide/messages';
 
@@ -12,9 +12,10 @@
 			shape?: 'rect' | 'round',
 			onComplete?: (data: any) => void
 		) => void;
+		isVerified: boolean;
 	}
 
-	let { bannerImage, onUpdate, openImageCrop }: Props = $props();
+	let { bannerImage, onUpdate, openImageCrop, isVerified }: Props = $props();
 
 	// No cache-busting needed for blob URLs since they're already unique
 
@@ -23,6 +24,11 @@
 	const { cropImage, cleanupTempImage, handleFileRead } = useImageCrop();
 
 	async function handleImageChange(event: Event) {
+		if (!isVerified) {
+			alert('이메일 인증이 필요합니다. 이메일을 확인해주세요.');
+			return;
+		}
+		
 		const target = event.target as HTMLInputElement;
 		const file = target.files?.[0];
 		if (file && file.type.startsWith('image/')) {
@@ -96,7 +102,7 @@
 <div class="space-y-4">
 	<h2 class="text-2xl font-semibold">{m.settings_banner_image()}</h2>
 	<div class="group relative transition-all">
-		<div class="bg-mofu-dark-800 relative aspect-[4/1] w-full overflow-hidden rounded-lg group-hover:opacity-75">
+		<div class="bg-mofu-dark-800 relative aspect-[4/1] w-full overflow-hidden rounded-lg {isVerified ? 'group-hover:opacity-75' : 'opacity-50'}">
 			{#if bannerImage}
 				<!-- Skeleton shimmer while loading -->
 				{#if imageLoading}
@@ -115,20 +121,32 @@
 			{#if bannerImage}
 				<label
 					for="banner-upload"
-					class="dark:text-mofu-dark-300 absolute inset-0 flex cursor-pointer items-center justify-center hover:text-gray-300"
+					class="dark:text-mofu-dark-300 absolute inset-0 flex {isVerified ? 'cursor-pointer' : 'cursor-not-allowed'} items-center justify-center hover:text-gray-300"
 				>
+					{#if !isVerified}
+						<div class="flex flex-col items-center justify-center space-y-2 text-gray-400">
+							<Icon src={LockClosed} class="h-8 w-8" />
+							<span class="text-xs">이메일 인증 필요</span>
+						</div>
+					{/if}
 				</label>
 			{:else}
 				<label
 					for="banner-upload"
-					class="text-mofu-dark-300 flex h-full cursor-pointer flex-col items-center justify-center space-y-2"
+					class="text-mofu-dark-300 flex h-full {isVerified ? 'cursor-pointer' : 'cursor-not-allowed'} flex-col items-center justify-center space-y-2"
 				>
-					<Icon src={Photo} class="h-10 w-10" />
-					<span class="text-sm">{m.settings_banner_image_upload()}</span>
-					<span class="text-xs">{m.settings_banner_image_recommended()}</span>
+					{#if isVerified}
+						<Icon src={Photo} class="h-10 w-10" />
+						<span class="text-sm">{m.settings_banner_image_upload()}</span>
+						<span class="text-xs">{m.settings_banner_image_recommended()}</span>
+					{:else}
+						<Icon src={LockClosed} class="h-10 w-10 text-gray-400" />
+						<span class="text-sm text-gray-400">이메일 인증 필요</span>
+						<span class="text-xs text-gray-500">배너 이미지 업로드를 위해 이메일을 인증해주세요</span>
+					{/if}
 				</label>
 			{/if}
 		</div>
-		<input id="banner-upload" type="file" accept="image/*" class="hidden" onchange={handleImageChange} />
+		<input id="banner-upload" type="file" accept="image/*" class="hidden" onchange={handleImageChange} disabled={!isVerified} />
 	</div>
 </div>

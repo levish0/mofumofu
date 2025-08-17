@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { settingsStore } from '$lib/stores/settings.svelte';
+	import { userStore } from '$lib/stores/user.svelte';
 	import { useFieldValidation } from '$lib/hooks/settings/useFieldValidation.svelte';
 	import { onMount } from 'svelte';
 	import BannerImageUpload from './BannerImageUpload.svelte';
@@ -23,6 +24,7 @@
 
 	const personal = $derived(settingsStore.personal);
 	const { handle, name, profileImage, bannerImage, bio, location, website } = $derived(personal);
+	const isVerified = $derived(userStore.user?.is_verified ?? false);
 
 	// 필드 검증 훅 사용
 	type PersonalErrors = {
@@ -94,18 +96,18 @@
 
 <div class="text-mofu-dark-200 min-h-screen">
 	<div class="space-y-4">
-		<BannerImageUpload {bannerImage} onUpdate={handleBannerUpdate} {openImageCrop} />
+		<BannerImageUpload {bannerImage} onUpdate={handleBannerUpdate} {openImageCrop} {isVerified} />
 
-		<ProfileImageUpload {profileImage} onUpdate={handleProfileUpdate} {openImageCrop} />
+		<ProfileImageUpload {profileImage} onUpdate={handleProfileUpdate} {openImageCrop} {isVerified} />
 
-		<HandleInput {handle} onUpdate={handleHandleUpdate} onValidationChange={handleHandleValidation} />
+		<HandleInput {handle} onUpdate={handleHandleUpdate} onValidationChange={handleHandleValidation} {isVerified} />
 
-		<DisplayNameInput {name} onUpdate={handleNameUpdate} onValidationChange={handleNameValidation} />
+		<DisplayNameInput {name} onUpdate={handleNameUpdate} onValidationChange={handleNameValidation} {isVerified} />
 
-		<BioInput {bio} onUpdate={handleBioUpdate} onValidationChange={handleBioValidation} />
+		<BioInput {bio} onUpdate={handleBioUpdate} onValidationChange={handleBioValidation} {isVerified} />
 
-		<LocationInput {location} onUpdate={handleLocationUpdate} onValidationChange={handleLocationValidation} />
+		<LocationInput {location} onUpdate={handleLocationUpdate} onValidationChange={handleLocationValidation} {isVerified} />
 
-		<WebsiteInput {website} onUpdate={handleWebsiteUpdate} onValidationChange={handleWebsiteValidation} />
+		<WebsiteInput {website} onUpdate={handleWebsiteUpdate} onValidationChange={handleWebsiteValidation} {isVerified} />
 	</div>
 </div>

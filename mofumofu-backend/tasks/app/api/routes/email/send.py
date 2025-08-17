@@ -115,6 +115,7 @@ async def send_email_verification(request: EmailVerificationRequest):
         return {"error": f"작업 큐 추가 실패: {str(e)}", "status": "FAILED"}
 
 
+
 @router.get("/status/{task_id}")
 async def get_email_status(task_id: str):
     """

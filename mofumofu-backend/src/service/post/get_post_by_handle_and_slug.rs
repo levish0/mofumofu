@@ -71,6 +71,7 @@ where
         id: post.id,
         title: post.title,
         summary: post.summary,
+        thumbnail_image: post.thumbnail_image,
         rendered: rendered_html,
         toc_items,
         author: PostAuthor {
