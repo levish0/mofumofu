@@ -73,7 +73,7 @@
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
-		
+
 		if (handleVerificationState !== 'verified') {
 			submitError = '핸들 중복 확인을 해주세요';
 			return;
@@ -81,7 +81,7 @@
 
 		const schema = createSignupSchema();
 		const result = safeParse(schema, { name: name.trim(), email: email.trim(), handle: handle.trim(), password });
-		
+
 		if (!result.success) {
 			submitError = '입력 정보를 다시 확인해주세요';
 			return;
@@ -97,7 +97,7 @@
 				handle: handle.trim(),
 				password
 			});
-			
+
 			await goto('/account/email-sent');
 		} catch (error) {
 			console.error('Signup error:', error);
@@ -285,24 +285,28 @@
 						</div>
 					</div>
 					{#if submitError}
-						<div class="rounded-lg bg-red-900/20 border border-red-500/20 p-3">
+						<div class="rounded-lg border border-red-500/20 bg-red-900/20 p-3">
 							<p class="flex items-center gap-1 text-xs text-rose-400">
 								<Icon src={ExclamationTriangle} size="14" />
 								{submitError}
 							</p>
 						</div>
 					{/if}
-					
+
 					<div>
 						<button
 							type="submit"
 							disabled={isSubmitting || handleVerificationState !== 'verified'}
-							class="bg-mofu text-mofu-dark-900 disabled:bg-mofu/50 disabled:cursor-not-allowed mt-6 flex w-full justify-center rounded-lg px-3 py-1.5 text-sm/6 font-semibold shadow-xs outline-none hover:opacity-70 disabled:hover:opacity-100"
+							class="bg-mofu text-mofu-dark-900 disabled:bg-mofu/50 mt-6 flex w-full justify-center rounded-lg px-3 py-1.5 text-sm/6 font-semibold shadow-xs outline-none hover:opacity-70 disabled:cursor-not-allowed disabled:hover:opacity-100"
 						>
 							{#if isSubmitting}
-								<svg class="h-4 w-4 animate-spin mr-2" fill="none" viewBox="0 0 24 24">
+								<svg class="mr-2 h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
 									<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-									<path class="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+									<path
+										class="opacity-75"
+										fill="currentColor"
+										d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+									></path>
 								</svg>
 								가입 중...
 							{:else}

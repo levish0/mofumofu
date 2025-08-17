@@ -55,7 +55,7 @@
 		const value = (e.target as HTMLInputElement).value;
 		password = value;
 		passwordValidationError = validatePassword(value);
-		
+
 		// Revalidate confirm password if it's been entered
 		if (confirmPassword) {
 			confirmPasswordError = password !== confirmPassword ? '비밀번호가 일치하지 않습니다' : undefined;
@@ -70,7 +70,7 @@
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
-		
+
 		if (!token) {
 			error = '유효하지 않은 토큰입니다';
 			return;
@@ -107,11 +107,11 @@
 
 	const canSubmit = $derived(
 		token &&
-		password &&
-		confirmPassword &&
-		!passwordValidationError &&
-		!confirmPasswordError &&
-		password === confirmPassword
+			password &&
+			confirmPassword &&
+			!passwordValidationError &&
+			!confirmPasswordError &&
+			password === confirmPassword
 	);
 </script>
 
@@ -128,7 +128,9 @@
 		</div>
 
 		{#if !token}
-			<div class="flex items-center gap-2 rounded-md border border-rose-400/20 bg-rose-400/10 p-3 text-sm text-rose-400">
+			<div
+				class="flex items-center gap-2 rounded-md border border-rose-400/20 bg-rose-400/10 p-3 text-sm text-rose-400"
+			>
 				<Icon src={ExclamationTriangle} size="16" />
 				유효하지 않은 링크입니다. 비밀번호 재설정을 다시 요청해주세요.
 			</div>
@@ -155,7 +157,7 @@
 						oninput={handlePasswordInput}
 						autocomplete="new-password"
 					/>
-					
+
 					{#if passwordValidationError}
 						<p class="flex items-center gap-1 text-xs text-rose-400">
 							<Icon src={ExclamationTriangle} size="14" />
@@ -179,7 +181,7 @@
 						oninput={handleConfirmPasswordInput}
 						autocomplete="new-password"
 					/>
-					
+
 					{#if confirmPasswordError}
 						<p class="flex items-center gap-1 text-xs text-rose-400">
 							<Icon src={ExclamationTriangle} size="14" />
@@ -189,7 +191,9 @@
 				</div>
 
 				{#if error}
-					<div class="flex items-center gap-2 rounded-md border border-rose-400/20 bg-rose-400/10 p-3 text-sm text-rose-400">
+					<div
+						class="flex items-center gap-2 rounded-md border border-rose-400/20 bg-rose-400/10 p-3 text-sm text-rose-400"
+					>
 						<Icon src={ExclamationTriangle} size="16" />
 						{error}
 					</div>
@@ -202,7 +206,7 @@
 						class="bg-mofu text-mofu-dark-900 hover:bg-mofu/80 w-full disabled:opacity-50"
 					>
 						{#if isSubmitting}
-							<svg class="h-4 w-4 animate-spin mr-2" fill="none" viewBox="0 0 24 24">
+							<svg class="mr-2 h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
 								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
 								<path
 									class="opacity-75"

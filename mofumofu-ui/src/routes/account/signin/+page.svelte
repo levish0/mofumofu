@@ -14,7 +14,7 @@
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
-		
+
 		if (!handle.trim() || !password) {
 			error = '핸들과 비밀번호를 모두 입력해주세요';
 			return;
@@ -81,7 +81,7 @@
 								required
 								placeholder="@핸들명"
 								value={handle}
-								oninput={(e) => handle = (e.target as HTMLInputElement).value}
+								oninput={(e) => (handle = (e.target as HTMLInputElement).value)}
 								autocomplete="username"
 								class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-lg px-3 py-1.5 text-base outline-none sm:text-sm/6"
 							/>
@@ -97,7 +97,7 @@
 								name="password"
 								placeholder="p4ssw@rd!"
 								value={password}
-								oninput={(e) => password = (e.target as HTMLInputElement).value}
+								oninput={(e) => (password = (e.target as HTMLInputElement).value)}
 								required
 								autocomplete="current-password"
 								class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-lg px-3 py-1.5 text-base outline-none sm:text-sm/6"
@@ -114,24 +114,28 @@
 					</div>
 
 					{#if error}
-						<div class="rounded-lg bg-red-900/20 border border-red-500/20 p-3">
+						<div class="rounded-lg border border-red-500/20 bg-red-900/20 p-3">
 							<p class="flex items-center gap-1 text-xs text-rose-400">
 								<Icon src={ExclamationTriangle} size="14" />
 								{error}
 							</p>
 						</div>
 					{/if}
-					
+
 					<div>
 						<button
 							type="submit"
 							disabled={isSubmitting}
-							class="bg-mofu text-mofu-dark-900 disabled:bg-mofu/50 disabled:cursor-not-allowed flex w-full justify-center rounded-lg px-3 py-1.5 text-sm/6 font-semibold shadow-xs outline-none hover:opacity-70 disabled:hover:opacity-100"
+							class="bg-mofu text-mofu-dark-900 disabled:bg-mofu/50 flex w-full justify-center rounded-lg px-3 py-1.5 text-sm/6 font-semibold shadow-xs outline-none hover:opacity-70 disabled:cursor-not-allowed disabled:hover:opacity-100"
 						>
 							{#if isSubmitting}
-								<svg class="h-4 w-4 animate-spin mr-2" fill="none" viewBox="0 0 24 24">
+								<svg class="mr-2 h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
 									<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-									<path class="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+									<path
+										class="opacity-75"
+										fill="currentColor"
+										d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+									></path>
 								</svg>
 								로그인 중...
 							{:else}

@@ -32,7 +32,7 @@
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
-		
+
 		const validationError = validateEmail(email);
 		if (validationError) {
 			emailValidationError = validationError;
@@ -89,7 +89,7 @@
 					oninput={handleEmailInput}
 					autocomplete="email"
 				/>
-				
+
 				{#if emailValidationError}
 					<p class="flex items-center gap-1 text-xs text-rose-400">
 						<Icon src={ExclamationTriangle} size="14" />
@@ -101,7 +101,9 @@
 			</div>
 
 			{#if error}
-				<div class="flex items-center gap-2 rounded-md border border-rose-400/20 bg-rose-400/10 p-3 text-sm text-rose-400">
+				<div
+					class="flex items-center gap-2 rounded-md border border-rose-400/20 bg-rose-400/10 p-3 text-sm text-rose-400"
+				>
 					<Icon src={ExclamationTriangle} size="16" />
 					{error}
 				</div>
@@ -114,7 +116,7 @@
 					class="bg-mofu text-mofu-dark-900 hover:bg-mofu/80 w-full disabled:opacity-50"
 				>
 					{#if isSubmitting}
-						<svg class="h-4 w-4 animate-spin mr-2" fill="none" viewBox="0 0 24 24">
+						<svg class="mr-2 h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
 							<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
 							<path
 								class="opacity-75"

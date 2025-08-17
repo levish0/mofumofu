@@ -16,7 +16,17 @@
 		editPostId?: string;
 	}
 
-	const { title, content, tags, onExit, onSaveDraft, onPublished, isEditMode = false, editSlug, editPostId }: Props = $props();
+	const {
+		title,
+		content,
+		tags,
+		onExit,
+		onSaveDraft,
+		onPublished,
+		isEditMode = false,
+		editSlug,
+		editPostId
+	}: Props = $props();
 </script>
 
 <div class="bg-mofu-dark-950 p-4">

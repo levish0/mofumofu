@@ -13,7 +13,9 @@
 					<Icon src={EnvelopeOpen} solid size="40" class="inline-block" />
 				</div>
 				<h2 class="text-xl font-semibold">이메일을 확인해주세요</h2>
-				<p class="text-mofu-dark-300">비밀번호 재설정 링크를 이메일로 보내드렸습니다. 이메일을 확인하여 비밀번호를 재설정해주세요.</p>
+				<p class="text-mofu-dark-300">
+					비밀번호 재설정 링크를 이메일로 보내드렸습니다. 이메일을 확인하여 비밀번호를 재설정해주세요.
+				</p>
 				<div class="pt-4">
 					<Button
 						onclick={() => goto('/')}
