@@ -7,12 +7,21 @@ import subprocess
 import sys
 import os
 
+from app.utils import build_email_templates
+
 
 def start_celery_worker():
     """Celery worker를 시작합니다."""
 
     # 현재 디렉토리를 tasks로 설정
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+    print("Building email templates...")
+    try:
+        build_email_templates()
+        print("Email templates built successfully.")
+    except Exception as e:
+        print(f"Failed to build email templates: {e}")
 
     # Celery worker 실행 명령어
     cmd = [
