@@ -77,7 +77,7 @@ services:
     build:
       context: tasks
       dockerfile: Dockerfile
-    command: ["python", "start_worker.py"]
+    command: ["uv", "run", "python", "start_worker.py"]
     extra_hosts:
       - "host.docker.internal:host-gateway"
     env_file:
