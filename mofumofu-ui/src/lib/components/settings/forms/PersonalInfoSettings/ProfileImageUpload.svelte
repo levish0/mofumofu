@@ -26,7 +26,27 @@
 		const target = event.target as HTMLInputElement;
 		const file = target.files?.[0];
 		if (file && file.type.startsWith('image/')) {
+			// 파일 크기 체크 (4MB 제한)
+			const fileSizeMB = file.size / (1024 * 1024);
+			if (fileSizeMB > 4) {
+				alert(`파일 크기가 ${fileSizeMB.toFixed(2)}MB로 4MB 제한을 초과합니다.`);
+				target.value = '';
+				return;
+			}
+
 			try {
+				// GIF 파일은 crop 없이 바로 업로드
+				if (file.type === 'image/gif') {
+					const url = URL.createObjectURL(file);
+					onUpdate({
+						profileImageFile: file,
+						profileImage: url
+					});
+					target.value = '';
+					return;
+				}
+
+				// 다른 이미지 형식은 crop 모달 열기
 				const tempImageSrc = await handleFileRead(file);
 
 				openImageCrop(
@@ -36,9 +56,7 @@
 					async (data: { croppedAreaPixels: { x: number; y: number; width: number; height: number } }) => {
 						try {
 							const { blob, url } = await cropImage(tempImageSrc, data, {
-								maxFileSizeMB: 4,
-								resizeOptions: { width: 400, height: 400 },
-								quality: 0.9
+								maxFileSizeMB: 4
 							});
 
 							onUpdate({

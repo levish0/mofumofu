@@ -1,5 +1,3 @@
-import { compressFromCanvas, type CompressOptions } from './imageCompress';
-
 export interface CroppedArea {
 	x: number;
 	y: number;
@@ -7,10 +5,12 @@ export interface CroppedArea {
 	height: number;
 }
 
-export interface CropOptions extends CompressOptions {}
+export interface CropOptions {
+	maxFileSizeMB?: number;
+}
 
 /**
- * Creates a cropped image from the original image and crop area using imageCompress for high quality resizing
+ * Creates a cropped image from the original image and crop area
  */
 export async function getCroppedImg(
 	imageSrc: string,
@@ -18,8 +18,10 @@ export async function getCroppedImg(
 	options: CropOptions = {}
 ): Promise<{ blob: Blob; url: string; cleanup: () => void }> {
 	const image = await createImage(imageSrc);
+	const { maxFileSizeMB = 4 } = options;
 
 	let sourceCanvas: HTMLCanvasElement | null = null;
+	let objectUrl: string | null = null;
 
 	try {
 		// Create source canvas with cropped area
@@ -47,8 +49,38 @@ export async function getCroppedImg(
 			pixelCrop.height
 		);
 
-		// Use compressFromCanvas to handle compression and resizing
-		return await compressFromCanvas(sourceCanvas, options);
+		// Convert canvas to blob without compression (server will handle compression)
+		const result = await new Promise<{ blob: Blob; url: string }>((resolve, reject) => {
+			sourceCanvas!.toBlob(
+				(blob) => {
+					if (!blob) {
+						reject(new Error('Canvas is empty'));
+						return;
+					}
+
+					// Check file size limit
+					const fileSizeMB = blob.size / (1024 * 1024);
+					if (fileSizeMB > maxFileSizeMB) {
+						reject(new Error(`File size ${fileSizeMB.toFixed(2)}MB exceeds limit of ${maxFileSizeMB}MB`));
+						return;
+					}
+
+					objectUrl = URL.createObjectURL(blob);
+					resolve({ blob, url: objectUrl });
+				},
+				'image/png' // Use PNG to preserve quality for server-side compression
+			);
+		});
+
+		// Cleanup function to revoke object URL
+		const cleanup = () => {
+			if (objectUrl) {
+				URL.revokeObjectURL(objectUrl);
+				objectUrl = null;
+			}
+		};
+
+		return { ...result, cleanup };
 	} finally {
 		// Clean up source canvas immediately
 		if (sourceCanvas) {

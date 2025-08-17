@@ -1,7 +1,7 @@
 use crate::repository::user::update_user::repository_update_user;
 use crate::dto::user::internal::update_user::UpdateUserFields;
 use crate::service::error::errors::{Errors, ServiceResult};
-use crate::utils::image_validator::{generate_image_hash, validate_and_get_image_info};
+use crate::utils::image_validator::{generate_image_hash, process_image_for_upload};
 use crate::connection::cloudflare_r2::R2Client;
 use reqwest::Client;
 use sea_orm::{ConnectionTrait, TransactionTrait};
@@ -51,26 +51,33 @@ where
         Errors::SysInternalError("Failed to process avatar image".to_string())
     })?;
 
-    // Validate image and get info
-    let (content_type, extension) = validate_and_get_image_info(&image_data, MAX_OAUTH_IMAGE_SIZE)?;
+    // Process and compress OAuth avatar image  
+    let max_dimensions = Some((400, 400)); // Same as regular avatar uploads
+    let (processed_data, content_type, extension) = process_image_for_upload(
+        &image_data,
+        MAX_OAUTH_IMAGE_SIZE,
+        true, // Convert to WebP for better compression
+        max_dimensions,
+    )?;
     
-    // Generate hash-based filename (same as profile/banner uploads)
-    let hash = generate_image_hash(&image_data);
+    // Generate hash-based filename using processed data
+    let hash = generate_image_hash(&processed_data);
     let filename = format!("avatar_{}.{}", hash, extension);
 
     info!(
-        "Uploading OAuth avatar: user_uuid={}, handle={}, filename={}, size={} bytes, content_type={}",
+        "Uploading OAuth avatar: user_uuid={}, handle={}, filename={}, original_size={} bytes, processed_size={} bytes, content_type={}",
         user_uuid,
         user_handle,
         filename,
         image_data.len(),
+        processed_data.len(),
         content_type
     );
 
     // Upload to R2 using hash-based path (consistent with profile uploads)
     let r2_key = format!("profiles/{}/avatar/{}", user_handle, filename);
     r2_client
-        .upload_with_content_type(&r2_key, image_data.to_vec(), &content_type)
+        .upload_with_content_type(&r2_key, processed_data, &content_type)
         .await
         .map_err(|e| {
             error!("Failed to upload OAuth avatar to R2: {}", e);

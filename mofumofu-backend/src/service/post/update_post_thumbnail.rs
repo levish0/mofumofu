@@ -1,7 +1,7 @@
 use crate::repository::post::get_post_by_user_and_slug::repository_get_post_by_user_and_slug;
 use crate::repository::post::update_post_thumbnail::repository_update_post_thumbnail;
 use crate::service::error::errors::{Errors, ServiceResult};
-use crate::utils::image_validator::{generate_image_hash, validate_and_get_image_info};
+use crate::utils::image_validator::{generate_image_hash, process_image_for_upload};
 use crate::connection::cloudflare_r2::R2Client;
 use axum::extract::Multipart;
 use sea_orm::{ConnectionTrait, TransactionTrait};
@@ -79,21 +79,28 @@ where
         Errors::BadRequestError("Image file is required".to_string())
     })?;
 
-    // Validate image and get info (8MB limit for thumbnails)
-    const MAX_THUMBNAIL_SIZE: usize = 8 * 1024 * 1024;
-    let (content_type, extension) = validate_and_get_image_info(&file_data, MAX_THUMBNAIL_SIZE)?;
+    // Process and compress image (4MB limit for thumbnails)
+    const MAX_THUMBNAIL_SIZE: usize = 4 * 1024 * 1024;
+    let max_dimensions = Some((800, 450)); // Max dimensions for thumbnail
+    let (processed_data, content_type, extension) = process_image_for_upload(
+        &file_data,
+        MAX_THUMBNAIL_SIZE,
+        true, // Convert to WebP for better compression
+        max_dimensions,
+    )?;
     
-    // Generate hash-based filename
-    let hash = generate_image_hash(&file_data);
+    // Generate hash-based filename using processed data
+    let hash = generate_image_hash(&processed_data);
     let filename = format!("thumbnail_{}.{}", hash, extension);
 
     info!(
-        "Processing thumbnail image upload: post_slug={}, user_uuid={}, filename={}, content_type={}, size={} bytes",
+        "Processing thumbnail image upload: post_slug={}, user_uuid={}, filename={}, content_type={}, original_size={} bytes, processed_size={} bytes",
         slug,
         user_uuid,
         filename,
         content_type,
-        file_data.len()
+        file_data.len(),
+        processed_data.len()
     );
 
     // Delete existing thumbnail if exists
@@ -109,7 +116,7 @@ where
 
     // Upload to R2
     let r2_key = format!("posts/{}/thumbnail/{}", post.id, filename);
-    r2_client.upload_with_content_type(&r2_key, file_data, &content_type)
+    r2_client.upload_with_content_type(&r2_key, processed_data, &content_type)
         .await
         .map_err(|e| {
             error!("Failed to upload thumbnail to R2: {}", e);

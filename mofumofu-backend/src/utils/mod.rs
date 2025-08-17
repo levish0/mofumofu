@@ -4,4 +4,5 @@ pub mod extract_user_agent;
 pub mod generate_random_string;
 pub mod hashtag_normalizer;
 pub mod image_validator;
+pub mod image_processor;
 pub mod logger;

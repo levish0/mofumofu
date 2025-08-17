@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Icon, Photo } from 'svelte-hero-icons';
-	import { compressImage } from '$lib/utils/imageCompress';
 
 	interface Props {
 		thumbnail: string | null;
@@ -15,21 +14,23 @@
 		const target = event.target as HTMLInputElement;
 		const file = target.files?.[0];
 		if (file && file.type.startsWith('image/')) {
-			try {
-				const { blob, url, cleanup } = await compressImage(file, {
-					maxFileSizeMB: 8,
-					resizeOptions: { width: 800, height: 450 }, // 16:9 비율
-					quality: 0.9
-				});
+			// 파일 크기 체크 (4MB 제한)
+			const fileSizeMB = file.size / (1024 * 1024);
+			if (fileSizeMB > 4) {
+				alert(`파일 크기가 ${fileSizeMB.toFixed(2)}MB로 4MB 제한을 초과합니다.`);
+				return;
+			}
 
+			try {
+				const url = URL.createObjectURL(file);
 				onUpdate({
-					thumbnailFile: blob,
+					thumbnailFile: file,
 					thumbnail: url
 				});
 			} catch (error) {
-				console.error('Error compressing thumbnail:', error);
+				console.error('Error uploading thumbnail:', error);
 				if (error instanceof Error) {
-					alert(`썸네일 압축 실패: ${error.message}`);
+					alert(`썸네일 업로드 실패: ${error.message}`);
 				}
 			}
 		}
@@ -91,7 +92,7 @@
 				>
 					<Icon src={Photo} class="h-10 w-10" />
 					<span class="text-sm">썸네일 이미지 업로드</span>
-					<span class="text-xs">16:9 비율 권장, 최대 8MB</span>
+					<span class="text-xs">16:9 비율 권장, 최대 4MB</span>
 				</label>
 			{/if}
 		</div>

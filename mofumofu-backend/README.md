@@ -1,3 +1,30 @@
+## Image Upload Specifications
+
+### Supported Formats
+- **JPEG/JPG** - Automatically compressed and converted to WebP
+- **PNG** - Automatically compressed and converted to WebP  
+- **GIF** - Preserved as original format (no compression)
+- **WebP** - Processed and optimized
+
+### Image Dimensions & Compression
+All images are automatically resized only if they exceed the maximum dimensions, maintaining aspect ratio:
+
+- **Avatar Images**: 512 × 512 pixels maximum
+- **Banner Images**: 1600 × 400 pixels maximum  
+- **Post Thumbnails**: 800 × 450 pixels maximum
+- **Post Images**: 2000 × 2000 pixels maximum
+
+### File Size Limits
+- **Avatar**: 4MB maximum
+- **Banner**: 8MB maximum
+- **Thumbnails**: 4MB maximum  
+- **Post Images**: 8MB maximum
+
+### Automatic Optimization
+- Non-GIF images are converted to WebP format for better compression
+- Images larger than maximum dimensions are resized using high-quality Lanczos3 algorithm
+- Quality setting: 90 for optimal balance between file size and image quality
+
 ## JWT Secret Key
 ```bash
 openssl rand -base64 32

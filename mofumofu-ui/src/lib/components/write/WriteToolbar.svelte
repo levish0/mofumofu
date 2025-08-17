@@ -19,7 +19,6 @@
 	import { Switch } from '../ui/switch';
 	import { uploadImage } from '$lib/api/post/postApi';
 	import { toast } from 'svelte-sonner';
-	import { compressImage } from '$lib/utils/imageCompress';
 	import * as m from '../../../paraglide/messages';
 	interface Props {
 		onInsertText: (before: string, after?: string) => void;
@@ -47,22 +46,17 @@
 			if (!file) return;
 
 			try {
+				// 파일 크기 체크 (8MB 제한)
+				const fileSizeMB = file.size / (1024 * 1024);
+				if (fileSizeMB > 8) {
+					toast.error(`파일 크기가 ${fileSizeMB.toFixed(2)}MB로 8MB 제한을 초과합니다.`);
+					return;
+				}
+
 				toast.loading(m.write_image_uploading());
 
-				// 이미지 압축 (원본 크기 유지)
-				const { blob, cleanup } = await compressImage(file, {
-					maxFileSizeMB: 8,
-					quality: 0.9
-				});
-
-				// 압축된 이미지로 새 파일 생성
-				const compressedFile = new File([blob], file.name, { type: blob.type });
-
-				// API에 업로드
-				const response = await uploadImage({ file: compressedFile });
-
-				// 리소스 정리
-				cleanup();
+				// API에 직접 업로드 (서버에서 압축 처리)
+				const response = await uploadImage({ file });
 
 				toast.dismiss();
 				toast.success(m.write_image_upload_success());
