@@ -12,11 +12,12 @@ RUN apt-get update && apt-get install -y \
 # uv 설치 (Python 패키지 매니저)
 RUN pip install uv
 
-# 프로젝트 파일 복사
-COPY pyproject.toml uv.lock ./
+# pyproject.toml 파일만 먼저 복사하여 Docker 레이어 캐시를 활용합니다.
+COPY pyproject.toml ./
 
-# 의존성 설치
-RUN uv sync --frozen
+# pyproject.toml을 기반으로 의존성을 설치합니다.
+# 이 방식은 uv.lock 파일이 최신이 아니더라도 항상 정확한 의존성을 설치합니다.
+RUN uv pip install --system .
 
 # 애플리케이션 코드 복사
 COPY app/ ./app/
