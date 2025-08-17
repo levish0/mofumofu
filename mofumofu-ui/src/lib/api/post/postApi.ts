@@ -2,10 +2,11 @@ import { privateApi } from '../private';
 import { publicApi } from '../public';
 import type {
 	CreatePostRequest,
+	CreatePostResponse,
 	GetPostByHandleAndSlugRequest,
+	GetPostByUuidRequest,
 	PostInfoResponse,
 	GetPostsRequest,
-	GetPostsAroundPageRequest,
 	SearchPostsRequest,
 	GetPostsResponse,
 	ThumbnailUploadRequest,
@@ -19,9 +20,10 @@ import type {
 	PostImageUploadResponse
 } from './types';
 
-export async function createPost(postData: CreatePostRequest): Promise<void> {
+export async function createPost(postData: CreatePostRequest): Promise<CreatePostResponse> {
 	try {
-		await privateApi.post('v0/post', { json: postData });
+		const response = await privateApi.post('v0/post', { json: postData });
+		return response.json<CreatePostResponse>();
 	} catch (error) {
 		console.error('Failed to create post:', error);
 		throw error;
@@ -29,6 +31,16 @@ export async function createPost(postData: CreatePostRequest): Promise<void> {
 }
 
 export async function getPostByHandleAndSlug(request: GetPostByHandleAndSlugRequest): Promise<PostInfoResponse> {
+	try {
+		const response = await publicApi.post('v0/post/get_by_handle_and_slug', { json: request });
+		return response.json<PostInfoResponse>();
+	} catch (error) {
+		console.error('Failed to get post:', error);
+		throw error;
+	}
+}
+
+export async function getPostByUuid(request: GetPostByUuidRequest): Promise<PostInfoResponse> {
 	try {
 		const response = await publicApi.post('v0/post/get', { json: request });
 		return response.json<PostInfoResponse>();
@@ -48,15 +60,6 @@ export async function getPosts(request: GetPostsRequest = {}): Promise<GetPostsR
 	}
 }
 
-export async function getPostsAroundPage(request: GetPostsAroundPageRequest): Promise<GetPostsResponse> {
-	try {
-		const response = await publicApi.post('v0/posts/around', { json: request });
-		return response.json<GetPostsResponse>();
-	} catch (error) {
-		console.error('Failed to get posts around page:', error);
-		throw error;
-	}
-}
 
 export async function searchPosts(request: SearchPostsRequest): Promise<GetPostsResponse> {
 	try {
@@ -71,7 +74,7 @@ export async function searchPosts(request: SearchPostsRequest): Promise<GetPosts
 export async function uploadThumbnail(request: ThumbnailUploadRequest): Promise<void> {
 	try {
 		const formData = new FormData();
-		formData.append('slug', request.slug);
+		formData.append('post_id', request.post_id);
 		formData.append('file', request.file);
 
 		await privateApi.post('v0/post/thumbnail', {
@@ -86,7 +89,7 @@ export async function uploadThumbnail(request: ThumbnailUploadRequest): Promise<
 	}
 }
 
-export async function incrementPostView(request: GetPostByHandleAndSlugRequest): Promise<void> {
+export async function incrementPostView(request: GetPostByUuidRequest): Promise<void> {
 	try {
 		await publicApi.post('v0/post/view', { json: request });
 	} catch (error) {

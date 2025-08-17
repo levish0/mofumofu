@@ -33,7 +33,7 @@ pub async fn check_like_status(
     info!("Received request to check like status: {:?}", payload);
     let user_uuid = claims.sub.clone();
 
-    let response = service_check_like_status(&state.conn, &user_uuid, &payload.handle, &payload.slug).await?;
+    let response = service_check_like_status(&state.conn, &user_uuid, &payload.post_id).await?;
 
     Ok(response)
 }

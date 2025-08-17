@@ -1,4 +1,4 @@
-use crate::repository::post::get_post_by_user_and_slug::repository_get_post_by_user_and_slug;
+use crate::repository::post::get_post_by_uuid::repository_get_post_by_uuid;
 use crate::repository::post::update_post_thumbnail::repository_update_post_thumbnail;
 use crate::service::error::errors::{Errors, ServiceResult};
 use crate::utils::image_validator::{generate_image_hash, process_image_for_upload};
@@ -21,7 +21,7 @@ where
 
     let mut file_data: Option<Vec<u8>> = None;
     let mut content_type: Option<String> = None;
-    let mut slug: Option<String> = None;
+    let mut post_id: Option<Uuid> = None;
 
     // multipart 데이터 파싱
     while let Some(field) = multipart.next_field().await.map_err(|e| {
@@ -40,12 +40,14 @@ where
 
                 file_data = Some(data.to_vec());
             }
-            "slug" => {
+            "post_id" => {
                 let text = field.text().await.map_err(|e| {
-                    error!("Failed to read slug field: {}", e);
-                    Errors::BadRequestError("Failed to read slug".to_string())
+                    error!("Failed to read post_id field: {}", e);
+                    Errors::BadRequestError("Failed to read post_id".to_string())
                 })?;
-                slug = Some(text);
+                post_id = Some(Uuid::parse_str(&text).map_err(|_| {
+                    Errors::BadRequestError("Invalid post_id format".to_string())
+                })?);
             }
             _ => {
                 warn!("Unknown field in multipart: {}", field_name);
@@ -53,25 +55,24 @@ where
         }
     }
 
-    // slug 필드 검증 (간단한 길이 체크)
-    let slug = slug.ok_or_else(|| {
-        error!("No slug provided in multipart data");
-        Errors::BadRequestError("Slug is required".to_string())
+    // post_id 필드 검증
+    let post_id = post_id.ok_or_else(|| {
+        error!("No post_id provided in multipart data");
+        Errors::BadRequestError("Post ID is required".to_string())
     })?;
 
-    if slug.trim().is_empty() || slug.len() > 80 {
-        return Err(Errors::ValidationError(
-            "Slug must be between 1 and 80 characters".to_string(),
-        ));
-    }
-
     info!(
-        "Processing thumbnail image upload for post slug: {} by user: {}",
-        slug, user_uuid
+        "Processing thumbnail image upload for post ID: {} by user: {}",
+        post_id, user_uuid
     );
 
-    // 포스트 존재 확인 및 작성자 권한 검증 (user_id와 slug로 조회하므로 권한 검증 불필요)
-    let post = repository_get_post_by_user_and_slug(conn, user_uuid, &slug).await?;
+    // 포스트 존재 확인 및 작성자 권한 검증
+    let post = repository_get_post_by_uuid(conn, &post_id).await?;
+
+    // 작성자 권한 검증
+    if post.user_id != *user_uuid {
+        return Err(Errors::ForbiddenError("Not the owner of this post".to_string()));
+    }
 
     // 필수 필드 검증
     let file_data = file_data.ok_or_else(|| {
@@ -94,8 +95,8 @@ where
     let filename = format!("thumbnail_{}.{}", hash, extension);
 
     info!(
-        "Processing thumbnail image upload: post_slug={}, user_uuid={}, filename={}, content_type={}, original_size={} bytes, processed_size={} bytes",
-        slug,
+        "Processing thumbnail image upload: post_id={}, user_uuid={}, filename={}, content_type={}, original_size={} bytes, processed_size={} bytes",
+        post_id,
         user_uuid,
         filename,
         content_type,

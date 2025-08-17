@@ -1,14 +1,14 @@
-use crate::dto::post::request::GetPostByHandleAndSlugRequest;
 use crate::dto::post::response::post_info::PostInfoResponse;
 use crate::service::error::errors::Errors;
-use crate::service::post::get_post_by_handle_and_slug::service_get_post_by_handle_and_slug;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
 use axum::extract::State;
+use crate::dto::post::request::GetPostByHandleAndSlugRequest;
+use crate::service::post::get_post_by_handle_and_slug::service_get_post_by_handle_and_slug;
 
 #[utoipa::path(
     post,
-    path = "/v0/post/get",
+    path = "/v0/post/get_by_handle_and_slug",
     request_body = GetPostByHandleAndSlugRequest,
     responses(
         (status = StatusCode::OK, description = "Post retrieved successfully", body = PostInfoResponse),
@@ -31,7 +31,7 @@ pub async fn get_post_by_handle_and_slug(
         &req_body.handle,
         &req_body.slug,
     )
-    .await?;
+        .await?;
 
     Ok(post)
 }

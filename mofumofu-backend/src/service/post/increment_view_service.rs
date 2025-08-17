@@ -1,5 +1,5 @@
 use crate::entity::common::{ActionType, TargetType};
-use crate::repository::post::get_post_by_handle_and_slug::repository_get_post_by_handle_and_slug;
+use crate::repository::post::get_post_by_uuid::repository_get_post_by_uuid;
 use crate::repository::post::increment_view_count::repository_increment_view_count;
 use crate::repository::system_events::log_event::repository_log_event;
 use crate::service::error::errors::{Errors, ServiceResult};
@@ -14,18 +14,17 @@ const VIEW_COUNT_TTL: i64 = 3600; // 1시간
 pub async fn service_increment_view<C>(
     app_state: &AppState,
     conn: &C,
-    handle: &str,
-    slug: &str,
+    post_id: &Uuid,
     anonymous_user_id: Option<&str>,
 ) -> ServiceResult<()>
 where
     C: ConnectionTrait,
 {
-    // 포스트 존재 여부 확인 및 ID 가져오기
-    let post = repository_get_post_by_handle_and_slug(conn, handle, slug).await?;
+    // 포스트 존재 여부 확인
+    let _post = repository_get_post_by_uuid(conn, post_id).await?;
 
     // 조회수 증가
-    increment_view_count_with_redis_check(app_state, conn, &post.id, anonymous_user_id).await?;
+    increment_view_count_with_redis_check(app_state, conn, post_id, anonymous_user_id).await?;
 
     Ok(())
 }

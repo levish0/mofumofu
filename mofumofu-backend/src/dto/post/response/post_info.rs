@@ -7,6 +7,7 @@ use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, ToSchema)]
 pub struct PostInfoResponse {
+    pub id: Uuid,
     pub title: String,
     pub summary: Option<String>,
     pub rendered: String,

@@ -24,3 +24,20 @@ where
 
     Ok(like_exists.is_some())
 }
+
+pub async fn repository_check_like_status_by_post_id<C>(
+    conn: &C,
+    user_id: &Uuid,
+    post_id: &Uuid,
+) -> Result<bool, sea_orm::DbErr>
+where
+    C: ConnectionTrait,
+{
+    let like_exists = LikesEntity::find()
+        .filter(LikesColumn::UserId.eq(*user_id))
+        .filter(LikesColumn::PostId.eq(*post_id))
+        .one(conn)
+        .await?;
+
+    Ok(like_exists.is_some())
+}

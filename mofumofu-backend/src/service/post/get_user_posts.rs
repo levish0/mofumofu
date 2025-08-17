@@ -44,6 +44,7 @@ where
             .unwrap_or_else(Vec::new);
 
         post_items.push(PostListItem {
+            id: post.id,
             title: post.title.clone(),
             summary: post.summary.clone(),
             thumbnail_image: post.thumbnail_image.clone(),

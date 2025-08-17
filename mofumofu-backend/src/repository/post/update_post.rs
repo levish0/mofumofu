@@ -17,7 +17,7 @@ where
     C: ConnectionTrait + TransactionTrait,
 {
     let post = PostEntity::find()
-        .filter(Column::Slug.eq(&payload.slug))
+        .filter(Column::Id.eq(payload.post_id))
         .filter(Column::UserId.eq(*user_uuid))
         .one(conn)
         .await?

@@ -26,9 +26,10 @@
 		onPublished?: () => void;
 		isEditMode?: boolean;
 		editSlug?: string;
+		editPostId?: string;
 	}
 
-	let { title, content, tags, onPublished, isEditMode = false, editSlug }: Props = $props();
+	let { title, content, tags, onPublished, isEditMode = false, editSlug, editPostId }: Props = $props();
 
 	let isOpen = $state(false);
 	let isLoading = $state(false);
@@ -124,11 +125,13 @@
 
 		try {
 			isLoading = true;
+			let createdPostId: string | undefined; // <--FIX: Declare variable here
 
 			if (isEditMode && editSlug) {
 				// 수정 모드
+				console.log(editPostId);
 				const updateRequest: UpdatePostRequest = {
-					slug: editSlug,
+					post_id: editPostId!,
 					title: publishData.title.trim(),
 					content: publishData.content.trim(),
 					summary: publishData.summary.trim() || null,
@@ -157,16 +160,17 @@
 						: null
 				};
 
-				await createPost(postRequest);
+				const createResponse = await createPost(postRequest);
+				createdPostId = createResponse.post_id; // <--FIX: Assign value here
 			}
 
 			// Upload thumbnail if provided
 			if (publishData.thumbnailFile) {
 				try {
-					const finalSlug =
-						isEditMode && editSlug && publishData.slug.trim() === editSlug ? editSlug : publishData.slug.trim();
+					// <--FIX: Use non-null assertion as it will be defined in create mode
+					const postId = isEditMode ? editPostId! : createdPostId!;
 					await uploadThumbnail({
-						slug: finalSlug,
+						post_id: postId,
 						file: new File([publishData.thumbnailFile], 'thumbnail.jpg', { type: publishData.thumbnailFile.type })
 					});
 				} catch (thumbnailError) {

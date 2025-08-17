@@ -84,6 +84,9 @@ pub enum Errors {
     UserTokenExpired,        // 만료된 토큰
     UserNoRefreshToken,
     UserInvalidToken, // 유효하지 않은 토큰
+    
+    // 권한 관련 오류
+    ForbiddenError(String), // 403 Forbidden - 접근 권한 없음
 
     // Post
     PostNotFound,
@@ -149,6 +152,7 @@ impl IntoResponse for Errors {
             Errors::UserTokenExpired |
             Errors::UserNoRefreshToken |
             Errors::UserInvalidToken |
+            Errors::ForbiddenError(_) |
             Errors::FollowCannotFollowSelf |
             Errors::FollowAlreadyFollowing |
             Errors::BadRequestError(_) |
@@ -185,6 +189,8 @@ impl IntoResponse for Errors {
             Errors::UserTokenExpired => (StatusCode::UNAUTHORIZED, USER_TOKEN_EXPIRED, None),
             Errors::UserNoRefreshToken => (StatusCode::UNAUTHORIZED, USER_NO_REFRESH_TOKEN, None),
             Errors::UserInvalidToken => (StatusCode::UNAUTHORIZED, USER_INVALID_TOKEN, None),
+            
+            Errors::ForbiddenError(msg) => (StatusCode::FORBIDDEN, "FORBIDDEN", Some(msg.clone())),
 
             Errors::PostNotFound => (StatusCode::NOT_FOUND, POST_NOT_FOUND, None),
 

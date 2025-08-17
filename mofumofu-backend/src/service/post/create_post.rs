@@ -1,4 +1,5 @@
 use crate::dto::post::request::create_post::CreatePostRequest;
+use crate::dto::post::response::create_post::CreatePostResponse;
 use crate::entity::common::{ActionType, TargetType};
 use crate::repository::hashtag::associate_post_hashtags::repository_associate_post_hashtags;
 use crate::repository::post::create_post::repository_create_post;
@@ -16,7 +17,7 @@ pub async fn service_create_post<C>(
     http_client: &reqwest::Client,
     payload: CreatePostRequest,
     user_uuid: &Uuid,
-) -> ServiceResult<()>
+) -> ServiceResult<CreatePostResponse>
 where
     C: ConnectionTrait + TransactionTrait,
 {
@@ -98,5 +99,7 @@ where
         .await;
     }
 
-    Ok(())
+    Ok(CreatePostResponse {
+        post_id: created_post.id,
+    })
 }

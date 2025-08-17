@@ -58,7 +58,7 @@
 			author_name={post?.user_name || ''}
 			author_avatar={authorAvatar || ''}
 			author_handle={post?.user_handle || ''}
-			post_slug={post?.slug || ''}
+			post_id={post?.id || ''}
 			likes={post?.like_count || 0}
 			views={post?.view_count || 0}
 			{isSkeleton}

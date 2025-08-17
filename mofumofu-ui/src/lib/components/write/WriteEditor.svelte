@@ -16,6 +16,7 @@
 		onPublished: () => void;
 		isEditMode?: boolean;
 		editSlug?: string;
+		editPostId?: string;
 		isPreviewMode?: boolean;
 		onTogglePreviewMode?: (isPreview: boolean) => void;
 		htmlOutput?: string;
@@ -33,6 +34,7 @@
 		onPublished,
 		isEditMode = false,
 		editSlug,
+		editPostId,
 		isPreviewMode = false,
 		onTogglePreviewMode,
 		htmlOutput = ''
@@ -99,5 +101,5 @@
 	</div>
 
 	<!-- 에디터 영역 하단 버튼들 -->
-	<WriteActions {title} {content} {tags} {onExit} {onSaveDraft} {onPublished} {isEditMode} {editSlug} />
+	<WriteActions {title} {content} {tags} {onExit} {onSaveDraft} {onPublished} {isEditMode} {editSlug} {editPostId} />
 </div>

@@ -6,9 +6,17 @@ export interface CreatePostRequest {
 	hashtags?: string[] | null;
 }
 
+export interface CreatePostResponse {
+	post_id: string;
+}
+
 export interface GetPostByHandleAndSlugRequest {
 	handle: string;
 	slug: string;
+}
+
+export interface GetPostByUuidRequest {
+	post_id: string;
 }
 
 export interface PostAuthor {
@@ -24,6 +32,7 @@ export interface TocItem {
 }
 
 export interface PostInfoResponse {
+	id: string;
 	title: string;
 	rendered: string;
 	toc_items: TocItem[];
@@ -46,12 +55,6 @@ export interface GetPostsRequest {
 	sort?: PostSortOrder;
 }
 
-export interface GetPostsAroundPageRequest {
-	target_page: number;
-	page_size?: number;
-	pages_around?: number;
-	sort?: PostSortOrder;
-}
 
 export interface SearchPostsRequest {
 	query?: string | null;
@@ -74,6 +77,7 @@ export interface UserPostsResponse {
 }
 
 export interface PostListItem {
+	id: string;
 	title: string;
 	summary?: string | null;
 	thumbnail_image?: string | null;
@@ -97,7 +101,7 @@ export interface GetPostsResponse {
 }
 
 export interface ThumbnailUploadRequest {
-	slug: string;
+	post_id: string;
 	file: File;
 }
 
@@ -114,7 +118,7 @@ export interface PostImageUploadResponse {
 }
 
 export interface UpdatePostRequest {
-	slug: string;
+	post_id: string;
 	title?: string | null;
 	content?: string | null;
 	summary?: string | null;
@@ -131,6 +135,7 @@ export interface GetPostForEditRequest {
 }
 
 export interface PostEditInfoResponse {
+	id: string;
 	title: string;
 	content: string;
 	created_at: string;

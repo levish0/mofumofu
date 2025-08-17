@@ -14,11 +14,12 @@ where
     C: ConnectionTrait,
 {
     let post = repository_get_post_by_user_and_slug(conn, user_uuid, slug).await?;
-    
+
     let hashtags = repository_get_hashtags_by_post(conn, post.id).await?;
     let tag_names: Vec<String> = hashtags.into_iter().map(|tag| tag.name).collect();
 
     let response = PostEditInfoResponse {
+        id: post.id,
         title: post.title,
         summary: post.summary,
         content: post.content,

@@ -3,9 +3,11 @@ use axum::response::{IntoResponse, Response};
 use chrono::{DateTime, Utc};
 use serde::Serialize;
 use utoipa::ToSchema;
+use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, ToSchema)]
 pub struct PostEditInfoResponse {
+    pub id: Uuid,
     pub title: String,
     pub summary: Option<String>,
     pub content: String,

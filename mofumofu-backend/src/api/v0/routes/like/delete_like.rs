@@ -33,7 +33,7 @@ pub async fn delete_like(
     info!("Received request to unlike post: {:?}", payload);
     let user_uuid = claims.sub.clone();
 
-    service_delete_like(&state.conn, &user_uuid, &payload.handle, &payload.slug).await?;
+    service_delete_like(&state.conn, &user_uuid, &payload.post_id).await?;
 
     Ok(StatusCode::NO_CONTENT)
 }

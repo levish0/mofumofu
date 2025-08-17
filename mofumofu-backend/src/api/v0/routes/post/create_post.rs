@@ -1,5 +1,6 @@
 use crate::dto::auth::internal::access_token::AccessTokenClaims;
 use crate::dto::post::request::create_post::CreatePostRequest;
+use crate::dto::post::response::create_post::CreatePostResponse;
 use crate::middleware::auth::access_jwt_auth;
 use crate::service::error::errors::Errors;
 use crate::service::post::create_post::service_create_post;
@@ -25,7 +26,7 @@ pub fn post_routes() -> Router<AppState> {
     path = "/v0/post",
     request_body = CreatePostRequest,
     responses(
-        (status = StatusCode::NO_CONTENT, description = "Post created successfully"),
+        (status = 201, description = "Post created successfully", body = CreatePostResponse),
         (status = StatusCode::BAD_REQUEST, description = "Invalid input"),
         (status = StatusCode::INTERNAL_SERVER_ERROR, description = "Internal Server Error")
     ),
@@ -38,11 +39,11 @@ pub async fn create_post(
     State(state): State<AppState>,
     Extension(claims): Extension<AccessTokenClaims>,
     ValidatedJson(payload): ValidatedJson<CreatePostRequest>,
-) -> Result<impl IntoResponse, Errors> {
+) -> Result<CreatePostResponse, Errors> {
     info!("Received POST request to create post: {:?}", payload);
     let user_uuid = claims.sub.clone();
 
-    service_create_post(&state.conn, &state.http_client, payload, &user_uuid).await?;
+    let response = service_create_post(&state.conn, &state.http_client, payload, &user_uuid).await?;
 
-    Ok(StatusCode::NO_CONTENT)
+    Ok(response)
 }

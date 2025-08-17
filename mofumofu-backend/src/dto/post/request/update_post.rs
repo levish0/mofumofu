@@ -1,10 +1,11 @@
 use serde::Deserialize;
 use utoipa::ToSchema;
+use uuid::Uuid;
 use validator::{Validate, ValidationError};
 
 #[derive(Debug, Clone, Deserialize, Validate, ToSchema)]
 pub struct UpdatePostRequest {
-    pub slug: String,
+    pub post_id: Uuid,
     #[validate(length(max = 80, message = "Title must be at most 80 characters."))]
     pub title: Option<String>,
     #[validate(length(max = 500, message = "Summary must be at most 500 characters."))]

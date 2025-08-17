@@ -112,8 +112,7 @@
 
 		try {
 			const response = await checkLikeStatus({
-				handle: data.author.handle,
-				slug: data.post.slug
+				post_id: data.post.id
 			});
 			isLiked = response.is_liked;
 		} catch (error) {
@@ -136,15 +135,13 @@
 		try {
 			if (isLiked) {
 				await deleteLike({
-					handle: data.author.handle,
-					slug: data.post.slug
+					post_id: data.post.id
 				});
 				isLiked = false;
 				likeCount = Math.max(0, likeCount - 1);
 			} else {
 				await createLike({
-					handle: data.author.handle,
-					slug: data.post.slug
+					post_id: data.post.id
 				});
 				isLiked = true;
 				likeCount += 1;
@@ -158,7 +155,7 @@
 	}
 
 	onMount(() => {
-		incrementPostView({ handle: data.handle, slug: data.slug }).catch((error) => {
+		incrementPostView({ post_id: data.post.id }).catch((error) => {
 			console.warn('Failed to increment view count:', error);
 		});
 

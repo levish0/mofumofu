@@ -83,6 +83,7 @@ where
             .unwrap_or_else(Vec::new);
 
         post_items.push(PostListItem {
+            id: post.id,
             title: post.title,
             summary: post.summary,
             thumbnail_image: post.thumbnail_image,

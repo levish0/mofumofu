@@ -3,7 +3,7 @@ use utoipa::ToSchema;
 use uuid::Uuid;
 use validator::Validate;
 
-#[derive(Debug, Clone, Deserialize, Validate, ToSchema)]
-pub struct DeleteLikeRequest {
+#[derive(Debug, Deserialize, ToSchema, Validate)]
+pub struct GetPostByUuidRequest {
     pub post_id: Uuid,
 }

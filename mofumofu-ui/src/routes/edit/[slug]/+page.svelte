@@ -127,6 +127,7 @@
 					onPublished={() => {}}
 					isEditMode={true}
 					editSlug={data.slug}
+					editPostId={data.post.id}
 					{isPreviewMode}
 					onTogglePreviewMode={handleTogglePreviewMode}
 					{htmlOutput}
@@ -148,6 +149,7 @@
 						onSaveDraft={handleSaveDraft}
 						onPublished={() => {}}
 						isEditMode={true}
+						editPostId={data.post.id}
 						editSlug={data.slug}
 						isPreviewMode={false}
 						onTogglePreviewMode={undefined}

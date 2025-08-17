@@ -12,14 +12,6 @@
 	<PostCardContent title="" summary="" date="" comments={0} isSkeleton={true} />
 
 	<div class="border-mofu-dark-600 border-t">
-		<PostCardFooter
-			author_name=""
-			author_avatar=""
-			author_handle=""
-			post_slug=""
-			likes={0}
-			views={0}
-			isSkeleton={true}
-		/>
+		<PostCardFooter author_name="" author_avatar="" author_handle="" post_id="" likes={0} views={0} isSkeleton={true} />
 	</div>
 </div>

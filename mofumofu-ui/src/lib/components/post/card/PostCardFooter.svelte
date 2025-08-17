@@ -9,7 +9,7 @@
 		author_name = '',
 		author_avatar = '',
 		author_handle = '',
-		post_slug = '',
+		post_id = '',
 		likes = 0,
 		views = 0,
 		isSkeleton = false
@@ -17,7 +17,7 @@
 		author_name: string;
 		author_avatar: string;
 		author_handle: string;
-		post_slug: string;
+		post_id: string;
 		likes: number;
 		views: number;
 		isSkeleton?: boolean;
@@ -38,8 +38,7 @@
 
 		try {
 			const response = await checkLikeStatus({
-				handle: author_handle,
-				slug: post_slug
+				post_id: post_id
 			});
 			isLiked = response.is_liked;
 		} catch (error) {
@@ -65,15 +64,13 @@
 		try {
 			if (isLiked) {
 				await deleteLike({
-					handle: author_handle,
-					slug: post_slug
+					post_id: post_id
 				});
 				isLiked = false;
 				likeCount = Math.max(0, likeCount - 1);
 			} else {
 				await createLike({
-					handle: author_handle,
-					slug: post_slug
+					post_id: post_id
 				});
 				isLiked = true;
 				likeCount += 1;

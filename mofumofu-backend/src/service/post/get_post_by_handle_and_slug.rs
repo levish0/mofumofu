@@ -33,18 +33,18 @@ where
     let (rendered_html, toc_items) = match (&post.render, &post.toc) {
         (Some(rendered_html), Some(toc_json)) if !rendered_html.is_empty() => {
             info!("데이터베이스에 저장된 렌더링 결과 사용 (post_id: {}, handle: {}, slug: {})", post.id, handle, slug);
-            
+
             // TOC JSON을 파싱
             let toc_items: Vec<TocItem> = serde_json::from_value(toc_json.clone()).unwrap_or_else(|e| {
                 warn!("TOC JSON 파싱 실패: {}", e);
                 Vec::new()
             });
-            
+
             (rendered_html.clone(), toc_items)
         }
         _ => {
             info!("렌더링 결과 없음 - 즉시 렌더링 수행 (post_id: {}, handle: {}, slug: {})", post.id, handle, slug);
-            
+
             // 마크다운 직접 렌더링
             match render_markdown(http_client, &post.content).await {
                 Ok(rendered_result) => {
@@ -68,6 +68,7 @@ where
     };
 
     Ok(PostInfoResponse {
+        id: post.id,
         title: post.title,
         summary: post.summary,
         rendered: rendered_html,

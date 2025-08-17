@@ -13,9 +13,10 @@
 		onPublished: () => void;
 		isEditMode?: boolean;
 		editSlug?: string;
+		editPostId?: string;
 	}
 
-	const { title, content, tags, onExit, onSaveDraft, onPublished, isEditMode = false, editSlug }: Props = $props();
+	const { title, content, tags, onExit, onSaveDraft, onPublished, isEditMode = false, editSlug, editPostId }: Props = $props();
 </script>
 
 <div class="bg-mofu-dark-950 p-4">
@@ -39,7 +40,7 @@
 				임시저장
 			</Button>
 
-			<PublishDialog {title} {content} {tags} {onPublished} {isEditMode} {editSlug} />
+			<PublishDialog {title} {content} {tags} {onPublished} {isEditMode} {editSlug} {editPostId} />
 		</div>
 	</div>
 </div>

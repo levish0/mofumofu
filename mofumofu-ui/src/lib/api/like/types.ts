@@ -1,16 +1,13 @@
 export interface CreateLikeRequest {
-	handle: string;
-	slug: string;
+	post_id: string;
 }
 
 export interface DeleteLikeRequest {
-	handle: string;
-	slug: string;
+	post_id: string;
 }
 
 export interface CheckLikeStatusRequest {
-	handle: string;
-	slug: string;
+	post_id: string;
 }
 
 export interface LikeStatusResponse {

@@ -5,7 +5,7 @@
 		"description": "A soft and simple blogging platform for everyone.",
 		"contact": { "name": "Levi Lim", "email": "shiueo.csh@gmail.com" },
 		"license": { "name": "" },
-		"version": "0.6.0"
+		"version": "0.6.2"
 	},
 	"paths": {
 		"/v0/auth/forgot_password": {
@@ -462,7 +462,10 @@
 					"required": true
 				},
 				"responses": {
-					"204": { "description": "Post created successfully" },
+					"201": {
+						"description": "Post created successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreatePostResponse" } } }
+					},
 					"400": { "description": "Invalid input" },
 					"500": { "description": "Internal Server Error" }
 				},
@@ -505,6 +508,26 @@
 			}
 		},
 		"/v0/post/get": {
+			"post": {
+				"tags": ["Post"],
+				"operationId": "get_post",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetPostByUuidRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Post retrieved successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/PostInfoResponse" } } }
+					},
+					"400": { "description": "Invalid UUID format" },
+					"404": { "description": "Post not found" },
+					"500": { "description": "Internal Server Error" }
+				},
+				"security": [{ "anonymous_id_cookie": [] }]
+			}
+		},
+		"/v0/post/get_by_handle_and_slug": {
 			"post": {
 				"tags": ["Post"],
 				"operationId": "get_post_by_handle_and_slug",
@@ -577,9 +600,7 @@
 				"tags": ["Post"],
 				"operationId": "increment_view",
 				"requestBody": {
-					"content": {
-						"application/json": { "schema": { "$ref": "#/components/schemas/GetPostByHandleAndSlugRequest" } }
-					},
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetPostByUuidRequest" } } },
 					"required": true
 				},
 				"responses": {
@@ -645,23 +666,6 @@
 					"400": { "description": "Invalid input" },
 					"404": { "description": "User not found" },
 					"500": { "description": "Internal Server Error" }
-				}
-			}
-		},
-		"/v0/user": {
-			"post": {
-				"tags": ["User"],
-				"operationId": "create_user",
-				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateUserRequest" } } },
-					"required": true
-				},
-				"responses": {
-					"204": { "description": "User created successfully" },
-					"400": { "description": "Invalid input" },
-					"409": { "description": "Handle already exists" },
-					"422": { "description": "Validation error" },
-					"500": { "description": "Internal server error" }
 				}
 			}
 		},
@@ -800,8 +804,8 @@
 			},
 			"CheckLikeStatusRequest": {
 				"type": "object",
-				"required": ["handle", "slug"],
-				"properties": { "handle": { "type": "string" }, "slug": { "type": "string" } }
+				"required": ["post_id"],
+				"properties": { "post_id": { "type": "string", "format": "uuid" } }
 			},
 			"CreateFollowRequest": {
 				"type": "object",
@@ -810,8 +814,8 @@
 			},
 			"CreateLikeRequest": {
 				"type": "object",
-				"required": ["handle", "slug"],
-				"properties": { "handle": { "type": "string" }, "slug": { "type": "string" } }
+				"required": ["post_id"],
+				"properties": { "post_id": { "type": "string", "format": "uuid" } }
 			},
 			"CreatePostRequest": {
 				"type": "object",
@@ -823,6 +827,11 @@
 					"summary": { "type": ["string", "null"] },
 					"title": { "type": "string" }
 				}
+			},
+			"CreatePostResponse": {
+				"type": "object",
+				"required": ["post_id"],
+				"properties": { "post_id": { "type": "string", "format": "uuid" } }
 			},
 			"CreateUserRequest": {
 				"type": "object",
@@ -841,8 +850,8 @@
 			},
 			"DeleteLikeRequest": {
 				"type": "object",
-				"required": ["handle", "slug"],
-				"properties": { "handle": { "type": "string" }, "slug": { "type": "string" } }
+				"required": ["post_id"],
+				"properties": { "post_id": { "type": "string", "format": "uuid" } }
 			},
 			"DeletePostRequest": { "type": "object", "required": ["slug"], "properties": { "slug": { "type": "string" } } },
 			"ErrorResponse": {
@@ -889,6 +898,11 @@
 				"type": "object",
 				"required": ["handle", "slug"],
 				"properties": { "handle": { "type": "string" }, "slug": { "type": "string" } }
+			},
+			"GetPostByUuidRequest": {
+				"type": "object",
+				"required": ["post_id"],
+				"properties": { "post_id": { "type": "string", "format": "uuid" } }
 			},
 			"GetPostForEditRequest": {
 				"type": "object",
@@ -971,10 +985,11 @@
 			},
 			"PostEditInfoResponse": {
 				"type": "object",
-				"required": ["title", "content", "created_at", "slug", "tags"],
+				"required": ["id", "title", "content", "created_at", "slug", "tags"],
 				"properties": {
 					"content": { "type": "string" },
 					"created_at": { "type": "string", "format": "date-time" },
+					"id": { "type": "string", "format": "uuid" },
 					"slug": { "type": "string" },
 					"summary": { "type": ["string", "null"] },
 					"tags": { "type": "array", "items": { "type": "string" } },
@@ -985,6 +1000,7 @@
 			"PostInfoResponse": {
 				"type": "object",
 				"required": [
+					"id",
 					"title",
 					"rendered",
 					"toc_items",
@@ -1000,6 +1016,7 @@
 					"author": { "$ref": "#/components/schemas/PostAuthor" },
 					"comment_count": { "type": "integer", "format": "int32" },
 					"created_at": { "type": "string", "format": "date-time" },
+					"id": { "type": "string", "format": "uuid" },
 					"like_count": { "type": "integer", "format": "int32" },
 					"rendered": { "type": "string" },
 					"slug": { "type": "string" },
@@ -1014,6 +1031,7 @@
 			"PostListItem": {
 				"type": "object",
 				"required": [
+					"id",
 					"title",
 					"user_handle",
 					"user_name",
@@ -1028,6 +1046,7 @@
 					"comment_count": { "type": "integer", "format": "int32" },
 					"created_at": { "type": "string", "format": "date-time" },
 					"hashtags": { "type": "array", "items": { "type": "string" } },
+					"id": { "type": "string", "format": "uuid" },
 					"like_count": { "type": "integer", "format": "int32" },
 					"slug": { "type": "string" },
 					"summary": { "type": ["string", "null"] },
@@ -1042,10 +1061,10 @@
 			"PostSortOrder": { "type": "string", "enum": ["latest", "popular", "oldest"] },
 			"PostThumbnailForm": {
 				"type": "object",
-				"required": ["slug", "file"],
+				"required": ["post_id", "file"],
 				"properties": {
 					"file": { "type": "string", "format": "binary", "contentMediaType": "image/*" },
-					"slug": { "type": "string" }
+					"post_id": { "type": "string", "format": "uuid" }
 				}
 			},
 			"ProfileAvatarForm": {
@@ -1120,12 +1139,12 @@
 			},
 			"UpdatePostRequest": {
 				"type": "object",
-				"required": ["slug"],
+				"required": ["post_id"],
 				"properties": {
 					"content": { "type": ["string", "null"] },
 					"hashtags": { "type": ["array", "null"], "items": { "type": "string" } },
 					"new_slug": { "type": ["string", "null"] },
-					"slug": { "type": "string" },
+					"post_id": { "type": "string", "format": "uuid" },
 					"summary": { "type": ["string", "null"] },
 					"title": { "type": ["string", "null"] }
 				}
