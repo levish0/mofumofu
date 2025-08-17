@@ -1,12 +1,11 @@
 import asyncio
-import json
 from celery import current_task
 from app.core.celery_app import celery_app
 from app.core.config import settings
 from app.services.db_service import db_service
 import logging
 import httpx
-from typing import Optional, Dict, Any
+from typing import Dict, Any
 from app.utils import create_failure_response
 
 logger = logging.getLogger(__name__)

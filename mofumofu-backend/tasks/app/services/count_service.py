@@ -1,4 +1,3 @@
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy import func
 from app.models import User, Post, Like, Follow
 from app.services.base_db_service import base_db_service

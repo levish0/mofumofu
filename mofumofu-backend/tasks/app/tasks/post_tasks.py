@@ -1,5 +1,3 @@
-from app.core.celery_app import celery_app
-from app.services.db_service import db_service
 import logging
 
 logger = logging.getLogger(__name__)

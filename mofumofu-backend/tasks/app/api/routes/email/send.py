@@ -1,6 +1,4 @@
 from fastapi import APIRouter
-from celery.result import AsyncResult
-from app.core.celery_app import celery_app
 from app.tasks.email_tasks import (
     send_email_task,
     send_reset_password_email_task,

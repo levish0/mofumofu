@@ -1,20 +1,17 @@
 """이메일 관련 Celery 작업들"""
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
-from celery import Celery
 from celery.result import AsyncResult
 
 from app.core.celery_app import celery_app
 from app.utils import (
-    EmailData,
     create_failure_response,
     create_success_response,
     generate_reset_password_email,
     generate_email_verification_email,
     send_email,
-    TaskError,
 )
 
 logger = logging.getLogger(__name__)

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any
 from app.tasks.markdown_tasks import render_markdown_task
 import logging
 
