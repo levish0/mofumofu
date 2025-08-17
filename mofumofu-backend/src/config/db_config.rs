@@ -11,6 +11,8 @@ pub struct DbConfig {
     pub jwt_secret: String,
     pub auth_access_token_expire_time: i64,
     pub auth_refresh_token_expire_time: i64,
+    pub auth_email_verification_token_expire_time: i64,
+    pub auth_password_reset_token_expire_time: i64,
 
     // Google
     pub google_client_id: String,
@@ -140,6 +142,14 @@ static CONFIG: LazyLock<DbConfig> = LazyLock::new(|| {
             .ok()
             .and_then(|v| v.parse().ok())
             .unwrap_or(14), // 기본값 14일 (일주일)
+        auth_email_verification_token_expire_time: env::var("AUTH_EMAIL_VERIFICATION_TOKEN_EXPIRE_TIME")
+            .ok()
+            .and_then(|v| v.parse().ok())
+            .unwrap_or(1), // 기본값 1시간
+        auth_password_reset_token_expire_time: env::var("AUTH_PASSWORD_RESET_TOKEN_EXPIRE_TIME")
+            .ok()
+            .and_then(|v| v.parse().ok())
+            .unwrap_or(1), // 기본값 1시간
 
         // Google
         google_client_id: env::var("GOOGLE_CLIENT_ID").expect("GOOGLE_CLIENT_ID must be set"),

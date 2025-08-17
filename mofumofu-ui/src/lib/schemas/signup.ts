@@ -2,6 +2,12 @@ import * as v from 'valibot';
 
 export function createSignupSchema() {
 	return v.object({
+		name: v.pipe(
+			v.string(),
+			v.minLength(1, '이름을 입력해주세요'),
+			v.minLength(3, '이름은 3자 이상이어야 합니다'),
+			v.maxLength(20, '이름은 20자 이하여야 합니다')
+		),
 		email: v.pipe(v.string(), v.minLength(1, '이메일을 입력해주세요'), v.email('올바른 이메일 형식이 아닙니다')),
 		handle: v.pipe(
 			v.string(),

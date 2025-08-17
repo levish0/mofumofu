@@ -1,5 +1,7 @@
 use crate::config::db_config::DbConfig;
 use crate::dto::auth::internal::access_token::AccessTokenClaims;
+use crate::dto::auth::internal::email_verification_token::EmailVerificationTokenClaims;
+use crate::dto::auth::internal::password_reset_token::PasswordResetTokenClaims;
 use crate::dto::auth::internal::refresh_token::{JWTRefreshTokenResult, RefreshTokenClaims};
 use chrono::{Duration, Utc};
 use jsonwebtoken::{
@@ -72,4 +74,58 @@ pub fn decode_refresh_token(
     token: &str,
 ) -> Result<TokenData<RefreshTokenClaims>, jsonwebtoken::errors::Error> {
     decode_token::<RefreshTokenClaims>(token)
+}
+
+pub fn create_email_verification_token(
+    user_id: &Uuid,
+    email: &str,
+) -> Result<String, jsonwebtoken::errors::Error> {
+    let jwt_secret = &DbConfig::get().jwt_secret;
+    let email_verification_token_lifetime = DbConfig::get().auth_email_verification_token_expire_time;
+    let encoding_key = EncodingKey::from_secret(jwt_secret.as_bytes());
+
+    let now = Utc::now();
+    let expires_at = now + Duration::hours(email_verification_token_lifetime);
+
+    let claims = EmailVerificationTokenClaims {
+        sub: *user_id,
+        email: email.to_string(),
+        iat: now.timestamp(),
+        exp: expires_at.timestamp(),
+    };
+
+    encode(&Header::default(), &claims, &encoding_key)
+}
+
+pub fn decode_email_verification_token(
+    token: &str,
+) -> Result<TokenData<EmailVerificationTokenClaims>, jsonwebtoken::errors::Error> {
+    decode_token::<EmailVerificationTokenClaims>(token)
+}
+
+pub fn create_password_reset_token(
+    user_id: &Uuid,
+    email: &str,
+) -> Result<String, jsonwebtoken::errors::Error> {
+    let jwt_secret = &DbConfig::get().jwt_secret;
+    let password_reset_token_lifetime = DbConfig::get().auth_password_reset_token_expire_time;
+    let encoding_key = EncodingKey::from_secret(jwt_secret.as_bytes());
+
+    let now = Utc::now();
+    let expires_at = now + Duration::hours(password_reset_token_lifetime);
+
+    let claims = PasswordResetTokenClaims {
+        sub: *user_id,
+        email: email.to_string(),
+        iat: now.timestamp(),
+        exp: expires_at.timestamp(),
+    };
+
+    encode(&Header::default(), &claims, &encoding_key)
+}
+
+pub fn decode_password_reset_token(
+    token: &str,
+) -> Result<TokenData<PasswordResetTokenClaims>, jsonwebtoken::errors::Error> {
+    decode_token::<PasswordResetTokenClaims>(token)
 }

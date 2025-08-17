@@ -1,5 +1,11 @@
+use crate::dto::auth::request::forgot_password::ForgotPasswordRequest;
+use crate::dto::auth::request::link_oauth::LinkOAuthRequest;
 use crate::dto::auth::request::login::AuthLoginRequest;
+use crate::dto::auth::request::reset_password::ResetPasswordRequest;
+use crate::dto::auth::request::set_password::SetPasswordRequest;
+use crate::dto::auth::request::verify_email::VerifyEmailRequest;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
+use crate::entity::common::OAuthProvider;
 use crate::dto::follow::request::check_follow_status::CheckFollowStatusRequest;
 use crate::dto::follow::request::create::CreateFollowRequest;
 use crate::dto::follow::request::delete::DeleteFollowRequest;
@@ -41,13 +47,18 @@ use utoipa::{
 #[derive(OpenApi)]
 #[openapi(
     paths(
+        crate::api::v0::routes::auth::forgot_password::forgot_password,
         crate::api::v0::routes::auth::github::github_sign_in,
         crate::api::v0::routes::auth::google::google_sign_in,
+        crate::api::v0::routes::auth::link_oauth::link_oauth,
+        crate::api::v0::routes::auth::reset_password::reset_password,
+        crate::api::v0::routes::auth::set_password::set_password,
         crate::api::v0::routes::auth::sign_in::sign_in,
         crate::api::v0::routes::auth::sign_out::sign_out,
+        crate::api::v0::routes::auth::sign_up::sign_up,
+        crate::api::v0::routes::auth::verify_email::verify_email,
         crate::api::v0::routes::auth::refresh::refresh,
         crate::api::v0::routes::user::get_my_profile::get_my_profile,
-        crate::api::v0::routes::user::create_user::create_user,
         crate::api::v0::routes::user::check_handle::check_handle_availability,
         crate::api::v0::routes::user::get_profile::get_profile,
         crate::api::v0::routes::user::update_profile::update_profile,
@@ -80,6 +91,12 @@ use utoipa::{
         schemas(
             AuthLoginRequest,
             AuthJWTResponse,
+            ForgotPasswordRequest,
+            ResetPasswordRequest,
+            SetPasswordRequest,
+            LinkOAuthRequest,
+            VerifyEmailRequest,
+            OAuthProvider,
             CreateUserRequest,
             CreatePostRequest,
             DeletePostRequest,

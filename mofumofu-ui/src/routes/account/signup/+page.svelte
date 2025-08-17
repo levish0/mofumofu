@@ -1,27 +1,40 @@
 <script lang="ts">
 	import { getGoogleOAuthUrl, getGitHubOAuthUrl } from '$lib/oauth/config';
 	import { checkHandleAvailability } from '$lib/api/user/userApi';
+	import { signup } from '$lib/api/auth/authApi';
 	import { createSignupSchema } from '$lib/schemas/signup';
 	import { safeParse } from 'valibot';
 	import { ExclamationTriangle, CheckCircle, Icon } from 'svelte-hero-icons';
+	import { goto } from '$app/navigation';
+	import { ApiError } from '$lib/api/error/common_error';
 	import * as m from '../../../paraglide/messages';
 
+	let name = $state('');
 	let email = $state('');
 	let handle = $state('');
 	let password = $state('');
 
+	let nameValidationError = $state<string | undefined>();
 	let emailValidationError = $state<string | undefined>();
 	let handleValidationError = $state<string | undefined>();
 	let passwordValidationError = $state<string | undefined>();
 	let handleVerificationState = $state<'unverified' | 'checking' | 'verified' | 'unavailable'>('unverified');
+	let isSubmitting = $state(false);
+	let submitError = $state<string | undefined>();
 
 	const characterCount = $derived(handle.length);
 	const canCheckHandle = $derived(handle.trim() !== '' && !handleValidationError);
 
-	function validateField(field: 'email' | 'handle' | 'password', value: string): string | undefined {
+	function validateField(field: 'name' | 'email' | 'handle' | 'password', value: string): string | undefined {
 		const schema = createSignupSchema();
 		const result = safeParse(schema.entries[field], value.trim());
 		return result.success ? undefined : result.issues?.[0]?.message;
+	}
+
+	function handleNameInput(e: Event) {
+		const value = (e.target as HTMLInputElement).value;
+		name = value;
+		nameValidationError = validateField('name', value);
 	}
 
 	function handleEmailInput(e: Event) {
@@ -58,6 +71,46 @@
 		}
 	}
 
+	async function handleSubmit(e: Event) {
+		e.preventDefault();
+		
+		if (handleVerificationState !== 'verified') {
+			submitError = '핸들 중복 확인을 해주세요';
+			return;
+		}
+
+		const schema = createSignupSchema();
+		const result = safeParse(schema, { name: name.trim(), email: email.trim(), handle: handle.trim(), password });
+		
+		if (!result.success) {
+			submitError = '입력 정보를 다시 확인해주세요';
+			return;
+		}
+
+		isSubmitting = true;
+		submitError = undefined;
+
+		try {
+			await signup({
+				name: name.trim(),
+				email: email.trim(),
+				handle: handle.trim(),
+				password
+			});
+			
+			await goto('/account/email-sent');
+		} catch (error) {
+			console.error('Signup error:', error);
+			if (error instanceof ApiError) {
+				submitError = error.message;
+			} else {
+				submitError = '회원가입 중 오류가 발생했습니다';
+			}
+		} finally {
+			isSubmitting = false;
+		}
+	}
+
 	function goBack() {
 		history.back();
 	}
@@ -88,7 +141,32 @@
 			</div>
 
 			<div class="mt-6">
-				<form method="POST" class="space-y-4">
+				<form onsubmit={handleSubmit} class="space-y-4">
+					<div>
+						<label for="name" class="block text-sm/6 font-medium">이름</label>
+						<div class="mt-2 space-y-2">
+							<input
+								id="name"
+								type="text"
+								name="name"
+								required
+								placeholder="이름을 입력해주세요"
+								value={name}
+								oninput={handleNameInput}
+								autocomplete="name"
+								class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-lg px-3 py-1.5 text-base outline-none sm:text-sm/6 {nameValidationError
+									? 'border-red-500'
+									: ''}"
+							/>
+							{#if nameValidationError}
+								<p class="flex items-center gap-1 text-xs text-rose-400">
+									<Icon src={ExclamationTriangle} size="14" />
+									{nameValidationError}
+								</p>
+							{/if}
+						</div>
+					</div>
+
 					<div>
 						<label for="email" class="block text-sm/6 font-medium">{m.auth_email_address()}</label>
 						<div class="mt-2 space-y-2">
@@ -206,12 +284,30 @@
 							{/if}
 						</div>
 					</div>
+					{#if submitError}
+						<div class="rounded-lg bg-red-900/20 border border-red-500/20 p-3">
+							<p class="flex items-center gap-1 text-xs text-rose-400">
+								<Icon src={ExclamationTriangle} size="14" />
+								{submitError}
+							</p>
+						</div>
+					{/if}
+					
 					<div>
 						<button
 							type="submit"
-							class="bg-mofu text-mofu-dark-900 mt-6 flex w-full justify-center rounded-lg px-3 py-1.5 text-sm/6 font-semibold shadow-xs outline-none hover:opacity-70"
+							disabled={isSubmitting || handleVerificationState !== 'verified'}
+							class="bg-mofu text-mofu-dark-900 disabled:bg-mofu/50 disabled:cursor-not-allowed mt-6 flex w-full justify-center rounded-lg px-3 py-1.5 text-sm/6 font-semibold shadow-xs outline-none hover:opacity-70 disabled:hover:opacity-100"
 						>
-							{m.auth_sign_up_button()}
+							{#if isSubmitting}
+								<svg class="h-4 w-4 animate-spin mr-2" fill="none" viewBox="0 0 24 24">
+									<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+									<path class="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+								</svg>
+								가입 중...
+							{:else}
+								{m.auth_sign_up_button()}
+							{/if}
 						</button>
 					</div>
 				</form>

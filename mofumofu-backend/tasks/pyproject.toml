@@ -14,6 +14,7 @@ dependencies = [
     "httpx>=0.28.1",
     "jinja2>=3.1.6",
     "meilisearch>=0.36.0",
+    "mjml>=0.11.1",
     "opensearch-py>=3.0.0",
     "passlib[bcrypt]>=1.7.4",
     "psycopg2-binary>=2.9.0",

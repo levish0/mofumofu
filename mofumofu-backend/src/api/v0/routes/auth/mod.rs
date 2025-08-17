@@ -1,6 +1,12 @@
+pub mod forgot_password;
 pub mod github;
 pub mod google;
+pub mod link_oauth;
 pub mod refresh;
+pub mod reset_password;
 pub mod routes;
+pub mod set_password;
 pub mod sign_in;
 pub mod sign_out;
+pub mod sign_up;
+pub mod verify_email;

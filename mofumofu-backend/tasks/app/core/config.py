@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import ( EmailStr, computed_field )
 
 
 class Settings(BaseSettings):
@@ -26,6 +27,25 @@ class Settings(BaseSettings):
     POSTGRES_HOST: str = "localhost"
     POSTGRES_PORT: str = "5432"
     POSTGRES_NAME: str = ""
+
+    # SMTP
+    SMTP_TLS: bool = True
+    SMTP_SSL: bool = False
+    SMTP_PORT: int = 587
+    SMTP_HOST: str | None = None
+    SMTP_USER: str | None = None
+    SMTP_PASSWORD: str | None = None
+    EMAILS_FROM_EMAIL: EmailStr | None = None
+    EMAILS_FROM_NAME: str | None = None
+    AUTH_EMAIL_VERIFICATION_TOKEN_EXPIRE_TIME: int = 1
+    AUTH_PASSWORD_RESET_TOKEN_EXPIRE_TIME: int = 1
+    PROJECT_NAME: str = "Mofumofu"
+    FRONTEND_HOST: str = "http://localhost:5173"
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def emails_enabled(self) -> bool:
+        return bool(self.SMTP_HOST and self.EMAILS_FROM_EMAIL)
 
     # Meilisearch 설정
     MEILISEARCH_HOST: str = "http://localhost:7700"

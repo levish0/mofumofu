@@ -1,6 +1,43 @@
 <script lang="ts">
 	import { getGoogleOAuthUrl, getGitHubOAuthUrl } from '$lib/oauth/config';
+	import { signin } from '$lib/api/auth/authApi';
+	import { authStore } from '$lib/stores/auth.svelte';
+	import { goto } from '$app/navigation';
+	import { ApiError } from '$lib/api/error/common_error';
+	import { ExclamationTriangle, Icon } from 'svelte-hero-icons';
 	import * as m from '../../../paraglide/messages';
+
+	let handle = $state('');
+	let password = $state('');
+	let isSubmitting = $state(false);
+	let error = $state<string | undefined>();
+
+	async function handleSubmit(e: Event) {
+		e.preventDefault();
+		
+		if (!handle.trim() || !password) {
+			error = '핸들과 비밀번호를 모두 입력해주세요';
+			return;
+		}
+
+		isSubmitting = true;
+		error = undefined;
+
+		try {
+			const response = await signin(handle.trim(), password);
+			authStore.setToken(response.access_token);
+			await goto('/');
+		} catch (err) {
+			console.error('Signin error:', err);
+			if (err instanceof ApiError) {
+				error = err.message;
+			} else {
+				error = '로그인 중 오류가 발생했습니다';
+			}
+		} finally {
+			isSubmitting = false;
+		}
+	}
 
 	function goBack() {
 		history.back();
@@ -33,17 +70,19 @@
 			</div>
 
 			<div class="mt-6">
-				<form method="POST" class="space-y-4">
+				<form onsubmit={handleSubmit} class="space-y-4">
 					<div>
-						<label for="email" class="block text-sm/6 font-medium">{m.auth_email_address()}</label>
+						<label for="handle" class="block text-sm/6 font-medium">핸들</label>
 						<div class="mt-2">
 							<input
-								id="email"
-								type="email"
-								name="email"
+								id="handle"
+								type="text"
+								name="handle"
 								required
-								placeholder="email@mofu.com"
-								autocomplete="email"
+								placeholder="@핸들명"
+								value={handle}
+								oninput={(e) => handle = (e.target as HTMLInputElement).value}
+								autocomplete="username"
 								class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-lg px-3 py-1.5 text-base outline-none sm:text-sm/6"
 							/>
 						</div>
@@ -57,6 +96,8 @@
 								type="password"
 								name="password"
 								placeholder="p4ssw@rd!"
+								value={password}
+								oninput={(e) => password = (e.target as HTMLInputElement).value}
 								required
 								autocomplete="current-password"
 								class="bg-mofu-dark-800 placeholder:text-mofu-dark-300 block w-full rounded-lg px-3 py-1.5 text-base outline-none sm:text-sm/6"
@@ -72,12 +113,30 @@
 						</div>
 					</div>
 
+					{#if error}
+						<div class="rounded-lg bg-red-900/20 border border-red-500/20 p-3">
+							<p class="flex items-center gap-1 text-xs text-rose-400">
+								<Icon src={ExclamationTriangle} size="14" />
+								{error}
+							</p>
+						</div>
+					{/if}
+					
 					<div>
 						<button
 							type="submit"
-							class="bg-mofu text-mofu-dark-900 flex w-full justify-center rounded-lg px-3 py-1.5 text-sm/6 font-semibold shadow-xs outline-none hover:opacity-70"
+							disabled={isSubmitting}
+							class="bg-mofu text-mofu-dark-900 disabled:bg-mofu/50 disabled:cursor-not-allowed flex w-full justify-center rounded-lg px-3 py-1.5 text-sm/6 font-semibold shadow-xs outline-none hover:opacity-70 disabled:hover:opacity-100"
 						>
-							{m.auth_sign_in_button()}
+							{#if isSubmitting}
+								<svg class="h-4 w-4 animate-spin mr-2" fill="none" viewBox="0 0 24 24">
+									<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+									<path class="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+								</svg>
+								로그인 중...
+							{:else}
+								{m.auth_sign_in_button()}
+							{/if}
 						</button>
 					</div>
 				</form>

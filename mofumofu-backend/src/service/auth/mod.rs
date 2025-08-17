@@ -1,8 +1,20 @@
+pub mod forgot_password;
 pub mod jwt;
+pub mod link_oauth;
 pub mod refresh;
+pub mod reset_password;
+pub mod set_password;
 pub mod sign_in;
 pub mod sign_out;
+pub mod sign_up;
+pub mod verify_email;
 
+pub use forgot_password::*;
+pub use link_oauth::*;
 pub use refresh::*;
+pub use reset_password::*;
+pub use set_password::*;
 pub use sign_in::*;
 pub use sign_out::*;
+pub use sign_up::*;
+pub use verify_email::*;

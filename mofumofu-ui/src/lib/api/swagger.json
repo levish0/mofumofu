@@ -5,9 +5,25 @@
 		"description": "A soft and simple blogging platform for everyone.",
 		"contact": { "name": "Levi Lim", "email": "shiueo.csh@gmail.com" },
 		"license": { "name": "" },
-		"version": "0.5.9"
+		"version": "0.6.0"
 	},
 	"paths": {
+		"/v0/auth/forgot_password": {
+			"post": {
+				"tags": ["Auth"],
+				"operationId": "forgot_password",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ForgotPasswordRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": { "description": "Password reset email sent if account exists" },
+					"400": { "description": "Invalid email format" },
+					"422": { "description": "Validation error" },
+					"500": { "description": "Internal server error" }
+				}
+			}
+		},
 		"/v0/auth/github": {
 			"post": {
 				"tags": ["Auth"],
@@ -50,6 +66,25 @@
 				}
 			}
 		},
+		"/v0/auth/link_oauth": {
+			"post": {
+				"tags": ["Auth"],
+				"operationId": "link_oauth",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/LinkOAuthRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": { "description": "OAuth account linked successfully" },
+					"400": { "description": "OAuth account already linked or invalid request" },
+					"401": { "description": "Unauthorized" },
+					"404": { "description": "User not found" },
+					"422": { "description": "Validation error" },
+					"500": { "description": "Internal server error" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
 		"/v0/auth/refresh": {
 			"post": {
 				"tags": ["Auth"],
@@ -65,6 +100,42 @@
 					"500": { "description": "Internal server error" }
 				},
 				"security": [{ "refresh_token_cookie": [] }]
+			}
+		},
+		"/v0/auth/reset_password": {
+			"post": {
+				"tags": ["Auth"],
+				"operationId": "reset_password",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ResetPasswordRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": { "description": "Password reset successfully" },
+					"400": { "description": "Invalid or expired token" },
+					"404": { "description": "User not found" },
+					"422": { "description": "Validation error" },
+					"500": { "description": "Internal server error" }
+				}
+			}
+		},
+		"/v0/auth/set_password": {
+			"post": {
+				"tags": ["Auth"],
+				"operationId": "set_password",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/SetPasswordRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": { "description": "Password set successfully" },
+					"400": { "description": "User already has password or invalid request" },
+					"401": { "description": "Unauthorized" },
+					"404": { "description": "User not found" },
+					"422": { "description": "Validation error" },
+					"500": { "description": "Internal server error" }
+				},
+				"security": [{ "bearer_auth": [] }]
 			}
 		},
 		"/v0/auth/sign_in": {
@@ -100,6 +171,40 @@
 					"500": { "description": "Internal server error" }
 				},
 				"security": [{ "refresh_token_cookie": [] }]
+			}
+		},
+		"/v0/auth/sign_up": {
+			"post": {
+				"tags": ["Auth"],
+				"operationId": "sign_up",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateUserRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"204": { "description": "User created successfully, verification email sent" },
+					"400": { "description": "Invalid input" },
+					"409": { "description": "Handle or email already exists" },
+					"422": { "description": "Validation error" },
+					"500": { "description": "Internal server error" }
+				}
+			}
+		},
+		"/v0/auth/verify_email": {
+			"post": {
+				"tags": ["Auth"],
+				"operationId": "verify_email",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/VerifyEmailRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": { "description": "Email verified successfully" },
+					"400": { "description": "Invalid or expired token" },
+					"404": { "description": "User not found" },
+					"422": { "description": "Validation error" },
+					"500": { "description": "Internal server error" }
+				}
 			}
 		},
 		"/v0/follow": {
@@ -770,6 +875,11 @@
 				"required": ["is_following"],
 				"properties": { "is_following": { "type": "boolean" } }
 			},
+			"ForgotPasswordRequest": {
+				"type": "object",
+				"required": ["email"],
+				"properties": { "email": { "type": "string" } }
+			},
 			"GetFollowCountRequest": {
 				"type": "object",
 				"required": ["user_handle"],
@@ -844,6 +954,12 @@
 				"required": ["is_liked"],
 				"properties": { "is_liked": { "type": "boolean" } }
 			},
+			"LinkOAuthRequest": {
+				"type": "object",
+				"required": ["provider", "code"],
+				"properties": { "code": { "type": "string" }, "provider": { "$ref": "#/components/schemas/OAuthProvider" } }
+			},
+			"OAuthProvider": { "type": "string", "enum": ["Google", "Github"] },
 			"PostAuthor": {
 				"type": "object",
 				"required": ["handle", "name"],
@@ -942,6 +1058,11 @@
 				"required": ["file"],
 				"properties": { "file": { "type": "string", "format": "binary", "contentMediaType": "image/*" } }
 			},
+			"ResetPasswordRequest": {
+				"type": "object",
+				"required": ["token", "new_password"],
+				"properties": { "new_password": { "type": "string" }, "token": { "type": "string" } }
+			},
 			"SearchPostsRequest": {
 				"type": "object",
 				"properties": {
@@ -965,6 +1086,11 @@
 					},
 					"user_handle": { "type": ["string", "null"], "description": "특정 사용자로 필터링" }
 				}
+			},
+			"SetPasswordRequest": {
+				"type": "object",
+				"required": ["password"],
+				"properties": { "password": { "type": "string" } }
 			},
 			"ThumbnailUploadResponse": {
 				"type": "object",
@@ -1034,7 +1160,8 @@
 				"type": "object",
 				"required": ["posts"],
 				"properties": { "posts": { "type": "array", "items": { "$ref": "#/components/schemas/PostListItem" } } }
-			}
+			},
+			"VerifyEmailRequest": { "type": "object", "required": ["token"], "properties": { "token": { "type": "string" } } }
 		},
 		"securitySchemes": {
 			"anonymous_id_cookie": { "type": "apiKey", "in": "cookie", "name": "anonymous_user_id" },

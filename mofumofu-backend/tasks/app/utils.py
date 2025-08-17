@@ -52,46 +52,37 @@ def send_email(
     logger.info(f"send email result: {response}")
 
 
-def generate_test_email(email_to: str) -> EmailData:
-    project_name = settings.PROJECT_NAME
-    subject = f"{project_name} - Test email"
-    html_content = render_email_template(
-        template_name="test_email.html",
-        context={"project_name": settings.PROJECT_NAME, "email": email_to},
-    )
-    return EmailData(html_content=html_content, subject=subject)
-
-
 def generate_reset_password_email(email_to: str, email: str, token: str) -> EmailData:
     project_name = settings.PROJECT_NAME
     subject = f"{project_name} - Password recovery for user {email}"
-    link = f"{settings.FRONTEND_HOST}/reset-password?token={token}"
+    link = f"{settings.FRONTEND_HOST}/account/reset-password?token={token}"
     html_content = render_email_template(
         template_name="reset_password.html",
         context={
             "project_name": settings.PROJECT_NAME,
             "username": email,
             "email": email_to,
-            "valid_hours": settings.EMAIL_RESET_TOKEN_EXPIRE_HOURS,
+            "valid_hours": settings.AUTH_PASSWORD_RESET_TOKEN_EXPIRE_TIME,
             "link": link,
         },
     )
     return EmailData(html_content=html_content, subject=subject)
 
 
-def generate_new_account_email(
-    email_to: str, username: str, password: str
+def generate_email_verification_email(
+    email_to: str, username: str, verification_token: str
 ) -> EmailData:
     project_name = settings.PROJECT_NAME
-    subject = f"{project_name} - New account for user {username}"
+    subject = f"{project_name} - Verify your email address"
+    verification_link = f"{settings.FRONTEND_HOST}/account/verify-email?token={verification_token}"
     html_content = render_email_template(
-        template_name="new_account.html",
+        template_name="email_verification.html",
         context={
             "project_name": settings.PROJECT_NAME,
             "username": username,
-            "password": password,
             "email": email_to,
-            "link": settings.FRONTEND_HOST,
+            "verification_link": verification_link,
+            "valid_hours": settings.AUTH_EMAIL_VERIFICATION_TOKEN_EXPIRE_TIME,  # 24시간 유효
         },
     )
     return EmailData(html_content=html_content, subject=subject)
