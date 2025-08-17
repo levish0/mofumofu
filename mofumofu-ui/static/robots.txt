@@ -1,0 +1,9 @@
+User-agent: *
+
+# Disallow crawling of admin/auth pages
+Disallow: /account/
+Disallow: /settings/
+Disallow: /write/
+Disallow: /edit/
+
+# Sitemap will be added later
