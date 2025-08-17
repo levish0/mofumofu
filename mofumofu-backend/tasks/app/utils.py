@@ -197,3 +197,56 @@ def safe_execute(func, *args, **kwargs) -> Tuple[bool, Any]:
     except Exception as e:
         logger.error(f"함수 실행 실패 {func.__name__}: {str(e)}")
         return False, str(e)
+
+
+def build_email_templates() -> None:
+    """MJML 템플릿들을 HTML로 변환"""
+    try:
+        from pathlib import Path
+        from mjml import mjml_to_html
+        
+        # 디렉토리 경로 설정
+        current_dir = Path(__file__).parent / "email-templates"
+        src_dir = current_dir / "src"
+        build_dir = current_dir / "build"
+        
+        # build 디렉토리 생성
+        build_dir.mkdir(exist_ok=True)
+        
+        # src 디렉토리의 모든 .mjml 파일 처리
+        mjml_files = list(src_dir.glob("*.mjml"))
+        
+        if not mjml_files:
+            logger.warning("No MJML files found in email templates")
+            return
+        
+        logger.info(f"Building {len(mjml_files)} email templates...")
+        
+        for mjml_file in mjml_files:
+            logger.info(f"Processing: {mjml_file.name}")
+            
+            try:
+                # MJML 파일 읽기
+                with open(mjml_file, 'r', encoding='utf-8') as f:
+                    mjml_content = f.read()
+                
+                # MJML을 HTML로 변환
+                result = mjml_to_html(mjml_content)
+                html_content = result.html
+                
+                # HTML 파일로 저장
+                html_filename = mjml_file.stem + ".html"
+                html_path = build_dir / html_filename
+                
+                with open(html_path, 'w', encoding='utf-8') as f:
+                    f.write(html_content)
+                
+                logger.info(f"Built email template: {html_filename}")
+                
+            except Exception as e:
+                logger.error(f"Failed to build template {mjml_file.name}: {e}")
+        
+        logger.info("Email template build completed")
+        
+    except Exception as e:
+        logger.error(f"Email template build failed: {e}")
