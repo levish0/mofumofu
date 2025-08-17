@@ -60,7 +60,6 @@ export async function getPosts(request: GetPostsRequest = {}): Promise<GetPostsR
 	}
 }
 
-
 export async function searchPosts(request: SearchPostsRequest): Promise<GetPostsResponse> {
 	try {
 		const response = await publicApi.post('v0/posts/search', { json: request });

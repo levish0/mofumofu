@@ -1,6 +1,15 @@
 import { privateApi } from '../private';
 import { publicApi } from '../public';
-import type { GithubAuthRequest, GoogleAuthRequest, RefreshAccessTokenResponse, SignupRequest, VerifyEmailRequest, SigninRequest, ForgotPasswordRequest, ResetPasswordRequest } from './types';
+import type {
+	GithubAuthRequest,
+	GoogleAuthRequest,
+	RefreshAccessTokenResponse,
+	SignupRequest,
+	VerifyEmailRequest,
+	SigninRequest,
+	ForgotPasswordRequest,
+	ResetPasswordRequest
+} from './types';
 
 // refreshAccessToken 수정
 export async function refreshAccessToken(): Promise<RefreshAccessTokenResponse> {

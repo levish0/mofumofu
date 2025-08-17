@@ -55,7 +55,6 @@ export interface GetPostsRequest {
 	sort?: PostSortOrder;
 }
 
-
 export interface SearchPostsRequest {
 	query?: string | null;
 	hashtags?: string[] | null;
