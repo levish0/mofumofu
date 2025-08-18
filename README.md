@@ -41,7 +41,7 @@ Mofumofu follows a modern **microservices architecture** with clear separation o
 graph TB
     subgraph "Frontend Layer"
         UI[🌐 Web UI<br/>SvelteKit]
-        DESKTOP[🖥️ Desktop App<br/>Tauri + Svelte]
+        DESKTOP[🖥️ Desktop App<br/>Tauri]
     end
 
     subgraph "API Gateway"
