@@ -24,7 +24,7 @@ where
     let deleted = repository_delete_like_by_post_id(&txn, *user_id, *post_id).await?;
 
     if !deleted {
-        return Err(Errors::BadRequestError("Like not found".to_string()));
+        return Err(Errors::LikeNotFound);
     }
 
     // 포스트 좋아요 개수 감소

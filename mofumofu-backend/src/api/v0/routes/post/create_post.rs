@@ -28,7 +28,7 @@ pub fn post_routes() -> Router<AppState> {
     request_body = CreatePostRequest,
     responses(
         (status = 201, description = "Post created successfully", body = CreatePostResponse),
-        (status = StatusCode::BAD_REQUEST, description = "Invalid input"),
+        (status = StatusCode::BAD_REQUEST, description = "Markdown render failed: markdown:render_failed"),
         (status = StatusCode::UNAUTHORIZED, description = "Unauthorized or email not verified"),
         (status = StatusCode::INTERNAL_SERVER_ERROR, description = "Internal Server Error")
     ),

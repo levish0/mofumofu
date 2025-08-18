@@ -25,7 +25,7 @@ where
     let (render_html, toc_json) = if let Some(ref content) = payload.content {
         info!("마크다운 렌더링 시작 (content length: {})", content.len());
         let rendered = render_markdown(http_client, content).await
-            .map_err(|e| Errors::BadRequestError(format!("마크다운 렌더링 실패: {}", e)))?;
+            .map_err(|e| Errors::MarkdownRenderFailed(format!("마크다운 렌더링 실패: {}", e)))?;
         
         info!("마크다운 렌더링 성공 (TOC items: {})", rendered.toc_items.len());
         

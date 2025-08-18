@@ -16,7 +16,7 @@ use tracing::info;
     request_body = SetPasswordRequest,
     responses(
         (status = 200, description = "Password set successfully"),
-        (status = 400, description = "User already has password or invalid request"),
+        (status = 400, description = "Password already set: password:already_set"),
         (status = 401, description = "Unauthorized"),
         (status = 404, description = "User not found"),
         (status = 422, description = "Validation error"),

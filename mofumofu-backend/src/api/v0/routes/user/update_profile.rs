@@ -18,7 +18,7 @@ use tracing::{error, info, warn};
     request_body = UpdateProfileRequest,
     responses(
         (status = 200, description = "Profile updated successfully", body = UserInfoResponse),
-        (status = 400, description = "Invalid input"),
+        (status = 400, description = "Password related errors: password:required_for_update, password:incorrect, password:cannot_update_oauth_only, password:new_password_missing"),
         (status = 401, description = "Unauthorized or email not verified"),
         (status = 404, description = "User not found"),
         (status = 409, description = "Handle already exists"),

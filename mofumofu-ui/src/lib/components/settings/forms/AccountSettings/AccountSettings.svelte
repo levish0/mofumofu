@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { userStore } from '$lib/stores/user.svelte';
 	import EmailVerificationInput from './EmailVerificationInput.svelte';
+	import PasswordManagement from './PasswordManagement.svelte';
 	import OAuthConnections from './OAuthConnections.svelte';
-	import SetPassword from './SetPassword.svelte';
 
 	const user = $derived(userStore.user);
 </script>
@@ -13,8 +13,8 @@
 			<EmailVerificationInput email={user.email} />
 		{/if}
 		
-		<OAuthConnections />
+		<PasswordManagement />
 		
-		<SetPassword />
+		<OAuthConnections />
 	</div>
 </div>

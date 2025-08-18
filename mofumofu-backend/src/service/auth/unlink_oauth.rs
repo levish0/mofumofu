@@ -31,16 +31,12 @@ where
     
     // OAuth 전용 계정에서 마지막 연결을 해제하려는 경우 방지
     if is_oauth_only && current_connections.len() <= 1 {
-        return Err(Errors::BadRequestError(
-            "Cannot unlink the last OAuth connection. Please set a password first.".to_string()
-        ));
+        return Err(Errors::OauthCannotUnlinkLastConnection);
     }
 
     // 해당 provider가 실제로 연결되어 있는지 확인
     if !current_connections.contains(&payload.provider) {
-        return Err(Errors::BadRequestError(
-            "OAuth connection not found".to_string()
-        ));
+        return Err(Errors::OauthConnectionNotFound);
     }
 
     // OAuth 연결 해제

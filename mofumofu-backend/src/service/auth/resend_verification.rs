@@ -22,7 +22,7 @@ where
 
     // 이미 인증된 사용자인지 확인
     if user.is_verified {
-        return Err(Errors::BadRequestError("Email already verified".to_string()));
+        return Err(Errors::EmailAlreadyVerified);
     }
 
     // 이메일 인증 토큰 생성

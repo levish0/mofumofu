@@ -18,7 +18,7 @@ where
     // JWT 토큰 검증
     let token_data = decode_email_verification_token(&payload.token).map_err(|e| {
         error!("Invalid email verification token: {}", e);
-        Errors::BadRequestError("Invalid or expired verification token".to_string())
+        Errors::TokenInvalidVerification
     })?;
 
     let claims = token_data.claims;
@@ -26,9 +26,7 @@ where
     // 토큰 만료 확인
     let now = Utc::now().timestamp();
     if claims.exp < now {
-        return Err(Errors::BadRequestError(
-            "Verification token has expired".to_string(),
-        ));
+        return Err(Errors::TokenExpiredVerification);
     }
 
     let txn = conn.begin().await?;
@@ -40,12 +38,12 @@ where
 
     // 이메일이 일치하는지 확인
     if user.email != claims.email {
-        return Err(Errors::BadRequestError("Token email mismatch".to_string()));
+        return Err(Errors::TokenEmailMismatch);
     }
 
     // 이미 인증된 사용자인지 확인
     if user.is_verified {
-        return Err(Errors::BadRequestError("Email already verified".to_string()));
+        return Err(Errors::EmailAlreadyVerified);
     }
 
     // 사용자를 인증됨으로 업데이트

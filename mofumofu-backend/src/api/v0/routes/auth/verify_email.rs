@@ -14,7 +14,7 @@ use tracing::info;
     request_body = VerifyEmailRequest,
     responses(
         (status = 200, description = "Email verified successfully"),
-        (status = 400, description = "Invalid or expired token"),
+        (status = 400, description = "Token errors: token:invalid_verification, token:expired_verification, token:email_mismatch, email:already_verified"),
         (status = 404, description = "User not found"),
         (status = 422, description = "Validation error"),
         (status = 500, description = "Internal server error")

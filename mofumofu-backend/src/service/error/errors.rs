@@ -6,7 +6,21 @@ use crate::service::error::protocol::general::{BAD_REQUEST, VALIDATION_ERROR};
 use crate::service::error::protocol::oauth::{
     OAUTH_INVALID_AUTH_URL, OAUTH_INVALID_REDIRECT_URL, OAUTH_INVALID_TOKEN_URL,
     OAUTH_TOKEN_EXCHANGE_FAILED, OAUTH_USER_INFO_FETCH_FAILED, OAUTH_USER_INFO_PARSE_FAILED,
+    OAUTH_ACCOUNT_ALREADY_LINKED, OAUTH_CONNECTION_NOT_FOUND, OAUTH_CANNOT_UNLINK_LAST_CONNECTION,
+    OAUTH_INVALID_IMAGE_URL,
 };
+use crate::service::error::protocol::file::{FILE_UPLOAD_ERROR, FILE_NOT_FOUND, FILE_READ_ERROR};
+use crate::service::error::protocol::like::{LIKE_ALREADY_EXISTS, LIKE_NOT_FOUND};
+use crate::service::error::protocol::password::{
+    PASSWORD_REQUIRED_FOR_UPDATE, PASSWORD_INCORRECT, PASSWORD_CANNOT_UPDATE_OAUTH_ONLY,
+    PASSWORD_NEW_PASSWORD_MISSING, PASSWORD_ALREADY_SET,
+};
+use crate::service::error::protocol::token::{
+    TOKEN_INVALID_VERIFICATION, TOKEN_EXPIRED_VERIFICATION, TOKEN_EMAIL_MISMATCH,
+    TOKEN_INVALID_RESET, TOKEN_EXPIRED_RESET,
+};
+use crate::service::error::protocol::email::EMAIL_ALREADY_VERIFIED;
+use crate::service::error::protocol::markdown::MARKDOWN_RENDER_FAILED;
 use crate::service::error::protocol::post::POST_NOT_FOUND;
 use crate::service::error::protocol::system::{
     SYS_DATABASE_ERROR, SYS_HASHING_ERROR, SYS_INTERNAL_ERROR, SYS_NOT_FOUND,
@@ -102,6 +116,39 @@ pub enum Errors {
     OauthTokenExchangeFailed,
     OauthUserInfoFetchFailed,
     OauthUserInfoParseFailed,
+    OauthAccountAlreadyLinked,
+    OauthConnectionNotFound,
+    OauthCannotUnlinkLastConnection,
+    OauthInvalidImageUrl,
+
+    // Password related errors
+    PasswordRequiredForUpdate,
+    PasswordIncorrect,
+    PasswordCannotUpdateOauthOnly,
+    PasswordNewPasswordMissing,
+    PasswordAlreadySet,
+
+    // Token related errors
+    TokenInvalidVerification,
+    TokenExpiredVerification,
+    TokenEmailMismatch,
+    TokenInvalidReset,
+    TokenExpiredReset,
+
+    // Email errors
+    EmailAlreadyVerified,
+
+    // File related errors
+    FileUploadError(String),
+    FileNotFound,
+    FileReadError(String),
+
+    // Like errors
+    LikeAlreadyExists,
+    LikeNotFound,
+
+    // Markdown errors
+    MarkdownRenderFailed(String),
 
     // 일반 오류
     BadRequestError(String), // 잘못된 요청 (추가 정보 포함)
@@ -153,10 +200,35 @@ impl IntoResponse for Errors {
             Errors::ForbiddenError(_) |
             Errors::FollowCannotFollowSelf |
             Errors::FollowAlreadyFollowing |
+            Errors::PasswordRequiredForUpdate |
+            Errors::PasswordIncorrect |
+            Errors::PasswordCannotUpdateOauthOnly |
+            Errors::PasswordNewPasswordMissing |
+            Errors::PasswordAlreadySet |
+            Errors::TokenInvalidVerification |
+            Errors::TokenExpiredVerification |
+            Errors::TokenEmailMismatch |
+            Errors::TokenInvalidReset |
+            Errors::TokenExpiredReset |
+            Errors::EmailAlreadyVerified |
+            Errors::LikeAlreadyExists |
+            Errors::LikeNotFound |
+            Errors::OauthAccountAlreadyLinked |
+            Errors::OauthConnectionNotFound |
+            Errors::OauthCannotUnlinkLastConnection |
+            Errors::OauthInvalidImageUrl |
             Errors::BadRequestError(_) |
             Errors::ValidationError(_) |
             Errors::FileTooLargeError(_) => {
                 debug!("Client error: {:?}", self);
+            }
+            
+            // 파일 관련 에러 - warn! 레벨
+            Errors::FileUploadError(_) |
+            Errors::FileNotFound |
+            Errors::FileReadError(_) |
+            Errors::MarkdownRenderFailed(_) => {
+                warn!("File/processing error: {:?}", self);
             }
             
             // OAuth 에러 - warn! 레벨 (외부 서비스 관련)
@@ -215,6 +287,39 @@ impl IntoResponse for Errors {
                 OAUTH_USER_INFO_PARSE_FAILED,
                 None,
             ),
+            Errors::OauthAccountAlreadyLinked => (StatusCode::CONFLICT, OAUTH_ACCOUNT_ALREADY_LINKED, None),
+            Errors::OauthConnectionNotFound => (StatusCode::NOT_FOUND, OAUTH_CONNECTION_NOT_FOUND, None),
+            Errors::OauthCannotUnlinkLastConnection => (StatusCode::BAD_REQUEST, OAUTH_CANNOT_UNLINK_LAST_CONNECTION, None),
+            Errors::OauthInvalidImageUrl => (StatusCode::BAD_REQUEST, OAUTH_INVALID_IMAGE_URL, None),
+
+            // Password errors
+            Errors::PasswordRequiredForUpdate => (StatusCode::BAD_REQUEST, PASSWORD_REQUIRED_FOR_UPDATE, None),
+            Errors::PasswordIncorrect => (StatusCode::BAD_REQUEST, PASSWORD_INCORRECT, None),
+            Errors::PasswordCannotUpdateOauthOnly => (StatusCode::BAD_REQUEST, PASSWORD_CANNOT_UPDATE_OAUTH_ONLY, None),
+            Errors::PasswordNewPasswordMissing => (StatusCode::BAD_REQUEST, PASSWORD_NEW_PASSWORD_MISSING, None),
+            Errors::PasswordAlreadySet => (StatusCode::BAD_REQUEST, PASSWORD_ALREADY_SET, None),
+
+            // Token errors
+            Errors::TokenInvalidVerification => (StatusCode::BAD_REQUEST, TOKEN_INVALID_VERIFICATION, None),
+            Errors::TokenExpiredVerification => (StatusCode::BAD_REQUEST, TOKEN_EXPIRED_VERIFICATION, None),
+            Errors::TokenEmailMismatch => (StatusCode::BAD_REQUEST, TOKEN_EMAIL_MISMATCH, None),
+            Errors::TokenInvalidReset => (StatusCode::BAD_REQUEST, TOKEN_INVALID_RESET, None),
+            Errors::TokenExpiredReset => (StatusCode::BAD_REQUEST, TOKEN_EXPIRED_RESET, None),
+
+            // Email errors
+            Errors::EmailAlreadyVerified => (StatusCode::BAD_REQUEST, EMAIL_ALREADY_VERIFIED, None),
+
+            // File errors
+            Errors::FileUploadError(msg) => (StatusCode::BAD_REQUEST, FILE_UPLOAD_ERROR, Some(msg)),
+            Errors::FileNotFound => (StatusCode::BAD_REQUEST, FILE_NOT_FOUND, None),
+            Errors::FileReadError(msg) => (StatusCode::BAD_REQUEST, FILE_READ_ERROR, Some(msg)),
+
+            // Like errors
+            Errors::LikeAlreadyExists => (StatusCode::CONFLICT, LIKE_ALREADY_EXISTS, None),
+            Errors::LikeNotFound => (StatusCode::NOT_FOUND, LIKE_NOT_FOUND, None),
+
+            // Markdown errors
+            Errors::MarkdownRenderFailed(msg) => (StatusCode::BAD_REQUEST, MARKDOWN_RENDER_FAILED, Some(msg)),
 
             // 일반 오류 - 400 Bad Request
             Errors::BadRequestError(msg) => (StatusCode::BAD_REQUEST, BAD_REQUEST, Some(msg)),

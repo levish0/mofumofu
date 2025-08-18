@@ -16,11 +16,12 @@ use tracing::info;
     request_body = LinkOAuthRequest,
     responses(
         (status = 200, description = "OAuth account linked successfully"),
-        (status = 400, description = "OAuth account already linked or invalid request"),
+        (status = 400, description = "OAuth errors: oauth:invalid_auth_url, oauth:invalid_token_url, oauth:invalid_redirect_url, oauth:token_exchange_failed, oauth:user_info_fetch_failed, oauth:invalid_image_url"),
         (status = 401, description = "Unauthorized"),
         (status = 404, description = "User not found"),
+        (status = 409, description = "OAuth account already linked: oauth:account_already_linked"),
         (status = 422, description = "Validation error"),
-        (status = 500, description = "Internal server error")
+        (status = 500, description = "Internal server error or oauth:user_info_parse_failed")
     ),
     tag = "Auth",
     security(("bearer_auth" = []))

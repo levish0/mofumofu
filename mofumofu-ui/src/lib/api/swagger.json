@@ -1227,6 +1227,7 @@
 				"type": "object",
 				"properties": {
 					"bio": { "type": ["string", "null"] },
+					"current_password": { "type": ["string", "null"] },
 					"handle": { "type": ["string", "null"] },
 					"location": { "type": ["string", "null"] },
 					"name": { "type": ["string", "null"] },

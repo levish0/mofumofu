@@ -14,7 +14,7 @@ use tracing::info;
     request_body = ResetPasswordRequest,
     responses(
         (status = 200, description = "Password reset successfully"),
-        (status = 400, description = "Invalid or expired token"),
+        (status = 400, description = "Token errors: token:invalid_reset, token:expired_reset, token:email_mismatch"),
         (status = 404, description = "User not found"),
         (status = 422, description = "Validation error"),
         (status = 500, description = "Internal server error")

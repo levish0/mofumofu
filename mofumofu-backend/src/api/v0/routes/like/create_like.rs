@@ -16,8 +16,8 @@ use tracing::info;
     request_body = CreateLikeRequest,
     responses(
         (status = StatusCode::NO_CONTENT, description = "Post liked successfully"),
-        (status = StatusCode::BAD_REQUEST, description = "Invalid input or already liked"),
         (status = StatusCode::NOT_FOUND, description = "Post not found"),
+        (status = StatusCode::CONFLICT, description = "Already liked: like:already_exists"),
         (status = StatusCode::INTERNAL_SERVER_ERROR, description = "Internal Server Error")
     ),
     security(

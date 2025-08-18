@@ -16,7 +16,7 @@ use tracing::info;
     request_body(content = ProfileAvatarForm, content_type = "multipart/form-data"),
     responses(
         (status = 200, description = "Profile image upload queued successfully", body = ImageUploadResponse),
-        (status = 400, description = "Invalid file or parameters"),
+        (status = 400, description = "File errors: file:not_found, file:read_error"),
         (status = 401, description = "Unauthorized or email not verified"),
         (status = 413, description = "File too large"),
         (status = 500, description = "Internal server error")

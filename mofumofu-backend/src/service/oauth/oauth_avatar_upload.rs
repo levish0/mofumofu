@@ -28,7 +28,7 @@ where
 
     // Validate image URL
     if !image_url.starts_with("http://") && !image_url.starts_with("https://") {
-        return Err(Errors::BadRequestError("Invalid image URL".to_string()));
+        return Err(Errors::OauthInvalidImageUrl);
     }
 
     // Download image from OAuth provider

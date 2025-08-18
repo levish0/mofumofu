@@ -72,7 +72,7 @@ pub async fn service_link_oauth(
     .await
     .map_err(|e| {
         error!("Failed to create OAuth connection: {:?}", e);
-        Errors::BadRequestError("OAuth account already linked".to_string())
+        Errors::OauthAccountAlreadyLinked
     })?;
 
     txn.commit().await?;

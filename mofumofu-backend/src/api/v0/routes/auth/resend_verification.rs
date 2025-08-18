@@ -14,7 +14,7 @@ use tracing::info;
     request_body = ResendVerificationRequest,
     responses(
         (status = 200, description = "Verification email sent successfully"),
-        (status = 400, description = "Email already verified or invalid request"),
+        (status = 400, description = "Email already verified: email:already_verified"),
         (status = 404, description = "User not found"),
         (status = 422, description = "Validation error"),
         (status = 500, description = "Internal server error")

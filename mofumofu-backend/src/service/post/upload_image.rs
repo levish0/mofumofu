@@ -13,13 +13,13 @@ pub async fn service_upload_image(
     while let Some(field) = multipart
         .next_field()
         .await
-        .map_err(|e| Errors::BadRequestError(format!("Failed to read multipart field: {}", e)))?
+        .map_err(|e| Errors::FileReadError(format!("Failed to read multipart field: {}", e)))?
     {
         if field.name() == Some("file") {
             let data = field
                 .bytes()
                 .await
-                .map_err(|e| Errors::BadRequestError(format!("Failed to read file data: {}", e)))?;
+                .map_err(|e| Errors::FileReadError(format!("Failed to read file data: {}", e)))?;
 
             // Process and compress image (8MB limit for post images)
             const MAX_POST_IMAGE_SIZE: usize = 8 * 1024 * 1024;
@@ -59,5 +59,5 @@ pub async fn service_upload_image(
         }
     }
 
-    Err(Errors::BadRequestError("No file found in request".to_string()))
+    Err(Errors::FileNotFound)
 }

@@ -26,7 +26,7 @@ where
     // 이미 좋아요가 있는지 확인
     let already_liked = repository_check_like_status_by_post_id(&txn, user_id, post_id).await?;
     if already_liked {
-        return Err(Errors::BadRequestError("Already liked this post".to_string()));
+        return Err(Errors::LikeAlreadyExists);
     }
 
     // 좋아요 생성

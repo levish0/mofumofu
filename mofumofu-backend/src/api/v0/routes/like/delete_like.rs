@@ -16,8 +16,7 @@ use tracing::info;
     request_body = DeleteLikeRequest,
     responses(
         (status = StatusCode::NO_CONTENT, description = "Post unliked successfully"),
-        (status = StatusCode::BAD_REQUEST, description = "Invalid input or like not found"),
-        (status = StatusCode::NOT_FOUND, description = "Post not found"),
+        (status = StatusCode::NOT_FOUND, description = "Post not found or Like not found: like:not_found"),
         (status = StatusCode::INTERNAL_SERVER_ERROR, description = "Internal Server Error")
     ),
     security(

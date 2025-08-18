@@ -33,6 +33,7 @@ export interface UpdateProfileRequest {
 	location?: string | null;
 	website?: string | null;
 	password?: string | null;
+	current_password?: string | null;
 }
 
 export interface ImageUploadResponse {

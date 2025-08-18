@@ -28,4 +28,10 @@ pub struct UpdateProfileRequest {
         message = "Password must be between 6 and 20 characters."
     ))]
     pub password: Option<String>,
+    #[validate(length(
+        min = 6,
+        max = 20,
+        message = "Current password must be between 6 and 20 characters."
+    ))]
+    pub current_password: Option<String>,
 }

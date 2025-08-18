@@ -19,7 +19,7 @@ where
     // JWT 토큰 검증
     let token_data = decode_password_reset_token(&payload.token).map_err(|e| {
         error!("Invalid password reset token: {}", e);
-        Errors::BadRequestError("Invalid or expired reset token".to_string())
+        Errors::TokenInvalidReset
     })?;
 
     let claims = token_data.claims;
@@ -27,9 +27,7 @@ where
     // 토큰 만료 확인
     let now = Utc::now().timestamp();
     if claims.exp < now {
-        return Err(Errors::BadRequestError(
-            "Reset token has expired".to_string(),
-        ));
+        return Err(Errors::TokenExpiredReset);
     }
 
     let txn = conn.begin().await?;
@@ -41,7 +39,7 @@ where
 
     // 이메일이 일치하는지 확인
     if user.email != claims.email {
-        return Err(Errors::BadRequestError("Token email mismatch".to_string()));
+        return Err(Errors::TokenEmailMismatch);
     }
 
     // 새 비밀번호 해싱

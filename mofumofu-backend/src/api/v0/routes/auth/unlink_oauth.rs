@@ -16,9 +16,9 @@ use tracing::info;
     request_body = UnlinkOAuthRequest,
     responses(
         (status = 200, description = "OAuth connection removed successfully"),
-        (status = 400, description = "Cannot unlink last OAuth connection or connection not found"),
+        (status = 400, description = "Cannot unlink last OAuth connection: oauth:cannot_unlink_last_connection"),
         (status = 401, description = "Unauthorized"),
-        (status = 404, description = "User not found"),
+        (status = 404, description = "User not found or OAuth connection not found: oauth:connection_not_found"),
         (status = 422, description = "Validation error"),
         (status = 500, description = "Internal server error")
     ),

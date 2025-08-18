@@ -27,10 +27,49 @@ pub mod oauth {
     pub const OAUTH_TOKEN_EXCHANGE_FAILED: &str = "oauth:token_exchange_failed";
     pub const OAUTH_USER_INFO_FETCH_FAILED: &str = "oauth:user_info_fetch failed";
     pub const OAUTH_USER_INFO_PARSE_FAILED: &str = "oauth:user_info_parse failed";
+    pub const OAUTH_ACCOUNT_ALREADY_LINKED: &str = "oauth:account_already_linked";
+    pub const OAUTH_CONNECTION_NOT_FOUND: &str = "oauth:connection_not_found";
+    pub const OAUTH_CANNOT_UNLINK_LAST_CONNECTION: &str = "oauth:cannot_unlink_last_connection";
+    pub const OAUTH_INVALID_IMAGE_URL: &str = "oauth:invalid_image_url";
 }
 pub mod general {
     pub const BAD_REQUEST: &str = "general:bad_request";
     pub const VALIDATION_ERROR: &str = "general:validation_error";
+}
+
+pub mod file {
+    pub const FILE_UPLOAD_ERROR: &str = "file:upload_error";
+    pub const FILE_NOT_FOUND: &str = "file:not_found";
+    pub const FILE_READ_ERROR: &str = "file:read_error";
+}
+
+pub mod like {
+    pub const LIKE_ALREADY_EXISTS: &str = "like:already_exists";
+    pub const LIKE_NOT_FOUND: &str = "like:not_found";
+}
+
+pub mod password {
+    pub const PASSWORD_REQUIRED_FOR_UPDATE: &str = "password:required_for_update";
+    pub const PASSWORD_INCORRECT: &str = "password:incorrect";
+    pub const PASSWORD_CANNOT_UPDATE_OAUTH_ONLY: &str = "password:cannot_update_oauth_only";
+    pub const PASSWORD_NEW_PASSWORD_MISSING: &str = "password:new_password_missing";
+    pub const PASSWORD_ALREADY_SET: &str = "password:already_set";
+}
+
+pub mod token {
+    pub const TOKEN_INVALID_VERIFICATION: &str = "token:invalid_verification";
+    pub const TOKEN_EXPIRED_VERIFICATION: &str = "token:expired_verification";
+    pub const TOKEN_EMAIL_MISMATCH: &str = "token:email_mismatch";
+    pub const TOKEN_INVALID_RESET: &str = "token:invalid_reset";
+    pub const TOKEN_EXPIRED_RESET: &str = "token:expired_reset";
+}
+
+pub mod email {
+    pub const EMAIL_ALREADY_VERIFIED: &str = "email:already_verified";
+}
+
+pub mod markdown {
+    pub const MARKDOWN_RENDER_FAILED: &str = "markdown:render_failed";
 }
 
 pub mod system {

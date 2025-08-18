@@ -16,7 +16,7 @@ use tracing::info;
     request_body(content = ImageUploadForm, content_type = "multipart/form-data"),
     responses(
         (status = 200, description = "Image uploaded successfully", body = ImageUploadResponse),
-        (status = 400, description = "Invalid file or parameters"),
+        (status = 400, description = "File errors: file:not_found, file:read_error"),
         (status = 401, description = "Unauthorized or email not verified"),
         (status = 413, description = "File too large"),
         (status = 422, description = "Unsupported image format"),

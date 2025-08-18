@@ -26,7 +26,7 @@ where
     // multipart 데이터 파싱
     while let Some(field) = multipart.next_field().await.map_err(|e| {
         error!("Failed to read multipart field: {}", e);
-        Errors::BadRequestError("Invalid multipart data".to_string())
+        Errors::FileReadError("Invalid multipart data".to_string())
     })? {
         let field_name = field.name().unwrap_or("").to_string();
 
@@ -35,7 +35,7 @@ where
                 content_type = field.content_type().map(|ct| ct.to_string());
                 let data = field.bytes().await.map_err(|e| {
                     error!("Failed to read image data: {}", e);
-                    Errors::BadRequestError("Failed to read image data".to_string())
+                    Errors::FileReadError("Failed to read image data".to_string())
                 })?;
 
                 file_data = Some(data.to_vec());

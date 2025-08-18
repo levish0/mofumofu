@@ -25,9 +25,7 @@ where
 
     // 이미 비밀번호가 설정되어 있는지 확인
     if user.password.is_some() {
-        return Err(Errors::BadRequestError(
-            "User already has a password set".to_string(),
-        ));
+        return Err(Errors::PasswordAlreadySet);
     }
 
     // 새 비밀번호 해싱
