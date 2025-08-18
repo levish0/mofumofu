@@ -4,7 +4,7 @@
 
 <img src="../assets/mofumofu_kawaii_mini.svg" alt="もふもふ" width="300"/>
 
-The frontend component library for Mofumofu - a soft and simple blogging platform.
+The frontend for Mofumofu - a soft and simple blogging platform.
 
 [![Svelte](https://img.shields.io/badge/Built%20with-Svelte%205-ff3e00.svg)](https://svelte.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
@@ -33,7 +33,7 @@ This is the frontend application for the Mofumofu platform. To run the full stac
 
 ### Prerequisites
 
-- **Node.js** 18+ 
+- **Node.js** 18+
 - **pnpm** (recommended package manager)
 - **Mofumofu Backend** running on your system
 
@@ -88,18 +88,21 @@ src/lib/
 ### 🧩 Component Categories
 
 #### Core UI Components
+
 - **Button, Input, Textarea** - Form controls with variants
 - **Dialog, Drawer, Popover** - Overlay components
 - **Badge, Card, Separator** - Content display
 - **Calendar, Select, Command** - Advanced inputs
 
 #### Domain Components
+
 - **PostCard, PostList** - Content display with skeleton states
 - **Navbar** - Responsive navigation with scroll behavior
 - **ProfileHeader, ProfileInfo** - User profile components
 - **WriteEditor, WritePreview** - Content creation interface
 
 #### Settings Components
+
 - **PersonalInfoSettings** - Profile management with image upload
 - **AccountSettings** - Authentication and security
 - **DisplaySettings** - Theme and language preferences
@@ -108,7 +111,7 @@ src/lib/
 
 ### Prerequisites
 
-- **Node.js** 18+ 
+- **Node.js** 18+
 - **pnpm** (recommended package manager)
 
 ### Setup
@@ -127,20 +130,21 @@ pnpm dev
 
 ### Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Start development server for showcase app |
-| `pnpm build` | Build library and production app |
-| `pnpm preview` | Preview production build |
-| `pnpm check` | Run Svelte type checking |
-| `pnpm check:watch` | Type checking in watch mode |
-| `pnpm fmt` | Format code with Prettier |
-| `pnpm lint` | Check code formatting |
-| `pnpm prepack` | Build library package |
+| Command            | Description                               |
+| ------------------ | ----------------------------------------- |
+| `pnpm dev`         | Start development server for showcase app |
+| `pnpm build`       | Build library and production app          |
+| `pnpm preview`     | Preview production build                  |
+| `pnpm check`       | Run Svelte type checking                  |
+| `pnpm check:watch` | Type checking in watch mode               |
+| `pnpm fmt`         | Format code with Prettier                 |
+| `pnpm lint`        | Check code formatting                     |
+| `pnpm prepack`     | Build library package                     |
 
 ## 🛠️ Technology Stack
 
 ### Core Technologies
+
 - **[Svelte 5](https://svelte.dev/)** - Reactive UI framework with runes
 - **[SvelteKit](https://kit.svelte.dev/)** - Full-stack framework
 - **[TypeScript](https://www.typescriptlang.org/)** - Type safety
@@ -148,6 +152,7 @@ pnpm dev
 - **[Vite](https://vitejs.dev/)** - Build tool and dev server
 
 ### Key Libraries
+
 - **[bits-ui](https://www.bits-ui.com/)** - Accessible component primitives
 - **[ky](https://github.com/sindresorhus/ky)** - HTTP client
 - **[valibot](https://valibot.dev/)** - Schema validation
@@ -155,6 +160,7 @@ pnpm dev
 - **[unified](https://unifiedjs.com/)** - Markdown processing pipeline
 
 ### Markdown Features
+
 - **GitHub Flavored Markdown** (GFM)
 - **Math rendering** (KaTeX)
 - **Syntax highlighting** (highlight.js)
@@ -187,12 +193,14 @@ Built-in support for multiple languages:
 ## 📊 State Management
 
 ### Stores
+
 - **`auth.svelte.ts`** - Authentication state with persistence
 - **`posts.svelte.ts`** - Post data and filtering
 - **`settings.svelte.ts`** - User preferences
 - **`user.svelte.ts`** - User profile data
 
 ### Hooks
+
 - **`useInfiniteScroll`** - Pagination and loading
 - **`useNavbarScroll`** - Navigation visibility
 - **`useWriteEditor`** - Content creation state
