@@ -1,5 +1,6 @@
 use sea_orm::prelude::*;
 use uuid::Uuid;
+use crate::entity::common::UserRole;
 
 #[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel)]
 #[sea_orm(table_name = "users")]
@@ -32,6 +33,7 @@ pub struct Model {
     pub following_count: i32,
     #[sea_orm(column_type = "TimestampWithTimeZone", not_null)]
     pub created_at: DateTimeUtc,
+    pub role: UserRole,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

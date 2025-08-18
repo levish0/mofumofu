@@ -16,3 +16,18 @@ where
 
     Ok(count)
 }
+
+pub async fn repository_get_like_count_by_comment_id<C>(
+    conn: &C,
+    comment_id: Uuid,
+) -> Result<u64, sea_orm::DbErr>
+where
+    C: ConnectionTrait,
+{
+    let count = LikesEntity::find()
+        .filter(LikesColumn::CommentId.eq(comment_id))
+        .count(conn)
+        .await?;
+
+    Ok(count)
+}

@@ -65,3 +65,23 @@ pub enum TargetType {
     #[sea_orm(string_value = "follow")]
     Follow,
 }
+
+#[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum, Serialize, Deserialize, ToSchema)]
+#[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "user_role")]
+pub enum UserRole {
+    #[sea_orm(string_value = "member")]
+    Member,
+    #[sea_orm(string_value = "moderator")]
+    Moderator,
+    #[sea_orm(string_value = "admin")]
+    Admin,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum, Serialize, Deserialize, ToSchema)]
+#[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "like_target_type")]
+pub enum LikeTargetType {
+    #[sea_orm(string_value = "post")]
+    Post,
+    #[sea_orm(string_value = "comment")]
+    Comment,
+}

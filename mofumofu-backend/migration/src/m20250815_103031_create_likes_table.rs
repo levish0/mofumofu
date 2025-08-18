@@ -1,4 +1,6 @@
+use crate::common::LikeTargetType;
 use sea_orm_migration::{prelude::*, schema::*};
+use strum::IntoEnumIterator;
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -19,7 +21,13 @@ impl MigrationTrait for Migration {
                             .default(Expr::cust("gen_random_uuid()")),
                     )
                     .col(ColumnDef::new(Likes::UserId).uuid().not_null())
-                    .col(ColumnDef::new(Likes::PostId).uuid().not_null())
+                    .col(ColumnDef::new(Likes::PostId).uuid().null())
+                    .col(ColumnDef::new(Likes::CommentId).uuid().null())
+                    .col(
+                        ColumnDef::new(Likes::TargetType)
+                            .enumeration(LikeTargetType::Table, LikeTargetType::iter().skip(1))
+                            .not_null()
+                    )
                     .col(
                         ColumnDef::new(Likes::CreatedAt)
                             .timestamp_with_time_zone()
@@ -38,10 +46,17 @@ impl MigrationTrait for Migration {
                             .to(Posts::Table, Posts::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .from(Likes::Table, Likes::CommentId)
+                            .to(Comments::Table, Comments::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
+                    )
                     .to_owned(),
             )
             .await?;
 
+        // post 좋아요용 유니크 인덱스 (null 값 제외)
         manager
             .create_index(
                 Index::create()
@@ -49,6 +64,19 @@ impl MigrationTrait for Migration {
                     .table(Likes::Table)
                     .col(Likes::UserId)
                     .col(Likes::PostId)
+                    .unique()
+                    .to_owned(),
+            )
+            .await?;
+
+        // comment 좋아요용 유니크 인덱스 (null 값 제외)
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_unique_user_comment_like")
+                    .table(Likes::Table)
+                    .col(Likes::UserId)
+                    .col(Likes::CommentId)
                     .unique()
                     .to_owned(),
             )
@@ -74,6 +102,28 @@ impl MigrationTrait for Migration {
                     .col(Likes::PostId)
                     .to_owned(),
             )
+            .await?;
+
+        // comment_id 단일 인덱스
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_likes_comment_id")
+                    .table(Likes::Table)
+                    .col(Likes::CommentId)
+                    .to_owned(),
+            )
+            .await?;
+
+        // target_type 인덱스
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_likes_target_type")
+                    .table(Likes::Table)
+                    .col(Likes::TargetType)
+                    .to_owned(),
+            )
             .await
     }
 
@@ -90,6 +140,8 @@ enum Likes {
     Id,
     UserId,
     PostId,
+    CommentId,
+    TargetType,
     CreatedAt,
 }
 
@@ -101,6 +153,12 @@ enum Users {
 
 #[derive(DeriveIden)]
 enum Posts {
+    Table,
+    Id,
+}
+
+#[derive(DeriveIden)]
+enum Comments {
     Table,
     Id,
 }

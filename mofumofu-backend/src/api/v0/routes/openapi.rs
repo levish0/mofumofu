@@ -18,10 +18,20 @@ use crate::dto::follow::response::follow_list::FollowListResponse;
 use crate::dto::follow::response::follow_status::FollowStatusResponse;
 use crate::dto::hashtag::request::trending_hashtags::TrendingHashtagsRequest;
 use crate::dto::hashtag::response::trending_hashtags::TrendingHashtagsResponse;
+use crate::dto::like::request::check_comment_like_status::CheckCommentLikeStatusRequest;
 use crate::dto::like::request::check_like_status::CheckLikeStatusRequest;
+use crate::dto::like::request::create_comment_like::CreateCommentLikeRequest;
 use crate::dto::like::request::create_like::CreateLikeRequest;
+use crate::dto::like::request::delete_comment_like::DeleteCommentLikeRequest;
 use crate::dto::like::request::delete_like::DeleteLikeRequest;
 use crate::dto::like::response::like_status::LikeStatusResponse;
+use crate::dto::comment::request::create_comment::CreateCommentRequest;
+use crate::dto::comment::request::delete_comment::DeleteCommentRequest;
+use crate::dto::comment::request::get_comment_by_id::GetCommentByIdRequest;
+use crate::dto::comment::request::get_comments::{GetCommentsRequest, GetRepliesRequest};
+use crate::dto::comment::request::update_comment::UpdateCommentRequest;
+use crate::dto::comment::response::comment_info::CommentInfo;
+use crate::dto::comment::response::get_comments::{GetCommentsResponse, GetRepliesResponse};
 use crate::dto::post::request::create_post::CreatePostRequest;
 use crate::dto::post::response::create_post::CreatePostResponse;
 use crate::dto::post::request::delete_post::DeletePostRequest;
@@ -94,7 +104,16 @@ use utoipa::{
         crate::api::v0::routes::hashtag::trending_hashtags::trending_hashtags,
         crate::api::v0::routes::like::check_like_status::check_like_status,
         crate::api::v0::routes::like::create_like::create_like,
-        crate::api::v0::routes::like::delete_like::delete_like
+        crate::api::v0::routes::like::delete_like::delete_like,
+        crate::api::v0::routes::like::check_comment_like_status::check_comment_like_status,
+        crate::api::v0::routes::like::create_comment_like::create_comment_like,
+        crate::api::v0::routes::like::delete_comment_like::delete_comment_like,
+        crate::api::v0::routes::comment::create_comment::create_comment,
+        crate::api::v0::routes::comment::delete_comment::delete_comment,
+        crate::api::v0::routes::comment::get_comment_by_id::get_comment_by_id,
+        crate::api::v0::routes::comment::get_comments::get_comments,
+        crate::api::v0::routes::comment::get_replies::get_replies,
+        crate::api::v0::routes::comment::update_comment::update_comment
     ),
     components(
         schemas(
@@ -149,13 +168,26 @@ use utoipa::{
             CheckLikeStatusRequest,
             CreateLikeRequest,
             DeleteLikeRequest,
+            CheckCommentLikeStatusRequest,
+            CreateCommentLikeRequest,
+            DeleteCommentLikeRequest,
             LikeStatusResponse,
+            CreateCommentRequest,
+            DeleteCommentRequest,
+            GetCommentByIdRequest,
+            GetCommentsRequest,
+            GetRepliesRequest,
+            UpdateCommentRequest,
+            CommentInfo,
+            GetCommentsResponse,
+            GetRepliesResponse,
         )
     ),
     tags(
         (name = "Auth", description = "Authentication endpoints"),
         (name = "User", description = "User endpoints"),
         (name = "Post", description = "Post endpoints"),
+        (name = "Comment", description = "Comment endpoints"),
         (name = "Follow", description = "Follow endpoints"),
         (name = "Hashtag", description = "Hashtag endpoints"),
         (name = "Like", description = "Like endpoints")

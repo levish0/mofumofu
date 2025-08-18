@@ -7,7 +7,7 @@ pub struct Model {
     #[sea_orm(primary_key)]
     pub id: Uuid,
 
-    #[sea_orm(column_type = "Text", not_null, string_len = 1000)]
+    #[sea_orm(column_type = "Text", not_null, string_len = 300)]
     pub content: String,
 
     #[sea_orm(column_type = "Uuid", not_null)]

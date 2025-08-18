@@ -4,7 +4,7 @@ use crate::service::error::errors::ServiceResult;
 use sea_orm::ConnectionTrait;
 use uuid::Uuid;
 
-pub async fn service_check_like_status<C>(
+pub async fn service_check_post_like_status<C>(
     conn: &C,
     user_id: &Uuid,
     post_id: &Uuid,

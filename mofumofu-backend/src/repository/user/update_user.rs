@@ -38,6 +38,7 @@ where
         follower_count: NotSet,
         following_count: NotSet,
         created_at: NotSet,
+        role: NotSet,
     };
 
     // 업데이트 실행

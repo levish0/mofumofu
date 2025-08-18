@@ -8,7 +8,7 @@ use crate::service::error::errors::{Errors, ServiceResult};
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use uuid::Uuid;
 
-pub async fn service_create_like<C>(
+pub async fn service_create_post_like<C>(
     conn: &C,
     user_id: &Uuid,
     post_id: &Uuid,

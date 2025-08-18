@@ -1,5 +1,6 @@
 use crate::dto::user::request::create::CreateUserRequest;
 use crate::entity::users::{ActiveModel as UserActiveModel, Model as UserModel};
+use crate::entity::common::UserRole;
 use crate::service::error::errors::Errors;
 use crate::utils::crypto::hash_password;
 use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
@@ -29,6 +30,7 @@ where
         follower_count: Set(0),
         following_count: Set(0),
         created_at: Default::default(),
+        role: Set(UserRole::Member),
     };
 
     let user = new_user.insert(txn).await?;

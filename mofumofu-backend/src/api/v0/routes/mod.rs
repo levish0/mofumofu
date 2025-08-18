@@ -1,4 +1,5 @@
 mod auth;
+mod comment;
 mod follow;
 mod hashtag;
 mod like;

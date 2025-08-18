@@ -1,7 +1,7 @@
 use crate::dto::auth::internal::access_token::AccessTokenClaims;
 use crate::dto::like::request::delete_like::DeleteLikeRequest;
 use crate::service::error::errors::Errors;
-use crate::service::like::delete_like::service_delete_like;
+use crate::service::like::delete_post_like::service_delete_post_like;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
 use axum::extract::State;
@@ -32,7 +32,7 @@ pub async fn delete_like(
     info!("Received request to unlike post: {:?}", payload);
     let user_uuid = claims.sub.clone();
 
-    service_delete_like(&state.conn, &user_uuid, &payload.post_id).await?;
+    service_delete_post_like(&state.conn, &user_uuid, &payload.post_id).await?;
 
     Ok(StatusCode::NO_CONTENT)
 }

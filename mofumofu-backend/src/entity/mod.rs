@@ -1,4 +1,4 @@
-mod comments;
+pub mod comments;
 pub mod common;
 mod drafts;
 pub mod follows;

@@ -1,5 +1,6 @@
 pub mod auth;
 pub mod common;
+pub mod comment;
 pub mod follow;
 pub mod hashtag;
 pub mod like;

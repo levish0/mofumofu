@@ -1,4 +1,6 @@
+use crate::common::UserRole;
 use sea_orm_migration::{prelude::*, schema::*};
+use strum::IntoEnumIterator;
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -63,6 +65,12 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .default(Expr::cust("now()")),
                     )
+                    .col(
+                        ColumnDef::new(Users::Role)
+                            .enumeration(UserRole::Table, UserRole::iter().skip(1))
+                            .not_null()
+                            .default("member"),
+                    )
                     .to_owned(),
             )
             .await?;
@@ -114,4 +122,5 @@ enum Users {
     FollowerCount,
     FollowingCount,
     CreatedAt,
+    Role,
 }

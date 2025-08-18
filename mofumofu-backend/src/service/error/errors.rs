@@ -150,6 +150,11 @@ pub enum Errors {
     // Markdown errors
     MarkdownRenderFailed(String),
 
+    // Comment errors
+    CommentNotFound,
+    InvalidParentComment,
+    CannotReplyToDeletedComment,
+
     // 일반 오류
     BadRequestError(String), // 잘못된 요청 (추가 정보 포함)
     ValidationError(String), // 유효성 검사 오류 (추가 정보 포함)
@@ -239,6 +244,13 @@ impl IntoResponse for Errors {
             Errors::OauthUserInfoFetchFailed => {
                 warn!("OAuth error: {:?}", self);
             }
+            
+            // Comment 에러 - debug! 레벨 (일반적인 사용자 요청 오류)
+            Errors::CommentNotFound |
+            Errors::InvalidParentComment |
+            Errors::CannotReplyToDeletedComment => {
+                debug!("Comment error: {:?}", self);
+            }
         }
 
         // 오류 유형에 따라 상태 코드, 오류 코드, 상세 정보를 결정
@@ -320,6 +332,10 @@ impl IntoResponse for Errors {
 
             // Markdown errors
             Errors::MarkdownRenderFailed(msg) => (StatusCode::BAD_REQUEST, MARKDOWN_RENDER_FAILED, Some(msg)),
+            // Comment errors
+            Errors::CommentNotFound => (StatusCode::NOT_FOUND, "comment:not_found", None),
+            Errors::InvalidParentComment => (StatusCode::BAD_REQUEST, "comment:invalid_parent", None),
+            Errors::CannotReplyToDeletedComment => (StatusCode::BAD_REQUEST, "comment:cannot_reply_to_deleted", None),
 
             // 일반 오류 - 400 Bad Request
             Errors::BadRequestError(msg) => (StatusCode::BAD_REQUEST, BAD_REQUEST, Some(msg)),

@@ -1,5 +1,6 @@
 use sea_orm::prelude::*;
 use uuid::Uuid;
+use crate::entity::common::LikeTargetType;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
 #[sea_orm(table_name = "likes")]
@@ -10,8 +11,13 @@ pub struct Model {
     #[sea_orm(column_type = "Uuid", not_null)]
     pub user_id: Uuid,
 
-    #[sea_orm(column_type = "Uuid", not_null)]
-    pub post_id: Uuid,
+    #[sea_orm(column_type = "Uuid", nullable)]
+    pub post_id: Option<Uuid>,
+
+    #[sea_orm(column_type = "Uuid", nullable)]
+    pub comment_id: Option<Uuid>,
+
+    pub target_type: LikeTargetType,
 
     #[sea_orm(column_type = "TimestampWithTimeZone", not_null)]
     pub created_at: DateTimeUtc,
@@ -34,6 +40,14 @@ pub enum Relation {
         on_delete = "Cascade"
     )]
     Post,
+
+    #[sea_orm(
+        belongs_to = "super::comments::Entity",
+        from = "Column::CommentId",
+        to = "super::comments::Column::Id",
+        on_delete = "Cascade"
+    )]
+    Comment,
 }
 
 impl Related<super::users::Entity> for Entity {
@@ -45,6 +59,12 @@ impl Related<super::users::Entity> for Entity {
 impl Related<super::posts::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::Post.def()
+    }
+}
+
+impl Related<super::comments::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Comment.def()
     }
 }
 

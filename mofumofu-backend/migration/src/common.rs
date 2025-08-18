@@ -78,3 +78,13 @@ pub enum UserRole {
     #[sea_orm(iden = "admin")]
     Admin,
 }
+
+#[derive(DeriveIden, EnumIter)]
+pub enum LikeTargetType {
+    #[sea_orm(iden = "like_target_type")]
+    Table,
+    #[sea_orm(iden = "post")]
+    Post,
+    #[sea_orm(iden = "comment")]
+    Comment,
+}

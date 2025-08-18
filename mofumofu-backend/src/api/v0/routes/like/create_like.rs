@@ -1,7 +1,7 @@
 use crate::dto::auth::internal::access_token::AccessTokenClaims;
 use crate::dto::like::request::create_like::CreateLikeRequest;
 use crate::service::error::errors::Errors;
-use crate::service::like::create_like::service_create_like;
+use crate::service::like::create_post_like::service_create_post_like;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
 use axum::extract::State;
@@ -33,7 +33,7 @@ pub async fn create_like(
     info!("Received request to like post: {:?}", payload);
     let user_uuid = claims.sub.clone();
 
-    service_create_like(&state.conn, &user_uuid, &payload.post_id).await?;
+    service_create_post_like(&state.conn, &user_uuid, &payload.post_id).await?;
 
     Ok(StatusCode::NO_CONTENT)
 }

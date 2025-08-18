@@ -12,6 +12,7 @@ pub mod sign_up;
 pub mod unlink_oauth;
 pub mod verification_check;
 pub mod verify_email;
+pub mod role_check;
 
 pub use forgot_password::*;
 pub use get_oauth_connections::*;
@@ -26,3 +27,4 @@ pub use sign_up::*;
 pub use unlink_oauth::*;
 pub use verification_check::*;
 pub use verify_email::*;
+pub use role_check::*;
