@@ -2,7 +2,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
-	import { githubAuth } from '$lib/api/auth/authApi';
+	import { githubAuth, linkOAuth } from '$lib/api/auth/authApi';
 	import { goto } from '$app/navigation';
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { oauthHandleStore } from '$lib/stores/oauthHandle.svelte';
@@ -10,14 +10,17 @@
 	import { ExclamationTriangle, Icon } from 'svelte-hero-icons';
 	import * as m from '../../../../../paraglide/messages';
 	import { Button } from '$lib/components/ui/button';
+	import { toast } from 'svelte-sonner';
 
 	let loading = $state(true);
 	let error = $state<string | null>(null);
+	let isLinkRequest = $state(false);
 
 	onMount(async () => {
 		try {
 			const code = page.url.searchParams.get('code');
 			const errorParam = page.url.searchParams.get('error');
+			const state = page.url.searchParams.get('state');
 
 			if (errorParam) {
 				throw new Error(`OAuth error: ${errorParam}`);
@@ -27,32 +30,43 @@
 				throw new Error('Authorization code not found');
 			}
 
-			// 저장된 핸들 가져오기 (가입 시에만 존재)
-			const handle = oauthHandleStore.currentHandle;
-			console.log('Handle from store:', handle);
+			// state가 'link_'로 시작하면 계정 연결 요청
+			isLinkRequest = state?.startsWith('link_') ?? false;
 
-			// GitHub OAuth 처리 (핸들이 있으면 가입, 없으면 로그인)
-			const response = await githubAuth(code, handle || undefined);
+			if (isLinkRequest) {
+				// 계정 연결 처리
+				await linkOAuth('Github', code);
+				toast.success('GitHub 계정이 성공적으로 연결되었습니다.');
+				await goto('/settings', { replaceState: true });
+			} else {
+				// 기존 로그인/가입 처리
+				// 저장된 핸들 가져오기 (가입 시에만 존재)
+				const handle = oauthHandleStore.currentHandle;
+				console.log('Handle from store:', handle);
 
-			// 토큰을 스토어에 저장
-			authStore.setToken(response.access_token);
+				// GitHub OAuth 처리 (핸들이 있으면 가입, 없으면 로그인)
+				const response = await githubAuth(code, handle || undefined);
 
-			// 핸들 스토어 정리
-			if (handle) {
-				oauthHandleStore.clearHandle();
+				// 토큰을 스토어에 저장
+				authStore.setToken(response.access_token);
+
+				// 핸들 스토어 정리
+				if (handle) {
+					oauthHandleStore.clearHandle();
+				}
+
+				// 성공 시 메인 페이지로 리다이렉트
+				await goto('/', { replaceState: true });
 			}
-
-			// 성공 시 메인 페이지로 리다이렉트
-			await goto('/', { replaceState: true });
 		} catch (err) {
 			console.error('GitHub OAuth error:', err);
 
 			if (err instanceof ApiError) {
-				error = `Login failed: ${err.message}`;
+				error = `처리 실패: ${err.message}`;
 			} else if (err instanceof Error) {
 				error = err.message;
 			} else {
-				error = 'An unexpected error occurred during login';
+				error = 'GitHub 처리 중 예기치 않은 오류가 발생했습니다.';
 			}
 		} finally {
 			loading = false;
@@ -66,7 +80,9 @@
 			{#if loading}
 				<div class="space-y-4">
 					<div class="border-mofu-dark-100 mx-auto h-12 w-12 animate-spin rounded-full border-b-2"></div>
-					<h2 class="text-xl font-semibold">{m.oauth_processing_github()}</h2>
+					<h2 class="text-xl font-semibold">
+						{isLinkRequest ? 'GitHub 계정 연결 중...' : m.oauth_processing_github()}
+					</h2>
 					<p>{m.oauth_please_wait()}</p>
 				</div>
 			{:else if error}
@@ -75,12 +91,13 @@
 						<Icon src={ExclamationTriangle} solid size="40" class="inline-block" />
 					</div>
 					<h2 class="text-xl font-semibold">{m.oauth_error_occurred()}</h2>
+					<p class="text-sm">{error}</p>
 					<Button
-						onclick={() => goto('/account/signin')}
+						onclick={() => goto(isLinkRequest ? '/settings' : '/account/signin')}
 						variant="ghost"
-						class=" dark:text-mofu-dark-300 rounded-md text-sm hover:opacity-70"
+						class="dark:text-mofu-dark-300 rounded-md text-sm hover:opacity-70"
 					>
-						← {m.oauth_go_back()}
+						← {isLinkRequest ? '설정으로 돌아가기' : m.oauth_go_back()}
 					</Button>
 				</div>
 			{/if}

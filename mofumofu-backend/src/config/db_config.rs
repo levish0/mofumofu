@@ -18,6 +18,7 @@ pub struct DbConfig {
     pub google_client_id: String,
     pub google_client_secret: String,
     pub google_redirect_uri: String,
+    pub google_link_redirect_uri: String,
 
     // Github
     pub github_client_id: String,
@@ -157,6 +158,8 @@ static CONFIG: LazyLock<DbConfig> = LazyLock::new(|| {
             .expect("GOOGLE_CLIENT_SECRET must be set"),
         google_redirect_uri: env::var("GOOGLE_REDIRECT_URI")
             .expect("GOOGLE_REDIRECT_URI must be set"),
+        google_link_redirect_uri: env::var("GOOGLE_LINK_REDIRECT_URI")
+            .expect("GOOGLE_LINK_REDIRECT_URI must be set"),
 
         // Github
         github_client_id: env::var("GITHUB_CLIENT_ID").expect("GITHUB_CLIENT_ID must be set"),

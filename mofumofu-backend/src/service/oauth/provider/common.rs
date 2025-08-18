@@ -7,6 +7,7 @@ use oauth2::{
     AccessToken, AuthUrl, AuthorizationCode, Client, ClientId, ClientSecret, EndpointNotSet,
     EndpointSet, RedirectUrl, StandardRevocableToken, TokenResponse, TokenUrl,
 };
+use tracing::{error, info, warn};
 
 pub fn build_oauth_client(
     client_id: &str,
@@ -68,13 +69,23 @@ pub async fn exchange_oauth_code(
     code: &str,
     provider: &str,
 ) -> ServiceResult<AccessToken> {
+    info!("Starting OAuth token exchange for provider: {}", provider);
+    info!("Authorization code (first 10 chars): {}", &code[..code.len().min(10)]);
+    
     let http_client = create_http_client()?;
+    info!("HTTP client created successfully");
 
+    info!("Attempting to exchange authorization code with {} OAuth server", provider);
     let token_result = oauth_client
         .exchange_code(AuthorizationCode::new(code.to_string()))
         .request_async(&http_client)
         .await
-        .map_err(|_e| Errors::OauthTokenExchangeFailed)?;
+        .map_err(|e| {
+            error!("OAuth token exchange failed for {}: {:?}", provider, e);
+            error!("Error details: {}", e);
+            Errors::OauthTokenExchangeFailed
+        })?;
 
+    info!("OAuth token exchange successful for provider: {}", provider);
     Ok(token_result.access_token().clone())
 }

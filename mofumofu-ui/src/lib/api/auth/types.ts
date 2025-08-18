@@ -40,3 +40,23 @@ export interface ResetPasswordRequest {
 export interface ResendVerificationRequest {
 	email: string;
 }
+
+export interface SetPasswordRequest {
+	password: string;
+}
+
+export interface OAuthConnectionsResponse {
+	connections: OAuthProvider[];
+	is_oauth_only: boolean;
+}
+
+export type OAuthProvider = 'Google' | 'Github';
+
+export interface UnlinkOAuthRequest {
+	provider: OAuthProvider;
+}
+
+export interface LinkOAuthRequest {
+	provider: OAuthProvider;
+	code: string;
+}

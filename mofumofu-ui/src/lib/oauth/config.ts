@@ -6,6 +6,7 @@ export const OAUTH_CONFIG = {
 	google: {
 		clientId: PUBLIC_GOOGLE_CLIENT_ID,
 		redirectUri: `${PUBLIC_APP_URL}/account/oauth/callback/google`,
+		linkRedirectUri: `${PUBLIC_APP_URL}/account/oauth/link/google`,
 		scope: 'openid email profile',
 		responseType: 'code',
 		authUrl: 'https://accounts.google.com/o/oauth2/v2/auth'
@@ -37,6 +38,30 @@ export function getGitHubOAuthUrl(): string {
 		redirect_uri: OAUTH_CONFIG.github.redirectUri,
 		scope: OAUTH_CONFIG.github.scope,
 		state: Math.random().toString(36).substring(2, 15)
+	});
+
+	return `${OAUTH_CONFIG.github.authUrl}?${params.toString()}`;
+}
+
+export function getGoogleOAuthLinkUrl(): string {
+	const params = new URLSearchParams({
+		client_id: OAUTH_CONFIG.google.clientId,
+		redirect_uri: OAUTH_CONFIG.google.linkRedirectUri,
+		response_type: OAUTH_CONFIG.google.responseType,
+		scope: OAUTH_CONFIG.google.scope,
+		access_type: 'offline',
+		prompt: 'consent'
+	});
+
+	return `${OAUTH_CONFIG.google.authUrl}?${params.toString()}`;
+}
+
+export function getGitHubOAuthLinkUrl(): string {
+	const params = new URLSearchParams({
+		client_id: OAUTH_CONFIG.github.clientId,
+		redirect_uri: OAUTH_CONFIG.github.redirectUri,
+		scope: OAUTH_CONFIG.github.scope,
+		state: `link_${Math.random().toString(36).substring(2, 15)}`
 	});
 
 	return `${OAUTH_CONFIG.github.authUrl}?${params.toString()}`;

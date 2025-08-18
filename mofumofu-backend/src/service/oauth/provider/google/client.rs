@@ -40,8 +40,38 @@ fn build_google_client() -> Result<
     )
 }
 
+fn build_google_link_client() -> Result<
+    OauthClient<
+        BasicErrorResponse,
+        BasicTokenResponse,
+        BasicTokenIntrospectionResponse,
+        StandardRevocableToken,
+        BasicRevocationErrorResponse,
+        EndpointSet,
+        EndpointNotSet,
+        EndpointNotSet,
+        EndpointNotSet,
+        EndpointSet,
+    >,
+    Errors,
+> {
+    let config = DbConfig::get();
+    build_oauth_client(
+        &config.google_client_id,
+        &config.google_client_secret,
+        &config.google_link_redirect_uri,
+        GOOGLE_AUTH_URL,
+        GOOGLE_TOKEN_URL,
+    )
+}
+
 pub async fn exchange_google_code(code: &str) -> ServiceResult<AccessToken> {
     let client = build_google_client()?;
+    exchange_oauth_code(client, code, "Google").await
+}
+
+pub async fn exchange_google_code_for_linking(code: &str) -> ServiceResult<AccessToken> {
+    let client = build_google_link_client()?;
     exchange_oauth_code(client, code, "Google").await
 }
 

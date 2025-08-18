@@ -75,9 +75,9 @@
 					/>
 				{:else}
 					<div
-						class="flex h-24 w-24 items-center justify-center rounded-full border-4 border-white bg-gray-100 dark:border-gray-900 dark:bg-gray-800"
+						class="dark:border-mofu-dark-900 dark:bg-mofu-dark-700 bg-mofu-light-700 border-mofu-light-100 flex h-24 w-24 items-center justify-center rounded-full border-4"
 					>
-						<span class="text-2xl font-medium text-gray-600 dark:text-gray-400">
+						<span class="text-2xl font-medium text-black dark:text-white">
 							{profile.name.charAt(0).toUpperCase()}
 						</span>
 					</div>

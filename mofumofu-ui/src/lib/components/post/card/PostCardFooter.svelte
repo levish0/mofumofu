@@ -100,7 +100,17 @@
 		</div>
 	{:else}
 		<a href="/@{author_handle}/profile" class="flex items-center gap-1.5 transition-opacity hover:opacity-80">
-			<img src={author_avatar} alt={author_name} class="h-6 w-6 rounded-full object-cover" />
+			<div class="h-6 w-6 overflow-hidden rounded-full">
+				{#if author_avatar}
+					<img src={author_avatar} alt={author_name} class="h-full w-full object-cover" />
+				{:else}
+					<span
+						class="dark:bg-mofu-dark-700 bg-mofu-light-700 flex h-full w-full items-center justify-center text-xs font-medium text-black dark:text-white"
+					>
+						{author_name.charAt(0).toUpperCase()}
+					</span>
+				{/if}
+			</div>
 			<div class="gap-1">
 				<span class="dark:text-mofu-dark-300 truncate text-xs">by</span>
 				<span class="text-xs font-semibold">{author_name}</span>

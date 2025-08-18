@@ -5,7 +5,6 @@ use crate::service::post::get_posts::service_get_posts;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
 use axum::extract::State;
-use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use tracing::info;
 

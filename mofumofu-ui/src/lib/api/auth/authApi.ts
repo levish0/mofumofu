@@ -9,7 +9,11 @@ import type {
 	SigninRequest,
 	ForgotPasswordRequest,
 	ResetPasswordRequest,
-	ResendVerificationRequest
+	ResendVerificationRequest,
+	SetPasswordRequest,
+	OAuthConnectionsResponse,
+	UnlinkOAuthRequest,
+	LinkOAuthRequest
 } from './types';
 
 // refreshAccessToken 수정
@@ -69,4 +73,23 @@ export async function resetPassword(token: string, newPassword: string): Promise
 export async function resendVerification(email: string): Promise<void> {
 	const payload: ResendVerificationRequest = { email };
 	return publicApi.post('v0/auth/resend_verification', { json: payload }).then(() => {});
+}
+
+export async function setPassword(password: string): Promise<void> {
+	const payload: SetPasswordRequest = { password };
+	return privateApi.post('v0/auth/set_password', { json: payload }).then(() => {});
+}
+
+export async function getOAuthConnections(): Promise<OAuthConnectionsResponse> {
+	return privateApi.get('v0/auth/oauth-connections').json<OAuthConnectionsResponse>();
+}
+
+export async function unlinkOAuth(provider: 'Google' | 'Github'): Promise<void> {
+	const payload: UnlinkOAuthRequest = { provider };
+	return privateApi.delete('v0/auth/unlink-oauth', { json: payload }).then(() => {});
+}
+
+export async function linkOAuth(provider: 'Google' | 'Github', code: string): Promise<void> {
+	const payload: LinkOAuthRequest = { provider, code };
+	return privateApi.post('v0/auth/link_oauth', { json: payload }).then(() => {});
 }
