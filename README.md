@@ -5,7 +5,7 @@
   
   **A soft and simple social blogging platform for everyone**
   
-  > *"Mofumofu" (もふもふ) - Japanese for something soft and fluffy*
+  *"Mofumofu" (もふもふ) - Japanese for something soft and fluffy*
   
   [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
   [![Rust](https://img.shields.io/badge/rust-1.86.0+-orange.svg?logo=rust)](https://www.rust-lang.org/)
