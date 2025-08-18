@@ -9,7 +9,7 @@ This is **mofumofu-ui**, a Svelte 5 component library for a blogging platform ca
 ## Development Commands
 
 - `pnpm dev` - Start development server for the showcase app
-- `pnpm build` - Build both the library and production app (runs vite build + prepack)
+- `pnpm build` - Build both the library and production app (runs vite build + npm run prepack)
 - `pnpm preview` - Preview the production build
 - `pnpm check` - Run Svelte type checking (svelte-kit sync + svelte-check)
 - `pnpm check:watch` - Run type checking in watch mode
@@ -54,7 +54,7 @@ Note: This project uses **pnpm** as the package manager, not npm.
 - **Utils** (`src/lib/utils/`) - Utility functions:
   - `utils.ts` - TailwindCSS class merging (`cn` function) and TypeScript helpers (root level)
   - `imagecrop.ts` - Image processing and cropping utilities
-  - `markdown.ts` - Markdown processing utilities
+  - `markdown.ts` - Markdown processing with unified pipeline (remark/rehype plugins for GFM, math, emoji, syntax highlighting, etc.)
 
 - **Schemas** (`src/lib/schemas/`) - Validation schemas using Valibot
 - **OAuth** (`src/lib/oauth/`) - OAuth configuration and flows
@@ -104,7 +104,15 @@ Note: This project uses **pnpm** as the package manager, not npm.
 
 ### Library Export System
 
-Components must be explicitly exported in `src/lib/index.ts` to be available when the library is installed as a package. The file is currently empty (`// Reexport your entry components here`) and needs exports added as components are finalized.
+Components must be explicitly exported in `src/lib/index.ts` to be available when the library is installed as a package. The library exports are organized into:
+- **UI Components** - Namespaced exports (Badge, Button, Dialog, etc.) to avoid conflicts
+- **Domain Components** - Direct exports for PostCard, PostList, Navbar, ProfileHeader, etc.
+- **Settings Components** - Complete settings form components for user management
+- **Write Components** - Editor, preview, toolbar, and publishing dialog components
+- **Stores** - Global state management (auth, user, posts, settings)
+- **Hooks** - Reusable Svelte 5 runes-based functionality
+- **API Layer** - Complete HTTP client with type definitions
+- **Utils & Schemas** - Utility functions and validation schemas
 
 ### Build System
 
