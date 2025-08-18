@@ -45,7 +45,7 @@ graph TB
     end
 
     subgraph "API Gateway"
-        GATEWAY[🚪 Load Balancer<br/>Nginx/Cloudflare]
+        GATEWAY[🚪 Load Balancer<br/>Caddy/Cloudflare]
     end
 
     subgraph "Core Backend Services"
