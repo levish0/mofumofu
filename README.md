@@ -369,8 +369,8 @@ GET    /hashtag/trending       # Get trending hashtags
 - **Node.js** 18+ with **pnpm**
 - **Python** 3.10+ with **uv**
 - **Bun** 1.0+
-- **PostgreSQL** 15+
-- **Redis** 6+
+- **PostgreSQL** 17+
+- **Redis** 8+
 - **Docker & Docker Compose** (recommended)
 
 ### Development Workflow
