@@ -3,7 +3,9 @@
 	import * as m from '../../paraglide/messages';
 </script>
 
-<footer class="bg-mofu-dark-900 border-mofu-dark-700 relative border-t pt-20 pb-20">
+<footer
+	class="dark:bg-mofu-dark-900 bg-mofu-light-900 border-mofu-light-700 dark:border-mofu-dark-700 relative border-t pt-20 pb-20"
+>
 	<div class="custom-width container mx-auto max-w-7xl px-4">
 		<div class="grid grid-cols-2 gap-6 sm:grid-cols-3">
 			<!-- About Section -->
