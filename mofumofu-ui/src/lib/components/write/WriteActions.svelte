@@ -31,7 +31,7 @@
 	}: Props = $props();
 </script>
 
-<div class="bg-mofu-dark-950 p-4">
+<div class="dark:bg-mofu-dark-950 bg-mofu-light-950 p-4">
 	<div class="flex items-center justify-between">
 		<Button
 			variant="ghost"

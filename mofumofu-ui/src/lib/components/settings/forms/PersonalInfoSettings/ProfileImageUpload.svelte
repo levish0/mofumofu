@@ -28,7 +28,7 @@
 			alert('이메일 인증이 필요합니다. 이메일을 확인해주세요.');
 			return;
 		}
-		
+
 		const target = event.target as HTMLInputElement;
 		const file = target.files?.[0];
 		if (file && file.type.startsWith('image/')) {
@@ -103,7 +103,11 @@
 	<h2 class="text-2xl font-semibold">{m.settings_profile_image()}</h2>
 	<div class="flex items-center space-x-4">
 		<div class="group relative transition-all">
-			<div class="bg-mofu-dark-800 relative h-24 w-24 overflow-hidden rounded-full {isVerified ? 'group-hover:opacity-75' : 'opacity-50'}">
+			<div
+				class="bg-mofu-dark-800 relative h-24 w-24 overflow-hidden rounded-full {isVerified
+					? 'group-hover:opacity-75'
+					: 'opacity-50'}"
+			>
 				{#if profileImage}
 					<!-- Skeleton shimmer while loading -->
 					{#if imageLoading}
@@ -122,7 +126,9 @@
 				{#if profileImage}
 					<label
 						for="profile-upload"
-						class="dark:text-mofu-dark-300 absolute inset-0 flex {isVerified ? 'cursor-pointer' : 'cursor-not-allowed'} items-center justify-center"
+						class="dark:text-mofu-dark-300 absolute inset-0 flex {isVerified
+							? 'cursor-pointer'
+							: 'cursor-not-allowed'} items-center justify-center"
 					>
 						{#if !isVerified}
 							<Icon src={LockClosed} class="h-6 w-6 text-gray-400" />
@@ -131,13 +137,22 @@
 				{:else}
 					<label
 						for="profile-upload"
-						class="dark:text-mofu-dark-300 flex h-full {isVerified ? 'cursor-pointer' : 'cursor-not-allowed'} items-center justify-center"
+						class="dark:text-mofu-dark-300 flex h-full {isVerified
+							? 'cursor-pointer'
+							: 'cursor-not-allowed'} items-center justify-center"
 					>
 						<Icon src={isVerified ? Camera : LockClosed} class="h-6 w-6 {isVerified ? '' : 'text-gray-400'}" />
 					</label>
 				{/if}
 			</div>
-			<input id="profile-upload" type="file" accept="image/*" class="hidden" onchange={handleImageChange} disabled={!isVerified} />
+			<input
+				id="profile-upload"
+				type="file"
+				accept="image/*"
+				class="hidden"
+				onchange={handleImageChange}
+				disabled={!isVerified}
+			/>
 		</div>
 		<div class="text-mofu-dark-400 text-sm">
 			{#if isVerified}

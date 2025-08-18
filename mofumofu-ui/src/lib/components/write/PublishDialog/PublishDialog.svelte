@@ -222,7 +222,7 @@
 </Button>
 
 <Dialog.Root bind:open={isOpen}>
-	<Dialog.Content class="dark:bg-mofu-dark-900 p-2 text-white sm:max-w-lg">
+	<Dialog.Content class="dark:bg-mofu-dark-900 bg-mofu-light-900 p-2 text-black sm:max-w-lg dark:text-white">
 		<!-- Dialog main content with rounded-b-none -->
 		<div class="rounded-t-lg rounded-b-none px-2 pt-4">
 			<Dialog.Header class="mb-2 p-0">

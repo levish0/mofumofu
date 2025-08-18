@@ -40,18 +40,23 @@
 	<h2 class="text-2xl font-semibold">{m.settings_language()}</h2>
 	<div class="space-y-2">
 		<Select.Root type="single" bind:value={selectedLanguage} onValueChange={handleLanguageChange}>
-			<Select.Trigger class="dark:bg-mofu-dark-800 text-mofu-dark-200 border-mofu-dark-700 w-64">
+			<Select.Trigger
+				class="dark:bg-mofu-dark-800 bg-mofu-light-800 text-mofu-light-200 dark:text-mofu-dark-200 border-mofu-light-700 dark:border-mofu-dark-700 w-64"
+			>
 				{triggerContent}
 			</Select.Trigger>
-			<Select.Content class="dark:bg-mofu-dark-800 border-mofu-dark-700">
+			<Select.Content class="dark:bg-mofu-dark-800 bg-mofu-light-800 border-mofu-light-700 dark:border-mofu-dark-700">
 				{#each languages as language}
-					<Select.Item value={language.value} class="text-mofu-dark-200 hover:bg-mofu-dark-700">
+					<Select.Item
+						value={language.value}
+						class="dark:text-mofu-dark-200 text-mofu-light-200 hover:bg-mofu-light-700 dark:hover:bg-mofu-dark-700"
+					>
 						{language.flag}
 						{language.label()}
 					</Select.Item>
 				{/each}
 			</Select.Content>
 		</Select.Root>
-		<p class="text-mofu-dark-400 text-xs">{m.settings_language_description()}</p>
+		<p class="dark:text-mofu-dark-400 text-mofu-light-400 text-xs">{m.settings_language_description()}</p>
 	</div>
 </div>

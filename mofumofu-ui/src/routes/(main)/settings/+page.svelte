@@ -17,7 +17,6 @@
 	import { settingsStore } from '$lib/stores/settings.svelte';
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { userStore } from '$lib/stores/user.svelte';
-	import { goto } from '$app/navigation';
 	import LoadingOverlay from '$lib/components/common/LoadingOverlay.svelte';
 	import MobileSettingsLayout from '$lib/components/settings/layouts/MobileSettingsLayout.svelte';
 	import DesktopSettingsLayout from '$lib/components/settings/layouts/DesktopSettingsLayout.svelte';

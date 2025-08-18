@@ -63,9 +63,11 @@
 </script>
 
 <div class="space-y-4">
-	<h2 class="text-mofu-dark-100 text-lg font-medium">썸네일 (선택사항)</h2>
+	<h2 class="text-mofu-light-100 dark:text-mofu-dark-100 text-lg font-medium">썸네일 (선택사항)</h2>
 	<div class="group relative transition-all">
-		<div class="bg-mofu-dark-800 relative aspect-video w-full overflow-hidden rounded-lg group-hover:opacity-75">
+		<div
+			class="dark:bg-mofu-dark-800 bg-mofu-light-800 relative aspect-video w-full overflow-hidden rounded-lg group-hover:opacity-75"
+		>
 			{#if thumbnail}
 				<!-- Loading shimmer -->
 				{#if imageLoading && !thumbnail.startsWith('blob:')}
@@ -82,13 +84,13 @@
 				/>
 				<label
 					for="thumbnail-upload"
-					class="dark:text-mofu-dark-300 absolute inset-0 flex cursor-pointer items-center justify-center hover:text-gray-300"
+					class="dark:text-mofu-dark-300 text-mofu-light-300 hover:text-mofu-light-400 dark:hover:text-mofu-dark-400 absolute inset-0 flex cursor-pointer items-center justify-center"
 				>
 				</label>
 			{:else}
 				<label
 					for="thumbnail-upload"
-					class="text-mofu-dark-300 flex h-full cursor-pointer flex-col items-center justify-center space-y-2"
+					class="dark:text-mofu-dark-300 text-mofu-light-300 flex h-full cursor-pointer flex-col items-center justify-center space-y-2"
 				>
 					<Icon src={Photo} class="h-10 w-10" />
 					<span class="text-sm">썸네일 이미지 업로드</span>
@@ -99,6 +101,6 @@
 		<input id="thumbnail-upload" type="file" accept="image/*" class="hidden" onchange={handleImageChange} />
 	</div>
 	{#if thumbnail}
-		<button onclick={removeThumbnail} class="text-xs text-red-400 underline hover:text-red-300"> 썸네일 제거 </button>
+		<button onclick={removeThumbnail} class="text-xs text-rose-500 underline hover:text-rose-400"> 썸네일 제거 </button>
 	{/if}
 </div>

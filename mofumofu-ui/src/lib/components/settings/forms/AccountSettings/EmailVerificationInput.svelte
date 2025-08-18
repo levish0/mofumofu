@@ -23,7 +23,7 @@
 		try {
 			isResending = true;
 			await resendVerification(email);
-			
+
 			// 성공 시 1분 쿨다운 시작
 			cooldownRemaining = 60;
 			cooldownInterval = setInterval(() => {
@@ -61,7 +61,7 @@
 				<Input
 					id="email"
 					placeholder="이메일 주소"
-					class="dark:bg-mofu-dark-800 text-mofu-dark-200 placeholder:text-mofu-dark-300 rounded-r-none border-r-0"
+					class="dark:bg-mofu-dark-800 bg-mofu-light-800 text-mofu-light-200  dark:text-mofu-dark-200 placeholder:text-mofu-light-300 dark:placeholder:text-mofu-dark-300 rounded-r-none border-r-0"
 					value={email}
 					disabled={true}
 				/>

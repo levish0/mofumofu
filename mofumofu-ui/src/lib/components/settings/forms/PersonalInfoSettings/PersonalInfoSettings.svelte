@@ -94,7 +94,7 @@
 	});
 </script>
 
-<div class="text-mofu-dark-200 min-h-screen">
+<div class="dark:text-mofu-dark-200 text-mofu-light-200 min-h-screen">
 	<div class="space-y-4">
 		<BannerImageUpload {bannerImage} onUpdate={handleBannerUpdate} {openImageCrop} {isVerified} />
 
@@ -106,7 +106,12 @@
 
 		<BioInput {bio} onUpdate={handleBioUpdate} onValidationChange={handleBioValidation} {isVerified} />
 
-		<LocationInput {location} onUpdate={handleLocationUpdate} onValidationChange={handleLocationValidation} {isVerified} />
+		<LocationInput
+			{location}
+			onUpdate={handleLocationUpdate}
+			onValidationChange={handleLocationValidation}
+			{isVerified}
+		/>
 
 		<WebsiteInput {website} onUpdate={handleWebsiteUpdate} onValidationChange={handleWebsiteValidation} {isVerified} />
 	</div>

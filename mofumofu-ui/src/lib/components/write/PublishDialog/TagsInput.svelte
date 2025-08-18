@@ -77,7 +77,9 @@
 </script>
 
 <div>
-	<label for="tags" class="text-mofu-dark-100 mb-2 block text-sm font-medium">{m.publish_tags_label()}</label>
+	<label for="tags" class=" text-mofu-light-100 dark:text-mofu-dark-100 mb-2 block text-sm font-medium"
+		>{m.publish_tags_label()}</label
+	>
 	<div class="space-y-2">
 		<!-- 기존 태그들 표시 -->
 		{#if tagArray.length > 0}
@@ -85,7 +87,7 @@
 				{#each tagArray as tag}
 					<Badge
 						variant="default"
-						class="hover:bg-mofu-dark-700 bg-mofu-dark-800 text-mofu cursor-pointer"
+						class="dark:hover:bg-mofu-dark-700 hover:bg-mofu-light-700 bg-mofu-light-800 dark:bg-mofu-dark-800 text-mofu cursor-pointer"
 						onclick={() => removeTag(tag)}
 					>
 						#{tag}
@@ -101,25 +103,27 @@
 					bind:value={currentTagInput}
 					onkeydown={handleTagKeyPress}
 					placeholder={m.publish_tags_placeholder()}
-					class="dark:bg-mofu-dark-700 border-mofu-dark-600 placeholder:text-mofu-dark-400 pr-12 text-white"
+					class="dark:bg-mofu-dark-700 bg-mofu-light-700 border-mofu-light-600 dark:border-mofu-dark-600 placeholder:text-mofu-light-400 dark:placeholder:text-mofu-dark-400 pr-12 text-white"
 				/>
 				<div
 					class="absolute top-1/2 right-3 -translate-y-1/2 text-xs {validationError
-						? 'text-red-400'
-						: 'text-mofu-dark-400'}"
+						? 'text-rose-500'
+						: 'dark:text-mofu-dark-400 text-mofu-light-400'}"
 				>
 					{tagCount}/8
 				</div>
 			</div>
 		{:else}
 			<!-- 태그가 5개일 때는 개수만 표시 -->
-			<div class="text-xs {validationError ? 'text-red-400' : 'text-mofu-dark-400'} text-right">
+			<div
+				class="text-xs {validationError ? 'text-rose-500' : 'text-mofu-light-400 dark:text-mofu-dark-400'} text-right"
+			>
 				{tagCount}/8
 			</div>
 		{/if}
 	</div>
 	{#if validationError}
-		<p class="mt-1 text-xs text-rose-400">{validationError}</p>
+		<p class="mt-1 text-xs text-rose-500">{validationError}</p>
 	{:else}
 		<p class="text-mofu-dark-400 mt-1 text-xs">태그를 클릭하면 삭제됩니다. Enter 또는 쉼표로 구분하여 입력하세요.</p>
 	{/if}

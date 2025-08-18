@@ -26,7 +26,7 @@
 			alert('이메일 인증이 필요합니다. 이메일을 확인해주세요.');
 			return;
 		}
-		
+
 		const value = (e.target as HTMLInputElement).value;
 		onUpdate(value);
 
@@ -46,9 +46,9 @@
 			<Input
 				id="location"
 				placeholder={m.settings_location_placeholder()}
-				class="dark:bg-mofu-dark-800 text-mofu-dark-200 placeholder:text-mofu-dark-300 pr-12 {localError
+				class="dark:bg-mofu-dark-800 dark:text-mofu-dark-200 text-mofu-light-800 placeholder:text-mofu-dark-300 pr-12 {localError
 					? 'border-red-500'
-					: ''} {!isVerified ? 'opacity-50 cursor-not-allowed' : ''}"
+					: ''} {!isVerified ? 'cursor-not-allowed opacity-50' : ''}"
 				value={location || ''}
 				oninput={handleInput}
 				disabled={!isVerified}

@@ -46,22 +46,24 @@
 </script>
 
 <div>
-	<label for="summary" class="text-mofu-dark-100 mb-2 block text-sm font-medium">{m.publish_summary_label()}</label>
+	<label for="summary" class="text-mofu-light-100 dark:text-mofu-dark-100 mb-2 block text-sm font-medium"
+		>{m.publish_summary_label()}</label
+	>
 	<div class="relative">
 		<Textarea
 			id="summary"
 			bind:value
 			oninput={handleInput}
 			placeholder="포스트 요약을 입력하세요"
-			class="bg-mofu-dark-700 border-mofu-dark-600 placeholder:text-mofu-dark-400 min-h-[80px] text-white {validationError
-				? 'border-red-500'
+			class="dark:bg-mofu-dark-700 bg-mofu-light-700 border-mofu-light-600  dark:border-mofu-dark-600 placeholder:text-mofu-light-400 dark:placeholder:text-mofu-dark-400 min-h-[80px] text-white {validationError
+				? 'border-rose-500'
 				: ''}"
 		/>
-		<div class="absolute right-2 bottom-2 text-xs {validationError ? 'text-red-400' : 'text-mofu-dark-400'}">
+		<div class="absolute right-2 bottom-2 text-xs {validationError ? 'text-rose-500' : 'text-mofu-dark-400'}">
 			{summaryCount}/500
 		</div>
 	</div>
 	{#if validationError}
-		<p class="mt-1 text-xs text-rose-400">{validationError}</p>
+		<p class="mt-1 text-xs text-rose-500">{validationError}</p>
 	{/if}
 </div>

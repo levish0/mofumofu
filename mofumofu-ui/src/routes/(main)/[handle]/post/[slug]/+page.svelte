@@ -214,16 +214,16 @@
 									/>
 								{:else}
 									<div
-										class="dark:bg-mofu-dark-600 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100"
+										class="dark:bg-mofu-dark-600 bg-mofu-light-600 flex h-12 w-12 items-center justify-center rounded-full"
 									>
-										<span class="dark:text-mofu-dark-200 text-lg font-medium text-gray-600">
+										<span class="dark:text-mofu-dark-200 text-mofu-light-200 text-lg font-medium">
 											{data.author.name.charAt(0).toUpperCase()}
 										</span>
 									</div>
 								{/if}
 								<div>
-									<p class="font-medium text-gray-900 dark:text-white">{data.author.name}</p>
-									<p class="dark:text-mofu-dark-400 text-sm text-gray-500">
+									<p class="font-medium text-black dark:text-white">{data.author.name}</p>
+									<p class="dark:text-mofu-dark-400 text-mofu-light-400 text-sm">
 										{formatDateTime(data.post.created_at)}
 									</p>
 								</div>
@@ -239,7 +239,7 @@
 										disabled={isLikeSubmitting}
 										class="flex items-center gap-2 rounded-full px-4 py-2 transition-colors {isLiked
 											? 'text-rose-600 dark:text-rose-500'
-											: 'dark:text-mofu-dark-400 text-mofu-light-800 hover:text-rose-600 dark:hover:text-rose-500'} 
+											: 'dark:text-mofu-dark-400 text-mofu-light-400 hover:text-rose-600 dark:hover:text-rose-500'} 
 										{isLikeSubmitting ? 'cursor-not-allowed opacity-50' : ''}"
 									>
 										<Icon src={Heart} class="h-5 w-5" solid />
@@ -262,13 +262,13 @@
 
 										{#if isDropdownOpen}
 											<div
-												class="dark:bg-mofu-dark-800 absolute top-12 right-0 z-50 w-48 rounded-lg bg-white text-sm font-bold shadow-lg"
+												class="dark:bg-mofu-dark-800 bg-mofu-light-800 absolute top-12 right-0 z-50 w-48 rounded-lg text-sm font-bold shadow-lg"
 												transition:fly={{ y: -8, duration: 150 }}
 												style="transform-origin: top right;"
 											>
 												<div class="py-1">
 													<button
-														class="dark:text-mofu-dark-200 text-mofu-light-800 flex w-full items-center px-4 py-2 hover:opacity-70"
+														class="dark:text-mofu-dark-200 text-mofu-light-200 flex w-full items-center px-4 py-2 hover:opacity-70"
 														onclick={handleEdit}
 													>
 														<Icon src={PencilSquare} solid size="16" class="mr-3" />
@@ -295,7 +295,7 @@
 						<!-- Tags -->
 						<div class="flex flex-wrap gap-2">
 							{#each data.post.tags as tag}
-								<Badge class="bg-mofu/10 text-mofu rounded-full px-2 py-1 text-xs font-medium">
+								<Badge>
 									#{tag}
 								</Badge>
 							{/each}
@@ -303,7 +303,7 @@
 					</header>
 
 					<!-- Post Content -->
-					<div class="prose prose-invert prose-lg text-mofu-dark-200 max-w-none break-all">
+					<div class="prose prose-invert prose-lg dark:text-mofu-dark-200 text-mofu-light-200 max-w-none break-all">
 						{@html htmlContent}
 					</div>
 				</article>
@@ -318,7 +318,7 @@
 							{#each tocItems as item}
 								<a
 									href="#{item.id}"
-									class="dark:text-mofu-dark-300 block text-sm text-gray-600 transition-colors hover:text-gray-900 dark:hover:text-white"
+									class="dark:text-mofu-dark-300 text-mofu-light-300 block text-sm transition-colors hover:text-black dark:hover:text-white"
 									style="padding-left: {(item.level - 1) * 12}px"
 								>
 									{item.text}

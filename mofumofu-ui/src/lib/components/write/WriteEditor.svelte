@@ -64,7 +64,9 @@
 	}
 </script>
 
-<div class="bg-mofu-dark-900 text-mofu-dark-200 flex h-full flex-col overflow-hidden">
+<div
+	class="dark:bg-mofu-dark-900 bg-mofu-light-900 text-mofu-light-200 dark:text-mofu-dark-200 flex h-full flex-col overflow-hidden"
+>
 	<!-- 헤더 영역 (sticky) -->
 	<div class="bg-mofu-dark-900 sticky top-0 z-10 overflow-hidden">
 		<!-- 제목/태그 영역 -->
@@ -103,5 +105,16 @@
 	</div>
 
 	<!-- 에디터 영역 하단 버튼들 -->
-	<WriteActions {title} {content} {tags} {onExit} {onSaveDraft} {onPublished} {isEditMode} {editSlug} {editPostId} {summary} />
+	<WriteActions
+		{title}
+		{content}
+		{tags}
+		{onExit}
+		{onSaveDraft}
+		{onPublished}
+		{isEditMode}
+		{editSlug}
+		{editPostId}
+		{summary}
+	/>
 </div>

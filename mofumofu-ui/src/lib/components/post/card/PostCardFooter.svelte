@@ -108,7 +108,7 @@
 		</a>
 		<div class="dark:text-mofu-dark-200 flex items-center gap-3 text-xs">
 			<div class="flex items-center gap-1">
-				<Icon src={Eye} solid size="16" class="text-mofu-dark-200" />
+				<Icon src={Eye} solid size="16" />
 				<span>{views}</span>
 			</div>
 

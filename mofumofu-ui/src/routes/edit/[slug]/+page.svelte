@@ -84,7 +84,7 @@
 					return;
 				}
 			}
-			
+
 			// 사용자 정보 로드 및 이메일 인증 체크
 			await userStore.loadProfile();
 			if (!userStore.user?.is_verified) {

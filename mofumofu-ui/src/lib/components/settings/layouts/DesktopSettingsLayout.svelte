@@ -45,14 +45,14 @@
 </script>
 
 <!-- 데스크톱 레이아웃 -->
-<div class="text-mofu-dark-200 hidden min-h-screen w-full gap-4 lg:flex">
+<div class="dark:text-mofu-dark-200 text-mofu-light-200 hidden min-h-screen w-full gap-4 lg:flex">
 	<!-- Sidebar with Card Grid -->
 	<div class="w-1/3">
 		<div class="sticky space-y-4 transition-all duration-100 ease-out" style="top: {topPosition}">
 			<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
 				{#each sections as section}
 					<button
-						class="dark:bg-mofu-dark-800 dark:border-mofu-dark-800 group flex cursor-pointer flex-col overflow-hidden rounded-xl border p-4 text-left transition-all duration-200 hover:opacity-75 hover:shadow-xl {selectedSection ===
+						class="dark:bg-mofu-dark-800 dark:border-mofu-dark-800 group flex cursor-pointer flex-col overflow-hidden rounded-xl border border-white bg-white p-4 text-left transition-all duration-200 hover:opacity-75 hover:shadow-xl {selectedSection ===
 						section.id
 							? 'opacity-70'
 							: ''} {section.requiresAuth && !authStore.isAuthenticated ? 'cursor-not-allowed opacity-30' : ''}"
@@ -68,17 +68,19 @@
 								<Icon src={section.icon} size="20" solid class="text-mofu" />
 							</div>
 							<div class="flex-1">
-								<h3 class="text-mofu-dark-200 text-md font-bold break-all">{section.label()}</h3>
+								<h3 class="dark:text-mofu-dark-200 text-mofu-light-200 text-md font-bold break-all">
+									{section.label()}
+								</h3>
 							</div>
 						</div>
-						<p class="dark:text-mofu-dark-300 text-xs text-gray-400">{section.description()}</p>
+						<p class="dark:text-mofu-dark-300 text-mofu-light-300 text-xs">{section.description()}</p>
 					</button>
 				{/each}
 			</div>
 
 			<!-- Save Button -->
 			<button
-				class="dark:bg-mofu-dark-800 dark:border-mofu-dark-800 group flex w-full cursor-pointer flex-col overflow-hidden rounded-xl border p-4 text-left transition-all duration-200 hover:opacity-75 hover:shadow-xl {!settingsStore.hasChanges
+				class="dark:bg-mofu-dark-800 dark:border-mofu-dark-800 group flex w-full cursor-pointer flex-col overflow-hidden rounded-xl border border-white bg-white p-4 text-left transition-all duration-200 hover:opacity-75 hover:shadow-xl {!settingsStore.hasChanges
 					? 'cursor-not-allowed opacity-50'
 					: ''}"
 				onclick={handleSave}
@@ -87,12 +89,12 @@
 				<div class="flex items-center justify-center gap-2">
 					{#if settingsStore.isLoading}
 						<div class="border-mofu h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></div>
-						<h3 class="text-mofu-dark-200 text-md font-bold">{m.settings_saving()}</h3>
+						<h3 class="dark:text-mofu-dark-200 text-mofu-light-200 text-md font-bold">{m.settings_saving()}</h3>
 					{:else if saveSuccess}
 						<Icon src={CheckCircle} class="h-4 w-4 text-green-400" />
-						<h3 class="text-mofu-dark-200 text-md font-bold">{m.settings_saved()}</h3>
+						<h3 class="dark:text-mofu-dark-200 text-mofu-light-200 text-md font-bold">{m.settings_saved()}</h3>
 					{:else}
-						<h3 class="text-mofu-dark-200 text-md font-bold">{m.settings_save_changes()}</h3>
+						<h3 class="dark:text-mofu-dark-200 text-mofu-light-200 text-md font-bold">{m.settings_save_changes()}</h3>
 						{#if settingsStore.hasChanges}
 							<span class="text-xs text-orange-400">•</span>
 						{/if}
@@ -103,12 +105,12 @@
 			<!-- Reset Button (only show if there are changes) -->
 			{#if settingsStore.hasChanges}
 				<button
-					class="dark:bg-mofu-dark-800/50 dark:border-mofu-dark-800 group flex w-full cursor-pointer flex-col overflow-hidden rounded-xl border p-2 text-center transition-all duration-200 hover:opacity-75"
+					class="dark:bg-mofu-dark-800/50 dark:border-mofu-dark-800 group flex w-full cursor-pointer flex-col overflow-hidden rounded-xl border border-white bg-white p-2 text-center transition-all duration-200 hover:opacity-75"
 					onclick={handleReset}
 				>
 					<div class="flex items-center justify-center gap-2">
-						<Icon src={ArrowUturnLeft} class="h-4 w-4" />
-						<span class="dark:text-mofu-dark-300 text-sm text-gray-400">{m.settings_reset_changes()}</span>
+						<Icon src={ArrowUturnLeft} class="text-mofu-light-600 dark:text-mofu-dark-300 h-4 w-4" />
+						<span class="dark:text-mofu-dark-300 text-mofu-light-600 text-sm">{m.settings_reset_changes()}</span>
 					</div>
 				</button>
 			{/if}

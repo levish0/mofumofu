@@ -84,7 +84,7 @@
 <div class="space-y-2">
 	<!-- Sticky Hashtags Section -->
 	<div
-		class="bg-mofu-dark-900 sticky z-20 pt-2 pb-2 transition-all duration-100 ease-out"
+		class="dark:bg-mofu-dark-900 bg-mofu-light-900 sticky z-20 pt-2 pb-2 transition-all duration-100 ease-out"
 		style="top: {stickyTopPosition}"
 	>
 		<div class="flex-1">
@@ -93,9 +93,8 @@
 					{#each availableHashtags as { tag, count }}
 						<Badge
 							variant="secondary"
-							class="cursor-pointer text-xs {selectedTags.includes(tag)
-								? 'bg-mofu text-mofu-dark-950 hover:bg-mofu/90'
-								: 'bg-mofu-dark-800 text-mofu hover:bg-mofu-dark-700 hover:text-mofu'} transition-colors"
+							class="cursor-pointer  {selectedTags.includes(tag) &&
+								'bg-mofu dark:bg-mofu text-white dark:text-black'} transition-colors"
 							onclick={() => toggleTag(tag)}
 						>
 							#{tag}({count})
@@ -103,7 +102,7 @@
 					{/each}
 				</div>
 			{:else}
-				<div class="text-mofu-dark-400 text-sm">필터할 태그가 없습니다.</div>
+				<div class="dark:text-mofu-dark-400 text-mofu-light-400 text-sm">필터할 태그가 없습니다.</div>
 			{/if}
 		</div>
 	</div>
@@ -119,14 +118,18 @@
 	{#if filteredPosts.length === 0}
 		<div class="flex flex-col items-center justify-center py-12 text-center">
 			{#if selectedTags.length > 0}
-				<div class="text-mofu-dark-400 mb-2 text-lg">선택한 태그와 일치하는 포스트가 없습니다</div>
-				<div class="text-mofu-dark-500 mb-4 text-sm">다른 태그를 선택하거나 필터를 해제해보세요.</div>
+				<div class="dark:text-mofu-dark-400 text-mofu-light-400 mb-2 text-lg">
+					선택한 태그와 일치하는 포스트가 없습니다
+				</div>
+				<div class="dark:text-mofu-dark-500 text-mofu-light-500 mb-4 text-sm">
+					다른 태그를 선택하거나 필터를 해제해보세요.
+				</div>
 				<button onclick={() => (selectedTags = [])} class="text-mofu hover:text-mofu/80 text-sm underline">
 					모든 필터 해제
 				</button>
 			{:else if posts.length === 0}
-				<div class="text-mofu-dark-400 mb-2 text-lg">작성된 포스트가 없습니다</div>
-				<div class="text-mofu-dark-500 text-sm">
+				<div class="dark:text-mofu-dark-400 text-mofu-light-400 mb-2 text-lg">작성된 포스트가 없습니다</div>
+				<div class="dark:text-mofu-dark-500 text-mofu-light-500 text-sm">
 					{profile.name}님이 아직 포스트를 작성하지 않았습니다.
 				</div>
 			{/if}

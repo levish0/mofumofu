@@ -10,7 +10,7 @@ use crate::service::oauth::oauth_avatar_upload::upload_oauth_avatar;
 use crate::connection::cloudflare_r2::R2Client;
 use reqwest::Client as ReqwestClient;
 use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
-use tracing::{error, info, warn};
+use tracing::{info, warn};
 
 pub async fn service_github_sign_in<C>(
     txn: &C,

@@ -47,26 +47,28 @@
 </script>
 
 <div>
-	<label for="title" class="text-mofu-dark-100 mb-2 block text-sm font-medium">{m.publish_title_label()}</label>
+	<label for="title" class="text-mofu-light-100 dark:text-mofu-dark-100 mb-2 block text-sm font-medium"
+		>{m.publish_title_label()}</label
+	>
 	<div class="relative">
 		<Input
 			id="title"
 			{value}
 			oninput={handleInput}
 			placeholder={m.publish_title_placeholder()}
-			class="dark:bg-mofu-dark-700 border-mofu-dark-600 placeholder:text-mofu-dark-400 pr-12 text-white {validationError
-				? 'border-red-500'
+			class="dark:bg-mofu-dark-700 bg-mofu-light-700 border-mofu-light-600 dark:border-mofu-dark-600 placeholder:text-mofu-light-400 dark:placeholder:text-mofu-dark-400 pr-12  text-black dark:text-white {validationError
+				? 'border-rose-500'
 				: ''}"
 		/>
 		<div
 			class="absolute top-1/2 right-3 -translate-y-1/2 text-xs {validationError
-				? 'text-red-400'
-				: 'text-mofu-dark-400'}"
+				? 'text-rose-500'
+				: 'text-mofu-light-400 dark:text-mofu-dark-400'}"
 		>
 			{titleCount}/80
 		</div>
 	</div>
 	{#if validationError}
-		<p class="mt-1 text-xs text-rose-400">{validationError}</p>
+		<p class="mt-1 text-xs text-rose-500">{validationError}</p>
 	{/if}
 </div>

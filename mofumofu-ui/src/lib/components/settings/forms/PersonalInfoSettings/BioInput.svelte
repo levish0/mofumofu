@@ -26,7 +26,7 @@
 			alert('이메일 인증이 필요합니다. 이메일을 확인해주세요.');
 			return;
 		}
-		
+
 		const value = (e.target as HTMLTextAreaElement).value;
 		onUpdate(value);
 
@@ -48,7 +48,7 @@
 				placeholder={m.settings_bio_placeholder()}
 				class="dark:bg-mofu-dark-800 text-mofu-dark-200 placeholder:text-mofu-dark-300 min-h-[100px]  {localError
 					? 'border-red-500'
-					: ''} {!isVerified ? 'opacity-50 cursor-not-allowed' : ''}"
+					: ''} {!isVerified ? 'cursor-not-allowed opacity-50' : ''}"
 				value={bio || ''}
 				oninput={handleInput}
 				disabled={!isVerified}

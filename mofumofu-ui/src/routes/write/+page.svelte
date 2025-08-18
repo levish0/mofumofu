@@ -75,7 +75,7 @@
 					return;
 				}
 			}
-			
+
 			// 사용자 정보 로드 및 이메일 인증 체크
 			await userStore.loadProfile();
 			if (!userStore.user?.is_verified) {
@@ -112,7 +112,7 @@
 <NotVerifiedScreen isVisible={verificationError} description="글 작성 기능을 이용하려면 이메일 인증을 완료해 주세요." />
 
 {#if !authError && !verificationError}
-	<div class="bg-mofu-dark-900 flex h-full w-full break-all text-white">
+	<div class="dark:bg-mofu-dark-900 bg-mofu-light-900 flex h-full w-full break-all text-black dark:text-white">
 		<!-- 메인 컨텐츠 영역 -->
 		<div bind:this={containerElement} class="flex flex-1 overflow-hidden">
 			<!-- 모바일/태블릿: 전체 화면, 데스크톱: 분할 -->
@@ -157,7 +157,7 @@
 				<button
 					type="button"
 					aria-label={m.write_resize_handle()}
-					class="bg-mofu-dark-700 w-1 flex-shrink-0 cursor-col-resize p-0 transition-colors"
+					class="dark:bg-mofu-dark-700 bg-mofu-light-700 w-1 flex-shrink-0 cursor-col-resize p-0 transition-colors"
 					onmousedown={resizableHook?.handleMouseDown}
 					class:bg-gray-400={resizableHook?.isDragging()}
 				></button>

@@ -28,7 +28,7 @@
 			alert('이메일 인증이 필요합니다. 이메일을 확인해주세요.');
 			return;
 		}
-		
+
 		const target = event.target as HTMLInputElement;
 		const file = target.files?.[0];
 		if (file && file.type.startsWith('image/')) {
@@ -102,7 +102,11 @@
 <div class="space-y-4">
 	<h2 class="text-2xl font-semibold">{m.settings_banner_image()}</h2>
 	<div class="group relative transition-all">
-		<div class="bg-mofu-dark-800 relative aspect-[4/1] w-full overflow-hidden rounded-lg {isVerified ? 'group-hover:opacity-75' : 'opacity-50'}">
+		<div
+			class="bg-mofu-light-800 dark:bg-mofu-dark-800 relative aspect-[4/1] w-full overflow-hidden rounded-lg {isVerified
+				? 'group-hover:opacity-75'
+				: 'opacity-50'}"
+		>
 			{#if bannerImage}
 				<!-- Skeleton shimmer while loading -->
 				{#if imageLoading}
@@ -121,7 +125,9 @@
 			{#if bannerImage}
 				<label
 					for="banner-upload"
-					class="dark:text-mofu-dark-300 absolute inset-0 flex {isVerified ? 'cursor-pointer' : 'cursor-not-allowed'} items-center justify-center hover:text-gray-300"
+					class="dark:text-mofu-dark-300 absolute inset-0 flex {isVerified
+						? 'cursor-pointer'
+						: 'cursor-not-allowed'} items-center justify-center hover:text-gray-300"
 				>
 					{#if !isVerified}
 						<div class="flex flex-col items-center justify-center space-y-2 text-gray-400">
@@ -133,7 +139,9 @@
 			{:else}
 				<label
 					for="banner-upload"
-					class="text-mofu-dark-300 flex h-full {isVerified ? 'cursor-pointer' : 'cursor-not-allowed'} flex-col items-center justify-center space-y-2"
+					class="text-mofu-dark-300 flex h-full {isVerified
+						? 'cursor-pointer'
+						: 'cursor-not-allowed'} flex-col items-center justify-center space-y-2"
 				>
 					{#if isVerified}
 						<Icon src={Photo} class="h-10 w-10" />
@@ -147,6 +155,13 @@
 				</label>
 			{/if}
 		</div>
-		<input id="banner-upload" type="file" accept="image/*" class="hidden" onchange={handleImageChange} disabled={!isVerified} />
+		<input
+			id="banner-upload"
+			type="file"
+			accept="image/*"
+			class="hidden"
+			onchange={handleImageChange}
+			disabled={!isVerified}
+		/>
 	</div>
 </div>

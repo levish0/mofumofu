@@ -74,44 +74,44 @@
 	}
 </script>
 
-<div class="px-4 pb-4">
+<div class="dark:bg-mofu-dark-900 bg-mofu-light-900 px-4 pb-4">
 	<div class="flex flex-wrap items-center justify-between gap-2">
 		<div class="flex flex-wrap items-center gap-2">
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('# ')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="dark:hover:bg-mofu-dark-700 hover:bg-mofu-light-700 text-mofu-light-400 hover:text-mofu-light-200 dark:text-mofu-dark-400 dark:hover:text-mofu-dark-200 rounded p-2"
 			>
 				<Heading1 class="h-5 w-5" />
 			</Button>
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('## ')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="dark:hover:bg-mofu-dark-700 hover:bg-mofu-light-700 text-mofu-light-400 hover:text-mofu-light-200 dark:text-mofu-dark-400 dark:hover:text-mofu-dark-200 rounded p-2"
 			>
 				<Heading2 class="h-5 w-5" />
 			</Button>
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('### ')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="dark:hover:bg-mofu-dark-700 hover:bg-mofu-light-700 text-mofu-light-400 hover:text-mofu-light-200 dark:text-mofu-dark-400 dark:hover:text-mofu-dark-200 rounded p-2"
 			>
 				<Heading3 class="h-5 w-5" />
 			</Button>
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('#### ')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="dark:hover:bg-mofu-dark-700 hover:bg-mofu-light-700 text-mofu-light-400 hover:text-mofu-light-200 dark:text-mofu-dark-400 dark:hover:text-mofu-dark-200 rounded p-2"
 			>
 				<Heading4 class="h-5 w-5" />
 			</Button>
 
-			<div class="bg-mofu-dark-700 mx-2 h-6 w-px"></div>
+			<div class="dark:bg-mofu-dark-700 bg-mofu-light-700 mx-2 h-6 w-px"></div>
 
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('**', '**')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2 "
+				class="dark:hover:bg-mofu-dark-700 hover:bg-mofu-light-700 text-mofu-light-400 hover:text-mofu-light-200 dark:text-mofu-dark-400 dark:hover:text-mofu-dark-200 rounded p-2"
 				title={m.write_toolbar_bold()}
 			>
 				<Bold class="h-5 w-5" />
@@ -119,7 +119,7 @@
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('*', '*')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="dark:hover:bg-mofu-dark-700 hover:bg-mofu-light-700 text-mofu-light-400 hover:text-mofu-light-200 dark:text-mofu-dark-400 dark:hover:text-mofu-dark-200 rounded p-2"
 				title={m.write_toolbar_italic()}
 			>
 				<Italic class="h-5 w-5" />
@@ -127,7 +127,7 @@
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('~~', '~~')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="dark:hover:bg-mofu-dark-700 hover:bg-mofu-light-700 text-mofu-light-400 hover:text-mofu-light-200 dark:text-mofu-dark-400 dark:hover:text-mofu-dark-200 rounded p-2"
 				title={m.write_toolbar_strikethrough()}
 			>
 				<Strikethrough class="h-5 w-5" />
@@ -138,7 +138,7 @@
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('> ')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="dark:hover:bg-mofu-dark-700 hover:bg-mofu-light-700 text-mofu-light-400 hover:text-mofu-light-200 dark:text-mofu-dark-400 dark:hover:text-mofu-dark-200 rounded p-2"
 				title={m.write_toolbar_quote()}
 			>
 				<Quote class="h-5 w-5" />
@@ -146,7 +146,7 @@
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('[', '](url)')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="dark:hover:bg-mofu-dark-700 hover:bg-mofu-light-700 text-mofu-light-400 hover:text-mofu-light-200 dark:text-mofu-dark-400 dark:hover:text-mofu-dark-200 rounded p-2"
 				title={m.write_toolbar_link()}
 			>
 				<Link class="h-5 w-5" />
@@ -154,7 +154,7 @@
 			<Button
 				variant="ghost"
 				onclick={handleImageUpload}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="dark:hover:bg-mofu-dark-700 hover:bg-mofu-light-700 text-mofu-light-400 hover:text-mofu-light-200 dark:text-mofu-dark-400 dark:hover:text-mofu-dark-200 rounded p-2"
 				title={m.write_toolbar_image_upload()}
 			>
 				<Image class="h-5 w-5" />
@@ -162,7 +162,7 @@
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('$$\n', '\n$$')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="dark:hover:bg-mofu-dark-700 hover:bg-mofu-light-700 text-mofu-light-400 hover:text-mofu-light-200 dark:text-mofu-dark-400 dark:hover:text-mofu-dark-200 rounded p-2"
 				title={m.write_toolbar_math()}
 			>
 				<Sigma class="h-5 w-5" />
@@ -170,7 +170,7 @@
 			<Button
 				variant="ghost"
 				onclick={() => onInsertText('```', '\n```')}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="dark:hover:bg-mofu-dark-700 hover:bg-mofu-light-700 text-mofu-light-400 hover:text-mofu-light-200 dark:text-mofu-dark-400 dark:hover:text-mofu-dark-200 rounded p-2"
 				title={m.write_toolbar_code()}
 			>
 				<Code class="h-5 w-5" />
@@ -181,9 +181,9 @@
 			<!-- 모바일/태블릿 전용 에디터/프리뷰 모드 스위치 -->
 			{#if onTogglePreviewMode}
 				<div class="flex items-center gap-2 lg:hidden">
-					<span class="dark:text-mofu-dark-400 text-sm">에디터</span>
+					<span class="dark:text-mofu-dark-400 text-mofu-light-400 text-sm">에디터</span>
 					<Switch checked={isPreviewMode} onCheckedChange={onTogglePreviewMode} />
-					<span class="dark:text-mofu-dark-400 text-sm">프리뷰</span>
+					<span class="dark:text-mofu-dark-400 text-mofu-light-400 text-sm">프리뷰</span>
 				</div>
 			{/if}
 
@@ -191,7 +191,7 @@
 			<Button
 				variant="ghost"
 				onclick={onToggleHeader}
-				class="hover:dark:bg-mofu-dark-700 dark:text-mofu-dark-400 hover:dark:text-mofu-dark-200 rounded p-2"
+				class="dark:hover:bg-mofu-dark-700 hover:bg-mofu-light-700 text-mofu-light-400 dark:text-mofu-dark-400 hover:text-mofu-light-200 dark:hover:text-mofu-dark-200 rounded p-2"
 				title={showStickyToolbar ? m.write_toolbar_show_header() : m.write_toolbar_hide_header()}
 			>
 				{#if showStickyToolbar}

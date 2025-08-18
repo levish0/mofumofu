@@ -71,7 +71,7 @@
 </script>
 
 <div
-	class="overflow-hidden pt-4 break-all transition-all duration-400 ease-in-out"
+	class="dark:bg-mofu-dark-900 bg-mofu-light-900 overflow-hidden pt-4 break-all transition-all duration-400 ease-in-out"
 	style="max-height: {showStickyToolbar ? '0px' : '480px'}; opacity: {showStickyToolbar ? '0' : '1'};"
 >
 	<!-- 제목 입력 -->
@@ -81,13 +81,17 @@
 				value={title}
 				oninput={(e) => onTitleChange((e.target as HTMLInputElement).value)}
 				placeholder={m.write_title_placeholder()}
-				class="placeholder:text-mofu-dark-600 text-mofu-dark-200 h-auto w-full border-none bg-transparent p-0 text-4xl font-bold outline-none {titleOverLimit
+				class="dark:placeholder:text-mofu-dark-600 placeholder:text-mofu-light-600 text-mofu-light-200 dark:text-mofu-dark-200 h-auto w-full border-none bg-transparent p-0 text-4xl font-bold outline-none {titleOverLimit
 					? 'text-red-400'
 					: ''}"
 				style="font-size: 2.5rem; line-height: 1.2;"
 			/>
 			<!-- 글자수 표시 -->
-			<div class="absolute right-0 -bottom-6 text-sm {titleOverLimit ? 'text-red-400' : 'text-mofu-dark-400'}">
+			<div
+				class="absolute right-0 -bottom-6 text-sm {titleOverLimit
+					? 'text-red-400'
+					: 'text-mofu-light-400 dark:text-mofu-dark-400'}"
+			>
 				{titleCount}/80
 			</div>
 		</div>
@@ -98,11 +102,7 @@
 		<div class="flex flex-wrap items-center gap-2 text-lg">
 			<!-- 기존 태그들 표시 -->
 			{#each tagArray as tag}
-				<Badge
-					variant="default"
-					class="hover:bg-mofu-dark-700 bg-mofu-dark-800 text-mofu cursor-pointer"
-					onclick={() => removeTag(tag)}
-				>
+				<Badge onclick={() => removeTag(tag)}>
 					#{tag}
 				</Badge>
 			{/each}
