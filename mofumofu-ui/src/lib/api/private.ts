@@ -34,8 +34,11 @@ export const privateApi = ky.create({
 						errorBody = await response.json();
 					} catch (error) {
 						console.error('Failed to parse error response:', error);
+						// auth 관련이 아닌 에러는 여기서 처리하지 않음
+						return;
 					}
 
+					// auth 관련 에러만 처리
 					if (errorBody?.code === ErrorCodes.UserNoRefreshToken) {
 						authStore.clearToken();
 						throw createApiError(errorBody);
@@ -62,10 +65,7 @@ export const privateApi = ky.create({
 						}
 					}
 
-					if (errorBody?.code) {
-						throw createApiError(errorBody);
-					}
-					throw new ApiError('unknown_error', response.status, null);
+					// auth 관련이 아닌 에러는 여기서 처리하지 않고 ky의 기본 에러 처리에 맡김
 				}
 			}
 		]
