@@ -52,7 +52,7 @@
 			<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
 				{#each sections as section}
 					<button
-						class="dark:bg-mofu-dark-800 dark:border-mofu-dark-800 group flex cursor-pointer flex-col overflow-hidden rounded-xl border border-white bg-white p-4 text-left transition-all duration-200 hover:opacity-75 hover:shadow-xl {selectedSection ===
+						class="dark:bg-mofu-dark-800 dark:border-mofu-dark-800 group border-mofu-light-800 bg-mofu-light-800 flex cursor-pointer flex-col overflow-hidden rounded-xl border p-4 text-left transition-all duration-200 hover:opacity-75 hover:shadow-xl {selectedSection ===
 						section.id
 							? 'opacity-70'
 							: ''} {section.requiresAuth && !authStore.isAuthenticated ? 'cursor-not-allowed opacity-30' : ''}"
@@ -80,7 +80,7 @@
 
 			<!-- Save Button -->
 			<button
-				class="dark:bg-mofu-dark-800 dark:border-mofu-dark-800 group flex w-full cursor-pointer flex-col overflow-hidden rounded-xl border border-white bg-white p-4 text-left transition-all duration-200 hover:opacity-75 hover:shadow-xl {!settingsStore.hasChanges
+				class="dark:bg-mofu-dark-800 dark:border-mofu-dark-800 group border-mofu-light-800 bg-mofu-light-800 flex w-full cursor-pointer flex-col overflow-hidden rounded-xl border p-4 text-left transition-all duration-200 hover:opacity-75 hover:shadow-xl {!settingsStore.hasChanges
 					? 'cursor-not-allowed opacity-50'
 					: ''}"
 				onclick={handleSave}
