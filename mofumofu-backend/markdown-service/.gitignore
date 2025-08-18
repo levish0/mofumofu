@@ -4,6 +4,8 @@
 **/*.tgz
 **/*.log
 
+dist/
+
 package-lock.json
 **/*.bun
 
