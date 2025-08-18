@@ -66,3 +66,15 @@ pub enum TargetType {
     #[sea_orm(iden = "follow")]
     Follow,
 }
+
+#[derive(DeriveIden, EnumIter)]
+pub enum UserRole {
+    #[sea_orm(iden = "user_role")]
+    Table,
+    #[sea_orm(iden = "member")]
+    Member,
+    #[sea_orm(iden = "moderator")]
+    Moderator,
+    #[sea_orm(iden = "admin")]
+    Admin,
+}
