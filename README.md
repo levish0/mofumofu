@@ -55,7 +55,7 @@ graph TB
     end
 
     subgraph "Background Processing"
-        WORKER[⚙️ Celery Workers<br/>Image Processing, Search]
+        WORKER[⚙️ Celery Workers<br/>Cron, Search]
         BEAT[📅 Celery Beat<br/>Scheduled Tasks]
         FLOWER[🌸 Flower<br/>Task Monitor]
     end
