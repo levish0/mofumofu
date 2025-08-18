@@ -1,6 +1,6 @@
 [project]
 name = "tasks"
-version = "0.6.9"
+version = "0.7.2"
 description = "A soft and simple blogging platform for everyone."
 requires-python = ">=3.10"
 dependencies = [
