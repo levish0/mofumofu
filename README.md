@@ -89,18 +89,18 @@ graph TB
 
 ### 🧩 Component Overview
 
-| Component            | Technology                           | Purpose                                 | Port |
-| -------------------- | ------------------------------------ | --------------------------------------- | ---- |
-| **Web UI**           | SvelteKit 5, TypeScript, TailwindCSS | User interface and experience           | 5173 |
-| **Desktop App**      | Tauri + Svelte                       | Native desktop application              | -    |
-| **Main API**         | Rust + Axum + SeaORM                 | Core business logic and REST API        | 8000 |
-| **Tasks API**        | Python + FastAPI + Celery            | Background task processing              | 7000 |
-| **Markdown Service** | Bun + Elysia                         | High-performance markdown rendering     | 6700 |
-| **Celery Workers**   | Python + Celery                      | Async image processing, search indexing | -    |
-| **PostgreSQL**       | Database                             | Primary data storage                    | 5432 |
-| **Redis**            | Cache/Broker                         | Session storage, task queue             | 6379 |
-| **Meilisearch**      | Search Engine                        | Full-text search and indexing           | 7700 |
-| **Cloudflare R2**    | Object Storage                       | Image and file storage                  | -    |
+| Component            | Technology                           | Purpose                                 | Port           |
+| -------------------- | ------------------------------------ | --------------------------------------- | -------------- |
+| **Web UI**           | SvelteKit 5, TypeScript, TailwindCSS | User interface and experience           | 5173(dev)      |
+| **Desktop App**      | Tauri + Svelte                       | Native desktop application              | -              |
+| **Main API**         | Rust + Axum + SeaORM                 | Core business logic and REST API        | 8000           |
+| **Tasks API**        | Python + FastAPI + Celery            | Background task processing              | 7000(internal) |
+| **Markdown Service** | Bun + Elysia                         | High-performance markdown rendering     | 6700(internal) |
+| **Celery Workers**   | Python + Celery                      | Async image processing, search indexing | -              |
+| **PostgreSQL**       | Database                             | Primary data storage                    | 5432(internal) |
+| **Redis**            | Cache/Broker                         | Session storage, task queue             | 6379(internal) |
+| **Meilisearch**      | Search Engine                        | Full-text search and indexing           | 7700(internal) |
+| **Cloudflare R2**    | Object Storage                       | Image and file storage                  | -              |
 
 ---
 
