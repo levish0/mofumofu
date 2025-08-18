@@ -14,7 +14,7 @@ The frontend for Mofumofu - a soft and simple blogging platform.
 
 ## ✨ Overview
 
-**mofumofu-ui** is the frontend component library for [Mofumofu](../README.md), an open-source minimalist blogging platform. Built with Svelte 5, it provides the complete user interface for the blogging experience including post creation, user profiles, authentication, and responsive design components.
+**mofumofu-ui** is the frontend for [Mofumofu](../README.md), an open-source minimalist blogging platform. Built with Svelte 5, it provides the complete user interface for the blogging experience including post creation, user profiles, authentication, and responsive design components.
 
 ### 🎯 Key Features
 
