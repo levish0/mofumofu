@@ -79,7 +79,6 @@ pub enum Errors {
     UserNotVerified,
     UserNotFound,     // 사용자를 찾을 수 없음
     UserUnauthorized, // 인증되지 않은 사용자
-    UserHandleGenerationFailed,
     UserHandleAlreadyExists, // 핸들이 이미 존재함
     UserTokenExpired,        // 만료된 토큰
     UserNoRefreshToken,
@@ -131,7 +130,6 @@ impl IntoResponse for Errors {
             Errors::TransactionError(_) |
             Errors::HashingError(_) |
             Errors::TokenCreationError(_) |
-            Errors::UserHandleGenerationFailed |
             Errors::OauthUserInfoParseFailed => {
                 error!("System error occurred: {:?}", self);
             }
@@ -178,11 +176,6 @@ impl IntoResponse for Errors {
             Errors::UserNotVerified => (StatusCode::UNAUTHORIZED, USER_NOT_VERIFIED, None),
             Errors::UserNotFound => (StatusCode::NOT_FOUND, USER_NOT_FOUND, None),
             Errors::UserUnauthorized => (StatusCode::UNAUTHORIZED, USER_UNAUTHORIZED, None),
-            Errors::UserHandleGenerationFailed => (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                USER_HANDLE_GENERATION_FAILED,
-                None,
-            ),
             Errors::UserHandleAlreadyExists => {
                 (StatusCode::CONFLICT, USER_HANDLE_ALREADY_EXISTS, None)
             }
