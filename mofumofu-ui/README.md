@@ -4,7 +4,7 @@
 
 <img src="../assets/mofumofu_kawaii_mini.svg" alt="もふもふ" width="300"/>
 
-The frontend for Mofumofu - a soft and simple blogging platform.
+The frontend component library for Mofumofu - a soft and simple blogging platform.
 
 [![Svelte](https://img.shields.io/badge/Built%20with-Svelte%205-ff3e00.svg)](https://svelte.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
@@ -14,7 +14,7 @@ The frontend for Mofumofu - a soft and simple blogging platform.
 
 ## ✨ Overview
 
-**mofumofu-ui** is the frontend for [Mofumofu](../README.md), an open-source minimalist blogging platform. Built with Svelte 5, it provides the complete user interface for the blogging experience including post creation, user profiles, authentication, and responsive design components.
+**mofumofu-ui** is the frontend component library for [Mofumofu](../README.md), an open-source minimalist blogging platform. Built with Svelte 5, it provides the complete user interface for the blogging experience including post creation, user profiles, authentication, and responsive design components.
 
 ### 🎯 Key Features
 
