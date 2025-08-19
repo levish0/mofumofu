@@ -1,5 +1,6 @@
 use crate::dto::comment::response::CommentInfo;
 use crate::repository::comment::get_comment_by_id::repository_get_comment_by_id;
+use crate::repository::comment::get_reply_count::repository_get_reply_count;
 use crate::repository::like::check_like_status::repository_check_like_status_by_comment_id;
 use crate::repository::like::get_like_count::repository_get_like_count_by_comment_id;
 use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
@@ -20,6 +21,7 @@ where
         .ok_or(Errors::CommentNotFound)?;
     
     let like_count = repository_get_like_count_by_comment_id(conn, comment.id).await? as i32;
+    let reply_count = repository_get_reply_count(conn, comment.id).await? as i32;
     
     let is_liked = if let Some(uid) = user_id {
         repository_check_like_status_by_comment_id(conn, uid, &comment.id).await?
@@ -39,6 +41,7 @@ where
             user_profile_image: None,
             parent_id: comment.parent_id,
             like_count,
+            reply_count,
             is_liked,
             is_deleted: comment.is_deleted,
             created_at: comment.created_at,
@@ -58,6 +61,7 @@ where
             user_profile_image: user.profile_image,
             parent_id: comment.parent_id,
             like_count,
+            reply_count,
             is_liked,
             is_deleted: comment.is_deleted,
             created_at: comment.created_at,

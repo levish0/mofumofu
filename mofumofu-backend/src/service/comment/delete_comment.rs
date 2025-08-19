@@ -1,7 +1,8 @@
 use crate::dto::comment::request::DeleteCommentRequest;
 use crate::repository::comment::delete_comment::repository_delete_comment;
 use crate::repository::comment::get_comment_by_id::repository_get_comment_by_id;
-use crate::repository::post::increment_comment_count::repository_decrement_comment_count;
+use crate::repository::comment::update_reply_count::repository_decrement_reply_count;
+use crate::repository::post::update_comment_count::repository_decrement_comment_count;
 use crate::service::error::errors::{Errors, ServiceResult};
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use uuid::Uuid;
@@ -35,6 +36,11 @@ where
     
     // 포스트 댓글 수 감소
     repository_decrement_comment_count(&txn, &comment.post_id).await?;
+    
+    // 부모 댓글이 있다면 답글 수 감소
+    if let Some(parent_id) = comment.parent_id {
+        repository_decrement_reply_count(&txn, &parent_id).await?;
+    }
     
     txn.commit().await?;
     Ok(())

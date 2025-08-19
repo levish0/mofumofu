@@ -30,6 +30,9 @@ pub struct Model {
 
     #[sea_orm(column_type = "Integer", not_null, default_value = "0")]
     pub like_count: i32,
+
+    #[sea_orm(column_type = "Integer", not_null, default_value = "0")]
+    pub reply_count: i32,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

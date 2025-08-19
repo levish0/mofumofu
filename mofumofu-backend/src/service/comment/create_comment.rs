@@ -1,7 +1,8 @@
 use crate::dto::comment::request::CreateCommentRequest;
 use crate::repository::comment::create_comment::repository_create_comment;
+use crate::repository::comment::update_reply_count::repository_increment_reply_count;
 use crate::repository::post::get_post_by_uuid::repository_get_post_by_uuid;
-use crate::repository::post::increment_comment_count::repository_increment_comment_count;
+use crate::repository::post::update_comment_count::repository_increment_comment_count;
 use crate::service::error::errors::{Errors, ServiceResult};
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use uuid::Uuid;
@@ -40,6 +41,11 @@ where
     
     // 포스트 댓글 수 증가
     repository_increment_comment_count(&txn, &request.post_id).await?;
+    
+    // 부모 댓글이 있다면 답글 수 증가
+    if let Some(parent_id) = request.parent_id {
+        repository_increment_reply_count(&txn, &parent_id).await?;
+    }
     
     txn.commit().await?;
     Ok(())

@@ -3,9 +3,14 @@
 	"info": {
 		"title": "mofumofu-backend",
 		"description": "A soft and simple blogging platform for everyone.",
-		"contact": { "name": "Levi Lim", "email": "shiueo.csh@gmail.com" },
-		"license": { "name": "" },
-		"version": "0.6.9"
+		"contact": {
+			"name": "Levi Lim",
+			"email": "shiueo.csh@gmail.com"
+		},
+		"license": {
+			"name": ""
+		},
+		"version": "0.7.2"
 	},
 	"paths": {
 		"/v0/auth/forgot_password": {
@@ -13,14 +18,28 @@
 				"tags": ["Auth"],
 				"operationId": "forgot_password",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ForgotPasswordRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ForgotPasswordRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
-					"200": { "description": "Password reset email sent if account exists" },
-					"400": { "description": "Invalid email format" },
-					"422": { "description": "Validation error" },
-					"500": { "description": "Internal server error" }
+					"200": {
+						"description": "Password reset email sent if account exists"
+					},
+					"400": {
+						"description": "Invalid email format"
+					},
+					"422": {
+						"description": "Validation error"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
 				}
 			}
 		},
@@ -29,19 +48,41 @@
 				"tags": ["Auth"],
 				"operationId": "github_sign_in",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GithubLoginRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GithubLoginRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "GitHub OAuth login successful",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthJWTResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthJWTResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid authorization code" },
-					"401": { "description": "OAuth authentication failed" },
-					"409": { "description": "Handle already exists" },
-					"422": { "description": "Validation error" },
-					"500": { "description": "Internal server error" }
+					"400": {
+						"description": "Invalid authorization code"
+					},
+					"401": {
+						"description": "OAuth authentication failed"
+					},
+					"409": {
+						"description": "Handle already exists"
+					},
+					"422": {
+						"description": "Validation error"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
 				}
 			}
 		},
@@ -50,19 +91,41 @@
 				"tags": ["Auth"],
 				"operationId": "google_sign_in",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GoogleLoginRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GoogleLoginRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "Google OAuth login successful",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthJWTResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthJWTResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid authorization code" },
-					"401": { "description": "OAuth authentication failed" },
-					"409": { "description": "Handle already exists" },
-					"422": { "description": "Validation error" },
-					"500": { "description": "Internal server error" }
+					"400": {
+						"description": "Invalid authorization code"
+					},
+					"401": {
+						"description": "OAuth authentication failed"
+					},
+					"409": {
+						"description": "Handle already exists"
+					},
+					"422": {
+						"description": "Validation error"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
 				}
 			}
 		},
@@ -71,18 +134,43 @@
 				"tags": ["Auth"],
 				"operationId": "link_oauth",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/LinkOAuthRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LinkOAuthRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
-					"200": { "description": "OAuth account linked successfully" },
-					"400": { "description": "OAuth account already linked or invalid request" },
-					"401": { "description": "Unauthorized" },
-					"404": { "description": "User not found" },
-					"422": { "description": "Validation error" },
-					"500": { "description": "Internal server error" }
+					"200": {
+						"description": "OAuth account linked successfully"
+					},
+					"400": {
+						"description": "OAuth errors: oauth:invalid_auth_url, oauth:invalid_token_url, oauth:invalid_redirect_url, oauth:token_exchange_failed, oauth:user_info_fetch_failed, oauth:invalid_image_url"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"404": {
+						"description": "User not found"
+					},
+					"409": {
+						"description": "OAuth account already linked: oauth:account_already_linked"
+					},
+					"422": {
+						"description": "Validation error"
+					},
+					"500": {
+						"description": "Internal server error or oauth:user_info_parse_failed"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			}
 		},
 		"/v0/auth/oauth-connections": {
@@ -92,13 +180,29 @@
 				"responses": {
 					"200": {
 						"description": "OAuth connections retrieved successfully",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/OAuthConnectionsResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OAuthConnectionsResponse"
+								}
+							}
+						}
 					},
-					"401": { "description": "Unauthorized" },
-					"404": { "description": "User not found" },
-					"500": { "description": "Internal server error" }
+					"401": {
+						"description": "Unauthorized"
+					},
+					"404": {
+						"description": "User not found"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			}
 		},
 		"/v0/auth/refresh": {
@@ -108,14 +212,32 @@
 				"responses": {
 					"200": {
 						"description": "Token refresh successful",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthJWTResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthJWTResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "No refresh token cookie found" },
-					"401": { "description": "Refresh token cookie exists but is invalid or malformed" },
-					"404": { "description": "User not found" },
-					"500": { "description": "Internal server error" }
+					"400": {
+						"description": "No refresh token cookie found"
+					},
+					"401": {
+						"description": "Refresh token cookie exists but is invalid or malformed"
+					},
+					"404": {
+						"description": "User not found"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
 				},
-				"security": [{ "refresh_token_cookie": [] }]
+				"security": [
+					{
+						"refresh_token_cookie": []
+					}
+				]
 			}
 		},
 		"/v0/auth/resend_verification": {
@@ -123,15 +245,31 @@
 				"tags": ["Auth"],
 				"operationId": "resend_verification",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ResendVerificationRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ResendVerificationRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
-					"200": { "description": "Verification email sent successfully" },
-					"400": { "description": "Email already verified or invalid request" },
-					"404": { "description": "User not found" },
-					"422": { "description": "Validation error" },
-					"500": { "description": "Internal server error" }
+					"200": {
+						"description": "Verification email sent successfully"
+					},
+					"400": {
+						"description": "Email already verified: email:already_verified"
+					},
+					"404": {
+						"description": "User not found"
+					},
+					"422": {
+						"description": "Validation error"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
 				}
 			}
 		},
@@ -140,15 +278,31 @@
 				"tags": ["Auth"],
 				"operationId": "reset_password",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ResetPasswordRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ResetPasswordRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
-					"200": { "description": "Password reset successfully" },
-					"400": { "description": "Invalid or expired token" },
-					"404": { "description": "User not found" },
-					"422": { "description": "Validation error" },
-					"500": { "description": "Internal server error" }
+					"200": {
+						"description": "Password reset successfully"
+					},
+					"400": {
+						"description": "Token errors: token:invalid_reset, token:expired_reset, token:email_mismatch"
+					},
+					"404": {
+						"description": "User not found"
+					},
+					"422": {
+						"description": "Validation error"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
 				}
 			}
 		},
@@ -157,18 +311,40 @@
 				"tags": ["Auth"],
 				"operationId": "set_password",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/SetPasswordRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SetPasswordRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
-					"200": { "description": "Password set successfully" },
-					"400": { "description": "User already has password or invalid request" },
-					"401": { "description": "Unauthorized" },
-					"404": { "description": "User not found" },
-					"422": { "description": "Validation error" },
-					"500": { "description": "Internal server error" }
+					"200": {
+						"description": "Password set successfully"
+					},
+					"400": {
+						"description": "Password already set: password:already_set"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"404": {
+						"description": "User not found"
+					},
+					"422": {
+						"description": "Validation error"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			}
 		},
 		"/v0/auth/sign_in": {
@@ -176,19 +352,41 @@
 				"tags": ["Auth"],
 				"operationId": "sign_in",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthLoginRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AuthLoginRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "Login successful",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthJWTResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthJWTResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid request" },
-					"401": { "description": "Invalid credentials" },
-					"404": { "description": "User not found" },
-					"422": { "description": "Validation error" },
-					"500": { "description": "Internal server error" }
+					"400": {
+						"description": "Invalid request"
+					},
+					"401": {
+						"description": "Invalid credentials"
+					},
+					"404": {
+						"description": "User not found"
+					},
+					"422": {
+						"description": "Validation error"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
 				}
 			}
 		},
@@ -197,13 +395,27 @@
 				"tags": ["Auth"],
 				"operationId": "sign_out",
 				"responses": {
-					"204": { "description": "Sign out successful (refresh token cookie deleted)" },
-					"400": { "description": "No refresh token cookie found" },
-					"401": { "description": "Refresh token cookie exists but is invalid or malformed" },
-					"404": { "description": "User not found" },
-					"500": { "description": "Internal server error" }
+					"204": {
+						"description": "Sign out successful (refresh token cookie deleted)"
+					},
+					"400": {
+						"description": "No refresh token cookie found"
+					},
+					"401": {
+						"description": "Refresh token cookie exists but is invalid or malformed"
+					},
+					"404": {
+						"description": "User not found"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
 				},
-				"security": [{ "refresh_token_cookie": [] }]
+				"security": [
+					{
+						"refresh_token_cookie": []
+					}
+				]
 			}
 		},
 		"/v0/auth/sign_up": {
@@ -211,15 +423,31 @@
 				"tags": ["Auth"],
 				"operationId": "sign_up",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateUserRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateUserRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
-					"204": { "description": "User created successfully, verification email sent" },
-					"400": { "description": "Invalid input" },
-					"409": { "description": "Handle or email already exists" },
-					"422": { "description": "Validation error" },
-					"500": { "description": "Internal server error" }
+					"204": {
+						"description": "User created successfully, verification email sent"
+					},
+					"400": {
+						"description": "Invalid input"
+					},
+					"409": {
+						"description": "Handle or email already exists"
+					},
+					"422": {
+						"description": "Validation error"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
 				}
 			}
 		},
@@ -228,18 +456,40 @@
 				"tags": ["Auth"],
 				"operationId": "unlink_oauth",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/UnlinkOAuthRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UnlinkOAuthRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
-					"200": { "description": "OAuth connection removed successfully" },
-					"400": { "description": "Cannot unlink last OAuth connection or connection not found" },
-					"401": { "description": "Unauthorized" },
-					"404": { "description": "User not found" },
-					"422": { "description": "Validation error" },
-					"500": { "description": "Internal server error" }
+					"200": {
+						"description": "OAuth connection removed successfully"
+					},
+					"400": {
+						"description": "Cannot unlink last OAuth connection: oauth:cannot_unlink_last_connection"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"404": {
+						"description": "User not found or OAuth connection not found: oauth:connection_not_found"
+					},
+					"422": {
+						"description": "Validation error"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			}
 		},
 		"/v0/auth/verify_email": {
@@ -247,16 +497,357 @@
 				"tags": ["Auth"],
 				"operationId": "verify_email",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/VerifyEmailRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/VerifyEmailRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
-					"200": { "description": "Email verified successfully" },
-					"400": { "description": "Invalid or expired token" },
-					"404": { "description": "User not found" },
-					"422": { "description": "Validation error" },
-					"500": { "description": "Internal server error" }
+					"200": {
+						"description": "Email verified successfully"
+					},
+					"400": {
+						"description": "Token errors: token:invalid_verification, token:expired_verification, token:email_mismatch, email:already_verified"
+					},
+					"404": {
+						"description": "User not found"
+					},
+					"422": {
+						"description": "Validation error"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
 				}
+			}
+		},
+		"/v0/comment": {
+			"put": {
+				"tags": ["Comment"],
+				"operationId": "update_comment",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateCommentRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"204": {
+						"description": "Comment updated successfully"
+					},
+					"401": {
+						"description": "Not authorized to update this comment"
+					},
+					"404": {
+						"description": "Comment not found"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			},
+			"post": {
+				"tags": ["Comment"],
+				"operationId": "create_comment",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateCommentRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"204": {
+						"description": "Comment created successfully"
+					},
+					"400": {
+						"description": "Invalid parent comment or Cannot reply to deleted comment"
+					},
+					"404": {
+						"description": "Post not found or Parent comment not found"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			},
+			"delete": {
+				"tags": ["Comment"],
+				"operationId": "delete_comment",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DeleteCommentRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"204": {
+						"description": "Comment deleted successfully"
+					},
+					"401": {
+						"description": "Not authorized to delete this comment"
+					},
+					"404": {
+						"description": "Comment not found"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			}
+		},
+		"/v0/comment/get": {
+			"post": {
+				"tags": ["Comment"],
+				"operationId": "get_comment_by_id",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GetCommentByIdRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Comment retrieved successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CommentInfo"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Comment not found"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			}
+		},
+		"/v0/comment/like": {
+			"post": {
+				"tags": ["Like"],
+				"operationId": "create_comment_like",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateCommentLikeRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"204": {
+						"description": "Comment liked successfully"
+					},
+					"404": {
+						"description": "Comment not found"
+					},
+					"409": {
+						"description": "Already liked: like:already_exists"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			},
+			"delete": {
+				"tags": ["Like"],
+				"operationId": "delete_comment_like",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DeleteCommentLikeRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"204": {
+						"description": "Comment unliked successfully"
+					},
+					"404": {
+						"description": "Comment not found or Like not found: like:not_found"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			}
+		},
+		"/v0/comment/like/status": {
+			"post": {
+				"tags": ["Like"],
+				"operationId": "check_comment_like_status",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CheckCommentLikeStatusRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Comment like status retrieved successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LikeStatusResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid input"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			}
+		},
+		"/v0/comment/list": {
+			"post": {
+				"tags": ["Comment"],
+				"operationId": "get_comments",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GetCommentsRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Comments retrieved successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetCommentsResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid input"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			}
+		},
+		"/v0/comment/replies": {
+			"post": {
+				"tags": ["Comment"],
+				"operationId": "get_replies",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GetRepliesRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Replies retrieved successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetRepliesResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid input"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			}
 		},
 		"/v0/follow": {
@@ -264,33 +855,73 @@
 				"tags": ["Follow"],
 				"operationId": "api_create_follow",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateFollowRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateFollowRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
-					"204": { "description": "Successfully followed user" },
-					"400": { "description": "Bad request" },
-					"401": { "description": "Unauthorized" },
-					"404": { "description": "User not found" },
-					"409": { "description": "Already following this user" },
-					"422": { "description": "Cannot follow yourself" },
-					"500": { "description": "Internal server error" }
+					"204": {
+						"description": "Successfully followed user"
+					},
+					"400": {
+						"description": "Bad request"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"404": {
+						"description": "User not found"
+					},
+					"409": {
+						"description": "Already following this user"
+					},
+					"422": {
+						"description": "Cannot follow yourself"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			},
 			"delete": {
 				"tags": ["Follow"],
 				"operationId": "api_delete_follow",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/DeleteFollowRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DeleteFollowRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
-					"204": { "description": "Successfully unfollowed user" },
-					"400": { "description": "Bad request" },
-					"404": { "description": "User not found" }
+					"204": {
+						"description": "Successfully unfollowed user"
+					},
+					"400": {
+						"description": "Bad request"
+					},
+					"404": {
+						"description": "User not found"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			}
 		},
 		"/v0/follow/follower-count": {
@@ -298,16 +929,32 @@
 				"tags": ["Follow"],
 				"operationId": "api_get_follower_count",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetFollowCountRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GetFollowCountRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "Successfully retrieved follower count",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/FollowCountResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FollowCountResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid input" },
-					"404": { "description": "User not found" }
+					"400": {
+						"description": "Invalid input"
+					},
+					"404": {
+						"description": "User not found"
+					}
 				}
 			}
 		},
@@ -316,16 +963,32 @@
 				"tags": ["Follow"],
 				"operationId": "api_get_following_count",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetFollowCountRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GetFollowCountRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "Successfully retrieved following count",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/FollowCountResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FollowCountResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid input" },
-					"404": { "description": "User not found" }
+					"400": {
+						"description": "Invalid input"
+					},
+					"404": {
+						"description": "User not found"
+					}
 				}
 			}
 		},
@@ -334,18 +997,38 @@
 				"tags": ["Follow"],
 				"operationId": "api_check_follow_status",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CheckFollowStatusRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CheckFollowStatusRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "Follow status retrieved successfully",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/FollowStatusResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FollowStatusResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Bad request" },
-					"404": { "description": "User not found" }
+					"400": {
+						"description": "Bad request"
+					},
+					"404": {
+						"description": "User not found"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			}
 		},
 		"/v0/followers/{handle}": {
@@ -358,29 +1041,47 @@
 						"in": "path",
 						"description": "User handle",
 						"required": true,
-						"schema": { "type": "string" }
+						"schema": {
+							"type": "string"
+						}
 					},
 					{
 						"name": "page",
 						"in": "query",
 						"description": "Page number (default: 1)",
 						"required": false,
-						"schema": { "type": "integer", "format": "int64", "minimum": 0 }
+						"schema": {
+							"type": "integer",
+							"format": "int64",
+							"minimum": 0
+						}
 					},
 					{
 						"name": "per_page",
 						"in": "query",
 						"description": "Items per page (default: 20)",
 						"required": false,
-						"schema": { "type": "integer", "format": "int64", "minimum": 0 }
+						"schema": {
+							"type": "integer",
+							"format": "int64",
+							"minimum": 0
+						}
 					}
 				],
 				"responses": {
 					"200": {
 						"description": "Followers list",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/FollowListResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FollowListResponse"
+								}
+							}
+						}
 					},
-					"404": { "description": "User not found" }
+					"404": {
+						"description": "User not found"
+					}
 				}
 			}
 		},
@@ -394,29 +1095,47 @@
 						"in": "path",
 						"description": "User handle",
 						"required": true,
-						"schema": { "type": "string" }
+						"schema": {
+							"type": "string"
+						}
 					},
 					{
 						"name": "page",
 						"in": "query",
 						"description": "Page number (default: 1)",
 						"required": false,
-						"schema": { "type": "integer", "format": "int64", "minimum": 0 }
+						"schema": {
+							"type": "integer",
+							"format": "int64",
+							"minimum": 0
+						}
 					},
 					{
 						"name": "per_page",
 						"in": "query",
 						"description": "Items per page (default: 20)",
 						"required": false,
-						"schema": { "type": "integer", "format": "int64", "minimum": 0 }
+						"schema": {
+							"type": "integer",
+							"format": "int64",
+							"minimum": 0
+						}
 					}
 				],
 				"responses": {
 					"200": {
 						"description": "Following list",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/FollowListResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FollowListResponse"
+								}
+							}
+						}
 					},
-					"404": { "description": "User not found" }
+					"404": {
+						"description": "User not found"
+					}
 				}
 			}
 		},
@@ -425,16 +1144,32 @@
 				"tags": ["Hashtag"],
 				"operationId": "trending_hashtags",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/TrendingHashtagsRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/TrendingHashtagsRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "Trending hashtags retrieved successfully",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/TrendingHashtagsResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TrendingHashtagsResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid input" },
-					"500": { "description": "Internal Server Error" }
+					"400": {
+						"description": "Invalid input"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
 				}
 			}
 		},
@@ -443,31 +1178,64 @@
 				"tags": ["Like"],
 				"operationId": "create_like",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateLikeRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateLikeRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
-					"204": { "description": "Post liked successfully" },
-					"400": { "description": "Invalid input or already liked" },
-					"404": { "description": "Post not found" },
-					"500": { "description": "Internal Server Error" }
+					"204": {
+						"description": "Post liked successfully"
+					},
+					"404": {
+						"description": "Post not found"
+					},
+					"409": {
+						"description": "Already liked: like:already_exists"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			},
 			"delete": {
 				"tags": ["Like"],
 				"operationId": "delete_like",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/DeleteLikeRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DeleteLikeRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
-					"204": { "description": "Post unliked successfully" },
-					"400": { "description": "Invalid input or like not found" },
-					"404": { "description": "Post not found" },
-					"500": { "description": "Internal Server Error" }
+					"204": {
+						"description": "Post unliked successfully"
+					},
+					"404": {
+						"description": "Post not found or Like not found: like:not_found"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			}
 		},
 		"/v0/like/status": {
@@ -475,19 +1243,41 @@
 				"tags": ["Like"],
 				"operationId": "check_like_status",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CheckLikeStatusRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CheckLikeStatusRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "Like status retrieved successfully",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/LikeStatusResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LikeStatusResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid input" },
-					"401": { "description": "Unauthorized" },
-					"500": { "description": "Internal Server Error" }
+					"400": {
+						"description": "Invalid input"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			}
 		},
 		"/v0/post": {
@@ -495,51 +1285,113 @@
 				"tags": ["Post"],
 				"operationId": "update_post",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdatePostRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdatePostRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
-					"204": { "description": "Post updated successfully" },
-					"400": { "description": "Invalid input" },
-					"401": { "description": "Unauthorized or email not verified" },
-					"404": { "description": "Post not found" },
-					"500": { "description": "Internal Server Error" }
+					"204": {
+						"description": "Post updated successfully"
+					},
+					"400": {
+						"description": "Invalid input"
+					},
+					"401": {
+						"description": "Unauthorized or email not verified"
+					},
+					"404": {
+						"description": "Post not found"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			},
 			"post": {
 				"tags": ["Post"],
 				"operationId": "create_post",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreatePostRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreatePostRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"201": {
 						"description": "Post created successfully",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreatePostResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CreatePostResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid input" },
-					"401": { "description": "Unauthorized or email not verified" },
-					"500": { "description": "Internal Server Error" }
+					"400": {
+						"description": "Markdown render failed: markdown:render_failed"
+					},
+					"401": {
+						"description": "Unauthorized or email not verified"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			},
 			"delete": {
 				"tags": ["Post"],
 				"operationId": "delete_post",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/DeletePostRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DeletePostRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
-					"204": { "description": "Post deleted successfully" },
-					"400": { "description": "Invalid input" },
-					"401": { "description": "Unauthorized or email not verified" },
-					"404": { "description": "Post not found" },
-					"500": { "description": "Internal Server Error" }
+					"204": {
+						"description": "Post deleted successfully"
+					},
+					"400": {
+						"description": "Invalid input"
+					},
+					"401": {
+						"description": "Unauthorized or email not verified"
+					},
+					"404": {
+						"description": "Post not found"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			}
 		},
 		"/v0/post/edit": {
@@ -547,19 +1399,41 @@
 				"tags": ["Post"],
 				"operationId": "get_post_for_edit",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetPostForEditRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GetPostForEditRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "Post retrieved for editing successfully",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/PostEditInfoResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PostEditInfoResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid input" },
-					"404": { "description": "Post not found" },
-					"500": { "description": "Internal Server Error" }
+					"400": {
+						"description": "Invalid input"
+					},
+					"404": {
+						"description": "Post not found"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			}
 		},
 		"/v0/post/get": {
@@ -567,19 +1441,41 @@
 				"tags": ["Post"],
 				"operationId": "get_post",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetPostByUuidRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GetPostByUuidRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "Post retrieved successfully",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/PostInfoResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PostInfoResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid UUID format" },
-					"404": { "description": "Post not found" },
-					"500": { "description": "Internal Server Error" }
+					"400": {
+						"description": "Invalid UUID format"
+					},
+					"404": {
+						"description": "Post not found"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
 				},
-				"security": [{ "anonymous_id_cookie": [] }]
+				"security": [
+					{
+						"anonymous_id_cookie": []
+					}
+				]
 			}
 		},
 		"/v0/post/get_by_handle_and_slug": {
@@ -588,20 +1484,40 @@
 				"operationId": "get_post_by_handle_and_slug",
 				"requestBody": {
 					"content": {
-						"application/json": { "schema": { "$ref": "#/components/schemas/GetPostByHandleAndSlugRequest" } }
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GetPostByHandleAndSlugRequest"
+							}
+						}
 					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "Post retrieved successfully",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/PostInfoResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PostInfoResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid input" },
-					"404": { "description": "Post not found" },
-					"500": { "description": "Internal Server Error" }
+					"400": {
+						"description": "Invalid input"
+					},
+					"404": {
+						"description": "Post not found"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
 				},
-				"security": [{ "anonymous_id_cookie": [] }]
+				"security": [
+					{
+						"anonymous_id_cookie": []
+					}
+				]
 			}
 		},
 		"/v0/post/image": {
@@ -609,21 +1525,47 @@
 				"tags": ["Post"],
 				"operationId": "upload_image",
 				"requestBody": {
-					"content": { "multipart/form-data": { "schema": { "$ref": "#/components/schemas/ImageUploadForm" } } },
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"$ref": "#/components/schemas/ImageUploadForm"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "Image uploaded successfully",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ImageUploadResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ImageUploadResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid file or parameters" },
-					"401": { "description": "Unauthorized or email not verified" },
-					"413": { "description": "File too large" },
-					"422": { "description": "Unsupported image format" },
-					"500": { "description": "Internal server error" }
+					"400": {
+						"description": "File errors: file:not_found, file:read_error"
+					},
+					"401": {
+						"description": "Unauthorized or email not verified"
+					},
+					"413": {
+						"description": "File too large"
+					},
+					"422": {
+						"description": "Unsupported image format"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			}
 		},
 		"/v0/post/thumbnail": {
@@ -631,23 +1573,53 @@
 				"tags": ["Post"],
 				"operationId": "upload_thumbnail",
 				"requestBody": {
-					"content": { "multipart/form-data": { "schema": { "$ref": "#/components/schemas/PostThumbnailForm" } } },
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"$ref": "#/components/schemas/PostThumbnailForm"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "Thumbnail image uploaded successfully",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ThumbnailUploadResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ThumbnailUploadResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid file or parameters" },
-					"401": { "description": "Unauthorized or email not verified" },
-					"403": { "description": "Not the owner of the post" },
-					"404": { "description": "Post not found" },
-					"413": { "description": "File too large" },
-					"422": { "description": "Unsupported image format" },
-					"500": { "description": "Internal server error" }
+					"400": {
+						"description": "Invalid file or parameters"
+					},
+					"401": {
+						"description": "Unauthorized or email not verified"
+					},
+					"403": {
+						"description": "Not the owner of the post"
+					},
+					"404": {
+						"description": "Post not found"
+					},
+					"413": {
+						"description": "File too large"
+					},
+					"422": {
+						"description": "Unsupported image format"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			}
 		},
 		"/v0/post/view": {
@@ -655,16 +1627,34 @@
 				"tags": ["Post"],
 				"operationId": "increment_view",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetPostByUuidRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GetPostByUuidRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
-					"204": { "description": "View count incremented successfully" },
-					"400": { "description": "Invalid input" },
-					"404": { "description": "Post not found" },
-					"500": { "description": "Internal Server Error" }
+					"204": {
+						"description": "View count incremented successfully"
+					},
+					"400": {
+						"description": "Invalid input"
+					},
+					"404": {
+						"description": "Post not found"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
 				},
-				"security": [{ "anonymous_id_cookie": [] }]
+				"security": [
+					{
+						"anonymous_id_cookie": []
+					}
+				]
 			}
 		},
 		"/v0/posts": {
@@ -672,16 +1662,32 @@
 				"tags": ["Post"],
 				"operationId": "get_posts",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetPostsRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GetPostsRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "Posts retrieved successfully",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetPostsResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetPostsResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid input" },
-					"500": { "description": "Internal Server Error" }
+					"400": {
+						"description": "Invalid input"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
 				}
 			}
 		},
@@ -690,18 +1696,38 @@
 				"tags": ["Post"],
 				"operationId": "search_posts",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/SearchPostsRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SearchPostsRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "Posts search completed successfully",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetPostsResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetPostsResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid search parameters" },
-					"422": { "description": "Validation error" },
-					"500": { "description": "Internal server error" },
-					"503": { "description": "Search service unavailable" }
+					"400": {
+						"description": "Invalid search parameters"
+					},
+					"422": {
+						"description": "Validation error"
+					},
+					"500": {
+						"description": "Internal server error"
+					},
+					"503": {
+						"description": "Search service unavailable"
+					}
 				}
 			}
 		},
@@ -710,17 +1736,35 @@
 				"tags": ["Post"],
 				"operationId": "get_user_posts",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetUserPostsRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GetUserPostsRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "User posts retrieved successfully",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserPostsResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserPostsResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid input" },
-					"404": { "description": "User not found" },
-					"500": { "description": "Internal Server Error" }
+					"400": {
+						"description": "Invalid input"
+					},
+					"404": {
+						"description": "User not found"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
 				}
 			}
 		},
@@ -729,16 +1773,32 @@
 				"tags": ["User"],
 				"operationId": "check_handle_availability",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetUserProfileRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GetUserProfileRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "Handle availability check result",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/HandleCheckResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HandleCheckResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid input" },
-					"500": { "description": "Internal Server Error" }
+					"400": {
+						"description": "Invalid input"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
 				}
 			}
 		},
@@ -749,13 +1809,29 @@
 				"responses": {
 					"200": {
 						"description": "Successfully retrieved user profile",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserInfoResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserInfoResponse"
+								}
+							}
+						}
 					},
-					"401": { "description": "Unauthorized" },
-					"404": { "description": "User not found" },
-					"500": { "description": "Internal Server Error" }
+					"401": {
+						"description": "Unauthorized"
+					},
+					"404": {
+						"description": "User not found"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			}
 		},
 		"/v0/user/profile": {
@@ -763,37 +1839,81 @@
 				"tags": ["User"],
 				"operationId": "update_profile",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateProfileRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateProfileRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "Profile updated successfully",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserInfoResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserInfoResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid input" },
-					"401": { "description": "Unauthorized or email not verified" },
-					"404": { "description": "User not found" },
-					"409": { "description": "Handle already exists" },
-					"422": { "description": "Validation error" },
-					"500": { "description": "Internal server error" }
+					"400": {
+						"description": "Password related errors: password:required_for_update, password:incorrect, password:cannot_update_oauth_only, password:new_password_missing"
+					},
+					"401": {
+						"description": "Unauthorized or email not verified"
+					},
+					"404": {
+						"description": "User not found"
+					},
+					"409": {
+						"description": "Handle already exists"
+					},
+					"422": {
+						"description": "Validation error"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			},
 			"post": {
 				"tags": ["User"],
 				"operationId": "get_profile",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetUserProfileRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GetUserProfileRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "Successfully retrieved user information",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserInfoResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserInfoResponse"
+								}
+							}
+						}
 					},
-					"404": { "description": "User not found" },
-					"500": { "description": "Internal Server Error" }
+					"404": {
+						"description": "User not found"
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
 				}
 			}
 		},
@@ -802,20 +1922,44 @@
 				"tags": ["User"],
 				"operationId": "upload_avatar",
 				"requestBody": {
-					"content": { "multipart/form-data": { "schema": { "$ref": "#/components/schemas/ProfileAvatarForm" } } },
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"$ref": "#/components/schemas/ProfileAvatarForm"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "Profile image upload queued successfully",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ImageUploadResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ImageUploadResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid file or parameters" },
-					"401": { "description": "Unauthorized or email not verified" },
-					"413": { "description": "File too large" },
-					"500": { "description": "Internal server error" }
+					"400": {
+						"description": "File errors: file:not_found, file:read_error"
+					},
+					"401": {
+						"description": "Unauthorized or email not verified"
+					},
+					"413": {
+						"description": "File too large"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			}
 		},
 		"/v0/user/profile/banner": {
@@ -823,20 +1967,44 @@
 				"tags": ["User"],
 				"operationId": "upload_banner",
 				"requestBody": {
-					"content": { "multipart/form-data": { "schema": { "$ref": "#/components/schemas/ProfileBannerForm" } } },
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"$ref": "#/components/schemas/ProfileBannerForm"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "Banner image upload queued successfully",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ImageUploadResponse" } } }
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ImageUploadResponse"
+								}
+							}
+						}
 					},
-					"400": { "description": "Invalid file or parameters" },
-					"401": { "description": "Unauthorized or email not verified" },
-					"413": { "description": "File too large" },
-					"500": { "description": "Internal server error" }
+					"400": {
+						"description": "File errors: file:not_found, file:read_error"
+					},
+					"401": {
+						"description": "Unauthorized or email not verified"
+					},
+					"413": {
+						"description": "File too large"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
 				},
-				"security": [{ "bearer_auth": [] }]
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			}
 		}
 	},
@@ -845,219 +2013,692 @@
 			"AuthJWTResponse": {
 				"type": "object",
 				"required": ["access_token"],
-				"properties": { "access_token": { "type": "string" } }
+				"properties": {
+					"access_token": {
+						"type": "string"
+					}
+				}
 			},
 			"AuthLoginRequest": {
 				"type": "object",
 				"required": ["handle", "password"],
-				"properties": { "handle": { "type": "string" }, "password": { "type": "string" } }
+				"properties": {
+					"handle": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				}
+			},
+			"CheckCommentLikeStatusRequest": {
+				"type": "object",
+				"required": ["comment_id"],
+				"properties": {
+					"comment_id": {
+						"type": "string",
+						"format": "uuid"
+					}
+				}
 			},
 			"CheckFollowStatusRequest": {
 				"type": "object",
 				"required": ["handle"],
-				"properties": { "handle": { "type": "string" } }
+				"properties": {
+					"handle": {
+						"type": "string"
+					}
+				}
 			},
 			"CheckLikeStatusRequest": {
 				"type": "object",
 				"required": ["post_id"],
-				"properties": { "post_id": { "type": "string", "format": "uuid" } }
+				"properties": {
+					"post_id": {
+						"type": "string",
+						"format": "uuid"
+					}
+				}
+			},
+			"CommentInfo": {
+				"type": "object",
+				"required": ["id", "post_id", "like_count", "is_liked", "is_deleted", "created_at"],
+				"properties": {
+					"content": {
+						"type": ["string", "null"]
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"is_deleted": {
+						"type": "boolean"
+					},
+					"is_liked": {
+						"type": "boolean"
+					},
+					"like_count": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"parent_id": {
+						"type": ["string", "null"],
+						"format": "uuid"
+					},
+					"post_id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"updated_at": {
+						"type": ["string", "null"],
+						"format": "date-time"
+					},
+					"user_handle": {
+						"type": ["string", "null"]
+					},
+					"user_id": {
+						"type": ["string", "null"],
+						"format": "uuid"
+					},
+					"user_name": {
+						"type": ["string", "null"]
+					},
+					"user_profile_image": {
+						"type": ["string", "null"]
+					}
+				}
+			},
+			"CreateCommentLikeRequest": {
+				"type": "object",
+				"required": ["comment_id"],
+				"properties": {
+					"comment_id": {
+						"type": "string",
+						"format": "uuid"
+					}
+				}
+			},
+			"CreateCommentRequest": {
+				"type": "object",
+				"required": ["content", "post_id"],
+				"properties": {
+					"content": {
+						"type": "string"
+					},
+					"parent_id": {
+						"type": ["string", "null"],
+						"format": "uuid"
+					},
+					"post_id": {
+						"type": "string",
+						"format": "uuid"
+					}
+				}
 			},
 			"CreateFollowRequest": {
 				"type": "object",
 				"required": ["followee_handle"],
-				"properties": { "followee_handle": { "type": "string" } }
+				"properties": {
+					"followee_handle": {
+						"type": "string"
+					}
+				}
 			},
 			"CreateLikeRequest": {
 				"type": "object",
 				"required": ["post_id"],
-				"properties": { "post_id": { "type": "string", "format": "uuid" } }
+				"properties": {
+					"post_id": {
+						"type": "string",
+						"format": "uuid"
+					}
+				}
 			},
 			"CreatePostRequest": {
 				"type": "object",
 				"required": ["title", "content", "slug"],
 				"properties": {
-					"content": { "type": "string" },
-					"hashtags": { "type": ["array", "null"], "items": { "type": "string" } },
-					"slug": { "type": "string" },
-					"summary": { "type": ["string", "null"] },
-					"title": { "type": "string" }
+					"content": {
+						"type": "string"
+					},
+					"hashtags": {
+						"type": ["array", "null"],
+						"items": {
+							"type": "string"
+						}
+					},
+					"slug": {
+						"type": "string"
+					},
+					"summary": {
+						"type": ["string", "null"]
+					},
+					"title": {
+						"type": "string"
+					}
 				}
 			},
 			"CreatePostResponse": {
 				"type": "object",
 				"required": ["post_id"],
-				"properties": { "post_id": { "type": "string", "format": "uuid" } }
+				"properties": {
+					"post_id": {
+						"type": "string",
+						"format": "uuid"
+					}
+				}
 			},
 			"CreateUserRequest": {
 				"type": "object",
 				"required": ["name", "handle", "password", "email"],
 				"properties": {
-					"email": { "type": "string" },
-					"handle": { "type": "string" },
-					"name": { "type": "string" },
-					"password": { "type": "string" }
+					"email": {
+						"type": "string"
+					},
+					"handle": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				}
+			},
+			"DeleteCommentLikeRequest": {
+				"type": "object",
+				"required": ["comment_id"],
+				"properties": {
+					"comment_id": {
+						"type": "string",
+						"format": "uuid"
+					}
+				}
+			},
+			"DeleteCommentRequest": {
+				"type": "object",
+				"required": ["comment_id"],
+				"properties": {
+					"comment_id": {
+						"type": "string",
+						"format": "uuid"
+					}
 				}
 			},
 			"DeleteFollowRequest": {
 				"type": "object",
 				"required": ["followee_handle"],
-				"properties": { "followee_handle": { "type": "string" } }
+				"properties": {
+					"followee_handle": {
+						"type": "string"
+					}
+				}
 			},
 			"DeleteLikeRequest": {
 				"type": "object",
 				"required": ["post_id"],
-				"properties": { "post_id": { "type": "string", "format": "uuid" } }
+				"properties": {
+					"post_id": {
+						"type": "string",
+						"format": "uuid"
+					}
+				}
 			},
-			"DeletePostRequest": { "type": "object", "required": ["slug"], "properties": { "slug": { "type": "string" } } },
+			"DeletePostRequest": {
+				"type": "object",
+				"required": ["slug"],
+				"properties": {
+					"slug": {
+						"type": "string"
+					}
+				}
+			},
 			"ErrorResponse": {
 				"type": "object",
 				"required": ["status", "code"],
 				"properties": {
-					"code": { "type": "string" },
-					"details": { "type": ["string", "null"] },
-					"status": { "type": "integer", "format": "int32", "minimum": 0 }
+					"code": {
+						"type": "string"
+					},
+					"details": {
+						"type": ["string", "null"]
+					},
+					"status": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					}
 				}
 			},
 			"FollowCountResponse": {
 				"type": "object",
 				"required": ["count"],
-				"properties": { "count": { "type": "integer", "format": "int64", "minimum": 0 } }
+				"properties": {
+					"count": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 0
+					}
+				}
 			},
 			"FollowListResponse": {
 				"type": "object",
 				"required": ["users", "total_count", "page", "per_page", "has_more"],
 				"properties": {
-					"has_more": { "type": "boolean" },
-					"page": { "type": "integer", "format": "int64", "minimum": 0 },
-					"per_page": { "type": "integer", "format": "int64", "minimum": 0 },
-					"total_count": { "type": "integer", "format": "int64", "minimum": 0 },
-					"users": { "type": "array", "items": { "$ref": "#/components/schemas/UserInfoResponse" } }
+					"has_more": {
+						"type": "boolean"
+					},
+					"page": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 0
+					},
+					"per_page": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 0
+					},
+					"total_count": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 0
+					},
+					"users": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/UserInfoResponse"
+						}
+					}
 				}
 			},
 			"FollowStatusResponse": {
 				"type": "object",
 				"required": ["is_following"],
-				"properties": { "is_following": { "type": "boolean" } }
+				"properties": {
+					"is_following": {
+						"type": "boolean"
+					}
+				}
 			},
 			"ForgotPasswordRequest": {
 				"type": "object",
 				"required": ["email"],
-				"properties": { "email": { "type": "string" } }
+				"properties": {
+					"email": {
+						"type": "string"
+					}
+				}
+			},
+			"GetCommentByIdRequest": {
+				"type": "object",
+				"required": ["comment_id"],
+				"properties": {
+					"comment_id": {
+						"type": "string",
+						"format": "uuid"
+					}
+				}
+			},
+			"GetCommentsRequest": {
+				"type": "object",
+				"required": ["post_id"],
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
+					"per_page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
+					"post_id": {
+						"type": "string",
+						"format": "uuid"
+					}
+				}
+			},
+			"GetCommentsResponse": {
+				"type": "object",
+				"required": ["comments", "total_count", "page", "per_page", "has_next"],
+				"properties": {
+					"comments": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/CommentInfo"
+						}
+					},
+					"has_next": {
+						"type": "boolean"
+					},
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
+					"per_page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
+					"total_count": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 0
+					}
+				}
 			},
 			"GetFollowCountRequest": {
 				"type": "object",
 				"required": ["user_handle"],
-				"properties": { "user_handle": { "type": "string" } }
+				"properties": {
+					"user_handle": {
+						"type": "string"
+					}
+				}
 			},
 			"GetPostByHandleAndSlugRequest": {
 				"type": "object",
 				"required": ["handle", "slug"],
-				"properties": { "handle": { "type": "string" }, "slug": { "type": "string" } }
+				"properties": {
+					"handle": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					}
+				}
 			},
 			"GetPostByUuidRequest": {
 				"type": "object",
 				"required": ["post_id"],
-				"properties": { "post_id": { "type": "string", "format": "uuid" } }
+				"properties": {
+					"post_id": {
+						"type": "string",
+						"format": "uuid"
+					}
+				}
 			},
 			"GetPostForEditRequest": {
 				"type": "object",
 				"required": ["slug"],
-				"properties": { "slug": { "type": "string" } }
+				"properties": {
+					"slug": {
+						"type": "string"
+					}
+				}
 			},
 			"GetPostsRequest": {
 				"type": "object",
 				"properties": {
-					"page": { "type": ["integer", "null"], "format": "int32", "minimum": 0 },
-					"page_size": { "type": ["integer", "null"], "format": "int32", "minimum": 0 },
-					"sort": { "oneOf": [{ "type": "null" }, { "$ref": "#/components/schemas/PostSortOrder" }] }
+					"page": {
+						"type": ["integer", "null"],
+						"format": "int32",
+						"minimum": 0
+					},
+					"page_size": {
+						"type": ["integer", "null"],
+						"format": "int32",
+						"minimum": 0
+					},
+					"sort": {
+						"oneOf": [
+							{
+								"type": "null"
+							},
+							{
+								"$ref": "#/components/schemas/PostSortOrder"
+							}
+						]
+					}
 				}
 			},
 			"GetPostsResponse": {
 				"type": "object",
 				"required": ["posts", "current_page", "page_size", "has_more", "total_count"],
 				"properties": {
-					"current_page": { "type": "integer", "format": "int32", "minimum": 0 },
-					"has_more": { "type": "boolean" },
-					"page_size": { "type": "integer", "format": "int32", "minimum": 0 },
-					"posts": { "type": "array", "items": { "$ref": "#/components/schemas/PostListItem" } },
-					"total_count": { "type": "integer", "format": "int64", "minimum": 0 }
+					"current_page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
+					"has_more": {
+						"type": "boolean"
+					},
+					"page_size": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
+					"posts": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PostListItem"
+						}
+					},
+					"total_count": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 0
+					}
+				}
+			},
+			"GetRepliesRequest": {
+				"type": "object",
+				"required": ["parent_comment_id"],
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
+					"parent_comment_id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"per_page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					}
+				}
+			},
+			"GetRepliesResponse": {
+				"type": "object",
+				"required": ["replies", "total_count", "page", "per_page", "has_next"],
+				"properties": {
+					"has_next": {
+						"type": "boolean"
+					},
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
+					"per_page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
+					"replies": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/CommentInfo"
+						}
+					},
+					"total_count": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 0
+					}
 				}
 			},
 			"GetUserPostsRequest": {
 				"type": "object",
 				"required": ["user_handle"],
-				"properties": { "user_handle": { "type": "string" } }
+				"properties": {
+					"user_handle": {
+						"type": "string"
+					}
+				}
 			},
 			"GetUserProfileRequest": {
 				"type": "object",
 				"required": ["handle"],
-				"properties": { "handle": { "type": "string" } }
+				"properties": {
+					"handle": {
+						"type": "string"
+					}
+				}
 			},
 			"GithubLoginRequest": {
 				"type": "object",
 				"required": ["code"],
-				"properties": { "code": { "type": "string" }, "handle": { "type": ["string", "null"] } }
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"handle": {
+						"type": ["string", "null"]
+					}
+				}
 			},
 			"GoogleLoginRequest": {
 				"type": "object",
 				"required": ["code"],
-				"properties": { "code": { "type": "string" }, "handle": { "type": ["string", "null"] } }
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"handle": {
+						"type": ["string", "null"]
+					}
+				}
 			},
 			"HandleCheckResponse": {
 				"type": "object",
 				"required": ["is_available"],
-				"properties": { "is_available": { "type": "boolean" } }
+				"properties": {
+					"is_available": {
+						"type": "boolean"
+					}
+				}
 			},
 			"ImageUploadForm": {
 				"type": "object",
 				"required": ["file"],
-				"properties": { "file": { "type": "string", "format": "binary", "contentMediaType": "image/*" } }
+				"properties": {
+					"file": {
+						"type": "string",
+						"format": "binary",
+						"contentMediaType": "image/*"
+					}
+				}
 			},
 			"ImageUploadResponse": {
 				"type": "object",
 				"required": ["public_url"],
-				"properties": { "public_url": { "type": "string" } }
+				"properties": {
+					"public_url": {
+						"type": "string"
+					}
+				}
 			},
 			"LikeStatusResponse": {
 				"type": "object",
 				"required": ["is_liked"],
-				"properties": { "is_liked": { "type": "boolean" } }
+				"properties": {
+					"is_liked": {
+						"type": "boolean"
+					}
+				}
 			},
 			"LinkOAuthRequest": {
 				"type": "object",
 				"required": ["provider", "code"],
-				"properties": { "code": { "type": "string" }, "provider": { "$ref": "#/components/schemas/OAuthProvider" } }
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"provider": {
+						"$ref": "#/components/schemas/OAuthProvider"
+					}
+				}
 			},
 			"OAuthConnectionsResponse": {
 				"type": "object",
 				"required": ["connections", "is_oauth_only"],
 				"properties": {
-					"connections": { "type": "array", "items": { "$ref": "#/components/schemas/OAuthProvider" } },
-					"is_oauth_only": { "type": "boolean" }
+					"connections": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/OAuthProvider"
+						}
+					},
+					"is_oauth_only": {
+						"type": "boolean"
+					}
 				}
 			},
-			"OAuthProvider": { "type": "string", "enum": ["Google", "Github"] },
+			"OAuthProvider": {
+				"type": "string",
+				"enum": ["Google", "Github"]
+			},
 			"PostAuthor": {
 				"type": "object",
 				"required": ["handle", "name"],
 				"properties": {
-					"handle": { "type": "string" },
-					"name": { "type": "string" },
-					"profile_image": { "type": ["string", "null"] }
+					"handle": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"profile_image": {
+						"type": ["string", "null"]
+					}
 				}
 			},
 			"PostEditInfoResponse": {
 				"type": "object",
 				"required": ["id", "title", "content", "created_at", "slug", "tags"],
 				"properties": {
-					"content": { "type": "string" },
-					"created_at": { "type": "string", "format": "date-time" },
-					"id": { "type": "string", "format": "uuid" },
-					"slug": { "type": "string" },
-					"summary": { "type": ["string", "null"] },
-					"tags": { "type": "array", "items": { "type": "string" } },
-					"title": { "type": "string" },
-					"updated_at": { "type": ["string", "null"], "format": "date-time" }
+					"content": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"summary": {
+						"type": ["string", "null"]
+					},
+					"tags": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"title": {
+						"type": "string"
+					},
+					"updated_at": {
+						"type": ["string", "null"],
+						"format": "date-time"
+					}
 				}
 			},
 			"PostInfoResponse": {
@@ -1076,20 +2717,60 @@
 					"tags"
 				],
 				"properties": {
-					"author": { "$ref": "#/components/schemas/PostAuthor" },
-					"comment_count": { "type": "integer", "format": "int32" },
-					"created_at": { "type": "string", "format": "date-time" },
-					"id": { "type": "string", "format": "uuid" },
-					"like_count": { "type": "integer", "format": "int32" },
-					"rendered": { "type": "string" },
-					"slug": { "type": "string" },
-					"summary": { "type": ["string", "null"] },
-					"tags": { "type": "array", "items": { "type": "string" } },
-					"thumbnail_image": { "type": ["string", "null"] },
-					"title": { "type": "string" },
-					"toc_items": { "type": "array", "items": { "$ref": "#/components/schemas/TocItem" } },
-					"updated_at": { "type": ["string", "null"], "format": "date-time" },
-					"view_count": { "type": "integer", "format": "int32" }
+					"author": {
+						"$ref": "#/components/schemas/PostAuthor"
+					},
+					"comment_count": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"like_count": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"rendered": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"summary": {
+						"type": ["string", "null"]
+					},
+					"tags": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"thumbnail_image": {
+						"type": ["string", "null"]
+					},
+					"title": {
+						"type": "string"
+					},
+					"toc_items": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/TocItem"
+						}
+					},
+					"updated_at": {
+						"type": ["string", "null"],
+						"format": "date-time"
+					},
+					"view_count": {
+						"type": "integer",
+						"format": "int32"
+					}
 				}
 			},
 			"PostListItem": {
@@ -1107,49 +2788,116 @@
 					"hashtags"
 				],
 				"properties": {
-					"comment_count": { "type": "integer", "format": "int32" },
-					"created_at": { "type": "string", "format": "date-time" },
-					"hashtags": { "type": "array", "items": { "type": "string" } },
-					"id": { "type": "string", "format": "uuid" },
-					"like_count": { "type": "integer", "format": "int32" },
-					"slug": { "type": "string" },
-					"summary": { "type": ["string", "null"] },
-					"thumbnail_image": { "type": ["string", "null"] },
-					"title": { "type": "string" },
-					"user_avatar": { "type": ["string", "null"] },
-					"user_handle": { "type": "string" },
-					"user_name": { "type": "string" },
-					"view_count": { "type": "integer", "format": "int32" }
+					"comment_count": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"hashtags": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"like_count": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"summary": {
+						"type": ["string", "null"]
+					},
+					"thumbnail_image": {
+						"type": ["string", "null"]
+					},
+					"title": {
+						"type": "string"
+					},
+					"user_avatar": {
+						"type": ["string", "null"]
+					},
+					"user_handle": {
+						"type": "string"
+					},
+					"user_name": {
+						"type": "string"
+					},
+					"view_count": {
+						"type": "integer",
+						"format": "int32"
+					}
 				}
 			},
-			"PostSortOrder": { "type": "string", "enum": ["latest", "popular", "oldest"] },
+			"PostSortOrder": {
+				"type": "string",
+				"enum": ["latest", "popular", "oldest"]
+			},
 			"PostThumbnailForm": {
 				"type": "object",
 				"required": ["post_id", "file"],
 				"properties": {
-					"file": { "type": "string", "format": "binary", "contentMediaType": "image/*" },
-					"post_id": { "type": "string", "format": "uuid" }
+					"file": {
+						"type": "string",
+						"format": "binary",
+						"contentMediaType": "image/*"
+					},
+					"post_id": {
+						"type": "string",
+						"format": "uuid"
+					}
 				}
 			},
 			"ProfileAvatarForm": {
 				"type": "object",
 				"required": ["file"],
-				"properties": { "file": { "type": "string", "format": "binary", "contentMediaType": "image/*" } }
+				"properties": {
+					"file": {
+						"type": "string",
+						"format": "binary",
+						"contentMediaType": "image/*"
+					}
+				}
 			},
 			"ProfileBannerForm": {
 				"type": "object",
 				"required": ["file"],
-				"properties": { "file": { "type": "string", "format": "binary", "contentMediaType": "image/*" } }
+				"properties": {
+					"file": {
+						"type": "string",
+						"format": "binary",
+						"contentMediaType": "image/*"
+					}
+				}
 			},
 			"ResendVerificationRequest": {
 				"type": "object",
 				"required": ["email"],
-				"properties": { "email": { "type": "string" } }
+				"properties": {
+					"email": {
+						"type": "string"
+					}
+				}
 			},
 			"ResetPasswordRequest": {
 				"type": "object",
 				"required": ["token", "new_password"],
-				"properties": { "new_password": { "type": "string" }, "token": { "type": "string" } }
+				"properties": {
+					"new_password": {
+						"type": "string"
+					},
+					"token": {
+						"type": "string"
+					}
+				}
 			},
 			"SearchPostsRequest": {
 				"type": "object",
@@ -1159,117 +2907,297 @@
 						"format": "date-time",
 						"description": "날짜 범위 필터링 - 시작일"
 					},
-					"date_to": { "type": ["string", "null"], "format": "date-time", "description": "날짜 범위 필터링 - 종료일" },
+					"date_to": {
+						"type": ["string", "null"],
+						"format": "date-time",
+						"description": "날짜 범위 필터링 - 종료일"
+					},
 					"hashtags": {
 						"type": ["array", "null"],
-						"items": { "type": "string" },
+						"items": {
+							"type": "string"
+						},
 						"description": "특정 해시태그로 필터링"
 					},
-					"min_likes": { "type": ["integer", "null"], "format": "int32", "description": "최소 좋아요 수" },
-					"page": { "type": ["integer", "null"], "format": "int32", "description": "페이지 번호", "minimum": 0 },
-					"page_size": { "type": ["integer", "null"], "format": "int32", "description": "페이지 크기", "minimum": 0 },
-					"query": { "type": ["string", "null"], "description": "검색 쿼리 (제목, 내용, 해시태그, 사용자명에서 검색)" },
-					"sort": {
-						"oneOf": [{ "type": "null" }, { "$ref": "#/components/schemas/PostSortOrder", "description": "정렬 방식" }]
+					"min_likes": {
+						"type": ["integer", "null"],
+						"format": "int32",
+						"description": "최소 좋아요 수"
 					},
-					"user_handle": { "type": ["string", "null"], "description": "특정 사용자로 필터링" }
+					"page": {
+						"type": ["integer", "null"],
+						"format": "int32",
+						"description": "페이지 번호",
+						"minimum": 0
+					},
+					"page_size": {
+						"type": ["integer", "null"],
+						"format": "int32",
+						"description": "페이지 크기",
+						"minimum": 0
+					},
+					"query": {
+						"type": ["string", "null"],
+						"description": "검색 쿼리 (제목, 내용, 해시태그, 사용자명에서 검색)"
+					},
+					"sort": {
+						"oneOf": [
+							{
+								"type": "null"
+							},
+							{
+								"$ref": "#/components/schemas/PostSortOrder",
+								"description": "정렬 방식"
+							}
+						]
+					},
+					"user_handle": {
+						"type": ["string", "null"],
+						"description": "특정 사용자로 필터링"
+					}
 				}
 			},
 			"SetPasswordRequest": {
 				"type": "object",
 				"required": ["password"],
-				"properties": { "password": { "type": "string" } }
+				"properties": {
+					"password": {
+						"type": "string"
+					}
+				}
 			},
 			"ThumbnailUploadResponse": {
 				"type": "object",
 				"required": ["public_url"],
-				"properties": { "public_url": { "type": "string" } }
+				"properties": {
+					"public_url": {
+						"type": "string"
+					}
+				}
 			},
 			"TocItem": {
 				"type": "object",
 				"required": ["level", "text", "id"],
 				"properties": {
-					"id": { "type": "string" },
-					"level": { "type": "integer", "format": "int32" },
-					"text": { "type": "string" }
+					"id": {
+						"type": "string"
+					},
+					"level": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"text": {
+						"type": "string"
+					}
 				}
 			},
 			"TrendingHashtagsRequest": {
 				"type": "object",
 				"properties": {
-					"days": { "type": ["integer", "null"], "format": "int64" },
-					"limit": { "type": ["integer", "null"], "format": "int64", "minimum": 0 }
+					"days": {
+						"type": ["integer", "null"],
+						"format": "int64"
+					},
+					"limit": {
+						"type": ["integer", "null"],
+						"format": "int64",
+						"minimum": 0
+					}
 				}
 			},
 			"TrendingHashtagsResponse": {
 				"type": "object",
 				"required": ["hashtags"],
-				"properties": { "hashtags": { "type": "array", "items": { "type": "string" } } }
+				"properties": {
+					"hashtags": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				}
 			},
 			"UnlinkOAuthRequest": {
 				"type": "object",
 				"required": ["provider"],
-				"properties": { "provider": { "$ref": "#/components/schemas/OAuthProvider" } }
+				"properties": {
+					"provider": {
+						"$ref": "#/components/schemas/OAuthProvider"
+					}
+				}
+			},
+			"UpdateCommentRequest": {
+				"type": "object",
+				"required": ["comment_id", "content"],
+				"properties": {
+					"comment_id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"content": {
+						"type": "string"
+					}
+				}
 			},
 			"UpdatePostRequest": {
 				"type": "object",
 				"required": ["post_id"],
 				"properties": {
-					"content": { "type": ["string", "null"] },
-					"hashtags": { "type": ["array", "null"], "items": { "type": "string" } },
-					"new_slug": { "type": ["string", "null"] },
-					"post_id": { "type": "string", "format": "uuid" },
-					"summary": { "type": ["string", "null"] },
-					"title": { "type": ["string", "null"] }
+					"content": {
+						"type": ["string", "null"]
+					},
+					"hashtags": {
+						"type": ["array", "null"],
+						"items": {
+							"type": "string"
+						}
+					},
+					"new_slug": {
+						"type": ["string", "null"]
+					},
+					"post_id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"summary": {
+						"type": ["string", "null"]
+					},
+					"title": {
+						"type": ["string", "null"]
+					}
 				}
 			},
 			"UpdateProfileRequest": {
 				"type": "object",
 				"properties": {
-					"bio": { "type": ["string", "null"] },
-					"current_password": { "type": ["string", "null"] },
-					"handle": { "type": ["string", "null"] },
-					"location": { "type": ["string", "null"] },
-					"name": { "type": ["string", "null"] },
-					"password": { "type": ["string", "null"] },
-					"website": { "type": ["string", "null"] }
+					"bio": {
+						"type": ["string", "null"]
+					},
+					"current_password": {
+						"type": ["string", "null"]
+					},
+					"handle": {
+						"type": ["string", "null"]
+					},
+					"location": {
+						"type": ["string", "null"]
+					},
+					"name": {
+						"type": ["string", "null"]
+					},
+					"password": {
+						"type": ["string", "null"]
+					},
+					"website": {
+						"type": ["string", "null"]
+					}
 				}
 			},
 			"UserInfoResponse": {
 				"type": "object",
 				"required": ["name", "handle", "email", "is_verified", "created_at"],
 				"properties": {
-					"banner_image": { "type": ["string", "null"] },
-					"bio": { "type": ["string", "null"] },
-					"created_at": { "type": "string", "format": "date-time" },
-					"email": { "type": "string" },
-					"handle": { "type": "string" },
-					"is_verified": { "type": "boolean" },
-					"location": { "type": ["string", "null"] },
-					"name": { "type": "string" },
-					"profile_image": { "type": ["string", "null"] },
-					"website": { "type": ["string", "null"] }
+					"banner_image": {
+						"type": ["string", "null"]
+					},
+					"bio": {
+						"type": ["string", "null"]
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"email": {
+						"type": "string"
+					},
+					"handle": {
+						"type": "string"
+					},
+					"is_verified": {
+						"type": "boolean"
+					},
+					"location": {
+						"type": ["string", "null"]
+					},
+					"name": {
+						"type": "string"
+					},
+					"profile_image": {
+						"type": ["string", "null"]
+					},
+					"website": {
+						"type": ["string", "null"]
+					}
 				}
 			},
 			"UserPostsResponse": {
 				"type": "object",
 				"required": ["posts"],
-				"properties": { "posts": { "type": "array", "items": { "$ref": "#/components/schemas/PostListItem" } } }
+				"properties": {
+					"posts": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PostListItem"
+						}
+					}
+				}
 			},
-			"VerifyEmailRequest": { "type": "object", "required": ["token"], "properties": { "token": { "type": "string" } } }
+			"VerifyEmailRequest": {
+				"type": "object",
+				"required": ["token"],
+				"properties": {
+					"token": {
+						"type": "string"
+					}
+				}
+			}
 		},
 		"securitySchemes": {
-			"anonymous_id_cookie": { "type": "apiKey", "in": "cookie", "name": "anonymous_user_id" },
-			"bearer_auth": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" },
-			"refresh_token_cookie": { "type": "apiKey", "in": "cookie", "name": "refresh_token" }
+			"anonymous_id_cookie": {
+				"type": "apiKey",
+				"in": "cookie",
+				"name": "anonymous_user_id"
+			},
+			"bearer_auth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			},
+			"refresh_token_cookie": {
+				"type": "apiKey",
+				"in": "cookie",
+				"name": "refresh_token"
+			}
 		}
 	},
 	"tags": [
-		{ "name": "Auth", "description": "Authentication endpoints" },
-		{ "name": "User", "description": "User endpoints" },
-		{ "name": "Post", "description": "Post endpoints" },
-		{ "name": "Follow", "description": "Follow endpoints" },
-		{ "name": "Hashtag", "description": "Hashtag endpoints" },
-		{ "name": "Like", "description": "Like endpoints" }
+		{
+			"name": "Auth",
+			"description": "Authentication endpoints"
+		},
+		{
+			"name": "User",
+			"description": "User endpoints"
+		},
+		{
+			"name": "Post",
+			"description": "Post endpoints"
+		},
+		{
+			"name": "Comment",
+			"description": "Comment endpoints"
+		},
+		{
+			"name": "Follow",
+			"description": "Follow endpoints"
+		},
+		{
+			"name": "Hashtag",
+			"description": "Hashtag endpoints"
+		},
+		{
+			"name": "Like",
+			"description": "Like endpoints"
+		}
 	]
 }

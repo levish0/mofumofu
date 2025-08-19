@@ -45,6 +45,12 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .default(0),
                     )
+                    .col(
+                        ColumnDef::new(Comments::ReplyCount)
+                            .integer()
+                            .not_null()
+                            .default(0),
+                    )
                     // 포스트와의 외래키
                     .foreign_key(
                         ForeignKey::create()
@@ -123,6 +129,7 @@ enum Comments {
     UpdatedAt,
     IsDeleted,
     LikeCount,
+    ReplyCount,
 }
 
 #[derive(DeriveIden)]

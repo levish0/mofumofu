@@ -4,7 +4,7 @@ pub mod get_post_by_user_and_slug;
 pub mod get_post_by_uuid;
 pub mod get_posts;
 pub mod get_user_posts;
-pub mod increment_comment_count;
+pub mod update_comment_count;
 pub mod increment_view_count;
 pub mod update_like_count;
 pub mod update_post;

@@ -22,6 +22,7 @@ where
         updated_at: Set(None),
         is_deleted: Set(false),
         like_count: Set(0),
+        reply_count: Set(0),
     };
 
     let created_comment = new_comment.insert(conn).await?;
