@@ -91,7 +91,7 @@
 		"svelte"
 	],
 	"dependencies": {
-		"@sveltejs/kit": "^2.31.0",
+		"@sveltejs/kit": "^2.33.0",
 		"esm-env": "^1.2.2"
 	}
 }
