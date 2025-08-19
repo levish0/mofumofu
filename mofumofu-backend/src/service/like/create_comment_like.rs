@@ -2,6 +2,7 @@ use crate::entity::common::{ActionType, TargetType};
 use crate::repository::like::check_like_status::repository_check_like_status_by_comment_id;
 use crate::repository::like::create_like::repository_create_like_by_comment_id;
 use crate::repository::comment::get_comment_by_id::repository_get_comment_by_id;
+use crate::repository::comment::update_like_count::repository_increment_comment_like_count;
 use crate::repository::system_events::log_event::repository_log_event;
 use crate::service::error::errors::{Errors, ServiceResult};
 use sea_orm::{ConnectionTrait, TransactionTrait};
@@ -34,6 +35,9 @@ where
 
     // 좋아요 생성
     let _created_like = repository_create_like_by_comment_id(&txn, *user_id, *comment_id).await?;
+
+    // 댓글 좋아요 수 증가
+    repository_increment_comment_like_count(&txn, comment_id).await?;
 
     txn.commit().await?;
 

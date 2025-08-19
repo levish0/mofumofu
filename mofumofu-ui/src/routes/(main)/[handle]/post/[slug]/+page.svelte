@@ -17,6 +17,7 @@
 	import { authStore } from '$lib/stores/auth.svelte';
 	import FloatingTOC from '$lib/components/post/floating/FloatingTOC.svelte';
 	import FloatingNavigation from '$lib/components/post/floating/FloatingNavigation.svelte';
+	import CommentList from '$lib/components/comment/CommentList.svelte';
 
 	const { data }: { data: PageData } = $props();
 
@@ -303,10 +304,15 @@
 					</header>
 
 					<!-- Post Content -->
-					<div class="prose prose-invert prose-lg dark:text-mofu-dark-200 text-mofu-light-200 max-w-none break-all">
+					<div class="prose prose-invert prose-lg dark:text-mofu-dark-200 text-mofu-light-200 max-w-none break-all mb-12">
 						{@html htmlContent}
 					</div>
 				</article>
+
+				<!-- Comments Section -->
+				<section class="mt-16 border-t border-gray-200 dark:border-gray-700 pt-8">
+					<CommentList postId={data.post.id} />
+				</section>
 			</div>
 
 			<!-- Right Column: TOC (데스크톱에서만 표시) -->

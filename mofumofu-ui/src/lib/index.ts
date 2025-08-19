@@ -39,6 +39,11 @@ export { default as ProfileInfo } from './components/profile/ProfileInfo.svelte'
 export { default as ProfilePostGrid } from './components/profile/ProfilePostGrid.svelte';
 export { default as ImageCropModal } from './components/modal/ImageCropModal.svelte';
 
+// Comment Components
+export { default as CommentList } from './components/comment/CommentList.svelte';
+export { default as Comment } from './components/comment/Comment.svelte';
+export { default as CommentForm } from './components/comment/CommentForm.svelte';
+
 // Settings Components
 export { default as AccountSettings } from './components/settings/forms/AccountSettings/AccountSettings.svelte';
 export { default as DisplaySettings } from './components/settings/forms/DisplaySettings/DisplaySettings.svelte';
@@ -69,6 +74,8 @@ export { useWriteEditor } from './hooks/write/useWriteEditor.svelte';
 export { usePostsData } from './hooks/posts/usePostsData.svelte';
 export { usePostsFilter } from './hooks/posts/usePostsFilter.svelte';
 export { useFieldValidation } from './hooks/settings/useFieldValidation.svelte';
+export { useComments } from './hooks/comment/useComments.svelte';
+export { useReplies } from './hooks/comment/useReplies.svelte';
 
 // API Layer
 export * from './api/index';
@@ -76,6 +83,8 @@ export * from './api/auth/types';
 export * from './api/user/types';
 export * from './api/post/types';
 export * from './api/follow/types';
+export * from './api/like/types';
+export * from './api/comment/types';
 
 // Utils
 export * from './utils/index';

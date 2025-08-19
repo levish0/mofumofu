@@ -3,12 +3,12 @@ export interface UserInfoResponse {
 	name: string;
 	email: string;
 	is_verified: boolean;
-	bio?: string;
-	location?: string;
-	website?: string;
-	profile_image?: string;
-	banner_image?: string;
-	created_at?: string;
+	bio?: string | null;
+	location?: string | null;
+	website?: string | null;
+	profile_image?: string | null;
+	banner_image?: string | null;
+	created_at: string;
 }
 
 export interface HandleCheckResponse {

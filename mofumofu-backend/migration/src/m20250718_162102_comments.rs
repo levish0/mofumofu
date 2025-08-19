@@ -107,6 +107,18 @@ impl MigrationTrait for Migration {
                     .col(Comments::ParentId)
                     .to_owned(),
             )
+            .await?;
+
+        // 특정 포스트의 댓글들을 좋아요순으로 조회
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_comments_post_likes")
+                    .table(Comments::Table)
+                    .col(Comments::PostId)
+                    .col(Comments::LikeCount)
+                    .to_owned(),
+            )
             .await
     }
 

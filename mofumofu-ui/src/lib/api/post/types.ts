@@ -97,7 +97,7 @@ export interface GetPostsResponse {
 	current_page: number;
 	page_size: number;
 	has_more: boolean;
-	total_count?: number;
+	total_count: number;
 }
 
 export interface ThumbnailUploadRequest {

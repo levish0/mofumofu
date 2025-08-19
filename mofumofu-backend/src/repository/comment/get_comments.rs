@@ -1,3 +1,4 @@
+use crate::dto::comment::request::get_comments::CommentSortOrder;
 use crate::entity::comments::{Column as CommentColumn, Entity as CommentEntity, Model as CommentModel};
 use sea_orm::{ColumnTrait, ConnectionTrait, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder, QuerySelect};
 use uuid::Uuid;
