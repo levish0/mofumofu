@@ -1,7 +1,7 @@
 use crate::api::v0::routes::report::create_report::create_report;
 use crate::api::v0::routes::report::get_reports::get_reports;
 use crate::api::v0::routes::report::process_report::process_report;
-use crate::middleware::auth::access_jwt_auth;
+use crate::middleware::auth::{access_jwt_auth, optional_access_jwt_auth};
 use crate::state::AppState;
 use axum::{
     Router,
@@ -13,7 +13,7 @@ pub fn report_routes() -> Router<AppState> {
     Router::new()
         .route(
             "/report",
-            post(create_report), // 익명 신고 가능
+            post(create_report).route_layer(from_fn(optional_access_jwt_auth)), // 선택적 인증
         )
         .route(
             "/report/list",

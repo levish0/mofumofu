@@ -1,5 +1,6 @@
 import { privateApi } from '../private';
 import { publicApi } from '../public';
+import { authStore } from '../../stores/auth.svelte';
 import type {
 	CreateReportRequest,
 	CreateReportResponse,
@@ -10,10 +11,13 @@ import type {
 
 /**
  * Create a new report
+ * Uses privateApi if user is authenticated (to record reporter ID),
+ * otherwise uses publicApi for anonymous reports
  */
 export async function createReport(request: CreateReportRequest): Promise<CreateReportResponse> {
 	try {
-		const response = await publicApi.post('v0/report', { json: request });
+		const api = authStore.isAuthenticated ? privateApi : publicApi;
+		const response = await api.post('v0/report', { json: request });
 		return response.json<CreateReportResponse>();
 	} catch (error) {
 		console.error('Failed to create report:', error);

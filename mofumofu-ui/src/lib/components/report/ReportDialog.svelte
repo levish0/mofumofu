@@ -108,6 +108,7 @@
 			</Dialog.Title>
 			<Dialog.Description>
 				이 {targetTypeLabel}이 커뮤니티 가이드라인을 위반한다고 생각하시면 신고해주세요.
+				로그인하지 않아도 익명으로 신고할 수 있습니다.
 			</Dialog.Description>
 		</Dialog.Header>
 

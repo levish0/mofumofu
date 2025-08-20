@@ -888,6 +888,7 @@
 		"/v0/report": {
 			"post": {
 				"tags": ["Report"],
+				"description": "Create a report. Authentication is optional - logged in users will have their ID recorded, anonymous users will create anonymous reports.",
 				"operationId": "create_report",
 				"requestBody": {
 					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateReportRequest" } } },

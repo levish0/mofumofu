@@ -32,6 +32,29 @@ pub async fn access_jwt_auth(mut req: Request<Body>, next: Next) -> Result<Respo
     Ok(next.run(req).await)
 }
 
+// 선택적 인증 미들웨어: 토큰이 있으면 검증해서 Extension에 추가, 없으면 그냥 진행
+pub async fn optional_access_jwt_auth(mut req: Request<Body>, next: Next) -> Response {
+    let auth_header = req
+        .headers()
+        .get("Authorization")
+        .and_then(|v| v.to_str().ok());
+
+    if let Some(header) = auth_header {
+        if header.starts_with("Bearer ") {
+            let token = header.trim_start_matches("Bearer ").to_string();
+
+            // 토큰이 유효하면 Extension에 추가
+            if let Ok(token_data) = decode_access_token(&token) {
+                req.extensions_mut().insert(token_data.claims);
+            }
+            // 토큰이 유효하지 않아도 에러를 발생시키지 않고 진행
+        }
+    }
+    // 토큰이 없어도 에러를 발생시키지 않고 진행
+
+    next.run(req).await
+}
+
 pub async fn refresh_jwt_auth(mut req: Request<Body>, next: Next) -> Response {
     // 쿠키에서 refresh_token 추출
     let cookie_header = req.headers().get(COOKIE);
