@@ -315,7 +315,7 @@
 			<!-- Reply and Load more buttons -->
 			{#if !showReplyForm}
 				<div
-					class="pointer-events-auto absolute left-[29px] z-10 flex flex-col items-start gap-2"
+					class="pointer-events-auto absolute left-[31.5px] z-10 flex flex-col items-start gap-2"
 					class:-bottom-8={remainChildren() > 0}
 					class:-bottom-2={remainChildren() === 0}
 				>
@@ -348,7 +348,7 @@
 							>
 								<div>{remainChildren()}개의 댓글 더 불러오기</div>
 								{#if loadingChildren}
-									<div class="border-mofu h-4 w-4 animate-spin rounded-full border-4 border-t-transparent"></div>
+									<div class="border-mofu h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></div>
 								{/if}
 							</button>
 						</div>
@@ -359,7 +359,7 @@
 			<!-- Collapsed state - show count with connection line -->
 			<div class="-mt-2 p-4">
 				<div
-					class="border-mofu-light-300 dark:border-mofu-dark-600 absolute bottom-2 left-[38px] h-4 w-4 rounded-bl-full border-b border-l"
+					class="border-mofu-light-300 dark:border-mofu-dark-600 absolute bottom-2 left-[41px] h-4 w-4 rounded-bl-full border-b border-l"
 				></div>
 				<button
 					onclick={toggleChildren}
@@ -369,7 +369,7 @@
 				>
 					<div>{localReplyCount}개의 댓글</div>
 					{#if loadingChildren}
-						<div class="border-mofu h-4 w-4 animate-spin rounded-full border-4 border-t-transparent"></div>
+						<div class="border-mofu h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></div>
 					{/if}
 				</button>
 			</div>
@@ -381,10 +381,10 @@
 		<div class="relative ml-8 pt-4">
 			<div class="bg-mofu-light-950 dark:bg-mofu-dark-900 absolute top-0 -left-6 h-[calc(100%+2rem)] w-6"></div>
 			<div
-				class="border-mofu-light-300 dark:border-mofu-dark-600 absolute top-0 -left-[10px] h-4 w-4 border-l border-dashed"
+				class="border-mofu-light-300 dark:border-mofu-dark-600 absolute top-0 -left-[7px] h-4 w-4 border-l border-dashed"
 			></div>
 			<div
-				class="border-mofu-light-300 dark:border-mofu-dark-600 absolute top-4 -left-[10px] h-4 w-4 rounded-bl-full border-b border-l border-dashed"
+				class="border-mofu-light-300 dark:border-mofu-dark-600 absolute top-4 -left-[7px] h-4 w-4 rounded-bl-full border-b border-l border-dashed"
 			></div>
 
 			<CommentForm
