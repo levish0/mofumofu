@@ -106,7 +106,7 @@
 
 				<!-- Comments Section -->
 				<section class="dark:border-mofu-dark-700 border-mofu-light-700 mt-16 border-t pt-8">
-					<CommentList postId={data.post.id} perPage={8} replyPerPage={6} defaultSort="latest" />
+					<CommentList postId={data.post.id} perPage={5} replyPerPage={4} defaultSort="latest" />
 				</section>
 			</div>
 

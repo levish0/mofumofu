@@ -34,7 +34,6 @@
 	let allLoaded = $state(false);
 	let sortOrder = $state<'latest' | 'oldest' | 'popular'>(defaultSort);
 
-
 	// 정렬 버튼 클릭
 	const toggleSortOrder = async () => {
 		const orders: Array<'latest' | 'oldest' | 'popular'> = ['latest', 'oldest', 'popular'];
@@ -72,14 +71,12 @@
 			commentCount = response.total_count;
 			allLoaded = !response.has_next;
 			currentPage++;
-
 		} catch (error) {
 			console.error('Failed to load comments:', error);
 		} finally {
 			loading = false;
 		}
 	};
-
 
 	// 새 댓글 추가 처리
 	const handleNewComment = async (newComment: CommentInfo) => {
@@ -92,7 +89,6 @@
 			}
 			commentCount++;
 		}
-
 	};
 
 	// 답글 추가 처리
@@ -173,23 +169,14 @@
 	<!-- 로딩 상태 (처음 로드시) -->
 	{#if loading && comments.length === 0}
 		<div class="flex items-center justify-center p-8">
-			<div
-				class="border-mofu-light-400 dark:border-mofu-dark-400 h-6 w-6 animate-spin rounded-full border-4 border-t-transparent"
-			></div>
+			<div class="border-mofu h-12 w-12 animate-spin rounded-full border-2 border-t-transparent"></div>
 		</div>
 	{/if}
 
 	<!-- 댓글 목록 -->
 	<div class="overflow-x-auto overflow-y-hidden pb-2">
 		{#each comments as comment (comment.id)}
-			<CommentItem
-				{comment}
-				{postId}
-				depth={0}
-				onReply={handleReply}
-				onLikeUpdate={updateLikeStatus}
-				{replyPerPage}
-			/>
+			<CommentItem {comment} {postId} depth={0} onReply={handleReply} onLikeUpdate={updateLikeStatus} {replyPerPage} />
 		{/each}
 
 		<!-- 더 보기 버튼 -->

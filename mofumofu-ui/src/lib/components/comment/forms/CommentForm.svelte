@@ -115,13 +115,9 @@
 	{:else}
 		<div class="flex gap-3">
 			<!-- 사용자 프로필 이미지 -->
-			<div class="flex-shrink-0">
+			<div class="z-20 flex-shrink-0">
 				{#if user?.profile_image}
-					<img
-						src={user.profile_image}
-						alt={user.name}
-						class="h-10 w-10 rounded-full object-cover"
-					/>
+					<img src={user.profile_image} alt={user.name} class="h-10 w-10 rounded-full object-cover" />
 				{:else}
 					<div class="bg-mofu-light-700 dark:bg-mofu-dark-700 flex h-10 w-10 items-center justify-center rounded-full">
 						<span class="text-mofu-light-200 dark:text-mofu-dark-200 text-sm font-medium">
