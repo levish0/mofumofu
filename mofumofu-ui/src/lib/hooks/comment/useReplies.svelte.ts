@@ -70,11 +70,11 @@ export function useReplies(parentCommentId: string, pageSize: number = 3) {
 			if (state.replies.length === 0 && state.totalCount > 0) {
 				await loadReplies(1, true);
 			}
-			
+
 			// 새 답글을 맨 앞에 추가
 			state.replies.unshift(newReply);
 			state.totalCount++;
-			
+
 			// 답글 섹션을 펼친 상태로 만들기
 			if (!state.expanded) {
 				state.expanded = true;
@@ -89,11 +89,21 @@ export function useReplies(parentCommentId: string, pageSize: number = 3) {
 	};
 
 	return {
-		get replies() { return state.replies; },
-		get loading() { return state.loading; },
-		get hasMore() { return state.hasMore; },
-		get totalCount() { return state.totalCount; },
-		get expanded() { return state.expanded; },
+		get replies() {
+			return state.replies;
+		},
+		get loading() {
+			return state.loading;
+		},
+		get hasMore() {
+			return state.hasMore;
+		},
+		get totalCount() {
+			return state.totalCount;
+		},
+		get expanded() {
+			return state.expanded;
+		},
 		loadReplies,
 		loadMoreReplies,
 		toggleReplies,

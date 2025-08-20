@@ -14,14 +14,7 @@
 		focus?: boolean;
 	}
 
-	let {
-		postId,
-		parentId,
-		placeholder = '댓글을 작성하세요...',
-		onSubmit,
-		onCancel,
-		focus = false
-	}: Props = $props();
+	let { postId, parentId, placeholder = '댓글을 작성하세요...', onSubmit, onCancel, focus = false }: Props = $props();
 
 	let content = $state('');
 	let isSubmitting = $state(false);
@@ -126,15 +119,11 @@
 					<img
 						src={userStore.user.profile_image}
 						alt={userStore.user.name}
-						class="w-10 h-10 rounded-full object-cover"
+						class="h-10 w-10 rounded-full object-cover"
 					/>
 				{:else}
-					<div
-						class="bg-mofu-light-700 dark:bg-mofu-dark-700 flex items-center justify-center rounded-full w-10 h-10"
-					>
-						<span
-							class="text-mofu-light-200 dark:text-mofu-dark-200 font-medium text-sm"
-						>
+					<div class="bg-mofu-light-700 dark:bg-mofu-dark-700 flex h-10 w-10 items-center justify-center rounded-full">
+						<span class="text-mofu-light-200 dark:text-mofu-dark-200 text-sm font-medium">
 							{userStore.user.name.charAt(0).toUpperCase()}
 						</span>
 					</div>
@@ -155,7 +144,7 @@
 						disabled={isSubmitting}
 						maxlength={maxLength}
 						class="text-mofu-light-100 dark:text-mofu-dark-100 placeholder-mofu-light-400 dark:placeholder-mofu-dark-500 w-full resize-none border-0 bg-transparent p-3 text-sm focus:ring-0 focus:outline-none"
-						rows=3
+						rows="3"
 						oninput={adjustHeight}
 						id={parentId ? undefined : 'comment_write_area'}
 					></textarea>

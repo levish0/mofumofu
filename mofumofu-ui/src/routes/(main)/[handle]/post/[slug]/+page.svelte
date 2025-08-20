@@ -2,22 +2,15 @@
 	import '$lib/styles/markdown.css';
 	import { getContext, onMount } from 'svelte';
 	import type { PageData } from './$types';
-	import { Heart, Icon, EllipsisVertical, PencilSquare, Trash } from 'svelte-hero-icons';
-	import { incrementPostView } from '$lib/api/post/postApi';
-	import { userStore } from '$lib/stores/user.svelte';
-	import { fly } from 'svelte/transition';
-	import { Button } from '$lib/components/ui/button';
+	import { incrementPostView, deletePost } from '$lib/api/post/postApi';
 	import { goto } from '$app/navigation';
-	import { deletePost } from '$lib/api/post/postApi';
-	import * as Dialog from '$lib/components/ui/dialog';
 	import { toast } from 'svelte-sonner';
-	import FollowButton from '$lib/components/profile/FollowButton.svelte';
-	import { Badge } from '$lib/components/ui/badge';
-	import { createLike, deleteLike, checkLikeStatus } from '$lib/api/like/likeApi';
-	import { authStore } from '$lib/stores/auth.svelte';
 	import FloatingTOC from '$lib/components/post/floating/FloatingTOC.svelte';
 	import FloatingNavigation from '$lib/components/post/floating/FloatingNavigation.svelte';
 	import CommentList from '$lib/components/comment/CommentList.svelte';
+	import PostHeader from '$lib/components/post/view/PostHeader.svelte';
+	import PostTOC from '$lib/components/post/view/PostTOC.svelte';
+	import PostDeleteModal from '$lib/components/post/view/PostDeleteModal.svelte';
 
 	const { data }: { data: PageData } = $props();
 
@@ -33,55 +26,15 @@
 	const navbar = getContext<NavbarContext>('navbar');
 	const topPosition = $derived(navbar.isVisible() ? '68px' : '8px');
 
-	// 유저의 로케일과 타임존에 맞는 시간 포맷팅
-	const formatDateTime = (dateStr: string) => {
-		const date = new Date(dateStr);
-		return date.toLocaleString(undefined, {
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric',
-			hour: '2-digit',
-			minute: '2-digit',
-			timeZoneName: 'short'
-		});
-	};
-
-	// 작성자 확인 및 드롭다운 상태
-	const currentUser = $derived(userStore.user);
-	const isAuthor = $derived(currentUser?.handle === data.author.handle);
-	let isDropdownOpen = $state(false);
+	// 삭제 모달 상태
 	let isDeleteModalOpen = $state(false);
 	let isDeleting = $state(false);
-	let closeTimer: ReturnType<typeof setTimeout> | null = null;
-
-	// Like 관련 상태
-	let isLiked = $state(false);
-	let likeCount = $state(data.post.like_count || 0);
-	let isLikeLoading = $state(true);
-	let isLikeSubmitting = $state(false);
-
-	function openDropdown() {
-		if (closeTimer) {
-			clearTimeout(closeTimer);
-			closeTimer = null;
-		}
-		isDropdownOpen = true;
-	}
-
-	function scheduleClose() {
-		closeTimer = setTimeout(() => {
-			isDropdownOpen = false;
-			closeTimer = null;
-		}, 100);
-	}
 
 	function handleEdit() {
-		isDropdownOpen = false;
 		goto(`/edit/${data.slug}`);
 	}
 
 	function handleDelete() {
-		isDropdownOpen = false;
 		isDeleteModalOpen = true;
 	}
 
@@ -104,64 +57,10 @@
 		isDeleteModalOpen = false;
 	}
 
-	// Like 상태 확인
-	async function loadLikeStatus() {
-		if (!authStore.isAuthenticated) {
-			isLikeLoading = false;
-			return;
-		}
-
-		try {
-			const response = await checkLikeStatus({
-				post_id: data.post.id
-			});
-			isLiked = response.is_liked;
-		} catch (error) {
-			console.error('Failed to check like status:', error);
-		} finally {
-			isLikeLoading = false;
-		}
-	}
-
-	// Like 토글
-	async function toggleLike() {
-		if (!authStore.isAuthenticated) {
-			goto('/account/signin');
-			return;
-		}
-
-		if (isLikeSubmitting) return;
-
-		isLikeSubmitting = true;
-		try {
-			if (isLiked) {
-				await deleteLike({
-					post_id: data.post.id
-				});
-				isLiked = false;
-				likeCount = Math.max(0, likeCount - 1);
-			} else {
-				await createLike({
-					post_id: data.post.id
-				});
-				isLiked = true;
-				likeCount += 1;
-			}
-		} catch (error) {
-			console.error('Failed to toggle like:', error);
-			toast.error('좋아요 처리에 실패했습니다');
-		} finally {
-			isLikeSubmitting = false;
-		}
-	}
-
 	onMount(() => {
 		incrementPostView({ post_id: data.post.id }).catch((error) => {
 			console.warn('Failed to increment view count:', error);
 		});
-
-		// Like 상태 로드
-		loadLikeStatus();
 	});
 </script>
 
@@ -193,115 +92,9 @@
 	<div class="max-w-8xl mx-auto gap-4 px-4">
 		<div class="flex gap-4">
 			<!-- Left Column: Post Content -->
-			<div class="min-w-0 flex-1">
-				<article class="rounded-lg">
-					<!-- Post Header -->
-					<header>
-						<h1 class="dark:text-mofu-200 mb-4 text-4xl font-bold break-all">
-							{data.post.title}
-						</h1>
-
-						<!-- Author Info -->
-						<div class="mb-4 flex items-center justify-between">
-							<a
-								href="/@{data.author.handle}/profile"
-								class="flex items-center gap-4 transition-opacity hover:opacity-80"
-							>
-								{#if data.author.profile_image}
-									<img
-										src={data.author.profile_image}
-										alt={data.author.name}
-										class="h-12 w-12 rounded-full object-cover"
-									/>
-								{:else}
-									<div
-										class="dark:bg-mofu-dark-600 bg-mofu-light-600 flex h-12 w-12 items-center justify-center rounded-full"
-									>
-										<span class="dark:text-mofu-dark-200 text-mofu-light-200 text-lg font-medium">
-											{data.author.name.charAt(0).toUpperCase()}
-										</span>
-									</div>
-								{/if}
-								<div>
-									<p class="font-medium text-black dark:text-white">{data.author.name}</p>
-									<p class="dark:text-mofu-dark-400 text-mofu-light-400 text-sm">
-										{formatDateTime(data.post.created_at)}
-									</p>
-								</div>
-							</a>
-
-							<div class="flex items-center gap-2">
-								<!-- Like Button -->
-								{#if isLikeLoading}
-									<div class="shimmer h-6 w-10 rounded"></div>
-								{:else}
-									<button
-										onclick={toggleLike}
-										disabled={isLikeSubmitting}
-										class="flex items-center gap-2 rounded-full px-4 py-2 transition-colors {isLiked
-											? 'text-rose-600 dark:text-rose-500'
-											: 'dark:text-mofu-dark-400 text-mofu-light-400 hover:text-rose-600 dark:hover:text-rose-500'} 
-										{isLikeSubmitting ? 'cursor-not-allowed opacity-50' : ''}"
-									>
-										<Icon src={Heart} class="h-5 w-5" solid />
-										<span class="text-sm">{likeCount}</span>
-									</button>
-								{/if}
-
-								{#if isAuthor}
-									<!-- Author Options Dropdown -->
-									<div
-										class="relative"
-										role="button"
-										tabindex="0"
-										onmouseenter={openDropdown}
-										onmouseleave={scheduleClose}
-									>
-										<Button variant="ghost" class="dark:text-mofu-dark-400 h-9 w-9 p-2">
-											<Icon src={EllipsisVertical} class="h-5 w-5" />
-										</Button>
-
-										{#if isDropdownOpen}
-											<div
-												class="dark:bg-mofu-dark-800 bg-mofu-light-800 absolute top-12 right-0 z-50 w-48 rounded-lg text-sm font-bold shadow-lg"
-												transition:fly={{ y: -8, duration: 150 }}
-												style="transform-origin: top right;"
-											>
-												<div class="py-1">
-													<button
-														class="dark:text-mofu-dark-200 text-mofu-light-200 flex w-full items-center px-4 py-2 hover:opacity-70"
-														onclick={handleEdit}
-													>
-														<Icon src={PencilSquare} solid size="16" class="mr-3" />
-														수정하기
-													</button>
-													<button
-														class="flex w-full items-center px-4 py-2 text-rose-600 hover:opacity-70 dark:text-rose-500"
-														onclick={handleDelete}
-													>
-														<Icon src={Trash} solid size="16" class="mr-3" />
-														삭제하기
-													</button>
-												</div>
-											</div>
-										{/if}
-									</div>
-								{:else}
-									<!-- Follow Button -->
-									<FollowButton handle={data.author.handle} />
-								{/if}
-							</div>
-						</div>
-
-						<!-- Tags -->
-						<div class="flex flex-wrap gap-2">
-							{#each data.post.tags as tag}
-								<Badge>
-									#{tag}
-								</Badge>
-							{/each}
-						</div>
-					</header>
+			<div class=" min-w-0 flex-1 pb-40">
+				<article class="min-h-screen">
+					<PostHeader post={data.post} author={data.author} onEdit={handleEdit} onDelete={handleDelete} />
 
 					<!-- Post Content -->
 					<div
@@ -318,24 +111,7 @@
 			</div>
 
 			<!-- Right Column: TOC (데스크톱에서만 표시) -->
-			<div class="border-mofu-dark-800 hidden w-80 flex-shrink-0 border-l md:block">
-				<div class="sticky transition-all duration-100 ease-out" style="top: {topPosition}">
-					<div class="px-4">
-						<h3 class="dark:text-mofu-dark-200 mb-2 text-xl font-semibold">목차</h3>
-						<nav class="max-h-[80vh] space-y-2 overflow-y-auto">
-							{#each tocItems as item}
-								<a
-									href="#{item.id}"
-									class="dark:text-mofu-dark-300 text-mofu-light-300 block text-sm transition-colors hover:text-black dark:hover:text-white"
-									style="padding-left: {(item.level - 1) * 12}px"
-								>
-									{item.text}
-								</a>
-							{/each}
-						</nav>
-					</div>
-				</div>
-			</div>
+			<PostTOC {tocItems} {topPosition} />
 		</div>
 	</div>
 </div>
@@ -344,35 +120,4 @@
 <FloatingTOC {tocItems} />
 <FloatingNavigation />
 
-<!-- 삭제 확인 Dialog -->
-<Dialog.Root bind:open={isDeleteModalOpen}>
-	<Dialog.Content class="dark:bg-mofu-dark-800 p-2 text-black sm:max-w-md dark:text-white">
-		<div class="rounded-lg px-2 pt-4">
-			<Dialog.Header class="mb-2 p-0">
-				<Dialog.Title class="text-lg font-semibold">포스트 삭제</Dialog.Title>
-				<Dialog.Description class="text-gray-600 dark:text-gray-300">
-					이 포스트를 정말 삭제하시겠습니까?<br />
-					삭제된 포스트는 복구할 수 없습니다.
-				</Dialog.Description>
-			</Dialog.Header>
-		</div>
-
-		<!-- 버튼 영역 -->
-		<div class="flex justify-end gap-3 rounded-b-lg px-2 py-2">
-			<Button variant="ghost" onclick={cancelDelete} disabled={isDeleting}>취소</Button>
-			<Button variant="destructive" onclick={confirmDelete} disabled={isDeleting}>
-				{isDeleting ? '삭제 중...' : '삭제하기'}
-			</Button>
-		</div>
-	</Dialog.Content>
-</Dialog.Root>
-
-<!-- 삭제 중 로딩 오버레이 -->
-{#if isDeleting}
-	<div class="fixed inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-		<div class="flex flex-col items-center space-y-4">
-			<div class="border-mofu h-12 w-12 animate-spin rounded-full border-4 border-t-transparent"></div>
-			<p class="text-lg font-medium text-white">삭제 중...</p>
-		</div>
-	</div>
-{/if}
+<PostDeleteModal bind:isOpen={isDeleteModalOpen} {isDeleting} onConfirm={confirmDelete} onCancel={cancelDelete} />

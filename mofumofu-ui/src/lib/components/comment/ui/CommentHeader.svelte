@@ -30,10 +30,7 @@
 
 <div class="flex items-center gap-2 text-sm">
 	{#if !isDeleted}
-		<a
-			href="/u/{displayUserHandle}"
-			class="text-mofu-light-200 dark:text-mofu-dark-200 font-medium hover:underline"
-		>
+		<a href="/u/{displayUserHandle}" class="text-mofu-light-200 dark:text-mofu-dark-200 font-medium hover:underline">
 			{displayUserName}
 		</a>
 	{:else}

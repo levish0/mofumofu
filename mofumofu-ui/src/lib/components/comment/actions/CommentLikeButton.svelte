@@ -30,7 +30,9 @@
 			<span class="text-sm">{likeCount}</span>
 		{/if}
 		{#if isLiking}
-			<div class="border-mofu-light-400 dark:border-mofu-dark-400 h-3 w-3 animate-spin rounded-full border-2 border-t-transparent"></div>
+			<div
+				class="border-mofu-light-400 dark:border-mofu-dark-400 h-3 w-3 animate-spin rounded-full border-2 border-t-transparent"
+			></div>
 		{/if}
 	</button>
 {:else if likeCount > 0}

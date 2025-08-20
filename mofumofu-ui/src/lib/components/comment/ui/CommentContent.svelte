@@ -6,6 +6,6 @@
 	let { content }: Props = $props();
 </script>
 
-<div class="comment-content whitespace-pre-wrap break-words">
+<div class="comment-content break-words whitespace-pre-wrap">
 	{content}
 </div>

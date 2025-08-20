@@ -105,6 +105,7 @@ Note: This project uses **pnpm** as the package manager, not npm.
 ### Library Export System
 
 Components must be explicitly exported in `src/lib/index.ts` to be available when the library is installed as a package. The library exports are organized into:
+
 - **UI Components** - Namespaced exports (Badge, Button, Dialog, etc.) to avoid conflicts
 - **Domain Components** - Direct exports for PostCard, PostList, Navbar, ProfileHeader, etc.
 - **Settings Components** - Complete settings form components for user management

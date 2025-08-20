@@ -12,9 +12,9 @@
 		{#if user?.email}
 			<EmailVerificationInput email={user.email} />
 		{/if}
-		
+
 		<PasswordManagement />
-		
+
 		<OAuthConnections />
 	</div>
 </div>

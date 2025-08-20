@@ -85,3 +85,48 @@ pub enum LikeTargetType {
     #[sea_orm(string_value = "comment")]
     Comment,
 }
+
+#[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum, Serialize, Deserialize, ToSchema)]
+#[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "report_target_type")]
+pub enum ReportTargetType {
+    #[sea_orm(string_value = "user")]
+    User,
+    #[sea_orm(string_value = "post")]
+    Post,
+    #[sea_orm(string_value = "comment")]
+    Comment,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum, Serialize, Deserialize, ToSchema)]
+#[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "report_reason")]
+pub enum ReportReason {
+    #[sea_orm(string_value = "spam")]
+    Spam,
+    #[sea_orm(string_value = "inappropriate_content")]
+    InappropriateContent,
+    #[sea_orm(string_value = "harassment")]
+    Harassment,
+    #[sea_orm(string_value = "copyright")]
+    Copyright,
+    #[sea_orm(string_value = "fake_information")]
+    FakeInformation,
+    #[sea_orm(string_value = "violence")]
+    Violence,
+    #[sea_orm(string_value = "adult_content")]
+    AdultContent,
+    #[sea_orm(string_value = "other")]
+    Other,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum, Serialize, Deserialize, ToSchema)]
+#[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "report_status")]
+pub enum ReportStatus {
+    #[sea_orm(string_value = "pending")]
+    Pending,
+    #[sea_orm(string_value = "reviewing")]
+    Reviewing,
+    #[sea_orm(string_value = "resolved")]
+    Resolved,
+    #[sea_orm(string_value = "dismissed")]
+    Dismissed,
+}

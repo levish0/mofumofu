@@ -91,13 +91,13 @@
 
 			<!-- Right Column: Posts -->
 			<div class="lg:col-span-1">
-				<ProfilePostGrid 
+				<ProfilePostGrid
 					profile={{
 						handle: data.profile.handle,
 						name: data.profile.name,
 						profile_image: data.profile.profile_image || undefined
-					}} 
-					posts={data.posts} 
+					}}
+					posts={data.posts}
 				/>
 			</div>
 		</div>

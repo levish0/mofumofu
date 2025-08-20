@@ -88,3 +88,51 @@ pub enum LikeTargetType {
     #[sea_orm(iden = "comment")]
     Comment,
 }
+
+#[derive(DeriveIden, EnumIter)]
+pub enum ReportTargetType {
+    #[sea_orm(iden = "report_target_type")]
+    Table,
+    #[sea_orm(iden = "user")]
+    User,
+    #[sea_orm(iden = "post")]
+    Post,
+    #[sea_orm(iden = "comment")]
+    Comment,
+}
+
+#[derive(DeriveIden, EnumIter)]
+pub enum ReportReason {
+    #[sea_orm(iden = "report_reason")]
+    Table,
+    #[sea_orm(iden = "spam")]
+    Spam,
+    #[sea_orm(iden = "inappropriate_content")]
+    InappropriateContent,
+    #[sea_orm(iden = "harassment")]
+    Harassment,
+    #[sea_orm(iden = "copyright")]
+    Copyright,
+    #[sea_orm(iden = "fake_information")]
+    FakeInformation,
+    #[sea_orm(iden = "violence")]
+    Violence,
+    #[sea_orm(iden = "adult_content")]
+    AdultContent,
+    #[sea_orm(iden = "other")]
+    Other,
+}
+
+#[derive(DeriveIden, EnumIter)]
+pub enum ReportStatus {
+    #[sea_orm(iden = "report_status")]
+    Table,
+    #[sea_orm(iden = "pending")]
+    Pending,
+    #[sea_orm(iden = "reviewing")]
+    Reviewing,
+    #[sea_orm(iden = "resolved")]
+    Resolved,
+    #[sea_orm(iden = "dismissed")]
+    Dismissed,
+}

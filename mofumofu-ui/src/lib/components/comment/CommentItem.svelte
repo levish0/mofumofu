@@ -22,7 +22,7 @@
 	import CommentEditForm from './forms/CommentEditForm.svelte';
 	import CommentThreadLines from './ui/CommentThreadLines.svelte';
 	import Self from './CommentItem.svelte';
-	import { CircleArrowRight } from '@lucide/svelte';
+	import { ChevronRight, CircleArrowRight, Mail, MessageCirclePlus, Reply, SendHorizontal } from '@lucide/svelte';
 
 	interface Props {
 		comment: CommentInfo;
@@ -35,7 +35,16 @@
 		replyPerPage?: number;
 	}
 
-	let { comment, postId, depth = 0, isLast = false, isLiked = false, onReply, onLikeUpdate, replyPerPage = 5 }: Props = $props();
+	let {
+		comment,
+		postId,
+		depth = 0,
+		isLast = false,
+		isLiked = false,
+		onReply,
+		onLikeUpdate,
+		replyPerPage = 5
+	}: Props = $props();
 
 	// 로칼 상태 관리
 	let showReplyForm = $state(false);
@@ -73,7 +82,7 @@
 	// 삭제된 댓글인지 확인
 	const isDeleted = $derived(localIsDeleted);
 	const displayContent = $derived(isDeleted ? '[삭제된 댓글입니다]' : localCommentContent);
-	const displayUserName = $derived(isDeleted ? '익명' : comment.user_name);
+	const displayUserName = $derived(isDeleted ? 'Anon' : comment.user_name);
 	const displayUserHandle = $derived(isDeleted ? '' : comment.user_handle);
 	const displayUserImage = $derived(isDeleted ? null : comment.user_profile_image);
 
@@ -234,7 +243,12 @@
 </script>
 
 <!-- Reddit-style Comment -->
-<div class="relative py-1.5 pl-4" class:ml-4={depth > 0} class:mb-6={showChildren && remainChildren() > 0}>
+<div
+	class="relative py-1.5 pl-4"
+	class:-ml-4={depth === 0}
+	class:ml-4={depth > 0}
+	class:mb-6={showChildren && remainChildren() > 0}
+>
 	<!-- Thread lines -->
 	<CommentThreadLines
 		{depth}
@@ -360,14 +374,11 @@
 							showReplyForm = !showReplyForm;
 						}}
 						type="button"
-						class="group/btn bg-mofu-light-950 dark:bg-mofu-dark-900 border-mofu-light-300 dark:border-mofu-dark-600 focus:ring-mofu cursor-pointer rounded-full border p-0.5 focus:ring-2 focus:outline-none"
+						class="group/btn bg-mofu-light-950 dark:bg-mofu-dark-900 border-mofu-light-300 dark:border-mofu-dark-600 cursor-pointer rounded-full border p-0.5"
 						title="답글 작성"
 						aria-label="답글 작성"
 					>
-						<CircleArrowRight
-							class="size-3.5 opacity-60 transition-opacity group-hover/btn:opacity-100"
-							strokeWidth={2}
-						/>
+						<ChevronRight class="size-3.5 opacity-60 transition-opacity group-hover/btn:opacity-100" strokeWidth={2} />
 					</button>
 
 					<!-- Load more replies -->
@@ -384,7 +395,9 @@
 							>
 								<div>{remainChildren()}개의 댓글 더 불러오기</div>
 								{#if loadingChildren}
-									<div class="border-mofu-light-400 dark:border-mofu-dark-400 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></div>
+									<div
+										class="border-mofu-light-400 dark:border-mofu-dark-400 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"
+									></div>
 								{/if}
 							</button>
 						</div>
@@ -405,7 +418,9 @@
 				>
 					<div>{localReplyCount}개의 댓글</div>
 					{#if loadingChildren}
-						<div class="border-mofu-light-400 dark:border-mofu-dark-400 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></div>
+						<div
+							class="border-mofu-light-400 dark:border-mofu-dark-400 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"
+						></div>
 					{/if}
 				</button>
 			</div>

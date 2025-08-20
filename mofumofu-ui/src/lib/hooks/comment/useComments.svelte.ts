@@ -64,10 +64,18 @@ export function useComments(postId: string, pageSize: number = 5) {
 	};
 
 	return {
-		get comments() { return state.comments; },
-		get loading() { return state.loading; },
-		get hasMore() { return state.hasMore; },
-		get totalCount() { return state.totalCount; },
+		get comments() {
+			return state.comments;
+		},
+		get loading() {
+			return state.loading;
+		},
+		get hasMore() {
+			return state.hasMore;
+		},
+		get totalCount() {
+			return state.totalCount;
+		},
 		loadComments,
 		loadMoreComments,
 		refreshComments,

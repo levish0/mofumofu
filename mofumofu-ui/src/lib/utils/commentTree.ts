@@ -13,10 +13,10 @@ export interface CommentNode {
  */
 export function buildCommentTree(comments: CommentInfo[], parentId: string | null = null): CommentNode[] {
 	const result: CommentNode[] = [];
-	
+
 	// 해당 부모의 직계 자식 댓글들 찾기
-	const directChildren = comments.filter(comment => comment.parent_id === parentId);
-	
+	const directChildren = comments.filter((comment) => comment.parent_id === parentId);
+
 	for (const comment of directChildren) {
 		const node: CommentNode = {
 			comment,
@@ -24,7 +24,7 @@ export function buildCommentTree(comments: CommentInfo[], parentId: string | nul
 		};
 		result.push(node);
 	}
-	
+
 	// 생성 시간 기준 정렬 (최신순)
 	return result.sort((a, b) => new Date(b.comment.created_at).getTime() - new Date(a.comment.created_at).getTime());
 }
@@ -34,7 +34,7 @@ export function buildCommentTree(comments: CommentInfo[], parentId: string | nul
  */
 export function addCommentToList(comments: CommentInfo[], newComment: CommentInfo): CommentInfo[] {
 	// 중복 확인 후 추가
-	const existingIndex = comments.findIndex(c => c.id === newComment.id);
+	const existingIndex = comments.findIndex((c) => c.id === newComment.id);
 	if (existingIndex >= 0) {
 		// 이미 존재하면 업데이트
 		comments[existingIndex] = newComment;

@@ -17,9 +17,9 @@
 		defaultSort?: 'latest' | 'oldest' | 'popular';
 	}
 
-	let { 
-		postId, 
-		initialComments = [], 
+	let {
+		postId,
+		initialComments = [],
 		initialCount = 0,
 		perPage = 10,
 		replyPerPage = 5,
@@ -42,7 +42,7 @@
 		const orders: Array<'latest' | 'oldest' | 'popular'> = ['latest', 'oldest', 'popular'];
 		const currentIndex = orders.indexOf(sortOrder);
 		sortOrder = orders[(currentIndex + 1) % orders.length];
-		
+
 		currentPage = 1;
 		comments = [];
 		allLoaded = false;
@@ -203,12 +203,14 @@
 	<!-- 로딩 상태 (처음 로드시) -->
 	{#if loading && comments.length === 0}
 		<div class="flex items-center justify-center p-8">
-			<div class="border-mofu-light-400 dark:border-mofu-dark-400 h-6 w-6 animate-spin rounded-full border-4 border-t-transparent"></div>
+			<div
+				class="border-mofu-light-400 dark:border-mofu-dark-400 h-6 w-6 animate-spin rounded-full border-4 border-t-transparent"
+			></div>
 		</div>
 	{/if}
 
 	<!-- 댓글 목록 -->
-	<div class="overflow-x-auto overflow-y-hidden pr-4 pb-2">
+	<div class="overflow-x-auto overflow-y-hidden pb-2">
 		{#each comments as comment (comment.id)}
 			<CommentItem
 				{comment}
@@ -232,7 +234,9 @@
 					<MessageCircle class="size-5" />
 					댓글 더 불러오기
 					{#if loading}
-						<div class="border-mofu-light-400 dark:border-mofu-dark-400 ml-2 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></div>
+						<div
+							class="border-mofu-light-400 dark:border-mofu-dark-400 ml-2 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"
+						></div>
 					{/if}
 				</button>
 			</div>

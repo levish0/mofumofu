@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { ChevronDown, ChevronUp } from '@lucide/svelte';
+
 	interface Props {
 		depth: number;
 		isLast: boolean;
@@ -36,13 +38,9 @@
 			aria-label={showChildren ? '답글 접기' : '답글 펼치기'}
 		>
 			{#if showChildren}
-				<svg class="size-3.5 opacity-60 transition-opacity group-hover/btn:opacity-100" stroke-width="2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-					<path d="m18 15-6-6-6 6"/>
-				</svg>
+				<ChevronUp class="size-3.5 opacity-60 transition-opacity group-hover/btn:opacity-100" strokeWidth={2} />
 			{:else}
-				<svg class="size-3.5 opacity-60 transition-opacity group-hover/btn:opacity-100" stroke-width="2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-					<path d="m6 9 6 6 6-6"/>
-				</svg>
+				<ChevronDown class="size-3.5 opacity-60 transition-opacity group-hover/btn:opacity-100" strokeWidth={2} />
 			{/if}
 		</button>
 	</div>
