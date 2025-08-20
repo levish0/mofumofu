@@ -128,7 +128,7 @@
 			</div>
 
 			<!-- 댓글 입력 영역 -->
-			<div class="min-w-0 flex-1">
+			<div class="min-w-0 flex-1" onclick={(e) => e.stopPropagation()}>
 				<div
 					class="bg-mofu-light-950 dark:bg-mofu-dark-900 border-mofu-light-600 dark:border-mofu-dark-600 focus-within:border-mofu focus-within:ring-mofu rounded-lg border transition-colors focus-within:ring-1"
 				>
@@ -137,6 +137,7 @@
 						bind:this={textareaElement}
 						bind:value={content}
 						onkeydown={handleKeyDown}
+						onclick={(e) => e.stopPropagation()}
 						{placeholder}
 						disabled={isSubmitting}
 						maxlength={maxLength}
@@ -171,7 +172,10 @@
 							{#if onCancel}
 								<button
 									type="button"
-									onclick={handleCancel}
+									onclick={(e) => {
+										e.stopPropagation();
+										handleCancel();
+									}}
 									disabled={isSubmitting}
 									class="text-mofu-light-600 hover:text-mofu-light-200 disabled:text-mofu-light-400 hover:bg-mofu-light-800 dark:hover:bg-mofu-dark-700 rounded px-3 py-1.5 text-xs transition-colors"
 								>
@@ -181,7 +185,10 @@
 
 							<button
 								type="button"
-								onclick={handleSubmit}
+								onclick={(e) => {
+									e.stopPropagation();
+									handleSubmit();
+								}}
 								disabled={!content.trim() || isSubmitting || remainingChars < 0}
 								class="bg-mofu hover:bg-mofu/90 disabled:bg-mofu-light-600 flex items-center gap-1.5 rounded-md px-4 py-1.5 text-xs text-white transition-colors disabled:cursor-not-allowed"
 							>

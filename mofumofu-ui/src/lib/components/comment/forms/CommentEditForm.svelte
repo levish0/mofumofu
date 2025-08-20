@@ -9,23 +9,30 @@
 	let { editContent, onSave, onCancel, onContentChange }: Props = $props();
 </script>
 
-<div class="mt-2">
+<div class="mt-2" onclick={(e) => e.stopPropagation()}>
 	<textarea
 		bind:value={editContent}
 		oninput={(e) => onContentChange((e.target as HTMLTextAreaElement).value)}
+		onclick={(e) => e.stopPropagation()}
 		class="border-mofu-light-600 dark:border-mofu-dark-600 bg-mofu-light-950 dark:bg-mofu-dark-800 focus:ring-mofu w-full resize-none rounded-md border p-2 text-sm focus:ring-2 focus:outline-none"
 		rows="3"
 		maxlength="500"
 	></textarea>
 	<div class="mt-2 flex justify-end gap-2">
 		<button
-			onclick={onCancel}
+			onclick={(e) => {
+				e.stopPropagation();
+				onCancel();
+			}}
 			class="text-mofu-light-400 dark:text-mofu-dark-400 hover:text-mofu-light-200 dark:hover:text-mofu-dark-200 px-3 py-1 text-sm transition-colors"
 		>
 			취소
 		</button>
 		<button
-			onclick={onSave}
+			onclick={(e) => {
+				e.stopPropagation();
+				onSave();
+			}}
 			disabled={!editContent.trim()}
 			class="bg-mofu hover:bg-mofu/90 disabled:bg-mofu-light-600 rounded px-3 py-1 text-sm text-white transition-colors disabled:cursor-not-allowed"
 		>

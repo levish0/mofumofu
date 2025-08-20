@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Heart, Icon } from 'svelte-hero-icons';
 	import { useLike } from '$lib/hooks/useLike.svelte';
+	import { authStore } from '$lib/stores/auth.svelte';
 
 	interface Props {
 		postId: string;
@@ -14,6 +15,8 @@
 		type: 'post',
 		initialCount: initialLikeCount
 	});
+
+	const isAuthenticated = $derived(authStore.isAuthenticated);
 </script>
 
 {#if like.isLoading()}
@@ -21,11 +24,11 @@
 {:else}
 	<button
 		onclick={like.toggleLike}
-		disabled={like.isSubmitting()}
+		disabled={like.isSubmitting() || !isAuthenticated}
 		class="flex items-center gap-2 rounded-full px-4 py-2 transition-colors {like.isLiked()
 			? 'text-rose-600 dark:text-rose-500'
-			: 'dark:text-mofu-dark-400 text-mofu-light-400 hover:text-rose-600 dark:hover:text-rose-500'} 
-		{like.isSubmitting() ? 'cursor-not-allowed opacity-50' : ''}"
+			: 'dark:text-mofu-dark-400 text-mofu-light-400'} 
+		{like.isSubmitting() || !isAuthenticated ? 'cursor-not-allowed opacity-50' : 'hover:text-rose-600 dark:hover:text-rose-500'}"
 	>
 		<Icon src={Heart} class="h-5 w-5" solid />
 		<span class="text-sm">{like.likeCount()}</span>

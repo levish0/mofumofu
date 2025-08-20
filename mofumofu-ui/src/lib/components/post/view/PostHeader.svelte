@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Badge } from '$lib/components/ui/badge';
-	import FollowButton from '$lib/components/profile/FollowButton.svelte';
 	import PostLikeButton from './PostLikeButton.svelte';
 	import PostActions from './PostActions.svelte';
 	import ReportDialog from '../../report/ReportDialog.svelte';
@@ -70,7 +69,6 @@
 			{#if isAuthor}
 				<PostActions isOwner={true} {onEdit} {onDelete} onReport={handleReport} />
 			{:else}
-				<FollowButton handle={author.handle} />
 				<PostActions isOwner={false} onEdit={() => {}} onDelete={() => {}} onReport={handleReport} />
 			{/if}
 		</div>

@@ -2,7 +2,6 @@
 	import type { CommentInfo } from '$lib/api/comment/types';
 	import { getReplies, updateComment, deleteComment } from '$lib/api/comment/commentApi';
 	import { userStore } from '$lib/stores/user.svelte';
-	import { useLike } from '$lib/hooks/useLike.svelte';
 	import { toast } from 'svelte-sonner';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Button } from '$lib/components/ui/button';
@@ -34,13 +33,6 @@
 	let showReplyForm = $state(false);
 	let showEditForm = $state(false);
 
-	// 좋아요 훅 사용
-	const like = useLike({
-		id: comment.id,
-		type: 'comment',
-		initialCount: comment.like_count || 0,
-		onUpdate: onLikeUpdate
-	});
 
 	let showChildren = $state(false);
 	let children = $state<CommentInfo[]>([]);
@@ -87,7 +79,6 @@
 		localIsDeleted = comment.is_deleted;
 		localReplyCount = comment.reply_count;
 		editContent = comment.content || '';
-		like.updateLikeCount(comment.like_count || 0);
 	});
 
 	// 드롭다운 관리 함수들
@@ -259,12 +250,10 @@
 					<div class="flex items-center gap-1">
 						<!-- Like button -->
 						<CommentLikeButton
-							likeCount={like.likeCount()}
-							userLiked={like.isLiked()}
-							isLiking={like.isSubmitting()}
+							commentId={comment.id}
+							initialLikeCount={comment.like_count || 0}
 							{isDeleted}
-							isLoggedIn={!!userStore.user}
-							onLike={like.toggleLike}
+							onLikeUpdate={onLikeUpdate}
 						/>
 
 						<!-- Actions menu -->

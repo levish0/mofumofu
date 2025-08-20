@@ -42,6 +42,8 @@
 	<span class="text-mofu-light-400 dark:text-mofu-dark-400">•</span>
 	<span class="text-mofu-light-400 dark:text-mofu-dark-400">{getRelativeTime(createdAt)}</span>
 	{#if updatedAt && updatedAt !== createdAt}
-		<span class="text-mofu-light-500 dark:text-mofu-dark-500 text-xs">(편집됨)</span>
+		<span class="text-mofu-light-500 dark:text-mofu-dark-500 text-xs">
+			• {getRelativeTime(updatedAt)} 편집
+		</span>
 	{/if}
 </div>

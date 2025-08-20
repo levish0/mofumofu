@@ -1,7 +1,6 @@
 import { createLike, deleteLike, checkLikeStatus } from '$lib/api/like/likeApi';
 import { createCommentLike, deleteCommentLike, checkCommentLikeStatus } from '$lib/api/comment/commentApi';
 import { authStore } from '$lib/stores/auth.svelte';
-import { goto } from '$app/navigation';
 import { toast } from 'svelte-sonner';
 import { onMount } from 'svelte';
 
@@ -58,7 +57,6 @@ export function useLike(options: UseLikeOptions) {
 	// 좋아요 토글
 	async function toggleLike() {
 		if (!authStore.isAuthenticated) {
-			goto('/account/signin');
 			return;
 		}
 
