@@ -1,6 +1,6 @@
 [package]
 name = "mofumofu-backend"
-version = "0.7.2"
+version = "0.8.2"
 description = "A soft and simple blogging platform for everyone."
 authors = [
     "Levi Lim <shiueo.csh@gmail.com>",
