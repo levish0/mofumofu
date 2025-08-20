@@ -5,8 +5,8 @@ use crate::service::error::errors::Errors;
 use crate::service::follow::check_follow_status::service_check_follow_status;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
-use axum::extract::State;
 use axum::Extension;
+use axum::extract::State;
 
 #[utoipa::path(
     post,
@@ -29,14 +29,8 @@ pub async fn api_check_follow_status(
 ) -> Result<FollowStatusResponse, Errors> {
     let user_uuid = claims.sub.clone();
 
-    let is_following = service_check_follow_status(
-        &state.conn,
-        &user_uuid,
-        &payload.handle,
-    )
-    .await?;
+    let is_following =
+        service_check_follow_status(&state.conn, &user_uuid, &payload.handle).await?;
 
-    Ok(FollowStatusResponse {
-        is_following,
-    })
+    Ok(FollowStatusResponse { is_following })
 }

@@ -54,18 +54,12 @@ pub async fn queue_send_email(
             .text()
             .await
             .unwrap_or_else(|_| "Unknown error".to_string());
-        warn!(
-            "Email send task queue failed: {} - {}",
-            status, error_text
-        );
+        warn!("Email send task queue failed: {} - {}", status, error_text);
         return Err(format!("Task queue request failed: {} - {}", status, error_text).into());
     }
 
     let task_response: TaskResponse = response.json().await?;
-    info!(
-        "Email send task queued with ID: {}",
-        task_response.task_id
-    );
+    info!("Email send task queued with ID: {}", task_response.task_id);
 
     Ok(task_response.task_id)
 }
@@ -88,7 +82,10 @@ pub async fn queue_send_reset_password_email(
     });
 
     let response = http_client
-        .post(&format!("{}/tasks/email/send-reset-password", task_server_url))
+        .post(&format!(
+            "{}/tasks/email/send-reset-password",
+            task_server_url
+        ))
         .json(&request_body)
         .send()
         .await?;
@@ -133,7 +130,10 @@ pub async fn queue_send_email_verification(
     });
 
     let response = http_client
-        .post(&format!("{}/tasks/email/send-verification", task_server_url))
+        .post(&format!(
+            "{}/tasks/email/send-verification",
+            task_server_url
+        ))
         .json(&request_body)
         .send()
         .await?;
@@ -170,7 +170,10 @@ pub async fn get_email_task_status(
     info!("Getting email task status for ID: {}", task_id);
 
     let response = http_client
-        .get(&format!("{}/tasks/email/status/{}", task_server_url, task_id))
+        .get(&format!(
+            "{}/tasks/email/status/{}",
+            task_server_url, task_id
+        ))
         .send()
         .await?;
 

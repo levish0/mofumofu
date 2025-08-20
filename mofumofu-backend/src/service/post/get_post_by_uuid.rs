@@ -1,7 +1,7 @@
-use crate::dto::post::response::post_info::{PostInfoResponse, PostAuthor};
+use crate::dto::post::response::post_info::{PostAuthor, PostInfoResponse};
+use crate::repository::hashtag::get_hashtags_by_post::repository_get_hashtags_by_post;
 use crate::repository::post::get_post_by_uuid::repository_get_post_by_uuid;
 use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
-use crate::repository::hashtag::get_hashtags_by_post::repository_get_hashtags_by_post;
 use crate::service::error::errors::{Errors, ServiceResult};
 use reqwest::Client;
 use sea_orm::{ConnectionTrait, TransactionTrait};
@@ -39,7 +39,7 @@ where
         summary: post.summary,
         thumbnail_image: post.thumbnail_image,
         rendered: post.render.unwrap_or_default(), // 렌더링된 HTML 또는 빈 문자열
-        toc_items: Vec::new(), // TODO: TOC 파싱 구현 필요
+        toc_items: Vec::new(),                     // TODO: TOC 파싱 구현 필요
         author: PostAuthor {
             handle: user.handle,
             name: user.name,

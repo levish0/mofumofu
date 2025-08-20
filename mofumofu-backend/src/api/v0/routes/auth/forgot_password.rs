@@ -24,7 +24,10 @@ pub async fn forgot_password(
     State(state): State<AppState>,
     ValidatedJson(payload): ValidatedJson<ForgotPasswordRequest>,
 ) -> Result<impl IntoResponse, Errors> {
-    info!("Received POST request to forgot_password: {:?}", payload.email);
+    info!(
+        "Received POST request to forgot_password: {:?}",
+        payload.email
+    );
 
     service_forgot_password(&state, payload).await?;
 

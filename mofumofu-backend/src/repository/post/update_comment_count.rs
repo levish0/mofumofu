@@ -1,8 +1,8 @@
 use crate::entity::posts::{Column as PostColumn, Entity as PostEntity};
-use sea_orm::{ColumnTrait, ConnectionTrait, EntityTrait, QueryFilter};
-use uuid::Uuid;
 use sea_orm::sea_query::Func;
 use sea_orm::sea_query::SimpleExpr::FunctionCall;
+use sea_orm::{ColumnTrait, ConnectionTrait, EntityTrait, QueryFilter};
+use uuid::Uuid;
 
 pub async fn repository_increment_comment_count<C>(
     conn: &C,
@@ -13,7 +13,10 @@ where
 {
     PostEntity::update_many()
         .filter(PostColumn::Id.eq(*post_id))
-        .col_expr(PostColumn::CommentCount, PostColumn::CommentCount.into_expr().add(1))
+        .col_expr(
+            PostColumn::CommentCount,
+            PostColumn::CommentCount.into_expr().add(1),
+        )
         .exec(conn)
         .await?;
 
@@ -30,11 +33,11 @@ where
     PostEntity::update_many()
         .filter(PostColumn::Id.eq(*post_id))
         .col_expr(
-            PostColumn::CommentCount, 
+            PostColumn::CommentCount,
             FunctionCall(Func::greatest([
                 PostColumn::CommentCount.into_expr().sub(1),
-                0.into()
-            ]))
+                0.into(),
+            ])),
         )
         .exec(conn)
         .await?;

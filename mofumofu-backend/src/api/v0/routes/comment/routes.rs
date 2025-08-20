@@ -6,7 +6,11 @@ use crate::api::v0::routes::comment::get_replies::get_replies;
 use crate::api::v0::routes::comment::update_comment::update_comment;
 use crate::middleware::auth::access_jwt_auth;
 use crate::state::AppState;
-use axum::{middleware::from_fn, routing::{delete as axum_delete, post, put}, Router};
+use axum::{
+    Router,
+    middleware::from_fn,
+    routing::{delete as axum_delete, post, put},
+};
 
 pub fn comment_routes() -> Router<AppState> {
     Router::new()
@@ -22,16 +26,7 @@ pub fn comment_routes() -> Router<AppState> {
             "/comment",
             axum_delete(delete_comment).route_layer(from_fn(access_jwt_auth)),
         )
-        .route(
-            "/comment/get",
-            post(get_comment_by_id),
-        )
-        .route(
-            "/comment/list",
-            post(get_comments),
-        )
-        .route(
-            "/comment/replies",
-            post(get_replies),
-        )
+        .route("/comment/get", post(get_comment_by_id))
+        .route("/comment/list", post(get_comments))
+        .route("/comment/replies", post(get_replies))
 }

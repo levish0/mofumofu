@@ -5,9 +5,9 @@ use crate::service::error::errors::Errors;
 use crate::service::like::check_post_like_status::service_check_post_like_status;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
+use axum::Extension;
 use axum::extract::State;
 use axum::response::IntoResponse;
-use axum::Extension;
 use tracing::info;
 
 #[utoipa::path(
@@ -33,7 +33,8 @@ pub async fn check_like_status(
     info!("Received request to check like status: {:?}", payload);
     let user_uuid = claims.sub.clone();
 
-    let response = service_check_post_like_status(&state.conn, &user_uuid, &payload.post_id).await?;
+    let response =
+        service_check_post_like_status(&state.conn, &user_uuid, &payload.post_id).await?;
 
     Ok(response)
 }

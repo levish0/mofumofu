@@ -11,7 +11,10 @@ where
 {
     UsersEntity::update_many()
         .filter(UsersColumn::Id.eq(user_id))
-        .col_expr(UsersColumn::FollowerCount, UsersColumn::FollowerCount.into_expr().add(1))
+        .col_expr(
+            UsersColumn::FollowerCount,
+            UsersColumn::FollowerCount.into_expr().add(1),
+        )
         .exec(conn)
         .await?;
 
@@ -27,7 +30,10 @@ where
 {
     UsersEntity::update_many()
         .filter(UsersColumn::Id.eq(user_id))
-        .col_expr(UsersColumn::FollowerCount, UsersColumn::FollowerCount.into_expr().sub(1))
+        .col_expr(
+            UsersColumn::FollowerCount,
+            UsersColumn::FollowerCount.into_expr().sub(1),
+        )
         .exec(conn)
         .await?;
 
@@ -43,7 +49,10 @@ where
 {
     UsersEntity::update_many()
         .filter(UsersColumn::Id.eq(user_id))
-        .col_expr(UsersColumn::FollowingCount, UsersColumn::FollowingCount.into_expr().add(1))
+        .col_expr(
+            UsersColumn::FollowingCount,
+            UsersColumn::FollowingCount.into_expr().add(1),
+        )
         .exec(conn)
         .await?;
 
@@ -59,7 +68,10 @@ where
 {
     UsersEntity::update_many()
         .filter(UsersColumn::Id.eq(user_id))
-        .col_expr(UsersColumn::FollowingCount, UsersColumn::FollowingCount.into_expr().sub(1))
+        .col_expr(
+            UsersColumn::FollowingCount,
+            UsersColumn::FollowingCount.into_expr().sub(1),
+        )
         .exec(conn)
         .await?;
 

@@ -9,10 +9,7 @@ use chrono::Utc;
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use tracing::{error, info};
 
-pub async fn service_reset_password<C>(
-    conn: &C,
-    payload: ResetPasswordRequest,
-) -> ServiceResult<()>
+pub async fn service_reset_password<C>(conn: &C, payload: ResetPasswordRequest) -> ServiceResult<()>
 where
     C: ConnectionTrait + TransactionTrait,
 {

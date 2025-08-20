@@ -4,10 +4,10 @@ use crate::service::auth::service_set_password;
 use crate::service::error::errors::Errors;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
+use axum::Extension;
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use axum::Extension;
 use tracing::info;
 
 #[utoipa::path(
@@ -30,7 +30,10 @@ pub async fn set_password(
     Extension(claims): Extension<AccessTokenClaims>,
     ValidatedJson(payload): ValidatedJson<SetPasswordRequest>,
 ) -> Result<impl IntoResponse, Errors> {
-    info!("Received POST request to set password for user: {}", claims.sub);
+    info!(
+        "Received POST request to set password for user: {}",
+        claims.sub
+    );
 
     service_set_password(&state.conn, claims.sub, payload).await?;
 

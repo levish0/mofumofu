@@ -5,10 +5,10 @@ use crate::service::comment::create_comment::service_create_comment;
 use crate::service::error::errors::Errors;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
+use axum::Extension;
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use axum::Extension;
 use tracing::info;
 
 #[utoipa::path(

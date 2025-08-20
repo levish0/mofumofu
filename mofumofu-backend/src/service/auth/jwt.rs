@@ -81,7 +81,8 @@ pub fn create_email_verification_token(
     email: &str,
 ) -> Result<String, jsonwebtoken::errors::Error> {
     let jwt_secret = &DbConfig::get().jwt_secret;
-    let email_verification_token_lifetime = DbConfig::get().auth_email_verification_token_expire_time;
+    let email_verification_token_lifetime =
+        DbConfig::get().auth_email_verification_token_expire_time;
     let encoding_key = EncodingKey::from_secret(jwt_secret.as_bytes());
 
     let now = Utc::now();

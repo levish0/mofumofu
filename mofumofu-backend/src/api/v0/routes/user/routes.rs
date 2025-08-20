@@ -6,8 +6,8 @@ use crate::api::v0::routes::user::upload_avatar::upload_avatar;
 use crate::api::v0::routes::user::upload_banner::upload_banner;
 use crate::middleware::auth::access_jwt_auth;
 use crate::state::AppState;
-use axum::routing::{get, post, put};
 use axum::Router;
+use axum::routing::{get, post, put};
 
 pub fn user_routes() -> Router<AppState> {
     Router::new()
@@ -25,12 +25,10 @@ pub fn user_routes() -> Router<AppState> {
         // 이미지 업로드 API
         .route(
             "/user/profile/avatar",
-            post(upload_avatar)
-                .route_layer(axum::middleware::from_fn(access_jwt_auth)),
+            post(upload_avatar).route_layer(axum::middleware::from_fn(access_jwt_auth)),
         )
         .route(
             "/user/profile/banner",
-            post(upload_banner)
-                .route_layer(axum::middleware::from_fn(access_jwt_auth)),
+            post(upload_banner).route_layer(axum::middleware::from_fn(access_jwt_auth)),
         )
 }

@@ -5,5 +5,6 @@ mod hashtag;
 mod like;
 mod openapi;
 mod post;
+mod report;
 pub mod routes;
 mod user;

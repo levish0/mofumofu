@@ -3,8 +3,7 @@ use utoipa::ToSchema;
 use uuid::Uuid;
 use validator::Validate;
 
-#[derive(Deserialize, Validate, ToSchema)]
-#[derive(Debug)]
+#[derive(Deserialize, Validate, ToSchema, Debug)]
 pub struct CreateCommentLikeRequest {
     pub comment_id: Uuid,
 }

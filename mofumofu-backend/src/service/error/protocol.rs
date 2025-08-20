@@ -48,6 +48,10 @@ pub mod like {
     pub const LIKE_NOT_FOUND: &str = "like:not_found";
 }
 
+pub mod report {
+    pub const REPORT_NOT_FOUND: &str = "report:not_found";
+}
+
 pub mod password {
     pub const PASSWORD_REQUIRED_FOR_UPDATE: &str = "password:required_for_update";
     pub const PASSWORD_INCORRECT: &str = "password:incorrect";

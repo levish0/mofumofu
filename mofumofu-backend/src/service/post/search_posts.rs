@@ -1,11 +1,11 @@
 use crate::connection::meilisearch::MeilisearchClient;
 use crate::dto::post::request::{PostSortOrder, SearchPostsRequest};
 use crate::dto::post::response::{GetPostsResponse, PostListItem};
+use crate::repository::hashtag::get_hashtags_by_post::repository_get_hashtags_by_posts;
+use crate::repository::post::get_posts::repository_get_posts_by_ids;
+use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
 use crate::service::error::errors::{Errors, ServiceResult};
 use crate::service::meilisearch::post_indexer;
-use crate::repository::post::get_posts::repository_get_posts_by_ids;
-use crate::repository::hashtag::get_hashtags_by_post::repository_get_hashtags_by_posts;
-use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
 use chrono::{DateTime, Utc};
 use sea_orm::{ConnectionTrait, TransactionTrait};
 

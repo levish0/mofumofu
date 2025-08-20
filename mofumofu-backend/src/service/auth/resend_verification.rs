@@ -26,8 +26,8 @@ where
     }
 
     // 이메일 인증 토큰 생성
-    let verification_token = create_email_verification_token(&user.id, &user.email)
-        .map_err(|e| {
+    let verification_token =
+        create_email_verification_token(&user.id, &user.email).map_err(|e| {
             error!("Failed to create email verification token: {}", e);
             Errors::SysInternalError("Failed to create verification token".to_string())
         })?;
@@ -42,7 +42,9 @@ where
     .await
     {
         error!("Failed to queue verification email: {}", e);
-        return Err(Errors::SysInternalError("Failed to send verification email".to_string()));
+        return Err(Errors::SysInternalError(
+            "Failed to send verification email".to_string(),
+        ));
     } else {
         info!("Verification email queued for user: {}", user.email);
     }

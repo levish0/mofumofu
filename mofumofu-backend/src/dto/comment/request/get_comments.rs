@@ -20,13 +20,13 @@ impl Default for CommentSortOrder {
 #[derive(Deserialize, ToSchema, Debug, Validate)]
 pub struct GetCommentsRequest {
     pub post_id: Uuid,
-    
+
     #[serde(default = "default_page")]
     pub page: u32,
-    
+
     #[serde(default = "default_per_page")]
     pub per_page: u32,
-    
+
     #[serde(default)]
     pub sort: CommentSortOrder,
 }
@@ -34,13 +34,13 @@ pub struct GetCommentsRequest {
 #[derive(Deserialize, ToSchema, Debug, Validate)]
 pub struct GetRepliesRequest {
     pub parent_comment_id: Uuid,
-    
+
     #[serde(default = "default_page")]
     pub page: u32,
-    
+
     #[serde(default = "default_per_page")]
     pub per_page: u32,
-    
+
     #[serde(default)]
     pub sort: CommentSortOrder,
 }

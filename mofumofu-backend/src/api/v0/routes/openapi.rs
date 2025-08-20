@@ -6,9 +6,15 @@ use crate::dto::auth::request::reset_password::ResetPasswordRequest;
 use crate::dto::auth::request::set_password::SetPasswordRequest;
 use crate::dto::auth::request::unlink_oauth::UnlinkOAuthRequest;
 use crate::dto::auth::request::verify_email::VerifyEmailRequest;
-use crate::dto::auth::response::oauth_connections::OAuthConnectionsResponse;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
-use crate::entity::common::OAuthProvider;
+use crate::dto::auth::response::oauth_connections::OAuthConnectionsResponse;
+use crate::dto::comment::request::create_comment::CreateCommentRequest;
+use crate::dto::comment::request::delete_comment::DeleteCommentRequest;
+use crate::dto::comment::request::get_comment_by_id::GetCommentByIdRequest;
+use crate::dto::comment::request::get_comments::{GetCommentsRequest, GetRepliesRequest};
+use crate::dto::comment::request::update_comment::UpdateCommentRequest;
+use crate::dto::comment::response::comment_info::CommentInfo;
+use crate::dto::comment::response::get_comments::{GetCommentsResponse, GetRepliesResponse};
 use crate::dto::follow::request::check_follow_status::CheckFollowStatusRequest;
 use crate::dto::follow::request::create::CreateFollowRequest;
 use crate::dto::follow::request::delete::DeleteFollowRequest;
@@ -25,26 +31,25 @@ use crate::dto::like::request::create_like::CreateLikeRequest;
 use crate::dto::like::request::delete_comment_like::DeleteCommentLikeRequest;
 use crate::dto::like::request::delete_like::DeleteLikeRequest;
 use crate::dto::like::response::like_status::LikeStatusResponse;
-use crate::dto::comment::request::create_comment::CreateCommentRequest;
-use crate::dto::comment::request::delete_comment::DeleteCommentRequest;
-use crate::dto::comment::request::get_comment_by_id::GetCommentByIdRequest;
-use crate::dto::comment::request::get_comments::{GetCommentsRequest, GetRepliesRequest};
-use crate::dto::comment::request::update_comment::UpdateCommentRequest;
-use crate::dto::comment::response::comment_info::CommentInfo;
-use crate::dto::comment::response::get_comments::{GetCommentsResponse, GetRepliesResponse};
-use crate::dto::post::request::create_post::CreatePostRequest;
-use crate::dto::post::response::create_post::CreatePostResponse;
-use crate::dto::post::request::delete_post::DeletePostRequest;
-use crate::dto::post::request::GetPostByUuidRequest;
 use crate::dto::post::request::GetPostByHandleAndSlugRequest;
+use crate::dto::post::request::GetPostByUuidRequest;
+use crate::dto::post::request::create_post::CreatePostRequest;
+use crate::dto::post::request::delete_post::DeletePostRequest;
 use crate::dto::post::request::get_post_for_edit::GetPostForEditRequest;
-use crate::dto::post::request::update_post::UpdatePostRequest;
 use crate::dto::post::request::image_upload::ImageUploadForm;
 use crate::dto::post::request::thumbnail_image::PostThumbnailForm;
-use crate::dto::post::request::{GetPostsRequest, GetUserPostsRequest, PostSortOrder, SearchPostsRequest};
+use crate::dto::post::request::update_post::UpdatePostRequest;
+use crate::dto::post::request::{
+    GetPostsRequest, GetUserPostsRequest, PostSortOrder, SearchPostsRequest,
+};
+use crate::dto::post::response::create_post::CreatePostResponse;
 use crate::dto::post::response::post_edit_info::PostEditInfoResponse;
 use crate::dto::post::response::post_info::{PostAuthor, PostInfoResponse};
-use crate::dto::post::response::{GetPostsResponse, ImageUploadResponse, PostListItem, UserPostsResponse};
+use crate::dto::post::response::{
+    GetPostsResponse, ImageUploadResponse, PostListItem, UserPostsResponse,
+};
+use crate::dto::report::request::{CreateReportRequest, GetReportsRequest, ProcessReportRequest};
+use crate::dto::report::response::{CreateReportResponse, GetReportsResponse, ReportInfo};
 use crate::dto::user::request::avatar_image::ProfileAvatarForm;
 use crate::dto::user::request::banner_image::ProfileBannerForm;
 use crate::dto::user::request::create::CreateUserRequest;
@@ -52,11 +57,12 @@ use crate::dto::user::request::get_profile::GetUserProfileRequest;
 use crate::dto::user::request::update_profile::UpdateProfileRequest;
 use crate::dto::user::response::handle_check::HandleCheckResponse;
 use crate::dto::user::response::info::UserInfoResponse;
+use crate::entity::common::OAuthProvider;
 use crate::service::error::errors::ErrorResponse;
 use utoipa::openapi::security::{ApiKey, ApiKeyValue};
 use utoipa::{
-    openapi::security::{HttpAuthScheme, HttpBuilder, SecurityScheme}, Modify,
-    OpenApi,
+    Modify, OpenApi,
+    openapi::security::{HttpAuthScheme, HttpBuilder, SecurityScheme},
 };
 
 #[derive(OpenApi)]

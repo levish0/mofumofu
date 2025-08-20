@@ -6,10 +6,10 @@ use crate::service::error::errors::Errors;
 use crate::service::user::service_update_user_profile;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
+use axum::Extension;
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use axum::Extension;
 use tracing::{error, info, warn};
 
 #[utoipa::path(

@@ -90,9 +90,10 @@ pub async fn get_google_user_info(
         return Err(Errors::OauthUserInfoFetchFailed);
     }
 
-    let user_info: GoogleUserInfo = response.json().await.map_err(|_e| {
-        Errors::OauthUserInfoParseFailed
-    })?;
+    let user_info: GoogleUserInfo = response
+        .json()
+        .await
+        .map_err(|_e| Errors::OauthUserInfoParseFailed)?;
 
     Ok(user_info)
 }

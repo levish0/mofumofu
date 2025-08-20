@@ -3,4 +3,3 @@ pub mod github_sign_in;
 pub mod google_sign_in;
 mod oauth_avatar_upload;
 pub mod provider;
-

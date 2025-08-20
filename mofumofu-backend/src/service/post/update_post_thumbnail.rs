@@ -1,8 +1,8 @@
+use crate::connection::cloudflare_r2::R2Client;
 use crate::repository::post::get_post_by_uuid::repository_get_post_by_uuid;
 use crate::repository::post::update_post_thumbnail::repository_update_post_thumbnail;
 use crate::service::error::errors::{Errors, ServiceResult};
 use crate::utils::image_validator::{generate_image_hash, process_image_for_upload};
-use crate::connection::cloudflare_r2::R2Client;
 use axum::extract::Multipart;
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use tracing::{error, info, warn};
@@ -45,9 +45,10 @@ where
                     error!("Failed to read post_id field: {}", e);
                     Errors::BadRequestError("Failed to read post_id".to_string())
                 })?;
-                post_id = Some(Uuid::parse_str(&text).map_err(|_| {
-                    Errors::BadRequestError("Invalid post_id format".to_string())
-                })?);
+                post_id =
+                    Some(Uuid::parse_str(&text).map_err(|_| {
+                        Errors::BadRequestError("Invalid post_id format".to_string())
+                    })?);
             }
             _ => {
                 warn!("Unknown field in multipart: {}", field_name);
@@ -71,7 +72,9 @@ where
 
     // 작성자 권한 검증
     if post.user_id != *user_uuid {
-        return Err(Errors::ForbiddenError("Not the owner of this post".to_string()));
+        return Err(Errors::ForbiddenError(
+            "Not the owner of this post".to_string(),
+        ));
     }
 
     // 필수 필드 검증
@@ -89,7 +92,7 @@ where
         true, // Convert to WebP for better compression
         max_dimensions,
     )?;
-    
+
     // Generate hash-based filename using processed data
     let hash = generate_image_hash(&processed_data);
     let filename = format!("thumbnail_{}.{}", hash, extension);
@@ -117,7 +120,8 @@ where
 
     // Upload to R2
     let r2_key = format!("posts/{}/thumbnail/{}", post.id, filename);
-    r2_client.upload_with_content_type(&r2_key, processed_data, &content_type)
+    r2_client
+        .upload_with_content_type(&r2_key, processed_data, &content_type)
         .await
         .map_err(|e| {
             error!("Failed to upload thumbnail to R2: {}", e);

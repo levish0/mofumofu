@@ -1,6 +1,6 @@
 use crate::dto::comment::request::GetRepliesRequest;
 use crate::dto::comment::response::{CommentInfo, GetRepliesResponse};
-use crate::repository::comment::get_comments::{repository_get_replies, repository_count_replies};
+use crate::repository::comment::get_comments::{repository_count_replies, repository_get_replies};
 use crate::repository::comment::get_reply_count::repository_get_reply_count;
 use crate::repository::like::check_like_status::repository_check_like_status_by_comment_id;
 use crate::repository::like::get_like_count::repository_get_like_count_by_comment_id;
@@ -18,17 +18,24 @@ where
 {
     let page = request.page;
     let per_page = request.per_page;
-    
+
     // 답글 조회
-    let replies = repository_get_replies(conn, request.parent_comment_id, page, per_page, request.sort.clone()).await?;
+    let replies = repository_get_replies(
+        conn,
+        request.parent_comment_id,
+        page,
+        per_page,
+        request.sort.clone(),
+    )
+    .await?;
     let total_count = repository_count_replies(conn, request.parent_comment_id).await?;
-    
+
     let mut reply_infos = Vec::new();
-    
+
     for reply in replies {
         let like_count = repository_get_like_count_by_comment_id(conn, reply.id).await? as i32;
         let reply_count = repository_get_reply_count(conn, reply.id).await? as i32;
-        
+
         // 삭제된 댓글은 내용과 사용자 정보를 숨김
         let reply_info = if reply.is_deleted {
             CommentInfo {
@@ -47,9 +54,10 @@ where
                 updated_at: reply.updated_at,
             }
         } else {
-            let user = repository_find_user_by_uuid(conn, &reply.user_id).await?
+            let user = repository_find_user_by_uuid(conn, &reply.user_id)
+                .await?
                 .ok_or(crate::service::error::errors::Errors::UserNotFound)?;
-            
+
             CommentInfo {
                 id: reply.id,
                 content: Some(reply.content),
@@ -66,12 +74,12 @@ where
                 updated_at: reply.updated_at,
             }
         };
-        
+
         reply_infos.push(reply_info);
     }
-    
+
     let has_next = reply_infos.len() == per_page as usize;
-    
+
     Ok(GetRepliesResponse {
         replies: reply_infos,
         total_count,

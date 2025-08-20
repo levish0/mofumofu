@@ -4,10 +4,7 @@ use crate::service::error::errors::{Errors, ServiceResult};
 use sea_orm::ConnectionTrait;
 use uuid::Uuid;
 
-pub async fn require_verified_user<C>(
-    conn: &C,
-    claims: &AccessTokenClaims,
-) -> ServiceResult<()>
+pub async fn require_verified_user<C>(conn: &C, claims: &AccessTokenClaims) -> ServiceResult<()>
 where
     C: ConnectionTrait,
 {

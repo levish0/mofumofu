@@ -26,7 +26,7 @@ impl MigrationTrait for Migration {
                     .col(
                         ColumnDef::new(Likes::TargetType)
                             .enumeration(LikeTargetType::Table, LikeTargetType::iter().skip(1))
-                            .not_null()
+                            .not_null(),
                     )
                     .col(
                         ColumnDef::new(Likes::CreatedAt)

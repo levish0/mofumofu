@@ -1,4 +1,6 @@
-use crate::entity::posts::{ActiveModel as PostActiveModel, Entity as PostEntity, Model as PostModel};
+use crate::entity::posts::{
+    ActiveModel as PostActiveModel, Entity as PostEntity, Model as PostModel,
+};
 use crate::service::error::errors::Errors;
 use sea_orm::{ActiveModelTrait, ActiveValue, ConnectionTrait, EntityTrait, Set, TransactionTrait};
 use uuid::Uuid;

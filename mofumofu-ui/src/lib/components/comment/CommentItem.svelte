@@ -2,14 +2,11 @@
 	import type { CommentInfo } from '$lib/api/comment/types';
 	import {
 		getReplies,
-		createCommentLike,
-		deleteCommentLike,
 		updateComment,
 		deleteComment
 	} from '$lib/api/comment/commentApi';
 	import { userStore } from '$lib/stores/user.svelte';
-	import { authStore } from '$lib/stores/auth.svelte';
-	import { goto } from '$app/navigation';
+	import { useLike } from '$lib/hooks/useLike.svelte';
 	import { toast } from 'svelte-sonner';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Button } from '$lib/components/ui/button';
@@ -29,7 +26,6 @@
 		postId: string;
 		depth?: number;
 		isLast?: boolean;
-		isLiked?: boolean;
 		onReply?: (newComment: CommentInfo) => void;
 		onLikeUpdate?: (commentId: string, isLiked: boolean) => void;
 		replyPerPage?: number;
@@ -40,7 +36,6 @@
 		postId,
 		depth = 0,
 		isLast = false,
-		isLiked = false,
 		onReply,
 		onLikeUpdate,
 		replyPerPage = 5
@@ -49,9 +44,14 @@
 	// 로칼 상태 관리
 	let showReplyForm = $state(false);
 	let showEditForm = $state(false);
-	let isLiking = $state(false);
-	let likeCount = $state(comment.like_count || 0);
-	let userLiked = $state(isLiked);
+
+	// 좋아요 훅 사용
+	const like = useLike({
+		id: comment.id,
+		type: 'comment',
+		initialCount: comment.like_count || 0,
+		onUpdate: onLikeUpdate
+	});
 
 	let showChildren = $state(false);
 	let children = $state<CommentInfo[]>([]);
@@ -95,12 +95,7 @@
 		localIsDeleted = comment.is_deleted;
 		localReplyCount = comment.reply_count;
 		editContent = comment.content || '';
-		likeCount = comment.like_count || 0;
-	});
-
-	// isLiked prop이 변경될 때 업데이트
-	$effect(() => {
-		userLiked = isLiked;
+		like.updateLikeCount(comment.like_count || 0);
 	});
 
 	// 드롭다운 관리 함수들
@@ -124,35 +119,6 @@
 		showEditForm = !showEditForm;
 	}
 
-	// 좋아요 토글 (포스트와 동일한 패턴)
-	const handleLike = async () => {
-		if (!authStore.isAuthenticated) {
-			goto('/account/signin');
-			return;
-		}
-
-		if (isLiking || isDeleted) return;
-
-		isLiking = true;
-		try {
-			if (userLiked) {
-				await deleteCommentLike({ comment_id: comment.id });
-				userLiked = false;
-				likeCount = Math.max(0, likeCount - 1);
-			} else {
-				await createCommentLike({ comment_id: comment.id });
-				userLiked = true;
-				likeCount += 1;
-			}
-
-			onLikeUpdate?.(comment.id, userLiked);
-		} catch (error) {
-			console.error('Failed to toggle comment like:', error);
-			toast.error('좋아요 처리에 실패했습니다');
-		} finally {
-			isLiking = false;
-		}
-	};
 
 	// 답글 목록 로드
 	const loadChildren = async () => {
@@ -296,12 +262,12 @@
 					<div class="flex items-center gap-1">
 						<!-- Like button -->
 						<CommentLikeButton
-							{likeCount}
-							{userLiked}
-							{isLiking}
+							likeCount={like.likeCount()}
+							userLiked={like.isLiked()}
+							isLiking={like.isSubmitting()}
 							{isDeleted}
 							isLoggedIn={!!userStore.user}
-							onLike={handleLike}
+							onLike={like.toggleLike}
 						/>
 
 						<!-- Owner actions -->

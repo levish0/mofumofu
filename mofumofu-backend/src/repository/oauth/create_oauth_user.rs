@@ -1,6 +1,6 @@
 use crate::dto::user::request::create::CreateUserRequest;
-use crate::entity::users::ActiveModel as UserActiveModel;
 use crate::entity::common::UserRole;
+use crate::entity::users::ActiveModel as UserActiveModel;
 use crate::service::error::errors::Errors;
 use crate::utils::crypto::hash_password;
 use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};

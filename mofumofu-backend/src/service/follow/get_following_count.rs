@@ -4,10 +4,7 @@ use crate::service::error::errors::{Errors, ServiceResult};
 use sea_orm::ConnectionTrait;
 use sea_orm::TransactionTrait;
 
-pub async fn service_get_following_count<C>(
-    conn: &C,
-    user_handle: &str,
-) -> ServiceResult<u64>
+pub async fn service_get_following_count<C>(conn: &C, user_handle: &str) -> ServiceResult<u64>
 where
     C: ConnectionTrait + TransactionTrait,
 {

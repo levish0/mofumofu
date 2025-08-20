@@ -1,8 +1,8 @@
+use crate::dto::comment::response::CommentInfo;
 use axum::Json;
 use axum::response::{IntoResponse, Response};
 use serde::Serialize;
 use utoipa::ToSchema;
-use crate::dto::comment::response::CommentInfo;
 
 #[derive(Serialize, ToSchema)]
 pub struct GetCommentsResponse {

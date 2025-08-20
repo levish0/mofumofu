@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getComments, checkCommentLikeStatus } from '$lib/api/comment/commentApi';
+	import { getComments } from '$lib/api/comment/commentApi';
 	import type { CommentInfo, GetCommentsRequest } from '$lib/api/comment/types';
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { userStore } from '$lib/stores/user.svelte';
@@ -34,8 +34,6 @@
 	let allLoaded = $state(false);
 	let sortOrder = $state<'latest' | 'oldest' | 'popular'>(defaultSort);
 
-	// 좋아요 상태 중앙 관리
-	let likeStatuses = $state<Record<string, boolean>>({});
 
 	// 정렬 버튼 클릭
 	const toggleSortOrder = async () => {
@@ -75,10 +73,6 @@
 			allLoaded = !response.has_next;
 			currentPage++;
 
-			// 새로운 댓글들의 좋아요 상태 확인 (로그인된 경우에만)
-			if (userStore.user) {
-				await updateLikeStatuses(response.comments);
-			}
 		} catch (error) {
 			console.error('Failed to load comments:', error);
 		} finally {
@@ -86,20 +80,6 @@
 		}
 	};
 
-	// 좋아요 상태 업데이트
-	const updateLikeStatuses = async (commentList: CommentInfo[]) => {
-		for (const comment of commentList) {
-			if (!(comment.id in likeStatuses)) {
-				try {
-					const status = await checkCommentLikeStatus({ comment_id: comment.id });
-					likeStatuses[comment.id] = status.is_liked;
-				} catch (error) {
-					console.error('Failed to check like status:', error);
-					likeStatuses[comment.id] = false;
-				}
-			}
-		}
-	};
 
 	// 새 댓글 추가 처리
 	const handleNewComment = async (newComment: CommentInfo) => {
@@ -113,24 +93,16 @@
 			commentCount++;
 		}
 
-		// 새 댓글의 좋아요 상태 초기화
-		likeStatuses[newComment.id] = false;
 	};
 
 	// 답글 추가 처리
 	const handleReply = (newReply: CommentInfo) => {
 		commentCount++;
-		likeStatuses[newReply.id] = false;
 	};
 
-	// 좋아요 상태 업데이트 함수
+	// 좋아요 상태 업데이트 함수 (더 이상 필요 없음)
 	const updateLikeStatus = (commentId: string, isLiked: boolean) => {
-		likeStatuses[commentId] = isLiked;
-		// 해당 댓글의 like_count도 업데이트
-		const comment = findCommentById(comments, commentId);
-		if (comment) {
-			comment.like_count += isLiked ? 1 : -1;
-		}
+		// 각 댓글이 자체적으로 관리
 	};
 
 	// 댓글 찾기 헬퍼 함수
@@ -145,8 +117,6 @@
 	onMount(() => {
 		if (initialComments.length === 0) {
 			loadComments();
-		} else if (userStore.user) {
-			updateLikeStatuses(initialComments);
 		}
 	});
 
@@ -216,7 +186,6 @@
 				{comment}
 				{postId}
 				depth={0}
-				isLiked={likeStatuses[comment.id] || false}
 				onReply={handleReply}
 				onLikeUpdate={updateLikeStatus}
 				{replyPerPage}

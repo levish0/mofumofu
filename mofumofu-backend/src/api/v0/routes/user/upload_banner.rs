@@ -5,9 +5,9 @@ use crate::service::auth::require_verified_user;
 use crate::service::error::errors::Errors;
 use crate::service::user::update_user_banner::service_update_user_banner;
 use crate::state::AppState;
+use axum::Extension;
 use axum::extract::{Multipart, State};
 use axum::response::IntoResponse;
-use axum::Extension;
 use tracing::info;
 
 #[utoipa::path(
@@ -38,7 +38,9 @@ pub async fn upload_banner(
 
     require_verified_user(&state.conn, &claims).await?;
 
-    let public_url = service_update_user_banner(&state.conn, &state.cloudflare_r2, &claims.sub, multipart).await?;
+    let public_url =
+        service_update_user_banner(&state.conn, &state.cloudflare_r2, &claims.sub, multipart)
+            .await?;
 
     Ok(ImageUploadResponse { public_url })
 }

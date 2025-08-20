@@ -8,7 +8,6 @@ use axum::extract::State;
 use axum::response::IntoResponse;
 use tracing::info;
 
-
 #[utoipa::path(
     post,
     path = "/v0/comment/list",

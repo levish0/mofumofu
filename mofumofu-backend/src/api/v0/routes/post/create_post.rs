@@ -47,7 +47,8 @@ pub async fn create_post(
 
     require_verified_user(&state.conn, &claims).await?;
 
-    let response = service_create_post(&state.conn, &state.http_client, payload, &user_uuid).await?;
+    let response =
+        service_create_post(&state.conn, &state.http_client, payload, &user_uuid).await?;
 
     Ok(response)
 }

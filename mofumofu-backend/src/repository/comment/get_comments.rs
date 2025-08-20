@@ -1,6 +1,10 @@
 use crate::dto::comment::request::get_comments::CommentSortOrder;
-use crate::entity::comments::{Column as CommentColumn, Entity as CommentEntity, Model as CommentModel};
-use sea_orm::{ColumnTrait, ConnectionTrait, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder, QuerySelect};
+use crate::entity::comments::{
+    Column as CommentColumn, Entity as CommentEntity, Model as CommentModel,
+};
+use sea_orm::{
+    ColumnTrait, ConnectionTrait, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder, QuerySelect,
+};
 use uuid::Uuid;
 
 pub async fn repository_get_comments<C>(
@@ -47,8 +51,7 @@ where
 {
     let offset = (page - 1) * per_page;
 
-    let mut query = CommentEntity::find()
-        .filter(CommentColumn::ParentId.eq(parent_comment_id));
+    let mut query = CommentEntity::find().filter(CommentColumn::ParentId.eq(parent_comment_id));
 
     // 정렬 적용
     query = match sort {
@@ -66,10 +69,7 @@ where
     Ok(replies)
 }
 
-pub async fn repository_count_comments<C>(
-    conn: &C,
-    post_id: Uuid,
-) -> Result<u64, sea_orm::DbErr>
+pub async fn repository_count_comments<C>(conn: &C, post_id: Uuid) -> Result<u64, sea_orm::DbErr>
 where
     C: ConnectionTrait,
 {

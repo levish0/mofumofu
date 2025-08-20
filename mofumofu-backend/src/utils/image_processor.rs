@@ -1,5 +1,5 @@
 use crate::service::error::errors::Errors;
-use image::{codecs::gif::GifDecoder, io::Reader, DynamicImage, GenericImageView, ImageFormat};
+use image::{DynamicImage, GenericImageView, ImageFormat, codecs::gif::GifDecoder, io::Reader};
 use std::io::Cursor;
 
 pub struct ImageProcessor;
@@ -12,7 +12,7 @@ impl ImageProcessor {
         max_dimensions: Option<(u32, u32)>,
     ) -> Result<Vec<u8>, Errors> {
         let img = Self::load_image(data)?;
-        
+
         let processed_img = if let Some((max_width, max_height)) = max_dimensions {
             Self::resize_if_needed(img, max_width, max_height)
         } else {
@@ -43,20 +43,25 @@ impl ImageProcessor {
 
     fn load_image(data: &[u8]) -> Result<DynamicImage, Errors> {
         let cursor = Cursor::new(data);
-        let reader = Reader::new(cursor).with_guessed_format()
+        let reader = Reader::new(cursor)
+            .with_guessed_format()
             .map_err(|_| Errors::BadRequestError("Cannot determine image format".to_string()))?;
-        
-        reader.decode()
+
+        reader
+            .decode()
             .map_err(|_| Errors::BadRequestError("Failed to decode image".to_string()))
     }
 
     fn resize_if_needed(img: DynamicImage, max_width: u32, max_height: u32) -> DynamicImage {
         let (width, height) = img.dimensions();
-        
+
         if width <= max_width && height <= max_height {
             tracing::info!(
                 "Image resize: No resize needed - {}x{} fits within {}x{}",
-                width, height, max_width, max_height
+                width,
+                height,
+                max_width,
+                max_height
             );
             return img;
         }
@@ -67,7 +72,13 @@ impl ImageProcessor {
 
         tracing::info!(
             "Image resize: Resizing {}x{} to {}x{} (max: {}x{}, ratio: {:.3})",
-            width, height, new_width, new_height, max_width, max_height, ratio
+            width,
+            height,
+            new_width,
+            new_height,
+            max_width,
+            max_height,
+            ratio
         );
 
         img.resize(new_width, new_height, image::imageops::FilterType::Lanczos3)
@@ -84,28 +95,32 @@ impl ImageProcessor {
         match format {
             ImageFormat::WebP => {
                 let encoder = image::codecs::webp::WebPEncoder::new_lossless(cursor);
-                img.write_with_encoder(encoder)
-                    .map_err(|_| Errors::SysInternalError("Failed to encode WebP image".to_string()))?;
+                img.write_with_encoder(encoder).map_err(|_| {
+                    Errors::SysInternalError("Failed to encode WebP image".to_string())
+                })?;
             }
             ImageFormat::Jpeg => {
                 let mut encoder = image::codecs::jpeg::JpegEncoder::new_with_quality(
                     cursor,
                     quality.unwrap_or(90),
                 );
-                encoder.encode_image(&img)
-                    .map_err(|_| Errors::SysInternalError("Failed to encode JPEG image".to_string()))?;
+                encoder.encode_image(&img).map_err(|_| {
+                    Errors::SysInternalError("Failed to encode JPEG image".to_string())
+                })?;
             }
             ImageFormat::Png => {
                 let encoder = image::codecs::png::PngEncoder::new(cursor);
-                img.write_with_encoder(encoder)
-                    .map_err(|_| Errors::SysInternalError("Failed to encode PNG image".to_string()))?;
+                img.write_with_encoder(encoder).map_err(|_| {
+                    Errors::SysInternalError("Failed to encode PNG image".to_string())
+                })?;
             }
             _ => {
-                return Err(Errors::BadRequestError("Unsupported output format".to_string()));
+                return Err(Errors::BadRequestError(
+                    "Unsupported output format".to_string(),
+                ));
             }
         }
 
         Ok(output)
     }
 }
-

@@ -7,9 +7,9 @@ use crate::api::v0::routes::follow::get_following_count::api_get_following_count
 use crate::api::v0::routes::follow::get_following_list::get_following;
 use crate::middleware::auth::access_jwt_auth;
 use crate::state::AppState;
+use axum::Router;
 use axum::middleware::from_fn;
 use axum::routing::{delete as axum_delete, get, post};
-use axum::Router;
 
 pub fn follow_routes() -> Router<AppState> {
     Router::new()

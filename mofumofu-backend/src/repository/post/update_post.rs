@@ -1,8 +1,12 @@
 use crate::dto::post::request::update_post::UpdatePostRequest;
-use crate::entity::posts::{ActiveModel as PostActiveModel, Column, Entity as PostEntity, Model as PostModel};
+use crate::entity::posts::{
+    ActiveModel as PostActiveModel, Column, Entity as PostEntity, Model as PostModel,
+};
 use crate::service::error::errors::Errors;
 use chrono::Utc;
-use sea_orm::{ActiveModelTrait, ColumnTrait, ConnectionTrait, EntityTrait, QueryFilter, Set, TransactionTrait};
+use sea_orm::{
+    ActiveModelTrait, ColumnTrait, ConnectionTrait, EntityTrait, QueryFilter, Set, TransactionTrait,
+};
 use serde_json::Value as JsonValue;
 use uuid::Uuid;
 
@@ -28,14 +32,14 @@ where
     if let Some(title) = payload.title {
         active_post.title = Set(title);
     }
-    
+
     if let Some(summary) = payload.summary {
         active_post.summary = Set(summary);
     }
-    
+
     if let Some(content) = payload.content {
         active_post.content = Set(content);
-        
+
         // render_html과 toc_json이 제공된 경우 업데이트
         if let Some(html) = render_html {
             active_post.render = Set(Some(html));
@@ -44,7 +48,7 @@ where
             active_post.toc = Set(Some(toc));
         }
     }
-    
+
     if let Some(new_slug) = payload.new_slug {
         active_post.slug = Set(new_slug);
     }

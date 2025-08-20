@@ -15,14 +15,12 @@ where
 {
     // 사용자 조회
     let user = repository_get_user_by_handle(conn, user_handle).await?;
-    
+
     // 해당 사용자의 모든 글 조회
     let posts = repository_get_user_posts(conn, user.id).await?;
-    
+
     if posts.is_empty() {
-        return Ok(UserPostsResponse {
-            posts: Vec::new(),
-        });
+        return Ok(UserPostsResponse { posts: Vec::new() });
     }
 
     // DB 결과를 PostListItem으로 변환
@@ -60,7 +58,5 @@ where
         });
     }
 
-    Ok(UserPostsResponse {
-        posts: post_items,
-    })
+    Ok(UserPostsResponse { posts: post_items })
 }

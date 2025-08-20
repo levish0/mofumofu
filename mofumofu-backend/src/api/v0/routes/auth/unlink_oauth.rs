@@ -4,10 +4,10 @@ use crate::service::auth::service_unlink_oauth;
 use crate::service::error::errors::Errors;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
+use axum::Extension;
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use axum::Extension;
 use tracing::info;
 
 #[utoipa::path(
@@ -32,7 +32,10 @@ pub async fn unlink_oauth(
     Extension(claims): Extension<AccessTokenClaims>,
     ValidatedJson(payload): ValidatedJson<UnlinkOAuthRequest>,
 ) -> Result<impl IntoResponse, Errors> {
-    info!("Received DELETE request to unlink OAuth {:?} for user: {}", payload.provider, claims.sub);
+    info!(
+        "Received DELETE request to unlink OAuth {:?} for user: {}",
+        payload.provider, claims.sub
+    );
 
     service_unlink_oauth(&state.conn, &claims.sub, payload).await?;
 

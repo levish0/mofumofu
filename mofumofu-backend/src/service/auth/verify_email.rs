@@ -8,10 +8,7 @@ use chrono::Utc;
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use tracing::{error, info};
 
-pub async fn service_verify_email<C>(
-    conn: &C,
-    payload: VerifyEmailRequest,
-) -> ServiceResult<()>
+pub async fn service_verify_email<C>(conn: &C, payload: VerifyEmailRequest) -> ServiceResult<()>
 where
     C: ConnectionTrait + TransactionTrait,
 {

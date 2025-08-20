@@ -1,6 +1,9 @@
 use crate::entity::posts::{Column as PostColumn, Entity as PostEntity, Model as PostModel};
 use crate::entity::users::{Column as UserColumn, Entity as UserEntity, Relation as UserRelation};
-use sea_orm::{ColumnTrait, ConnectionTrait, EntityTrait, JoinType, QueryFilter, QueryOrder, QuerySelect, RelationTrait};
+use sea_orm::{
+    ColumnTrait, ConnectionTrait, EntityTrait, JoinType, QueryFilter, QueryOrder, QuerySelect,
+    RelationTrait,
+};
 use uuid::Uuid;
 
 pub async fn repository_get_user_posts<C>(

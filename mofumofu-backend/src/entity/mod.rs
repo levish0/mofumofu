@@ -6,6 +6,7 @@ pub(crate) mod hash_tags;
 pub mod likes;
 pub(crate) mod post_hash_tags;
 pub mod posts;
+pub mod reports;
 pub mod system_events;
 pub(crate) mod user_oauth_connections;
 pub mod user_refresh_tokens;

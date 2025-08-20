@@ -4,10 +4,10 @@ use crate::service::auth::service_link_oauth;
 use crate::service::error::errors::Errors;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
+use axum::Extension;
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use axum::Extension;
 use tracing::info;
 
 #[utoipa::path(
@@ -31,7 +31,10 @@ pub async fn link_oauth(
     Extension(claims): Extension<AccessTokenClaims>,
     ValidatedJson(payload): ValidatedJson<LinkOAuthRequest>,
 ) -> Result<impl IntoResponse, Errors> {
-    info!("Received POST request to link OAuth for user: {}", claims.sub);
+    info!(
+        "Received POST request to link OAuth for user: {}",
+        claims.sub
+    );
 
     service_link_oauth(&state, claims.sub, payload).await?;
 

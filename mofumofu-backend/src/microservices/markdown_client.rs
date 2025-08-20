@@ -85,7 +85,7 @@ pub async fn render_markdown(
     markdown: &str,
 ) -> Result<RenderedMarkdown, Box<dyn std::error::Error + Send + Sync>> {
     let service_url = get_markdown_service_url();
-    
+
     info!("Rendering markdown, length: {} chars", markdown.len());
 
     let request = MarkdownRequest {
@@ -104,14 +104,23 @@ pub async fn render_markdown(
             .text()
             .await
             .unwrap_or_else(|_| "Unknown error".to_string());
-        error!("Markdown service request failed: {} - {}", status, error_text);
-        return Err(format!("Markdown service request failed: {} - {}", status, error_text).into());
+        error!(
+            "Markdown service request failed: {} - {}",
+            status, error_text
+        );
+        return Err(format!(
+            "Markdown service request failed: {} - {}",
+            status, error_text
+        )
+        .into());
     }
 
     let markdown_response: MarkdownResponse = response.json().await?;
 
     if !markdown_response.success {
-        let error_msg = markdown_response.error.unwrap_or_else(|| "Unknown error".to_string());
+        let error_msg = markdown_response
+            .error
+            .unwrap_or_else(|| "Unknown error".to_string());
         error!("Markdown processing failed: {}", error_msg);
         return Err(format!("Markdown processing failed: {}", error_msg).into());
     }
@@ -128,7 +137,10 @@ pub async fn render_markdown(
         })
         .collect();
 
-    info!("Markdown rendered successfully, TOC items: {}", toc_items.len());
+    info!(
+        "Markdown rendered successfully, TOC items: {}",
+        toc_items.len()
+    );
 
     Ok(RenderedMarkdown {
         html_content: data.html_content,
@@ -143,7 +155,7 @@ pub async fn queue_render_markdown(
     content: &str,
 ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let service_url = get_tasks_service_url();
-    
+
     info!("마크다운 렌더링 태스크 큐에 추가: post_id={}", post_id);
 
     let request = MarkdownRenderRequest {
@@ -163,8 +175,15 @@ pub async fn queue_render_markdown(
             .text()
             .await
             .unwrap_or_else(|_| "Unknown error".to_string());
-        error!("마크다운 렌더링 태스크 큐 추가 실패: {} - {}", status, error_text);
-        return Err(format!("마크다운 렌더링 태스크 큐 추가 실패: {} - {}", status, error_text).into());
+        error!(
+            "마크다운 렌더링 태스크 큐 추가 실패: {} - {}",
+            status, error_text
+        );
+        return Err(format!(
+            "마크다운 렌더링 태스크 큐 추가 실패: {} - {}",
+            status, error_text
+        )
+        .into());
     }
 
     info!("마크다운 렌더링 태스크 큐에 추가 완료: post_id={}", post_id);

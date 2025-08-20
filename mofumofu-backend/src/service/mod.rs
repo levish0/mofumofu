@@ -7,5 +7,6 @@ pub mod like;
 pub mod meilisearch;
 pub mod oauth;
 pub mod post;
+pub mod report;
 pub mod user;
 pub mod validator;

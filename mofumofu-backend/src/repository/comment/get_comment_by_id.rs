@@ -1,4 +1,6 @@
-use crate::entity::comments::{Column as CommentColumn, Entity as CommentEntity, Model as CommentModel};
+use crate::entity::comments::{
+    Column as CommentColumn, Entity as CommentEntity, Model as CommentModel,
+};
 use sea_orm::{ColumnTrait, ConnectionTrait, EntityTrait, QueryFilter};
 use uuid::Uuid;
 

@@ -23,12 +23,11 @@ where
         .ok_or(Errors::UserNotFound)?;
 
     // 현재 OAuth 연결 목록 조회
-    let current_connections = repository_get_oauth_providers_by_user_id(&txn, user_id)
-        .await?;
+    let current_connections = repository_get_oauth_providers_by_user_id(&txn, user_id).await?;
 
     // OAuth 전용 계정인지 확인
     let is_oauth_only = user.password.is_none();
-    
+
     // OAuth 전용 계정에서 마지막 연결을 해제하려는 경우 방지
     if is_oauth_only && current_connections.len() <= 1 {
         return Err(Errors::OauthCannotUnlinkLastConnection);
@@ -40,8 +39,7 @@ where
     }
 
     // OAuth 연결 해제
-    repository_delete_oauth_connection(&txn, user_id, &payload.provider)
-        .await?;
+    repository_delete_oauth_connection(&txn, user_id, &payload.provider).await?;
 
     txn.commit().await?;
 

@@ -1,4 +1,6 @@
-use crate::entity::comments::{ActiveModel as CommentActiveModel, Entity as CommentEntity, Model as CommentModel};
+use crate::entity::comments::{
+    ActiveModel as CommentActiveModel, Entity as CommentEntity, Model as CommentModel,
+};
 use sea_orm::{ActiveModelTrait, ConnectionTrait, EntityTrait, Set};
 use uuid::Uuid;
 
@@ -13,7 +15,9 @@ where
     let comment = CommentEntity::find_by_id(comment_id)
         .one(conn)
         .await?
-        .ok_or(sea_orm::DbErr::RecordNotFound("Comment not found".to_string()))?;
+        .ok_or(sea_orm::DbErr::RecordNotFound(
+            "Comment not found".to_string(),
+        ))?;
 
     let mut comment_active: CommentActiveModel = comment.into();
     comment_active.content = Set(content.to_string());

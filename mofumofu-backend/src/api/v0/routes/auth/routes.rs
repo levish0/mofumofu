@@ -14,8 +14,8 @@ use crate::api::v0::routes::auth::unlink_oauth::unlink_oauth;
 use crate::api::v0::routes::auth::verify_email::verify_email;
 use crate::middleware::auth::{access_jwt_auth, refresh_jwt_auth};
 use crate::state::AppState;
-use axum::routing::{delete, get, post};
 use axum::Router;
+use axum::routing::{delete, get, post};
 
 pub fn auth_routes() -> Router<AppState> {
     Router::new()

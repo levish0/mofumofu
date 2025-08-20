@@ -16,8 +16,8 @@ pub async fn service_sign_up(state: &AppState, payload: CreateUserRequest) -> Se
     txn.commit().await?;
 
     // 이메일 인증 토큰 생성
-    let verification_token = create_email_verification_token(&user.id, &user.email)
-        .map_err(|e| {
+    let verification_token =
+        create_email_verification_token(&user.id, &user.email).map_err(|e| {
             error!("Failed to create email verification token: {}", e);
             Errors::SysInternalError("Failed to create verification token".to_string())
         })?;

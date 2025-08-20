@@ -1,6 +1,6 @@
+use crate::entity::common::LikeTargetType;
 use sea_orm::prelude::*;
 use uuid::Uuid;
-use crate::entity::common::LikeTargetType;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
 #[sea_orm(table_name = "likes")]

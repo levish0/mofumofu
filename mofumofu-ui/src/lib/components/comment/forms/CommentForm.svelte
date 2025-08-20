@@ -23,6 +23,7 @@
 
 	const maxLength = 500;
 	const remainingChars = $derived(maxLength - content.length);
+	const user = $derived(userStore.user);
 
 	// focus 처리
 	$effect(() => {
@@ -41,7 +42,7 @@
 	};
 
 	const handleSubmit = async () => {
-		if (!content.trim() || isSubmitting || !userStore.user) return;
+		if (!content.trim() || isSubmitting || !authStore.isAuthenticated) return;
 
 		error = '';
 
@@ -65,9 +66,9 @@
 					content: commentContent,
 					parent_id: parentId || null,
 					user_id: null,
-					user_handle: userStore.user?.handle || null,
-					user_name: userStore.user?.name || null,
-					user_profile_image: userStore.user?.profile_image || null,
+					user_handle: user?.handle || null,
+					user_name: user?.name || null,
+					user_profile_image: user?.profile_image || null,
 					like_count: 0,
 					reply_count: 0,
 					is_deleted: false,
@@ -105,7 +106,7 @@
 </script>
 
 <div class="comment-form" id={parentId ? undefined : 'comment_write'}>
-	{#if !userStore.user}
+	{#if !authStore.isAuthenticated}
 		<div
 			class="text-mofu-light-500 dark:text-mofu-dark-400 border-mofu-light-600 dark:border-mofu-dark-600 ml-2 flex items-center justify-center rounded-lg border py-8 text-sm"
 		>
@@ -115,16 +116,16 @@
 		<div class="flex gap-3">
 			<!-- 사용자 프로필 이미지 -->
 			<div class="flex-shrink-0">
-				{#if userStore.user.profile_image}
+				{#if user?.profile_image}
 					<img
-						src={userStore.user.profile_image}
-						alt={userStore.user.name}
+						src={user.profile_image}
+						alt={user.name}
 						class="h-10 w-10 rounded-full object-cover"
 					/>
 				{:else}
 					<div class="bg-mofu-light-700 dark:bg-mofu-dark-700 flex h-10 w-10 items-center justify-center rounded-full">
 						<span class="text-mofu-light-200 dark:text-mofu-dark-200 text-sm font-medium">
-							{userStore.user.name.charAt(0).toUpperCase()}
+							{user?.name?.charAt(0).toUpperCase()}
 						</span>
 					</div>
 				{/if}

@@ -1,8 +1,8 @@
-use crate::repository::user::update_user::repository_update_user;
+use crate::connection::cloudflare_r2::R2Client;
 use crate::dto::user::internal::update_user::UpdateUserFields;
+use crate::repository::user::update_user::repository_update_user;
 use crate::service::error::errors::{Errors, ServiceResult};
 use crate::utils::image_validator::{generate_image_hash, process_image_for_upload};
-use crate::connection::cloudflare_r2::R2Client;
 use reqwest::Client;
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use tracing::{error, info, warn};
@@ -32,17 +32,15 @@ where
     }
 
     // Download image from OAuth provider
-    let response = http_client
-        .get(image_url)
-        .send()
-        .await
-        .map_err(|e| {
-            error!("Failed to download OAuth avatar image: {}", e);
-            Errors::SysInternalError("Failed to download avatar image".to_string())
-        })?;
+    let response = http_client.get(image_url).send().await.map_err(|e| {
+        error!("Failed to download OAuth avatar image: {}", e);
+        Errors::SysInternalError("Failed to download avatar image".to_string())
+    })?;
 
     if !response.status().is_success() {
-        return Err(Errors::SysInternalError("Failed to download avatar image".to_string()));
+        return Err(Errors::SysInternalError(
+            "Failed to download avatar image".to_string(),
+        ));
     }
 
     // Get image data and validate size
@@ -51,7 +49,7 @@ where
         Errors::SysInternalError("Failed to process avatar image".to_string())
     })?;
 
-    // Process and compress OAuth avatar image  
+    // Process and compress OAuth avatar image
     let max_dimensions = Some((400, 400)); // Same as regular avatar uploads
     let (processed_data, content_type, extension) = process_image_for_upload(
         &image_data,
@@ -59,7 +57,7 @@ where
         true, // Convert to WebP for better compression
         max_dimensions,
     )?;
-    
+
     // Generate hash-based filename using processed data
     let hash = generate_image_hash(&processed_data);
     let filename = format!("avatar_{}.{}", hash, extension);

@@ -143,10 +143,12 @@ static CONFIG: LazyLock<DbConfig> = LazyLock::new(|| {
             .ok()
             .and_then(|v| v.parse().ok())
             .unwrap_or(14), // 기본값 14일 (일주일)
-        auth_email_verification_token_expire_time: env::var("AUTH_EMAIL_VERIFICATION_TOKEN_EXPIRE_TIME")
-            .ok()
-            .and_then(|v| v.parse().ok())
-            .unwrap_or(1), // 기본값 1시간
+        auth_email_verification_token_expire_time: env::var(
+            "AUTH_EMAIL_VERIFICATION_TOKEN_EXPIRE_TIME",
+        )
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(1), // 기본값 1시간
         auth_password_reset_token_expire_time: env::var("AUTH_PASSWORD_RESET_TOKEN_EXPIRE_TIME")
             .ok()
             .and_then(|v| v.parse().ok())
@@ -220,8 +222,10 @@ static CONFIG: LazyLock<DbConfig> = LazyLock::new(|| {
         task_server_port: env::var("TASK_SERVER_PORT").unwrap_or_else(|_| "7000".to_string()),
 
         // Markdown Service
-        markdown_service_host: env::var("MARKDOWN_SERVICE_HOST").unwrap_or_else(|_| "127.0.0.1".to_string()),
-        markdown_service_port: env::var("MARKDOWN_SERVICE_PORT").unwrap_or_else(|_| "6700".to_string()),
+        markdown_service_host: env::var("MARKDOWN_SERVICE_HOST")
+            .unwrap_or_else(|_| "127.0.0.1".to_string()),
+        markdown_service_port: env::var("MARKDOWN_SERVICE_PORT")
+            .unwrap_or_else(|_| "6700".to_string()),
 
         // Meilisearch
         meilisearch_host: env::var("MEILISEARCH_HOST")

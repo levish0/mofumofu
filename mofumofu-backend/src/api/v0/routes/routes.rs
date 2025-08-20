@@ -5,6 +5,7 @@ use crate::api::v0::routes::follow::routes::follow_routes;
 use crate::api::v0::routes::hashtag::routes::hashtag_routes;
 use crate::api::v0::routes::like::routes::like_routes;
 use crate::api::v0::routes::post::routes::post_routes;
+use crate::api::v0::routes::report::routes::report_routes;
 use crate::api::v0::routes::user::routes::user_routes;
 use crate::service::error::errors::handler_404;
 use crate::state::AppState;
@@ -23,5 +24,6 @@ pub fn api_routes() -> Router<AppState> {
         .nest("/v0", follow_routes())
         .nest("/v0", like_routes())
         .nest("/v0/hashtag", hashtag_routes())
+        .nest("/v0", report_routes())
         .fallback(handler_404)
 }

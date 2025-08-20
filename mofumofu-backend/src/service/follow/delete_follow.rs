@@ -4,7 +4,9 @@ use crate::repository::follow::delete_follow::repository_delete_follow;
 use crate::repository::system_events::log_event::repository_log_event;
 use crate::repository::user::find_user_by_handle::repository_find_user_by_handle;
 use crate::repository::user::find_user_by_uuid::repository_find_user_by_uuid;
-use crate::repository::user::update_follow_count::{repository_decrement_user_follower_count, repository_decrement_user_following_count};
+use crate::repository::user::update_follow_count::{
+    repository_decrement_user_follower_count, repository_decrement_user_following_count,
+};
 use crate::service::error::errors::{Errors, ServiceResult};
 use sea_orm::ConnectionTrait;
 use sea_orm::TransactionTrait;

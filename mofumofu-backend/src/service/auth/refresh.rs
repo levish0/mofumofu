@@ -36,13 +36,11 @@ pub async fn service_refresh(
 
     repository_revoke_refresh_token(conn, stored_token, None, None, Utc::now()).await?;
 
-    let new_access_token = create_jwt_access_token(&user.id).map_err(|e| {
-        Errors::TokenCreationError(e.to_string())
-    })?;
+    let new_access_token =
+        create_jwt_access_token(&user.id).map_err(|e| Errors::TokenCreationError(e.to_string()))?;
 
-    let new_refresh_token = create_jwt_refresh_token(&user.id).map_err(|e| {
-        Errors::TokenCreationError(e.to_string())
-    })?;
+    let new_refresh_token = create_jwt_refresh_token(&user.id)
+        .map_err(|e| Errors::TokenCreationError(e.to_string()))?;
 
     let new_refresh_model = RefreshTokenActiveModel {
         id: Set(new_refresh_token.jti),

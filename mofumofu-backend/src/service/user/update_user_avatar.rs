@@ -1,9 +1,9 @@
+use crate::connection::cloudflare_r2::R2Client;
+use crate::dto::user::internal::update_user::UpdateUserFields;
 use crate::repository::user::get_user_by_uuid::repository_get_user_by_uuid;
 use crate::repository::user::update_user::repository_update_user;
-use crate::dto::user::internal::update_user::UpdateUserFields;
 use crate::service::error::errors::{Errors, ServiceResult};
 use crate::utils::image_validator::{generate_image_hash, process_image_for_upload};
-use crate::connection::cloudflare_r2::R2Client;
 use axum::extract::Multipart;
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use tracing::{error, info, warn};
@@ -43,7 +43,7 @@ where
                 true, // Convert to WebP for better compression
                 max_dimensions,
             )?;
-            
+
             // Generate hash-based filename using processed data
             let hash = generate_image_hash(&processed_data);
             let filename = format!("avatar_{}.{}", hash, extension);
@@ -63,7 +63,7 @@ where
                     // Extract key from URL and delete from R2
                     let url_parts: Vec<&str> = existing_image_url.split('/').collect();
                     if url_parts.len() >= 4 {
-                        let key = url_parts[url_parts.len()-4..].join("/");
+                        let key = url_parts[url_parts.len() - 4..].join("/");
                         if let Err(e) = r2_client.delete(&key).await {
                             warn!("Failed to delete existing avatar from R2: {}", e);
                         }
@@ -73,7 +73,8 @@ where
 
             // Upload to R2
             let r2_key = format!("profiles/{}/avatar/{}", user.handle, filename);
-            r2_client.upload_with_content_type(&r2_key, processed_data, &content_type)
+            r2_client
+                .upload_with_content_type(&r2_key, processed_data, &content_type)
                 .await
                 .map_err(|e| {
                     error!("Failed to upload avatar to R2: {}", e);

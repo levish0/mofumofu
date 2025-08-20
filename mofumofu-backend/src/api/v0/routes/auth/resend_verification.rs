@@ -25,7 +25,10 @@ pub async fn resend_verification(
     State(state): State<AppState>,
     ValidatedJson(payload): ValidatedJson<ResendVerificationRequest>,
 ) -> Result<impl IntoResponse, Errors> {
-    info!("Received POST request to resend verification email for: {}", payload.email);
+    info!(
+        "Received POST request to resend verification email for: {}",
+        payload.email
+    );
 
     service_resend_verification(&state, &state.conn, payload).await?;
 

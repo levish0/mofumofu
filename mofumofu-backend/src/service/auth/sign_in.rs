@@ -26,13 +26,11 @@ where
     let stored_password = user.password.as_ref().ok_or(Errors::UserInvalidPassword)?;
     verify_password(&payload.password, stored_password)?;
 
-    let access_token = create_jwt_access_token(&user.id).map_err(|e| {
-        Errors::TokenCreationError(e.to_string())
-    })?;
+    let access_token =
+        create_jwt_access_token(&user.id).map_err(|e| Errors::TokenCreationError(e.to_string()))?;
 
-    let refresh_token = create_jwt_refresh_token(&user.id).map_err(|e| {
-        Errors::TokenCreationError(e.to_string())
-    })?;
+    let refresh_token = create_jwt_refresh_token(&user.id)
+        .map_err(|e| Errors::TokenCreationError(e.to_string()))?;
 
     let refresh_model = RefreshTokenActiveModel {
         id: Set(refresh_token.jti),

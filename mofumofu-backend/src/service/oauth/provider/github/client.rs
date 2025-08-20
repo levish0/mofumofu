@@ -57,9 +57,10 @@ pub async fn get_github_user_info(
         .await
         .map_err(|_e| Errors::OauthUserInfoFetchFailed)?;
 
-    let mut user_info: GithubUserInfo = response.json().await.map_err(|_e| {
-        Errors::OauthUserInfoParseFailed
-    })?;
+    let mut user_info: GithubUserInfo = response
+        .json()
+        .await
+        .map_err(|_e| Errors::OauthUserInfoParseFailed)?;
 
     if user_info.email.is_none() {
         let email_response = http_client

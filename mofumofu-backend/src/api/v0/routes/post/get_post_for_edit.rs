@@ -5,10 +5,10 @@ use crate::service::error::errors::Errors;
 use crate::service::post::get_post_for_edit::service_get_post_for_edit;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
+use axum::Extension;
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use axum::Extension;
 use tracing::info;
 
 #[utoipa::path(

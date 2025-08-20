@@ -1,8 +1,8 @@
+use crate::connection::cloudflare_r2::R2Client;
+use crate::dto::user::internal::update_user::UpdateUserFields;
 use crate::repository::user::get_user_by_uuid::repository_get_user_by_uuid;
 use crate::repository::user::update_user::repository_update_user;
-use crate::dto::user::internal::update_user::UpdateUserFields;
 use crate::service::error::errors::{Errors, ServiceResult};
-use crate::connection::cloudflare_r2::R2Client;
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use tracing::{error, info, warn};
 use uuid::Uuid;
@@ -28,7 +28,7 @@ where
             let url_parts: Vec<&str> = existing_image_url.split('/').collect();
             if url_parts.len() >= 4 {
                 // "profiles/{handle}/avatar/{filename}" 부분 추출
-                let key = url_parts[url_parts.len()-4..].join("/");
+                let key = url_parts[url_parts.len() - 4..].join("/");
                 if let Err(e) = r2_client.delete(&key).await {
                     warn!("Failed to delete avatar from R2: {}", e);
                 }

@@ -1,9 +1,9 @@
+use axum::Json;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 use serde::Serialize;
 use utoipa::ToSchema;
 use uuid::Uuid;
-use axum::Json;
 
 #[derive(Debug, Clone, Serialize, ToSchema)]
 pub struct CreatePostResponse {

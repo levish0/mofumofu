@@ -5,9 +5,9 @@ use crate::service::error::errors::Errors;
 use crate::service::like::check_comment_like_status::service_check_comment_like_status;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
+use axum::Extension;
 use axum::extract::State;
 use axum::response::IntoResponse;
-use axum::Extension;
 use tracing::info;
 
 #[utoipa::path(
@@ -30,10 +30,14 @@ pub async fn check_comment_like_status(
     Extension(claims): Extension<AccessTokenClaims>,
     ValidatedJson(payload): ValidatedJson<CheckCommentLikeStatusRequest>,
 ) -> Result<LikeStatusResponse, Errors> {
-    info!("Received request to check comment like status: {:?}", payload);
+    info!(
+        "Received request to check comment like status: {:?}",
+        payload
+    );
     let user_uuid = claims.sub.clone();
 
-    let response = service_check_comment_like_status(&state.conn, &user_uuid, &payload.comment_id).await?;
+    let response =
+        service_check_comment_like_status(&state.conn, &user_uuid, &payload.comment_id).await?;
 
     Ok(response)
 }

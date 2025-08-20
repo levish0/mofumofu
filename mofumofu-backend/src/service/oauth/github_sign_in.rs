@@ -1,3 +1,4 @@
+use crate::connection::cloudflare_r2::R2Client;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
 use crate::entity::common::{ActionType, OAuthProvider, TargetType};
 use crate::entity::user_refresh_tokens::ActiveModel as RefreshTokenActiveModel;
@@ -5,9 +6,8 @@ use crate::repository::system_events::log_event::repository_log_event;
 use crate::service::auth::jwt::{create_jwt_access_token, create_jwt_refresh_token};
 use crate::service::error::errors::{Errors, ServiceResult};
 use crate::service::oauth::find_or_create_oauth_user::service_find_or_create_oauth_user;
-use crate::service::oauth::provider::github::client::{exchange_github_code, get_github_user_info};
 use crate::service::oauth::oauth_avatar_upload::upload_oauth_avatar;
-use crate::connection::cloudflare_r2::R2Client;
+use crate::service::oauth::provider::github::client::{exchange_github_code, get_github_user_info};
 use reqwest::Client as ReqwestClient;
 use sea_orm::{ActiveModelTrait, ConnectionTrait, Set, TransactionTrait};
 use tracing::{info, warn};
@@ -77,13 +77,11 @@ where
     }
 
     // 5. JWT 토큰 생성 (Google과 동일한 로직)
-    let access_token = create_jwt_access_token(&oauth_result.user.id).map_err(|e| {
-        Errors::TokenCreationError(e.to_string())
-    })?;
+    let access_token = create_jwt_access_token(&oauth_result.user.id)
+        .map_err(|e| Errors::TokenCreationError(e.to_string()))?;
 
-    let refresh_token = create_jwt_refresh_token(&oauth_result.user.id).map_err(|e| {
-        Errors::TokenCreationError(e.to_string())
-    })?;
+    let refresh_token = create_jwt_refresh_token(&oauth_result.user.id)
+        .map_err(|e| Errors::TokenCreationError(e.to_string()))?;
 
     // 6. 리프레시 토큰 DB에 저장
     let refresh_model = RefreshTokenActiveModel {
@@ -97,9 +95,10 @@ where
         revoked_at: Default::default(),
     };
 
-    refresh_model.insert(txn).await.map_err(|e| {
-        Errors::DatabaseError(e.to_string())
-    })?;
+    refresh_model
+        .insert(txn)
+        .await
+        .map_err(|e| Errors::DatabaseError(e.to_string()))?;
 
     info!(
         "Successfully logged in user via GitHub OAuth: {}",

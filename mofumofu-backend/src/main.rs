@@ -18,11 +18,11 @@ mod config;
 mod connection;
 mod dto;
 mod entity;
+mod microservices;
 mod middleware;
 mod repository;
 mod service;
 mod state;
-mod microservices;
 mod utils;
 
 pub async fn run_server() -> anyhow::Result<()> {

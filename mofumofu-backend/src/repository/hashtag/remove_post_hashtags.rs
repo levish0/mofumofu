@@ -3,10 +3,7 @@ use crate::service::error::errors::Errors;
 use sea_orm::{ColumnTrait, ConnectionTrait, EntityTrait, QueryFilter, TransactionTrait};
 use uuid::Uuid;
 
-pub async fn repository_remove_post_hashtags<C>(
-    conn: &C,
-    post_id: Uuid,
-) -> Result<(), Errors>
+pub async fn repository_remove_post_hashtags<C>(conn: &C, post_id: Uuid) -> Result<(), Errors>
 where
     C: ConnectionTrait + TransactionTrait,
 {

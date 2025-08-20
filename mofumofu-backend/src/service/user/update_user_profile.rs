@@ -27,12 +27,14 @@ where
     // 패스워드 업데이트가 요청된 경우 현재 패스워드 확인
     let new_password_hash = if let Some(new_password) = &payload.password {
         // 새로운 패스워드가 제공된 경우 현재 패스워드 확인 필요
-        let current_password = payload.current_password
+        let current_password = payload
+            .current_password
             .as_ref()
             .ok_or(Errors::PasswordRequiredForUpdate)?;
 
         // OAuth 전용 계정인 경우 (패스워드가 없는 경우) 에러 반환
-        let existing_password_hash = user.password
+        let existing_password_hash = user
+            .password
             .as_ref()
             .ok_or(Errors::PasswordCannotUpdateOauthOnly)?;
 

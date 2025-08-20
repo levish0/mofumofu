@@ -1,5 +1,6 @@
 pub mod create_post;
 pub mod delete_post;
+pub mod get_post_by_handle_and_slug;
 pub mod get_post_by_uuid;
 pub mod get_post_for_edit;
 pub mod get_posts;
@@ -9,4 +10,3 @@ pub mod search_posts;
 pub mod update_post;
 pub mod update_post_thumbnail;
 pub mod upload_image;
-pub mod get_post_by_handle_and_slug;

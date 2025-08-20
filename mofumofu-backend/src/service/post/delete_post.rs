@@ -1,10 +1,10 @@
 use crate::dto::post::request::delete_post::DeletePostRequest;
 use crate::entity::common::{ActionType, TargetType};
+use crate::microservices::search_client;
 use crate::repository::post::delete_post::repository_delete_post;
 use crate::repository::post::get_post_by_user_and_slug::repository_get_post_by_user_and_slug;
 use crate::repository::system_events::log_event::repository_log_event;
 use crate::service::error::errors::{Errors, ServiceResult};
-use crate::microservices::search_client;
 use sea_orm::{ConnectionTrait, TransactionTrait};
 use tracing::warn;
 use uuid::Uuid;
@@ -19,7 +19,7 @@ where
     C: ConnectionTrait + TransactionTrait,
 {
     let post = repository_get_post_by_user_and_slug(conn, user_uuid, &payload.slug).await?;
-    
+
     let txn = conn.begin().await?;
 
     repository_delete_post(&txn, &payload.slug, user_uuid).await?;

@@ -16,7 +16,7 @@ where
     let follower = repository_find_user_by_uuid(conn, follower_id)
         .await?
         .ok_or(Errors::UserNotFound)?;
-    
+
     let followee = repository_find_user_by_handle(conn, followee_handle)
         .await?
         .ok_or(Errors::UserNotFound)?;

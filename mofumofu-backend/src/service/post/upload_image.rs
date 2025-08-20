@@ -30,7 +30,7 @@ pub async fn service_upload_image(
                 true, // Convert to WebP for better compression
                 max_dimensions,
             )?;
-            
+
             // Generate hash-based filename using processed data
             let hash = generate_image_hash(&processed_data);
             let filename = format!("post_image_{}.{}", hash, extension);
@@ -46,14 +46,19 @@ pub async fn service_upload_image(
 
             // Upload to R2
             let key = format!("post-images/{}", filename);
-            match r2_client.upload_with_content_type(&key, processed_data, &content_type).await {
+            match r2_client
+                .upload_with_content_type(&key, processed_data, &content_type)
+                .await
+            {
                 Ok(_) => {
                     info!("Successfully uploaded post image to R2: {}", filename);
                     return Ok(filename);
                 }
                 Err(e) => {
                     error!("Failed to upload post image to R2: {}", e);
-                    return Err(Errors::SysInternalError("Failed to upload image to storage".to_string()));
+                    return Err(Errors::SysInternalError(
+                        "Failed to upload image to storage".to_string(),
+                    ));
                 }
             }
         }

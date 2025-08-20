@@ -1,6 +1,6 @@
+use crate::entity::common::UserRole;
 use sea_orm::prelude::*;
 use uuid::Uuid;
-use crate::entity::common::UserRole;
 
 #[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel)]
 #[sea_orm(table_name = "users")]

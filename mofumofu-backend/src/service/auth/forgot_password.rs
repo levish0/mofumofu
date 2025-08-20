@@ -16,11 +16,10 @@ pub async fn service_forgot_password(
     match user_result {
         Ok(Some(user)) => {
             // 비밀번호 재설정 토큰 생성
-            let reset_token = create_password_reset_token(&user.id, &user.email)
-                .map_err(|e| {
-                    error!("Failed to create password reset token: {}", e);
-                    Errors::SysInternalError("Failed to create reset token".to_string())
-                })?;
+            let reset_token = create_password_reset_token(&user.id, &user.email).map_err(|e| {
+                error!("Failed to create password reset token: {}", e);
+                Errors::SysInternalError("Failed to create reset token".to_string())
+            })?;
 
             // 비동기로 비밀번호 재설정 이메일 발송 요청
             if let Err(e) = queue_send_reset_password_email(
@@ -39,7 +38,10 @@ pub async fn service_forgot_password(
         }
         Ok(None) => {
             // 사용자가 존재하지 않음 - 보안상 동일한 응답
-            info!("Password reset requested for non-existent email: {}", payload.email);
+            info!(
+                "Password reset requested for non-existent email: {}",
+                payload.email
+            );
         }
         Err(e) => {
             error!("Database error during forgot password: {:?}", e);

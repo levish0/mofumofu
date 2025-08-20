@@ -18,8 +18,7 @@ where
         .ok_or(Errors::UserNotFound)?;
 
     // OAuth 연결 목록 조회
-    let connections = repository_get_oauth_providers_by_user_id(conn, user_id)
-        .await?;
+    let connections = repository_get_oauth_providers_by_user_id(conn, user_id).await?;
 
     // OAuth 전용 계정인지 확인 (비밀번호가 없고 OAuth 연결이 있는 경우)
     let is_oauth_only = user.password.is_none() && !connections.is_empty();

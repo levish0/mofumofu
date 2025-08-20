@@ -70,12 +70,18 @@ pub async fn exchange_oauth_code(
     provider: &str,
 ) -> ServiceResult<AccessToken> {
     info!("Starting OAuth token exchange for provider: {}", provider);
-    info!("Authorization code (first 10 chars): {}", &code[..code.len().min(10)]);
-    
+    info!(
+        "Authorization code (first 10 chars): {}",
+        &code[..code.len().min(10)]
+    );
+
     let http_client = create_http_client()?;
     info!("HTTP client created successfully");
 
-    info!("Attempting to exchange authorization code with {} OAuth server", provider);
+    info!(
+        "Attempting to exchange authorization code with {} OAuth server",
+        provider
+    );
     let token_result = oauth_client
         .exchange_code(AuthorizationCode::new(code.to_string()))
         .request_async(&http_client)
