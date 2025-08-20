@@ -1,10 +1,6 @@
 <script lang="ts">
 	import type { CommentInfo } from '$lib/api/comment/types';
-	import {
-		getReplies,
-		updateComment,
-		deleteComment
-	} from '$lib/api/comment/commentApi';
+	import { getReplies, updateComment, deleteComment } from '$lib/api/comment/commentApi';
 	import { userStore } from '$lib/stores/user.svelte';
 	import { useLike } from '$lib/hooks/useLike.svelte';
 	import { toast } from 'svelte-sonner';
@@ -31,15 +27,7 @@
 		replyPerPage?: number;
 	}
 
-	let {
-		comment,
-		postId,
-		depth = 0,
-		isLast = false,
-		onReply,
-		onLikeUpdate,
-		replyPerPage = 5
-	}: Props = $props();
+	let { comment, postId, depth = 0, isLast = false, onReply, onLikeUpdate, replyPerPage = 5 }: Props = $props();
 
 	// 로칼 상태 관리
 	let showReplyForm = $state(false);
@@ -118,7 +106,6 @@
 		isDropdownOpen = false;
 		showEditForm = !showEditForm;
 	}
-
 
 	// 답글 목록 로드
 	const loadChildren = async () => {
@@ -361,9 +348,7 @@
 							>
 								<div>{remainChildren()}개의 댓글 더 불러오기</div>
 								{#if loadingChildren}
-									<div
-										class="border-mofu-light-400 dark:border-mofu-dark-400 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"
-									></div>
+									<div class="border-mofu h-4 w-4 animate-spin rounded-full border-4 border-t-transparent"></div>
 								{/if}
 							</button>
 						</div>
@@ -384,9 +369,7 @@
 				>
 					<div>{localReplyCount}개의 댓글</div>
 					{#if loadingChildren}
-						<div
-							class="border-mofu-light-400 dark:border-mofu-dark-400 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"
-						></div>
+						<div class="border-mofu h-4 w-4 animate-spin rounded-full border-4 border-t-transparent"></div>
 					{/if}
 				</button>
 			</div>
