@@ -6,7 +6,6 @@ use crate::service::error::protocol::follow::{
 };
 use crate::service::error::protocol::general::{BAD_REQUEST, VALIDATION_ERROR};
 use crate::service::error::protocol::like::{LIKE_ALREADY_EXISTS, LIKE_NOT_FOUND};
-use crate::service::error::protocol::report::REPORT_NOT_FOUND;
 use crate::service::error::protocol::markdown::MARKDOWN_RENDER_FAILED;
 use crate::service::error::protocol::oauth::{
     OAUTH_ACCOUNT_ALREADY_LINKED, OAUTH_CANNOT_UNLINK_LAST_CONNECTION, OAUTH_CONNECTION_NOT_FOUND,
@@ -19,6 +18,7 @@ use crate::service::error::protocol::password::{
     PASSWORD_NEW_PASSWORD_MISSING, PASSWORD_REQUIRED_FOR_UPDATE,
 };
 use crate::service::error::protocol::post::POST_NOT_FOUND;
+use crate::service::error::protocol::report::REPORT_NOT_FOUND;
 use crate::service::error::protocol::system::{
     SYS_DATABASE_ERROR, SYS_HASHING_ERROR, SYS_INTERNAL_ERROR, SYS_NOT_FOUND,
     SYS_TOKEN_CREATION_ERROR, SYS_TRANSACTION_ERROR,

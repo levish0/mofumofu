@@ -1,5 +1,8 @@
 use crate::entity::common::ReportStatus;
-use crate::entity::reports::{ActiveModel as ReportActiveModel, Column as ReportColumn, Entity as ReportEntity, Model as ReportModel};
+use crate::entity::reports::{
+    ActiveModel as ReportActiveModel, Column as ReportColumn, Entity as ReportEntity,
+    Model as ReportModel,
+};
 use sea_orm::{ActiveModelTrait, ColumnTrait, ConnectionTrait, EntityTrait, QueryFilter, Set};
 use uuid::Uuid;
 
@@ -17,7 +20,9 @@ where
         .filter(ReportColumn::Id.eq(report_id))
         .one(conn)
         .await?
-        .ok_or(sea_orm::DbErr::RecordNotFound("Report not found".to_string()))?;
+        .ok_or(sea_orm::DbErr::RecordNotFound(
+            "Report not found".to_string(),
+        ))?;
 
     let mut active_report: ReportActiveModel = report.into();
     active_report.status = Set(status);

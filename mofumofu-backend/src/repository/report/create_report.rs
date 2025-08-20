@@ -16,7 +16,7 @@ where
 {
     let reasons_json = serde_json::to_value(reasons)
         .map_err(|_| sea_orm::DbErr::Custom("Failed to serialize reasons".to_string()))?;
-        
+
     let new_report = ReportActiveModel {
         id: Default::default(),
         reporter_id: Set(user_id),

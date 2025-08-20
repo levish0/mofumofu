@@ -11,18 +11,16 @@
 </script>
 
 <!-- Comment Skeleton -->
-<div
-	class="relative py-1.5 pl-4"
-	class:-ml-4={depth === 0}
-	class:ml-4={depth > 0}
->
+<div class="relative py-1.5 pl-4" class:-ml-4={depth === 0} class:ml-4={depth > 0}>
 	<!-- Thread line for nested comments -->
 	{#if depth > 0}
-		<div class="border-mofu-light-300 dark:border-mofu-dark-600 absolute left-2 top-0 h-full w-px border-l"></div>
+		<div class="border-mofu-light-300 dark:border-mofu-dark-600 absolute top-0 left-2 h-full w-px border-l"></div>
 	{/if}
 
 	<!-- Comment main content -->
-	<div class="hover:bg-mofu-light-900 dark:hover:bg-mofu-dark-800/50 flex items-start gap-3 rounded-lg p-2 pb-1.5 transition-colors">
+	<div
+		class="hover:bg-mofu-light-900 dark:hover:bg-mofu-dark-800/50 flex items-start gap-3 rounded-lg p-2 pb-1.5 transition-colors"
+	>
 		<!-- Avatar skeleton -->
 		<div class="shimmer h-8 w-8 rounded-full"></div>
 

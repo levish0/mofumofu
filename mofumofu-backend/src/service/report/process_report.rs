@@ -15,7 +15,7 @@ where
 {
     // 관리자/모더레이터 권한 체크
     require_moderator(conn, user_id).await?;
-    
+
     let _updated_report = repository_process_report(
         conn,
         request.report_id,

@@ -3,7 +3,11 @@ use crate::api::v0::routes::report::get_reports::get_reports;
 use crate::api::v0::routes::report::process_report::process_report;
 use crate::middleware::auth::access_jwt_auth;
 use crate::state::AppState;
-use axum::{Router, middleware::from_fn, routing::{post, put}};
+use axum::{
+    Router,
+    middleware::from_fn,
+    routing::{post, put},
+};
 
 pub fn report_routes() -> Router<AppState> {
     Router::new()

@@ -105,9 +105,7 @@ pub enum ReportTargetType {
     Comment,
 }
 
-#[derive(
-    Debug, Clone, PartialEq, Eq, EnumIter, Serialize, Deserialize, ToSchema,
-)]
+#[derive(Debug, Clone, PartialEq, Eq, EnumIter, Serialize, Deserialize, ToSchema)]
 pub enum ReportReason {
     Spam,
     InappropriateContent,

@@ -1,13 +1,13 @@
 use crate::dto::auth::internal::access_token::AccessTokenClaims;
 use crate::dto::report::request::get_reports::GetReportsRequest;
 use crate::dto::report::response::get_reports::GetReportsResponse;
-use crate::service::report::get_reports::service_get_reports;
 use crate::service::error::errors::Errors;
+use crate::service::report::get_reports::service_get_reports;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
+use axum::Extension;
 use axum::extract::State;
 use axum::http::StatusCode;
-use axum::Extension;
 use tracing::info;
 
 #[utoipa::path(

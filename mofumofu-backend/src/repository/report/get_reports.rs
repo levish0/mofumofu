@@ -1,7 +1,9 @@
 use crate::entity::common::ReportStatus;
 use crate::entity::reports::{Column, Entity as ReportEntity, Model as ReportModel};
 use crate::service::error::errors::Errors;
-use sea_orm::{ColumnTrait, ConnectionTrait, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder, QuerySelect};
+use sea_orm::{
+    ColumnTrait, ConnectionTrait, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder, QuerySelect,
+};
 
 pub async fn repository_get_reports<C>(
     conn: &C,
