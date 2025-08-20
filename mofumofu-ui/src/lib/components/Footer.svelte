@@ -11,6 +11,10 @@
 			<!-- About Section -->
 			<div class="space-y-2">
 				<h3 class="text-xl font-semibold text-zinc-900 dark:text-zinc-100">もふもふ。</h3>
+				<p class="text-mofu-light-300 dark:text-mofu-dark-300 text-xs">
+					Mofumofu is an open-source, minimalist blogging platform. Write essays, tutorials, or daily thoughts and focus
+					on what matters most.
+				</p>
 				<p class="text-xs text-zinc-600 dark:text-zinc-400">
 					<a href="/" class="text-zinc-700 hover:underline dark:text-zinc-300">By Levish</a>
 				</p>

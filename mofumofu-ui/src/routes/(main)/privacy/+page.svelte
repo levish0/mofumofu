@@ -28,6 +28,23 @@
 				</ul>
 			</section>
 
+			<!-- 🔽 Google Sign-In 추가 -->
+			<section class="mb-8">
+				<h2 class="mb-4 text-2xl font-semibold">1a. Google Sign-In</h2>
+				<p class="mb-4">
+					If you choose to sign in with your Google account, we only request the minimal information necessary:
+				</p>
+				<ul class="mb-4 list-disc space-y-2 pl-6">
+					<li><strong>Email address:</strong> used to create and identify your account</li>
+					<li><strong>Basic profile information (name, avatar):</strong> used to display your profile in Mofumofu</li>
+				</ul>
+				<p class="mb-4">
+					We do <strong>not</strong> access your Google Drive, contacts, calendar, or any other data. Mofumofu uses Google
+					Sign-In solely for authentication and account creation.
+				</p>
+			</section>
+			<!-- 🔼 -->
+
 			<section class="mb-8">
 				<h2 class="mb-4 text-2xl font-semibold">2. How We Use Your Information</h2>
 				<p class="mb-4">We use your information to:</p>
@@ -91,7 +108,7 @@
 
 			<section class="mb-8">
 				<h2 class="mb-4 text-2xl font-semibold">8. Contact Us</h2>
-				<p class="mb-4">If you have questions about this privacy policy, please contact us at levish@mofumofu.com</p>
+				<p class="mb-4">If you have questions about this privacy policy, please contact us at privacy@mofumofu.ink</p>
 			</section>
 		</div>
 	</div>
