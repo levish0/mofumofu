@@ -288,7 +288,10 @@
 					"required": true
 				},
 				"responses": {
-					"204": { "description": "Comment created successfully" },
+					"201": {
+						"description": "Comment created successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateCommentResponse" } } }
+					},
 					"400": { "description": "Invalid parent comment or Cannot reply to deleted comment" },
 					"404": { "description": "Post not found or Parent comment not found" },
 					"500": { "description": "Internal Server Error" }
@@ -326,8 +329,7 @@
 					},
 					"404": { "description": "Comment not found" },
 					"500": { "description": "Internal Server Error" }
-				},
-				"security": [{ "bearer_auth": [] }]
+				}
 			}
 		},
 		"/v0/comment/like": {
@@ -398,8 +400,7 @@
 					},
 					"400": { "description": "Invalid input" },
 					"500": { "description": "Internal Server Error" }
-				},
-				"security": [{ "bearer_auth": [] }]
+				}
 			}
 		},
 		"/v0/comment/replies": {
@@ -417,8 +418,7 @@
 					},
 					"400": { "description": "Invalid input" },
 					"500": { "description": "Internal Server Error" }
-				},
-				"security": [{ "bearer_auth": [] }]
+				}
 			}
 		},
 		"/v0/follow": {
@@ -1032,13 +1032,12 @@
 			},
 			"CommentInfo": {
 				"type": "object",
-				"required": ["id", "post_id", "like_count", "reply_count", "is_liked", "is_deleted", "created_at"],
+				"required": ["id", "post_id", "like_count", "reply_count", "is_deleted", "created_at"],
 				"properties": {
 					"content": { "type": ["string", "null"] },
 					"created_at": { "type": "string", "format": "date-time" },
 					"id": { "type": "string", "format": "uuid" },
 					"is_deleted": { "type": "boolean" },
-					"is_liked": { "type": "boolean" },
 					"like_count": { "type": "integer", "format": "int32" },
 					"parent_id": { "type": ["string", "null"], "format": "uuid" },
 					"post_id": { "type": "string", "format": "uuid" },
@@ -1050,6 +1049,7 @@
 					"user_profile_image": { "type": ["string", "null"] }
 				}
 			},
+			"CommentSortOrder": { "type": "string", "enum": ["latest", "oldest", "popular"] },
 			"CreateCommentLikeRequest": {
 				"type": "object",
 				"required": ["comment_id"],
@@ -1063,6 +1063,11 @@
 					"parent_id": { "type": ["string", "null"], "format": "uuid" },
 					"post_id": { "type": "string", "format": "uuid" }
 				}
+			},
+			"CreateCommentResponse": {
+				"type": "object",
+				"required": ["comment_id"],
+				"properties": { "comment_id": { "type": "string", "format": "uuid" } }
 			},
 			"CreateFollowRequest": {
 				"type": "object",
@@ -1167,7 +1172,8 @@
 				"properties": {
 					"page": { "type": "integer", "format": "int32", "minimum": 0 },
 					"per_page": { "type": "integer", "format": "int32", "minimum": 0 },
-					"post_id": { "type": "string", "format": "uuid" }
+					"post_id": { "type": "string", "format": "uuid" },
+					"sort": { "$ref": "#/components/schemas/CommentSortOrder" }
 				}
 			},
 			"GetCommentsResponse": {
@@ -1226,7 +1232,8 @@
 				"properties": {
 					"page": { "type": "integer", "format": "int32", "minimum": 0 },
 					"parent_comment_id": { "type": "string", "format": "uuid" },
-					"per_page": { "type": "integer", "format": "int32", "minimum": 0 }
+					"per_page": { "type": "integer", "format": "int32", "minimum": 0 },
+					"sort": { "$ref": "#/components/schemas/CommentSortOrder" }
 				}
 			},
 			"GetRepliesResponse": {

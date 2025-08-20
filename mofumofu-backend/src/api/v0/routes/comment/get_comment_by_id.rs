@@ -6,8 +6,6 @@ use crate::service::error::errors::Errors;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
 use axum::extract::State;
-use axum::response::IntoResponse;
-use axum::Extension;
 use tracing::info;
 
 #[utoipa::path(
@@ -19,20 +17,15 @@ use tracing::info;
         (status = 404, description = "Comment not found"),
         (status = 500, description = "Internal Server Error")
     ),
-    security(
-        ("bearer_auth" = [])
-    ),
     tag = "Comment"
 )]
 pub async fn get_comment_by_id(
     State(state): State<AppState>,
-    Extension(claims): Extension<AccessTokenClaims>,
     ValidatedJson(payload): ValidatedJson<GetCommentByIdRequest>,
 ) -> Result<CommentInfo, Errors> {
     info!("Received request to get comment by id: {:?}", payload);
-    let user_uuid = Some(&claims.sub);
 
-    let response = service_get_comment_by_id(&state.conn, user_uuid, payload.comment_id).await?;
+    let response = service_get_comment_by_id(&state.conn, payload.comment_id).await?;
 
     Ok(response)
 }

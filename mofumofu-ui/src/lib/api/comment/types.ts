@@ -4,6 +4,10 @@ export interface CreateCommentRequest {
 	parent_id?: string | null;
 }
 
+export interface CreateCommentResponse {
+	comment_id: string;
+}
+
 export interface UpdateCommentRequest {
 	comment_id: string;
 	content: string;
@@ -21,12 +25,14 @@ export interface GetCommentsRequest {
 	post_id: string;
 	page?: number;
 	per_page?: number;
+	sort?: 'latest' | 'oldest' | 'popular';
 }
 
 export interface GetRepliesRequest {
 	parent_comment_id: string;
 	page?: number;
 	per_page?: number;
+	sort?: 'latest' | 'oldest' | 'popular';
 }
 
 export interface CommentInfo {
@@ -40,7 +46,6 @@ export interface CommentInfo {
 	user_profile_image?: string | null;
 	like_count: number;
 	reply_count: number;
-	is_liked: boolean;
 	is_deleted: boolean;
 	created_at: string;
 	updated_at?: string | null;

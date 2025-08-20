@@ -1,0 +1,49 @@
+<script lang="ts">
+	interface Props {
+		depth: number;
+		isLast: boolean;
+		hasReplies: boolean;
+		showChildren: boolean;
+		onToggleChildren: () => void;
+	}
+
+	let { depth, isLast, hasReplies, showChildren, onToggleChildren }: Props = $props();
+</script>
+
+{#if isLast}
+	<div class="absolute -left-3 h-full">
+		<div class="bg-mofu-light-950 dark:bg-mofu-dark-900 h-full w-6"></div>
+	</div>
+	<div
+		class="border-mofu-light-300 dark:border-mofu-dark-600 absolute left-[6px] h-full w-4 border-l border-dashed"
+	></div>
+	<div class="bg-mofu-light-950 dark:bg-mofu-dark-900 absolute -bottom-4 -left-1 h-4 w-4"></div>
+{/if}
+
+{#if depth > 0}
+	<div
+		class="border-mofu-light-300 dark:border-mofu-dark-600 absolute left-[6px] h-7 w-4 rounded-bl-full border-b border-l"
+	></div>
+{/if}
+
+{#if hasReplies}
+	<div class="pointer-events-none absolute top-0 left-[38px] h-full w-px pt-12 pb-6">
+		<div class="border-mofu-light-300 dark:border-mofu-dark-600 h-full w-full border-l"></div>
+		<button
+			onclick={onToggleChildren}
+			class="group/btn bg-mofu-light-950 dark:bg-mofu-dark-900 border-mofu-light-300 dark:border-mofu-dark-600 pointer-events-auto absolute top-12 -left-[9px] z-20 cursor-pointer rounded-full border p-0.5"
+			title={showChildren ? '답글 접기' : '답글 펼치기'}
+			aria-label={showChildren ? '답글 접기' : '답글 펼치기'}
+		>
+			{#if showChildren}
+				<svg class="size-3.5 opacity-60 transition-opacity group-hover/btn:opacity-100" stroke-width="2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+					<path d="m18 15-6-6-6 6"/>
+				</svg>
+			{:else}
+				<svg class="size-3.5 opacity-60 transition-opacity group-hover/btn:opacity-100" stroke-width="2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+					<path d="m6 9 6 6 6-6"/>
+				</svg>
+			{/if}
+		</button>
+	</div>
+{/if}

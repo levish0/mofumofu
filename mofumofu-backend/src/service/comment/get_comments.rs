@@ -11,7 +11,6 @@ use uuid::Uuid;
 
 pub async fn service_get_comments<C>(
     conn: &C,
-    user_id: Option<&Uuid>,
     request: GetCommentsRequest,
 ) -> ServiceResult<GetCommentsResponse>
 where
@@ -21,7 +20,7 @@ where
     let per_page = request.per_page;
     
     // 댓글 조회
-    let comments = repository_get_comments(conn, request.post_id, page, per_page).await?;
+    let comments = repository_get_comments(conn, request.post_id, page, per_page, request.sort.clone()).await?;
     let total_count = repository_count_comments(conn, request.post_id).await?;
     
     let mut comment_infos = Vec::new();
@@ -29,12 +28,6 @@ where
     for comment in comments {
         let like_count = repository_get_like_count_by_comment_id(conn, comment.id).await? as i32;
         let reply_count = repository_get_reply_count(conn, comment.id).await? as i32;
-        
-        let is_liked = if let Some(uid) = user_id {
-            repository_check_like_status_by_comment_id(conn, uid, &comment.id).await?
-        } else {
-            false
-        };
         
         // 삭제된 댓글은 내용과 사용자 정보를 숨김
         let comment_info = if comment.is_deleted {
@@ -49,7 +42,6 @@ where
                 parent_id: comment.parent_id,
                 like_count,
                 reply_count,
-                is_liked,
                 is_deleted: comment.is_deleted,
                 created_at: comment.created_at,
                 updated_at: comment.updated_at,
@@ -69,7 +61,6 @@ where
                 parent_id: comment.parent_id,
                 like_count,
                 reply_count,
-                is_liked,
                 is_deleted: comment.is_deleted,
                 created_at: comment.created_at,
                 updated_at: comment.updated_at,

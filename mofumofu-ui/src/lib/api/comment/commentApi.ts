@@ -1,6 +1,7 @@
 import { privateApi } from '../private';
 import type {
 	CreateCommentRequest,
+	CreateCommentResponse,
 	UpdateCommentRequest,
 	DeleteCommentRequest,
 	GetCommentByIdRequest,
@@ -14,10 +15,12 @@ import type {
 	CheckCommentLikeStatusRequest
 } from './types';
 import type { LikeStatusResponse } from '../like/types';
+import { publicApi } from '../public';
 
-export async function createComment(request: CreateCommentRequest): Promise<void> {
+export async function createComment(request: CreateCommentRequest): Promise<CreateCommentResponse> {
 	try {
-		await privateApi.post('v0/comment', { json: request });
+		const response = await privateApi.post('v0/comment', { json: request });
+		return response.json<CreateCommentResponse>();
 	} catch (error) {
 		console.error('Failed to create comment:', error);
 		throw error;
@@ -44,7 +47,7 @@ export async function deleteComment(request: DeleteCommentRequest): Promise<void
 
 export async function getCommentById(request: GetCommentByIdRequest): Promise<CommentInfo> {
 	try {
-		const response = await privateApi.post('v0/comment/get', { json: request });
+		const response = await publicApi.post('v0/comment/get', { json: request });
 		return response.json<CommentInfo>();
 	} catch (error) {
 		console.error('Failed to get comment:', error);
@@ -54,7 +57,7 @@ export async function getCommentById(request: GetCommentByIdRequest): Promise<Co
 
 export async function getComments(request: GetCommentsRequest): Promise<GetCommentsResponse> {
 	try {
-		const response = await privateApi.post('v0/comment/list', { json: request });
+		const response = await publicApi.post('v0/comment/list', { json: request });
 		return response.json<GetCommentsResponse>();
 	} catch (error) {
 		console.error('Failed to get comments:', error);
@@ -64,7 +67,7 @@ export async function getComments(request: GetCommentsRequest): Promise<GetComme
 
 export async function getReplies(request: GetRepliesRequest): Promise<GetRepliesResponse> {
 	try {
-		const response = await privateApi.post('v0/comment/replies', { json: request });
+		const response = await publicApi.post('v0/comment/replies', { json: request });
 		return response.json<GetRepliesResponse>();
 	} catch (error) {
 		console.error('Failed to get replies:', error);

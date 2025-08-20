@@ -17,7 +17,6 @@ pub struct CommentInfo {
     pub parent_id: Option<Uuid>,
     pub like_count: i32,
     pub reply_count: i32,
-    pub is_liked: bool,
     pub is_deleted: bool,
     pub created_at: DateTime<Utc>,
     pub updated_at: Option<DateTime<Utc>>,

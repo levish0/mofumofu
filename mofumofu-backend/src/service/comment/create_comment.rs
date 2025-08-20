@@ -1,4 +1,5 @@
 use crate::dto::comment::request::CreateCommentRequest;
+use crate::dto::comment::response::CreateCommentResponse;
 use crate::repository::comment::create_comment::repository_create_comment;
 use crate::repository::comment::update_reply_count::repository_increment_reply_count;
 use crate::repository::post::get_post_by_uuid::repository_get_post_by_uuid;
@@ -11,7 +12,7 @@ pub async fn service_create_comment<C>(
     conn: &C,
     user_id: &Uuid,
     request: CreateCommentRequest,
-) -> ServiceResult<()>
+) -> ServiceResult<CreateCommentResponse>
 where
     C: ConnectionTrait + TransactionTrait,
 {
@@ -37,7 +38,7 @@ where
     }
     
     // 댓글 생성
-    repository_create_comment(&txn, *user_id, request.post_id, &request.content, request.parent_id).await?;
+    let created_comment = repository_create_comment(&txn, *user_id, request.post_id, &request.content, request.parent_id).await?;
     
     // 포스트 댓글 수 증가
     repository_increment_comment_count(&txn, &request.post_id).await?;
@@ -48,5 +49,7 @@ where
     }
     
     txn.commit().await?;
-    Ok(())
+    Ok(CreateCommentResponse {
+        comment_id: created_comment.id,
+    })
 }

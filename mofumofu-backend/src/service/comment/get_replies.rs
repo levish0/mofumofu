@@ -11,7 +11,6 @@ use uuid::Uuid;
 
 pub async fn service_get_replies<C>(
     conn: &C,
-    user_id: Option<&Uuid>,
     request: GetRepliesRequest,
 ) -> ServiceResult<GetRepliesResponse>
 where
@@ -21,7 +20,7 @@ where
     let per_page = request.per_page;
     
     // 답글 조회
-    let replies = repository_get_replies(conn, request.parent_comment_id, page, per_page).await?;
+    let replies = repository_get_replies(conn, request.parent_comment_id, page, per_page, request.sort.clone()).await?;
     let total_count = repository_count_replies(conn, request.parent_comment_id).await?;
     
     let mut reply_infos = Vec::new();
@@ -29,12 +28,6 @@ where
     for reply in replies {
         let like_count = repository_get_like_count_by_comment_id(conn, reply.id).await? as i32;
         let reply_count = repository_get_reply_count(conn, reply.id).await? as i32;
-        
-        let is_liked = if let Some(uid) = user_id {
-            repository_check_like_status_by_comment_id(conn, uid, &reply.id).await?
-        } else {
-            false
-        };
         
         // 삭제된 댓글은 내용과 사용자 정보를 숨김
         let reply_info = if reply.is_deleted {
@@ -49,7 +42,6 @@ where
                 parent_id: reply.parent_id,
                 like_count,
                 reply_count,
-                is_liked,
                 is_deleted: reply.is_deleted,
                 created_at: reply.created_at,
                 updated_at: reply.updated_at,
@@ -69,7 +61,6 @@ where
                 parent_id: reply.parent_id,
                 like_count,
                 reply_count,
-                is_liked,
                 is_deleted: reply.is_deleted,
                 created_at: reply.created_at,
                 updated_at: reply.updated_at,

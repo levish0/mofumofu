@@ -41,8 +41,10 @@ export { default as ImageCropModal } from './components/modal/ImageCropModal.sve
 
 // Comment Components
 export { default as CommentList } from './components/comment/CommentList.svelte';
-export { default as Comment } from './components/comment/Comment.svelte';
-export { default as CommentForm } from './components/comment/CommentForm.svelte';
+export { default as CommentView } from './components/comment/CommentView.svelte';
+export { default as CommentItem } from './components/comment/CommentItem.svelte';
+export { default as CommentForm } from './components/comment/forms/CommentForm.svelte';
+export { default as CommentContent } from './components/comment/ui/CommentContent.svelte';
 
 // Settings Components
 export { default as AccountSettings } from './components/settings/forms/AccountSettings/AccountSettings.svelte';

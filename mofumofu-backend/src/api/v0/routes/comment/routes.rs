@@ -24,14 +24,14 @@ pub fn comment_routes() -> Router<AppState> {
         )
         .route(
             "/comment/get",
-            post(get_comment_by_id).route_layer(from_fn(access_jwt_auth)),
+            post(get_comment_by_id),
         )
         .route(
             "/comment/list",
-            post(get_comments).route_layer(from_fn(access_jwt_auth)),
+            post(get_comments),
         )
         .route(
             "/comment/replies",
-            post(get_replies).route_layer(from_fn(access_jwt_auth)),
+            post(get_replies),
         )
 }

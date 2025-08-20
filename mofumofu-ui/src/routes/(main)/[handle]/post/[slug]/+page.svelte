@@ -304,14 +304,16 @@
 					</header>
 
 					<!-- Post Content -->
-					<div class="prose prose-invert prose-lg dark:text-mofu-dark-200 text-mofu-light-200 max-w-none break-all mb-12">
+					<div
+						class="prose prose-invert prose-lg dark:text-mofu-dark-200 text-mofu-light-200 mb-12 max-w-none break-all"
+					>
 						{@html htmlContent}
 					</div>
 				</article>
 
 				<!-- Comments Section -->
-				<section class="mt-16 border-t border-gray-200 dark:border-gray-700 pt-8">
-					<CommentList postId={data.post.id} />
+				<section class="dark:border-mofu-dark-700 border-mofu-light-700 mt-16 border-t pt-8">
+					<CommentList postId={data.post.id} perPage={8} replyPerPage={6} defaultSort="latest" />
 				</section>
 			</div>
 
