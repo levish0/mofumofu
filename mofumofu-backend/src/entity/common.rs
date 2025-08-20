@@ -106,25 +106,16 @@ pub enum ReportTargetType {
 }
 
 #[derive(
-    Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum, Serialize, Deserialize, ToSchema,
+    Debug, Clone, PartialEq, Eq, EnumIter, Serialize, Deserialize, ToSchema,
 )]
-#[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "report_reason")]
 pub enum ReportReason {
-    #[sea_orm(string_value = "spam")]
     Spam,
-    #[sea_orm(string_value = "inappropriate_content")]
     InappropriateContent,
-    #[sea_orm(string_value = "harassment")]
     Harassment,
-    #[sea_orm(string_value = "copyright")]
     Copyright,
-    #[sea_orm(string_value = "fake_information")]
     FakeInformation,
-    #[sea_orm(string_value = "violence")]
     Violence,
-    #[sea_orm(string_value = "adult_content")]
     AdultContent,
-    #[sea_orm(string_value = "other")]
     Other,
 }
 

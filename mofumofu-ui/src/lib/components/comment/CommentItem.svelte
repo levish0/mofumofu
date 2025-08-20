@@ -13,6 +13,7 @@
 	import CommentLikeButton from './actions/CommentLikeButton.svelte';
 	import CommentActionsMenu from './actions/CommentActionsMenu.svelte';
 	import CommentEditForm from './forms/CommentEditForm.svelte';
+	import ReportDialog from '../report/ReportDialog.svelte';
 	import CommentThreadLines from './ui/CommentThreadLines.svelte';
 	import Self from './CommentItem.svelte';
 	import { ChevronRight, CircleArrowRight, Mail, MessageCirclePlus, Reply, SendHorizontal } from '@lucide/svelte';
@@ -55,6 +56,9 @@
 	// 삭제 다이얼로그 상태
 	let isDeleteModalOpen = $state(false);
 	let isDeleting = $state(false);
+
+	// 신고 다이얼로그 상태
+	let isReportDialogOpen = $state(false);
 
 	// 댓글 로칼 상태
 	let localCommentContent = $state(comment.content);
@@ -180,6 +184,12 @@
 		isDeleteModalOpen = false;
 	};
 
+	// 신고하기 클릭
+	const handleReport = () => {
+		isDropdownOpen = false;
+		isReportDialogOpen = true;
+	};
+
 	// 답글 작성 완료
 	const handleReplySubmit = async (newReply: CommentInfo) => {
 		children = [newReply, ...children];
@@ -257,16 +267,16 @@
 							onLike={like.toggleLike}
 						/>
 
-						<!-- Owner actions -->
-						{#if isOwner}
-							<CommentActionsMenu
-								{isDropdownOpen}
-								onEdit={handleEditClick}
-								onDelete={handleDelete}
-								onOpenDropdown={openDropdown}
-								onScheduleClose={scheduleClose}
-							/>
-						{/if}
+						<!-- Actions menu -->
+						<CommentActionsMenu
+							{isDropdownOpen}
+							{isOwner}
+							onEdit={handleEditClick}
+							onDelete={handleDelete}
+							onReport={handleReport}
+							onOpenDropdown={openDropdown}
+							onScheduleClose={scheduleClose}
+						/>
 					</div>
 				{/if}
 			</div>
@@ -348,7 +358,7 @@
 							>
 								<div>{remainChildren()}개의 댓글 더 불러오기</div>
 								{#if loadingChildren}
-									<div class="border-mofu h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></div>
+									<div class="border-mofu h-4 w-4 animate-spin rounded-full border-1 border-t-transparent"></div>
 								{/if}
 							</button>
 						</div>
@@ -369,7 +379,7 @@
 				>
 					<div>{localReplyCount}개의 댓글</div>
 					{#if loadingChildren}
-						<div class="border-mofu h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></div>
+						<div class="border-mofu h-4 w-4 animate-spin rounded-full border-1 border-t-transparent"></div>
 					{/if}
 				</button>
 			</div>
@@ -420,3 +430,11 @@
 		</div>
 	</Dialog.Content>
 </Dialog.Root>
+
+<!-- 댓글 신고 Dialog -->
+<ReportDialog
+	targetId={comment.id}
+	targetType="Comment"
+	open={isReportDialogOpen}
+	onOpenChange={(open) => (isReportDialogOpen = open)}
+/>

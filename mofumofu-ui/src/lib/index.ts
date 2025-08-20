@@ -45,6 +45,10 @@ export { default as CommentView } from './components/comment/CommentView.svelte'
 export { default as CommentItem } from './components/comment/CommentItem.svelte';
 export { default as CommentForm } from './components/comment/forms/CommentForm.svelte';
 export { default as CommentContent } from './components/comment/ui/CommentContent.svelte';
+export { default as CommentSkeleton } from './components/comment/CommentSkeleton.svelte';
+
+// Report Components
+export { default as ReportDialog } from './components/report/ReportDialog.svelte';
 
 // Settings Components
 export { default as AccountSettings } from './components/settings/forms/AccountSettings/AccountSettings.svelte';
@@ -87,6 +91,7 @@ export * from './api/post/types';
 export * from './api/follow/types';
 export * from './api/like/types';
 export * from './api/comment/types';
+export * from './api/report/types';
 
 // Utils
 export * from './utils/index';

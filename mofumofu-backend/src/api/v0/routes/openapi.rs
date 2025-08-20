@@ -57,7 +57,7 @@ use crate::dto::user::request::get_profile::GetUserProfileRequest;
 use crate::dto::user::request::update_profile::UpdateProfileRequest;
 use crate::dto::user::response::handle_check::HandleCheckResponse;
 use crate::dto::user::response::info::UserInfoResponse;
-use crate::entity::common::OAuthProvider;
+use crate::entity::common::{OAuthProvider, ReportReason, ReportStatus, ReportTargetType};
 use crate::service::error::errors::ErrorResponse;
 use utoipa::openapi::security::{ApiKey, ApiKeyValue};
 use utoipa::{
@@ -119,7 +119,10 @@ use utoipa::{
         crate::api::v0::routes::comment::get_comment_by_id::get_comment_by_id,
         crate::api::v0::routes::comment::get_comments::get_comments,
         crate::api::v0::routes::comment::get_replies::get_replies,
-        crate::api::v0::routes::comment::update_comment::update_comment
+        crate::api::v0::routes::comment::update_comment::update_comment,
+        crate::api::v0::routes::report::create_report::create_report,
+        crate::api::v0::routes::report::get_reports::get_reports,
+        crate::api::v0::routes::report::process_report::process_report
     ),
     components(
         schemas(
@@ -187,6 +190,15 @@ use utoipa::{
             CommentInfo,
             GetCommentsResponse,
             GetRepliesResponse,
+            CreateReportRequest,
+            GetReportsRequest,
+            ProcessReportRequest,
+            CreateReportResponse,
+            GetReportsResponse,
+            ReportInfo,
+            ReportReason,
+            ReportStatus,
+            ReportTargetType,
         )
     ),
     tags(
@@ -196,7 +208,8 @@ use utoipa::{
         (name = "Comment", description = "Comment endpoints"),
         (name = "Follow", description = "Follow endpoints"),
         (name = "Hashtag", description = "Hashtag endpoints"),
-        (name = "Like", description = "Like endpoints")
+        (name = "Like", description = "Like endpoints"),
+        (name = "Report", description = "Report endpoints")
     ),
     modifiers(&SecurityAddon) // 보안 스키마 등록
 )]

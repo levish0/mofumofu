@@ -5,6 +5,7 @@
 	import { userStore } from '$lib/stores/user.svelte';
 	import CommentItem from './CommentItem.svelte';
 	import CommentForm from './forms/CommentForm.svelte';
+	import CommentSkeleton from './CommentSkeleton.svelte';
 	import { ChevronDown, ChevronUp, TrendingUp, Edit3, MessageCircle } from '@lucide/svelte';
 	import { onMount } from 'svelte';
 
@@ -168,8 +169,10 @@
 
 	<!-- 로딩 상태 (처음 로드시) -->
 	{#if loading && comments.length === 0}
-		<div class="flex items-center justify-center p-8">
-			<div class="border-mofu h-12 w-12 animate-spin rounded-full border-2 border-t-transparent"></div>
+		<div class="space-y-2">
+			{#each Array(3) as _}
+				<CommentSkeleton />
+			{/each}
 		</div>
 	{/if}
 
@@ -185,7 +188,7 @@
 				<button
 					onclick={loadComments}
 					disabled={loading}
-					class="text-mofu-light-400 hover:text-mofu-light-200 dark:text-mofu-dark-400 dark:hover:text-mofu-dark-200 flex cursor-pointer items-center gap-1.5 pt-1 pl-2 text-sm hover:underline disabled:opacity-50"
+					class="text-mofu-light-400 hover:text-mofu-light-200 dark:text-mofu-dark-400 dark:hover:text-mofu-dark-200 flex cursor-pointer items-center gap-1.5 pt-2 pl-2 text-sm hover:underline disabled:opacity-50"
 				>
 					<MessageCircle class="size-5" />
 					댓글 더 불러오기

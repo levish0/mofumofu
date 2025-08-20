@@ -1,4 +1,4 @@
-use crate::entity::common::{ReportReason, ReportStatus, ReportTargetType};
+use crate::entity::common::{ReportStatus, ReportTargetType};
 use sea_orm::prelude::*;
 use uuid::Uuid;
 
@@ -17,7 +17,7 @@ pub struct Model {
     pub target_id: Uuid,
 
     #[sea_orm(column_type = "Json")]
-    pub reasons: Vec<ReportReason>,
+    pub reasons: serde_json::Value,
 
     #[sea_orm(column_type = "Text", nullable)]
     pub description: Option<String>,

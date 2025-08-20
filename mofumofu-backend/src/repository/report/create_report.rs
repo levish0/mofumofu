@@ -14,12 +14,15 @@ pub async fn repository_create_report<C>(
 where
     C: ConnectionTrait,
 {
+    let reasons_json = serde_json::to_value(reasons)
+        .map_err(|_| sea_orm::DbErr::Custom("Failed to serialize reasons".to_string()))?;
+        
     let new_report = ReportActiveModel {
         id: Default::default(),
         reporter_id: Set(user_id),
         target_type: Set(target_type),
         target_id: Set(target_id),
-        reasons: Set(reasons),
+        reasons: Set(reasons_json),
         description: Set(description),
         status: Set(ReportStatus::Pending),
         admin_note: Set(None),

@@ -1,14 +1,16 @@
 <script lang="ts">
-	import { Icon, EllipsisVertical, PencilSquare, Trash } from 'svelte-hero-icons';
+	import { Icon, EllipsisVertical, PencilSquare, Trash, Flag } from 'svelte-hero-icons';
 	import { Button } from '$lib/components/ui/button';
 	import { fly } from 'svelte/transition';
 
 	interface Props {
+		isOwner: boolean;
 		onEdit: () => void;
 		onDelete: () => void;
+		onReport: () => void;
 	}
 
-	const { onEdit, onDelete }: Props = $props();
+	const { isOwner, onEdit, onDelete, onReport }: Props = $props();
 
 	let isDropdownOpen = $state(false);
 	let closeTimer: ReturnType<typeof setTimeout> | null = null;
@@ -37,6 +39,11 @@
 		isDropdownOpen = false;
 		onDelete();
 	}
+
+	function handleReport() {
+		isDropdownOpen = false;
+		onReport();
+	}
 </script>
 
 <div class="relative" role="button" tabindex="0" onmouseenter={openDropdown} onmouseleave={scheduleClose}>
@@ -51,19 +58,28 @@
 			style="transform-origin: top right;"
 		>
 			<div class="py-1">
+				{#if isOwner}
+					<button
+						class="dark:text-mofu-dark-200 text-mofu-light-200 flex w-full items-center px-4 py-2 hover:opacity-70"
+						onclick={handleEdit}
+					>
+						<Icon src={PencilSquare} solid size="16" class="mr-3" />
+						수정하기
+					</button>
+					<button
+						class="flex w-full items-center px-4 py-2 text-rose-600 hover:opacity-70 dark:text-rose-500"
+						onclick={handleDelete}
+					>
+						<Icon src={Trash} solid size="16" class="mr-3" />
+						삭제하기
+					</button>
+				{/if}
 				<button
 					class="dark:text-mofu-dark-200 text-mofu-light-200 flex w-full items-center px-4 py-2 hover:opacity-70"
-					onclick={handleEdit}
+					onclick={handleReport}
 				>
-					<Icon src={PencilSquare} solid size="16" class="mr-3" />
-					수정하기
-				</button>
-				<button
-					class="flex w-full items-center px-4 py-2 text-rose-600 hover:opacity-70 dark:text-rose-500"
-					onclick={handleDelete}
-				>
-					<Icon src={Trash} solid size="16" class="mr-3" />
-					삭제하기
+					<Icon src={Flag} solid size="16" class="mr-3" />
+					신고하기
 				</button>
 			</div>
 		</div>

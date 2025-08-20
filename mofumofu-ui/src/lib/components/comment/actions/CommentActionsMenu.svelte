@@ -1,16 +1,18 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
-	import { Icon, EllipsisVertical, PencilSquare, Trash } from 'svelte-hero-icons';
+	import { Icon, EllipsisVertical, PencilSquare, Trash, Flag } from 'svelte-hero-icons';
 
 	interface Props {
 		isDropdownOpen: boolean;
+		isOwner: boolean;
 		onEdit: () => void;
 		onDelete: () => void;
+		onReport: () => void;
 		onOpenDropdown: () => void;
 		onScheduleClose: () => void;
 	}
 
-	let { isDropdownOpen, onEdit, onDelete, onOpenDropdown, onScheduleClose }: Props = $props();
+	let { isDropdownOpen, isOwner, onEdit, onDelete, onReport, onOpenDropdown, onScheduleClose }: Props = $props();
 </script>
 
 <div
@@ -40,19 +42,28 @@
 			style="transform-origin: top right;"
 		>
 			<div class="py-1">
+				{#if isOwner}
+					<button
+						class="text-mofu-light-200 dark:text-mofu-dark-200 flex w-full items-center px-4 py-2 hover:opacity-70"
+						onclick={onEdit}
+					>
+						<Icon src={PencilSquare} solid size="16" class="mr-3" />
+						수정하기
+					</button>
+					<button
+						class="flex w-full items-center px-4 py-2 text-rose-600 hover:opacity-70 dark:text-rose-500"
+						onclick={onDelete}
+					>
+						<Icon src={Trash} solid size="16" class="mr-3" />
+						삭제하기
+					</button>
+				{/if}
 				<button
 					class="text-mofu-light-200 dark:text-mofu-dark-200 flex w-full items-center px-4 py-2 hover:opacity-70"
-					onclick={onEdit}
+					onclick={onReport}
 				>
-					<Icon src={PencilSquare} solid size="16" class="mr-3" />
-					수정하기
-				</button>
-				<button
-					class="flex w-full items-center px-4 py-2 text-rose-600 hover:opacity-70 dark:text-rose-500"
-					onclick={onDelete}
-				>
-					<Icon src={Trash} solid size="16" class="mr-3" />
-					삭제하기
+					<Icon src={Flag} solid size="16" class="mr-3" />
+					신고하기
 				</button>
 			</div>
 		</div>

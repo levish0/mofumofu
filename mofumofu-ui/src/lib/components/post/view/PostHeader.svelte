@@ -3,6 +3,7 @@
 	import FollowButton from '$lib/components/profile/FollowButton.svelte';
 	import PostLikeButton from './PostLikeButton.svelte';
 	import PostActions from './PostActions.svelte';
+	import ReportDialog from '../../report/ReportDialog.svelte';
 	import { userStore } from '$lib/stores/user.svelte';
 
 	import type { PostInfoResponse, PostAuthor } from '$lib/api/post/types';
@@ -15,6 +16,13 @@
 	}
 
 	const { post, author, onEdit, onDelete }: Props = $props();
+
+	// 신고 다이얼로그 상태
+	let isReportDialogOpen = $state(false);
+
+	const handleReport = () => {
+		isReportDialogOpen = true;
+	};
 
 	const currentUser = $derived(userStore.user);
 	const isAuthor = $derived(currentUser?.handle === author.handle);
@@ -60,9 +68,10 @@
 			<PostLikeButton postId={post.id} initialLikeCount={post.like_count} />
 
 			{#if isAuthor}
-				<PostActions {onEdit} {onDelete} />
+				<PostActions isOwner={true} {onEdit} {onDelete} onReport={handleReport} />
 			{:else}
 				<FollowButton handle={author.handle} />
+				<PostActions isOwner={false} onEdit={() => {}} onDelete={() => {}} onReport={handleReport} />
 			{/if}
 		</div>
 	</div>
@@ -73,3 +82,11 @@
 		{/each}
 	</div>
 </header>
+
+<!-- 포스트 신고 Dialog -->
+<ReportDialog
+	targetId={post.id}
+	targetType="Post"
+	open={isReportDialogOpen}
+	onOpenChange={(open) => (isReportDialogOpen = open)}
+/>
