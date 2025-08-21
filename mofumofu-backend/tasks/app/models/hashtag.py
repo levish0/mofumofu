@@ -9,7 +9,7 @@ class HashTag(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(50), nullable=False, unique=True, index=True)
-    
+
     # 관계 정의는 __init__.py에서 모든 모델 로드 후 설정
 
     def __repr__(self):
