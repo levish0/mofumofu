@@ -33,7 +33,6 @@
 	let showReplyForm = $state(false);
 	let showEditForm = $state(false);
 
-
 	let showChildren = $state(false);
 	let children = $state<CommentInfo[]>([]);
 	let loadingChildren = $state(false);
@@ -253,7 +252,7 @@
 							commentId={comment.id}
 							initialLikeCount={comment.like_count || 0}
 							{isDeleted}
-							onLikeUpdate={onLikeUpdate}
+							{onLikeUpdate}
 						/>
 
 						<!-- Actions menu -->

@@ -9,7 +9,15 @@
 	let { editContent, onSave, onCancel, onContentChange }: Props = $props();
 </script>
 
-<div class="mt-2" onclick={(e) => e.stopPropagation()}>
+<div
+	class="mt-2"
+	onclick={(e) => e.stopPropagation()}
+	onkeydown={(e) => {
+		if (e.key === 'Escape') e.stopPropagation();
+	}}
+	role="dialog"
+	tabindex="0"
+>
 	<textarea
 		bind:value={editContent}
 		oninput={(e) => onContentChange((e.target as HTMLTextAreaElement).value)}

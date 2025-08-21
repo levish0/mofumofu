@@ -50,6 +50,7 @@ use crate::dto::post::response::{
 };
 use crate::dto::report::request::{CreateReportRequest, GetReportsRequest, ProcessReportRequest};
 use crate::dto::report::response::{CreateReportResponse, GetReportsResponse, ReportInfo};
+use crate::dto::admin::response::AdminTaskResponse;
 use crate::dto::user::request::avatar_image::ProfileAvatarForm;
 use crate::dto::user::request::banner_image::ProfileBannerForm;
 use crate::dto::user::request::create::CreateUserRequest;
@@ -122,7 +123,16 @@ use utoipa::{
         crate::api::v0::routes::comment::update_comment::update_comment,
         crate::api::v0::routes::report::create_report::create_report,
         crate::api::v0::routes::report::get_reports::get_reports,
-        crate::api::v0::routes::report::process_report::process_report
+        crate::api::v0::routes::report::process_report::process_report,
+        // Admin endpoints
+        crate::api::v0::routes::admin::reindex_all_posts::reindex_all_posts,
+        crate::api::v0::routes::admin::meilisearch_health::meilisearch_health,
+        crate::api::v0::routes::admin::search_stats::search_stats,
+        crate::api::v0::routes::admin::sync_likes::sync_likes,
+        crate::api::v0::routes::admin::sync_follows::sync_follows,
+        crate::api::v0::routes::admin::sync_all_counts::sync_all_counts,
+        crate::api::v0::routes::admin::cleanup_expired_tokens::cleanup_expired_tokens,
+        crate::api::v0::routes::admin::cleanup_old_events::cleanup_old_events
     ),
     components(
         schemas(
@@ -199,6 +209,8 @@ use utoipa::{
             ReportReason,
             ReportStatus,
             ReportTargetType,
+            // Admin schemas
+            AdminTaskResponse,
         )
     ),
     tags(
@@ -209,7 +221,8 @@ use utoipa::{
         (name = "Follow", description = "Follow endpoints"),
         (name = "Hashtag", description = "Hashtag endpoints"),
         (name = "Like", description = "Like endpoints"),
-        (name = "Report", description = "Report endpoints")
+        (name = "Report", description = "Report endpoints"),
+        (name = "Admin", description = "Admin management endpoints")
     ),
     modifiers(&SecurityAddon) // 보안 스키마 등록
 )]

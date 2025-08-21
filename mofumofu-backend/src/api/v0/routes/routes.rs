@@ -1,4 +1,5 @@
 use super::openapi::ApiDoc;
+use crate::api::v0::routes::admin::routes::admin_routes;
 use crate::api::v0::routes::auth::routes::auth_routes;
 use crate::api::v0::routes::comment::routes::comment_routes;
 use crate::api::v0::routes::follow::routes::follow_routes;
@@ -25,5 +26,6 @@ pub fn api_routes() -> Router<AppState> {
         .nest("/v0", like_routes())
         .nest("/v0/hashtag", hashtag_routes())
         .nest("/v0", report_routes())
+        .nest("/v0/admin", admin_routes())
         .fallback(handler_404)
 }

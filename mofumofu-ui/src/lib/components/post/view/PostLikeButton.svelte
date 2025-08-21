@@ -28,7 +28,9 @@
 		class="flex items-center gap-2 rounded-full px-4 py-2 transition-colors {like.isLiked()
 			? 'text-rose-600 dark:text-rose-500'
 			: 'dark:text-mofu-dark-400 text-mofu-light-400'} 
-		{like.isSubmitting() || !isAuthenticated ? 'cursor-not-allowed opacity-50' : 'hover:text-rose-600 dark:hover:text-rose-500'}"
+		{like.isSubmitting() || !isAuthenticated
+			? 'cursor-not-allowed opacity-50'
+			: 'hover:text-rose-600 dark:hover:text-rose-500'}"
 	>
 		<Icon src={Heart} class="h-5 w-5" solid />
 		<span class="text-sm">{like.likeCount()}</span>

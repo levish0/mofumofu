@@ -128,7 +128,15 @@
 			</div>
 
 			<!-- 댓글 입력 영역 -->
-			<div class="min-w-0 flex-1" onclick={(e) => e.stopPropagation()}>
+			<div
+				class="min-w-0 flex-1"
+				onclick={(e) => e.stopPropagation()}
+				onkeydown={(e) => {
+					if (e.key === 'Escape') e.stopPropagation();
+				}}
+				role="dialog"
+				tabindex="0"
+			>
 				<div
 					class="bg-mofu-light-950 dark:bg-mofu-dark-900 border-mofu-light-600 dark:border-mofu-dark-600 focus-within:border-mofu focus-within:ring-mofu rounded-lg border transition-colors focus-within:ring-1"
 				>
