@@ -10,11 +10,6 @@ class UserStore {
 	private _initialized = $state(false);
 
 	get user() {
-		// 자동 로딩을 위한 체크만 하고, 실제 로딩은 비동기적으로 처리
-		if (authStore.isAuthenticated && !this._user && !this._isLoading && !this._initialized) {
-			// setTimeout을 사용하여 getter 실행 후 비동기적으로 로드
-			setTimeout(() => this.loadProfile(), 0);
-		}
 		return this._user;
 	}
 
