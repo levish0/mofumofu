@@ -16,7 +16,7 @@
 		e.preventDefault();
 
 		if (!handle.trim() || !password) {
-			error = '핸들과 비밀번호를 모두 입력해주세요';
+			error = m.signin_handle_password_required();
 			return;
 		}
 
@@ -32,7 +32,7 @@
 			if (err instanceof ApiError) {
 				error = err.message;
 			} else {
-				error = '로그인 중 오류가 발생했습니다';
+				error = m.signin_error_occurred();
 			}
 		} finally {
 			isSubmitting = false;
@@ -72,14 +72,14 @@
 			<div class="mt-6">
 				<form onsubmit={handleSubmit} class="space-y-4">
 					<div>
-						<label for="handle" class="block text-sm/6 font-medium">핸들</label>
+						<label for="handle" class="block text-sm/6 font-medium">{m.signin_handle_label()}</label>
 						<div class="mt-2">
 							<input
 								id="handle"
 								type="text"
 								name="handle"
 								required
-								placeholder="@핸들명"
+								placeholder={m.signin_handle_placeholder()}
 								value={handle}
 								oninput={(e) => (handle = (e.target as HTMLInputElement).value)}
 								autocomplete="username"
@@ -137,7 +137,7 @@
 										d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
 									></path>
 								</svg>
-								로그인 중...
+								{m.signin_signing_in()}
 							{:else}
 								{m.auth_sign_in_button()}
 							{/if}

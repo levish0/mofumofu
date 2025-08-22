@@ -27,6 +27,7 @@
 	let saveSuccess = $state(false);
 	let isAuthChecking = $state(true); // 인증 체크 중인지
 	let authError = $state(false); // 인증 실패 상태
+	let isOAuthDataLoading = $state(false); // OAuth 연결 정보 로딩 상태
 
 	// 이미지 크롭 관련 상태
 	let showImageCrop = $state(false);
@@ -118,15 +119,23 @@
 					accordionValue = 'display';
 				}
 			}
+
+			// URL 해시에서 초기 섹션 설정
+			selectedSection = getInitialSection();
+
+			// Initialize settings with default data
+			settingsStore.initializeWithDefaults();
+
+			// Account 섹션이 선택되면 OAuth 데이터 로딩 상태 설정
+			if (selectedSection === 'account' && authStore.isAuthenticated && !isOAuthDataLoaded) {
+				isOAuthDataLoading = true;
+			}
 		} finally {
-			isAuthChecking = false;
+			// OAuth 데이터 로딩이 필요하지 않거나 인증되지 않은 경우에만 로딩 완료
+			if (!isOAuthDataLoading) {
+				isAuthChecking = false;
+			}
 		}
-
-		// URL 해시에서 초기 섹션 설정
-		selectedSection = getInitialSection();
-
-		// Initialize settings with default data
-		settingsStore.initializeWithDefaults();
 	});
 
 	// userStore.user가 로드되면 자동으로 settings 업데이트
@@ -174,8 +183,17 @@
 		}
 	});
 
+	// OAuth 데이터가 이미 로드되었는지 추적
+	let isOAuthDataLoaded = $state(false);
+
 	function handleSectionChange(sectionId: string) {
 		selectedSection = sectionId;
+		
+		// Account 섹션으로 변경 시 OAuth 데이터가 아직 로드되지 않았다면 로딩 상태 설정
+		if (sectionId === 'account' && authStore.isAuthenticated && !isOAuthDataLoaded) {
+			isOAuthDataLoading = true;
+			isAuthChecking = true;
+		}
 	}
 
 	function handleReset() {
@@ -206,6 +224,13 @@
 
 	function handleCropCancel() {
 		showImageCrop = false;
+	}
+
+	// OAuth 데이터 로딩 완료를 알리는 함수
+	function handleOAuthDataLoaded() {
+		isOAuthDataLoaded = true;
+		isOAuthDataLoading = false;
+		isAuthChecking = false;
 	}
 </script>
 
@@ -245,10 +270,11 @@
 		onSectionChange={handleSectionChange}
 		{openImageCrop}
 		{handleReset}
+		{handleOAuthDataLoaded}
 	/>
 
 	<!-- 모바일 레이아웃 -->
-	<MobileSettingsLayout {sections} {handleSave} {saveSuccess} {openImageCrop} {handleReset} />
+	<MobileSettingsLayout {sections} {handleSave} {saveSuccess} {openImageCrop} {handleReset} {handleOAuthDataLoaded} />
 
 	<!-- 전역 이미지 크롭 모달 -->
 	<ImageCropModal

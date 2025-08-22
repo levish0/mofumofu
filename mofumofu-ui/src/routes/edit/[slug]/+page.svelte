@@ -103,22 +103,22 @@
 	<meta name="robots" content="noindex, nofollow" />
 
 	<!-- Open Graph -->
-	<meta property="og:title" content="글 수정 - Mofumofu" />
+	<meta property="og:title" content={m.edit_page_meta_title()} />
 	<meta property="og:description" content={m.edit_page_description()} />
 	<meta property="og:type" content="website" />
 	<meta property="og:site_name" content="Mofumofu" />
 
 	<!-- Twitter Card -->
 	<meta name="twitter:card" content="summary" />
-	<meta name="twitter:title" content="글 수정 - Mofumofu" />
+	<meta name="twitter:title" content={m.edit_page_meta_title()} />
 	<meta name="twitter:description" content={m.edit_page_description()} />
 </svelte:head>
 
-<LoadingOverlay isVisible={isAuthChecking} message="에디터를 준비중입니다..." />
+<LoadingOverlay isVisible={isAuthChecking} message={m.edit_preparing_editor()} />
 
-<AuthErrorScreen isVisible={authError} description="글 수정 기능을 이용하려면 로그인해 주세요." />
+<AuthErrorScreen isVisible={authError} description={m.edit_auth_required()} />
 
-<NotVerifiedScreen isVisible={verificationError} description="글 수정 기능을 이용하려면 이메일 인증을 완료해 주세요." />
+<NotVerifiedScreen isVisible={verificationError} description={m.edit_email_verification_required()} />
 
 {#if !authError && !verificationError}
 	<div class="flex h-full w-full bg-gray-900 break-all text-white dark:bg-gray-900">

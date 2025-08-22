@@ -1,3 +1,5 @@
+import * as m from '../../paraglide/messages';
+
 export interface TocItem {
 	level: number;
 	text: string;
@@ -246,7 +248,7 @@ export async function processMarkdown(markdown: string): Promise<MarkdownProcess
 	} catch (error) {
 		console.error('Markdown processing error:', error);
 		return {
-			htmlContent: '<p>마크다운 처리 중 오류가 발생했습니다.</p>',
+			htmlContent: `<p>${m.markdown_processing_error()}</p>`,
 			tocItems: []
 		};
 	}

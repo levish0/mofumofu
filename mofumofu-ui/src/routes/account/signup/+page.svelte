@@ -75,7 +75,7 @@
 		e.preventDefault();
 
 		if (handleVerificationState !== 'verified') {
-			submitError = '핸들 중복 확인을 해주세요';
+			submitError = m.signup_handle_check_required();
 			return;
 		}
 
@@ -83,7 +83,7 @@
 		const result = safeParse(schema, { name: name.trim(), email: email.trim(), handle: handle.trim(), password });
 
 		if (!result.success) {
-			submitError = '입력 정보를 다시 확인해주세요';
+			submitError = m.signup_input_validation_error();
 			return;
 		}
 
@@ -104,7 +104,7 @@
 			if (error instanceof ApiError) {
 				submitError = error.message;
 			} else {
-				submitError = '회원가입 중 오류가 발생했습니다';
+				submitError = m.signup_error_occurred();
 			}
 		} finally {
 			isSubmitting = false;
@@ -143,14 +143,14 @@
 			<div class="mt-6">
 				<form onsubmit={handleSubmit} class="space-y-4">
 					<div>
-						<label for="name" class="block text-sm/6 font-medium">이름</label>
+						<label for="name" class="block text-sm/6 font-medium">{m.signup_name_label()}</label>
 						<div class="mt-2 space-y-2">
 							<input
 								id="name"
 								type="text"
 								name="name"
 								required
-								placeholder="이름을 입력해주세요"
+								placeholder={m.signup_name_placeholder()}
 								value={name}
 								oninput={handleNameInput}
 								autocomplete="name"
@@ -308,7 +308,7 @@
 										d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
 									></path>
 								</svg>
-								가입 중...
+								{m.signup_signing_up()}
 							{:else}
 								{m.auth_sign_up_button()}
 							{/if}

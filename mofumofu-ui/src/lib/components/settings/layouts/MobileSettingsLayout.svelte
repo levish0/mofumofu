@@ -29,9 +29,10 @@
 			onComplete?: (data: any) => void
 		) => void;
 		handleReset: () => void;
+		handleOAuthDataLoaded: () => void;
 	};
 
-	const { sections, handleSave, saveSuccess, openImageCrop, handleReset }: Props = $props();
+	const { sections, handleSave, saveSuccess, openImageCrop, handleReset, handleOAuthDataLoaded }: Props = $props();
 
 	// 모바일에서 accordion의 기본 열린 섹션
 	let accordionValue = $state(authStore.isAuthenticated ? 'personal' : 'display');
@@ -57,7 +58,7 @@
 					{#if section.id === 'personal'}
 						<PersonalInfoSettings {openImageCrop} />
 					{:else if section.id === 'account'}
-						<AccountSettings />
+						<AccountSettings {handleOAuthDataLoaded} />
 					{:else if section.id === 'display'}
 						<DisplaySettings />
 					{:else if section.id === 'writing'}

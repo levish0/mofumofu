@@ -6,6 +6,7 @@
 	import ProfileInfo from '$lib/components/profile/ProfileInfo.svelte';
 	import ProfilePostGrid from '$lib/components/profile/ProfilePostGrid.svelte';
 	import type { PageData } from './$types';
+	import * as m from '../../../../paraglide/messages';
 
 	const { data }: { data: PageData } = $props();
 
@@ -54,11 +55,11 @@
 
 <svelte:head>
 	<title>{data.profile.name} (@{data.profile.handle}) - Mofumofu</title>
-	<meta name="description" content={data.profile.bio || `${data.profile.name}의 프로필을 확인하세요.`} />
+	<meta name="description" content={data.profile.bio || m.profile_meta_description_fallback({ name: data.profile.name })} />
 
 	<!-- Open Graph -->
 	<meta property="og:title" content="{data.profile.name} (@{data.profile.handle}) - Mofumofu" />
-	<meta property="og:description" content={data.profile.bio || `${data.profile.name}의 프로필을 확인하세요.`} />
+	<meta property="og:description" content={data.profile.bio || m.profile_meta_description_fallback({ name: data.profile.name })} />
 	<meta property="og:type" content="profile" />
 	<meta property="og:url" content="https://mofumofu.ink/{data.profile.handle}/profile" />
 	<meta
@@ -71,7 +72,7 @@
 	<!-- Twitter Card -->
 	<meta name="twitter:card" content="summary" />
 	<meta name="twitter:title" content="{data.profile.name} (@{data.profile.handle}) - Mofu" />
-	<meta name="twitter:description" content={data.profile.bio || `${data.profile.name}의 프로필을 확인하세요.`} />
+	<meta name="twitter:description" content={data.profile.bio || m.profile_meta_description_fallback({ name: data.profile.name })} />
 	<meta
 		name="twitter:image"
 		content={data.profile.banner_image || data.profile.profile_image || 'https://mofumofu.ink/og-default.png'}

@@ -3,6 +3,7 @@ import { createCommentLike, deleteCommentLike, checkCommentLikeStatus } from '$l
 import { authStore } from '$lib/stores/auth.svelte';
 import { toast } from 'svelte-sonner';
 import { onMount } from 'svelte';
+import * as m from '../../paraglide/messages';
 
 type LikeType = 'post' | 'comment';
 
@@ -78,7 +79,7 @@ export function useLike(options: UseLikeOptions) {
 			onUpdate?.(id, isLiked);
 		} catch (error) {
 			console.error(`Failed to toggle ${type} like:`, error);
-			toast.error('좋아요 처리에 실패했습니다');
+			toast.error(m.like_processing_error());
 		} finally {
 			isSubmitting = false;
 		}

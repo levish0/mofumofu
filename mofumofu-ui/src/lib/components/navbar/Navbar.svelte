@@ -204,7 +204,7 @@
 				<Button href="/settings" variant="icon" aria-label="settings">
 					<Icon src={Cog6Tooth} solid size="20" class="text-black dark:text-white" />
 				</Button>
-				<Button href="/account/signup" class="py-0">{m.navbar_sign_in()}</Button>
+				<Button href="/account/signin" class="py-0">{m.navbar_sign_in()}</Button>
 			{/if}
 		</div>
 	</div>

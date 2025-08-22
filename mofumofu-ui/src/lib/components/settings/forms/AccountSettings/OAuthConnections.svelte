@@ -6,6 +6,12 @@
 	import { toast } from 'svelte-sonner';
 	import { onMount } from 'svelte';
 
+	type Props = {
+		handleOAuthDataLoaded: () => void;
+	};
+
+	const { handleOAuthDataLoaded }: Props = $props();
+
 	let connections = $state<OAuthProvider[]>([]);
 	let isOAuthOnly = $state(false);
 	let unlinkingProviders = $state<Set<OAuthProvider>>(new Set());
@@ -30,6 +36,9 @@
 		} catch (error) {
 			console.error('Failed to load OAuth connections:', error);
 			toast.error('연결된 계정 정보를 불러오는데 실패했습니다.');
+		} finally {
+			// OAuth 데이터 로드 완료를 부모 컴포넌트에 알림
+			handleOAuthDataLoaded();
 		}
 	}
 

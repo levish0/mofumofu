@@ -1,30 +1,31 @@
 import * as v from 'valibot';
+import * as m from '../../paraglide/messages';
 
 export function createSignupSchema() {
 	return v.object({
 		name: v.pipe(
 			v.string(),
-			v.minLength(1, '이름을 입력해주세요'),
-			v.minLength(3, '이름은 3자 이상이어야 합니다'),
-			v.maxLength(20, '이름은 20자 이하여야 합니다')
+			v.minLength(1, m.signup_validation_name_required()),
+			v.minLength(3, m.signup_validation_name_min_length()),
+			v.maxLength(20, m.signup_validation_name_max_length())
 		),
-		email: v.pipe(v.string(), v.minLength(1, '이메일을 입력해주세요'), v.email('올바른 이메일 형식이 아닙니다')),
+		email: v.pipe(v.string(), v.minLength(1, m.signup_validation_email_required()), v.email(m.signup_validation_email_invalid())),
 		handle: v.pipe(
 			v.string(),
-			v.minLength(1, '핸들을 입력해주세요'),
-			v.minLength(3, '핸들은 3자 이상이어야 합니다'),
-			v.maxLength(20, '핸들은 20자 이하여야 합니다'),
-			v.regex(/^[a-zA-Z0-9_]+$/, '핸들은 영문, 숫자, 언더스코어만 사용 가능합니다')
+			v.minLength(1, m.signup_validation_handle_required()),
+			v.minLength(3, m.signup_validation_handle_min_length()),
+			v.maxLength(20, m.signup_validation_handle_max_length()),
+			v.regex(/^[a-zA-Z0-9_]+$/, m.signup_validation_handle_format())
 		),
 		password: v.pipe(
 			v.string(),
-			v.minLength(1, '비밀번호를 입력해주세요'),
-			v.minLength(8, '비밀번호는 8자 이상이어야 합니다'),
-			v.maxLength(128, '비밀번호는 128자 이하여야 합니다'),
-			v.regex(/(?=.*[a-z])/, '소문자를 포함해야 합니다'),
-			v.regex(/(?=.*[A-Z])/, '대문자를 포함해야 합니다'),
-			v.regex(/(?=.*\d)/, '숫자를 포함해야 합니다'),
-			v.regex(/(?=.*[!@#$%^&*(),.?":{}|<>])/, '특수문자를 포함해야 합니다')
+			v.minLength(1, m.signup_validation_password_required()),
+			v.minLength(8, m.signup_validation_password_min_length()),
+			v.maxLength(128, m.signup_validation_password_max_length()),
+			v.regex(/(?=.*[a-z])/, m.signup_validation_password_lowercase()),
+			v.regex(/(?=.*[A-Z])/, m.signup_validation_password_uppercase()),
+			v.regex(/(?=.*\d)/, m.signup_validation_password_numbers()),
+			v.regex(/(?=.*[!@#$%^&*(),.?":{}|<>])/, m.signup_validation_password_special())
 		)
 	});
 }

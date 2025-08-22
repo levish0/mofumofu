@@ -30,6 +30,7 @@
 			onComplete?: (data: any) => void
 		) => void;
 		handleReset: () => void;
+		handleOAuthDataLoaded: () => void;
 	};
 
 	const {
@@ -40,7 +41,8 @@
 		saveSuccess,
 		onSectionChange,
 		openImageCrop,
-		handleReset
+		handleReset,
+		handleOAuthDataLoaded
 	}: Props = $props();
 </script>
 
@@ -145,7 +147,7 @@
 		{#if selectedSection === 'personal'}
 			<PersonalInfoSettings {openImageCrop} />
 		{:else if selectedSection === 'account'}
-			<AccountSettings />
+			<AccountSettings {handleOAuthDataLoaded} />
 		{:else if selectedSection === 'display'}
 			<DisplaySettings />
 		{:else if selectedSection === 'writing'}

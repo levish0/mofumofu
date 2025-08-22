@@ -12,6 +12,7 @@
 	import PostHeader from '$lib/components/post/view/PostHeader.svelte';
 	import PostTOC from '$lib/components/post/view/PostTOC.svelte';
 	import PostDeleteModal from '$lib/components/post/view/PostDeleteModal.svelte';
+	import * as m from '../../../../../paraglide/messages';
 
 	const { data }: { data: PageData } = $props();
 
@@ -43,12 +44,12 @@
 		try {
 			isDeleting = true;
 			await deletePost({ slug: data.slug });
-			toast.success('포스트가 성공적으로 삭제되었습니다.');
+			toast.success(m.post_delete_success());
 			// 삭제 후 사용자 프로필 페이지로 이동
 			goto(`/@${data.author.handle}/profile`);
 		} catch (error) {
 			console.error('Failed to delete post:', error);
-			toast.error('포스트 삭제에 실패했습니다. 다시 시도해주세요.');
+			toast.error(m.post_delete_error());
 		} finally {
 			isDeleting = false;
 		}

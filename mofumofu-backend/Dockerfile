@@ -1,5 +1,5 @@
 # Builder stage
-FROM rust:1.88 AS builder
+FROM rust:1.89 AS builder
 
 # Install necessary system dependencies
 RUN apt-get update && apt-get install -y \

@@ -18,7 +18,7 @@
 			const token = page.url.searchParams.get('token');
 
 			if (!token) {
-				throw new Error('인증 토큰이 없습니다');
+				throw new Error(m.auth_token_missing());
 			}
 
 			await verifyEmail(token);
@@ -27,11 +27,11 @@
 			console.error('Email verification error:', err);
 
 			if (err instanceof ApiError) {
-				error = `이메일 인증 실패: ${err.message}`;
+				error = m.verify_email_failed_message({ message: err.message });
 			} else if (err instanceof Error) {
 				error = err.message;
 			} else {
-				error = '이메일 인증 중 예상치 못한 오류가 발생했습니다';
+				error = m.verify_email_unexpected_error();
 			}
 		} finally {
 			loading = false;
@@ -45,22 +45,22 @@
 			{#if loading}
 				<div class="space-y-4">
 					<div class="border-mofu-dark-100 mx-auto h-12 w-12 animate-spin rounded-full border-b-2"></div>
-					<h2 class="text-xl font-semibold">이메일 인증 중</h2>
-					<p>잠시만 기다려주세요</p>
+					<h2 class="text-xl font-semibold">{m.verify_email_in_progress()}</h2>
+					<p>{m.verify_email_please_wait()}</p>
 				</div>
 			{:else if success}
 				<div class="space-y-4">
 					<div class="text-green-600">
 						<Icon src={CheckCircle} solid size="40" class="inline-block" />
 					</div>
-					<h2 class="text-xl font-semibold">이메일 인증 완료</h2>
-					<p class="text-mofu-dark-300">이메일 인증이 성공적으로 완료되었습니다. 이제 로그인할 수 있습니다.</p>
+					<h2 class="text-xl font-semibold">{m.verify_email_completed()}</h2>
+					<p class="text-mofu-dark-300">{m.verify_email_success_description()}</p>
 					<div class="pt-4">
 						<Button
 							onclick={() => goto('/account/signin')}
 							class="bg-mofu text-mofu-dark-900 rounded-md px-4 py-2 text-sm font-semibold hover:opacity-70"
 						>
-							로그인하기
+							{m.verify_email_sign_in()}
 						</Button>
 					</div>
 				</div>
@@ -69,7 +69,7 @@
 					<div class="text-rose-600">
 						<Icon src={ExclamationTriangle} solid size="40" class="inline-block" />
 					</div>
-					<h2 class="text-xl font-semibold">인증 실패</h2>
+					<h2 class="text-xl font-semibold">{m.verify_email_failed()}</h2>
 					<p class="text-mofu-dark-300">{error}</p>
 					<div class="flex gap-3 pt-4">
 						<Button
@@ -77,14 +77,14 @@
 							variant="ghost"
 							class="text-mofu-dark-300 rounded-md text-sm hover:opacity-70"
 						>
-							다시 가입하기
+							{m.verify_email_signup_again()}
 						</Button>
 						<Button
 							onclick={() => goto('/account/signin')}
 							variant="ghost"
 							class="text-mofu-dark-300 rounded-md text-sm hover:opacity-70"
 						>
-							로그인하기
+							{m.verify_email_sign_in()}
 						</Button>
 					</div>
 				</div>
