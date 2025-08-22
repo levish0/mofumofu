@@ -57,7 +57,7 @@
 					{#if section.id === 'personal'}
 						<PersonalInfoSettings {openImageCrop} />
 					{:else if section.id === 'account'}
-						<AccountSettings {handleOAuthDataLoaded} />
+						<AccountSettings />
 					{:else if section.id === 'display'}
 						<DisplaySettings />
 					{:else if section.id === 'writing'}
