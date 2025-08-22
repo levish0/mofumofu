@@ -55,7 +55,7 @@
 
 		try {
 			await unlinkOAuth(provider);
-			await loadConnections();
+			await loadConnections(); // settingsStore를 업데이트
 			toast.success(`${providerDisplayNames[provider]} 연결이 해제되었습니다.`);
 		} catch (error) {
 			console.error('Failed to unlink OAuth connection:', error);

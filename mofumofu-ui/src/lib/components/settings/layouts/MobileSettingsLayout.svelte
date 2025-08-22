@@ -29,7 +29,6 @@
 			onComplete?: (data: any) => void
 		) => void;
 		handleReset: () => void;
-		handleOAuthDataLoaded: () => void;
 	};
 
 	const { sections, handleSave, saveSuccess, openImageCrop, handleReset, handleOAuthDataLoaded }: Props = $props();
