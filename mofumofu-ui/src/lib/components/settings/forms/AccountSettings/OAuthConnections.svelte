@@ -4,14 +4,8 @@
 	import type { OAuthConnectionsResponse, OAuthProvider } from '$lib/api/auth/types';
 	import { getGoogleOAuthLinkUrl, getGitHubOAuthLinkUrl } from '$lib/oauth/config';
 	import { toast } from 'svelte-sonner';
-	import { onMount } from 'svelte';
 	import { settingsStore } from '$lib/stores/settings.svelte';
 
-	type Props = {
-		handleOAuthDataLoaded: () => void;
-	};
-
-	const { handleOAuthDataLoaded }: Props = $props();
 
 	// settingsStore에서 데이터 가져오기
 	const connections = $derived(settingsStore.account.oauthConnections as OAuthProvider[]);
@@ -26,10 +20,6 @@
 	const availableProviders: OAuthProvider[] = ['Google', 'Github'];
 	const unconnectedProviders = $derived(availableProviders.filter((provider) => !connections.includes(provider)));
 
-	onMount(() => {
-		// 이미 settingsStore에 데이터가 로드되어 있으므로 바로 완료 신호
-		handleOAuthDataLoaded();
-	});
 
 	async function loadConnections() {
 		try {

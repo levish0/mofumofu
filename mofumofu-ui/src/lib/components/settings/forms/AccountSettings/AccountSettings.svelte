@@ -4,11 +4,6 @@
 	import PasswordManagement from './PasswordManagement.svelte';
 	import OAuthConnections from './OAuthConnections.svelte';
 
-	type Props = {
-		handleOAuthDataLoaded: () => void;
-	};
-
-	const { handleOAuthDataLoaded }: Props = $props();
 	const user = $derived(userStore.user);
 </script>
 
@@ -20,6 +15,6 @@
 
 		<PasswordManagement />
 
-		<OAuthConnections {handleOAuthDataLoaded} />
+		<OAuthConnections />
 	</div>
 </div>
