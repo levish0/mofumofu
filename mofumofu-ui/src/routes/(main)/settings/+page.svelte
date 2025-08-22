@@ -132,6 +132,7 @@
 
 	// userStore.user가 로드되면 자동으로 settings 업데이트
 	let userInitialized = $state(false);
+	let oauthInitialized = $state(false);
 
 	$effect(() => {
 		if (authStore.isAuthenticated && userStore.user && !userInitialized) {
@@ -145,8 +146,11 @@
 				bannerImage: userStore.user.banner_image || null
 			});
 
-			// OAuth 데이터도 함께 로드
-			loadOAuthData();
+			// OAuth 데이터도 함께 로드 (한 번만)
+			if (!oauthInitialized) {
+				loadOAuthData();
+				oauthInitialized = true;
+			}
 
 			// API 호출이 성공하면 인증된 상태이므로 personal 섹션으로 변경 (단, 해시가 없는 경우만)
 			if (!window.location.hash && selectedSection === 'display') {
@@ -162,7 +166,8 @@
 	async function loadOAuthData() {
 		try {
 			const response = await getOAuthConnections();
-			settingsStore.updateAccount({
+			// Silent 업데이트로 변경사항 감지를 피함
+			settingsStore.updateAccountSilent({
 				oauthConnections: response.connections,
 				isOAuthOnly: response.is_oauth_only
 			});

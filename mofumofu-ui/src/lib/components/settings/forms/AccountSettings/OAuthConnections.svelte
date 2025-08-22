@@ -24,7 +24,7 @@
 	async function loadConnections() {
 		try {
 			const response = await getOAuthConnections();
-			settingsStore.updateAccount({
+			settingsStore.updateAccountSilent({
 				oauthConnections: response.connections,
 				isOAuthOnly: response.is_oauth_only
 			});

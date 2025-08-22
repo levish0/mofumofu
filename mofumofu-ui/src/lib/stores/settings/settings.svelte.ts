@@ -206,6 +206,15 @@ class SettingsStore {
 		this.checkForChanges();
 	}
 
+	// Update account info without triggering change detection (for initial load)
+	updateAccountSilent(updates: Partial<AccountSettings>) {
+		this.state.account = { ...this.state.account, ...updates };
+		// originalState도 함께 업데이트하여 변경사항으로 감지되지 않도록 함
+		if (this.originalState.account) {
+			this.originalState.account = { ...this.originalState.account, ...updates };
+		}
+	}
+
 	updateWriting(updates: Partial<WritingSettings>) {
 		this.state.writing = { ...this.state.writing, ...updates };
 		this.checkForChanges();
