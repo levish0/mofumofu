@@ -44,15 +44,15 @@
 	const isAuthenticated = $derived(authStore.isAuthenticated);
 
 	onMount(async () => {
-		// 인증된 상태에서 유저 정보가 없으면 프로필 로드
-		if (authStore.isAuthenticated && !userStore.user) {
-			await userStore.loadProfile();
-		} else if (!authStore.isAuthenticated) {
+		if (!authStore.isAuthenticated) {
 			// 토큰이 없는 경우 refresh 시도
 			const refreshSuccess = await authStore.tryRefreshToken();
-			if (refreshSuccess) {
+			if (refreshSuccess && !userStore.user) {
 				await userStore.loadProfile();
 			}
+		} else if (!userStore.user) {
+			// 인증된 상태에서 유저 정보가 없으면 프로필 로드
+			await userStore.loadProfile();
 		}
 	});
 

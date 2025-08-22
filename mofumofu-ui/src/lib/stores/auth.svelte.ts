@@ -4,10 +4,10 @@ import { browser } from '$app/environment';
 import { userStore } from './user.svelte';
 import { refreshAccessToken, signOut } from '$lib/api/auth/authApi';
 
-let _token = $state(browser ? (localStorage.getItem('access_token') ?? '') : '');
+const initialToken = browser ? (localStorage.getItem('access_token') ?? '') : '';
+let _token = $state(initialToken);
 
 // 브라우저에서 초기화 시 토큰이 없으면 userStore도 clear
-const initialToken = browser ? (localStorage.getItem('access_token') ?? '') : '';
 if (browser && !initialToken) {
 	userStore.clear();
 }
