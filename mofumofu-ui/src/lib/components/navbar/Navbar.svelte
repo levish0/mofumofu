@@ -110,7 +110,7 @@
 					onclick={() => handleNavClick('/')}
 				>
 					<Icon src={ArrowTrendingUp} solid size="20" class="mr-3 text-black dark:text-white" />
-					트렌딩
+					{m.navbar_trending()}
 				</Button>
 				<Button
 					variant="ghost"
@@ -119,7 +119,7 @@
 					onclick={() => handleNavClick('/latest')}
 				>
 					<Icon src={Clock} size="20" solid class="mr-3 text-black dark:text-white" />
-					최신
+					{m.navbar_latest()}
 				</Button>
 			</div>
 		</div>

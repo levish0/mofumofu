@@ -1,5 +1,7 @@
 <script lang="ts">
-	let { isVisible, message = '로딩 중...' } = $props<{
+	import * as m from '../../../paraglide/messages';
+
+	let { isVisible, message = m.loading_default() } = $props<{
 		isVisible: boolean;
 		message?: string;
 	}>();

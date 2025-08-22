@@ -5,6 +5,7 @@
 	import { getGoogleOAuthLinkUrl, getGitHubOAuthLinkUrl } from '$lib/oauth/config';
 	import { toast } from 'svelte-sonner';
 	import { onMount } from 'svelte';
+	import { settingsStore } from '$lib/stores/settings.svelte';
 
 	type Props = {
 		handleOAuthDataLoaded: () => void;
@@ -12,8 +13,9 @@
 
 	const { handleOAuthDataLoaded }: Props = $props();
 
-	let connections = $state<OAuthProvider[]>([]);
-	let isOAuthOnly = $state(false);
+	// settingsStore에서 데이터 가져오기
+	const connections = $derived(settingsStore.account.oauthConnections as OAuthProvider[]);
+	const isOAuthOnly = $derived(settingsStore.account.isOAuthOnly);
 	let unlinkingProviders = $state<Set<OAuthProvider>>(new Set());
 
 	const providerDisplayNames: Record<OAuthProvider, string> = {
@@ -24,21 +26,21 @@
 	const availableProviders: OAuthProvider[] = ['Google', 'Github'];
 	const unconnectedProviders = $derived(availableProviders.filter((provider) => !connections.includes(provider)));
 
-	onMount(async () => {
-		await loadConnections();
+	onMount(() => {
+		// 이미 settingsStore에 데이터가 로드되어 있으므로 바로 완료 신호
+		handleOAuthDataLoaded();
 	});
 
 	async function loadConnections() {
 		try {
 			const response = await getOAuthConnections();
-			connections = response.connections;
-			isOAuthOnly = response.is_oauth_only;
+			settingsStore.updateAccount({
+				oauthConnections: response.connections,
+				isOAuthOnly: response.is_oauth_only
+			});
 		} catch (error) {
 			console.error('Failed to load OAuth connections:', error);
 			toast.error('연결된 계정 정보를 불러오는데 실패했습니다.');
-		} finally {
-			// OAuth 데이터 로드 완료를 부모 컴포넌트에 알림
-			handleOAuthDataLoaded();
 		}
 	}
 

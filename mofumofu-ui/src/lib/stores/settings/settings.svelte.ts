@@ -49,7 +49,9 @@ class SettingsStore {
 		account: {
 			email: '',
 			password: '',
-			twoFactorEnabled: false
+			twoFactorEnabled: false,
+			oauthConnections: [],
+			isOAuthOnly: false
 		},
 		writing: {
 			defaultVisibility: 'public',

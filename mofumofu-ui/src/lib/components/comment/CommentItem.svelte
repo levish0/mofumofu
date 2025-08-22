@@ -16,6 +16,7 @@
 	import CommentThreadLines from './ui/CommentThreadLines.svelte';
 	import Self from './CommentItem.svelte';
 	import { ChevronRight, CircleArrowRight, Mail, MessageCirclePlus, Reply, SendHorizontal } from '@lucide/svelte';
+	import * as m from '../../../paraglide/messages';
 
 	interface Props {
 		comment: CommentInfo;
@@ -64,7 +65,7 @@
 
 	// 삭제된 댓글인지 확인
 	const isDeleted = $derived(localIsDeleted);
-	const displayContent = $derived(isDeleted ? '[삭제된 댓글입니다]' : localCommentContent);
+	const displayContent = $derived(isDeleted ? m.comment_deleted() : localCommentContent);
 	const displayUserName = $derived(isDeleted ? 'Anon' : comment.user_name);
 	const displayUserHandle = $derived(isDeleted ? '' : comment.user_handle);
 	const displayUserImage = $derived(isDeleted ? null : comment.user_profile_image);
@@ -159,11 +160,11 @@
 			await deleteComment({ comment_id: comment.id });
 			localIsDeleted = true;
 			localCommentContent = null;
-			toast.success('댓글이 삭제되었습니다.');
+			toast.success(m.comment_deleted_success());
 			isDeleteModalOpen = false;
 		} catch (error) {
 			console.error('Failed to delete comment:', error);
-			toast.error('댓글 삭제에 실패했습니다. 다시 시도해주세요.');
+			toast.error(m.comment_delete_failed());
 		} finally {
 			isDeleting = false;
 		}
@@ -342,9 +343,9 @@
 								onclick={loadChildren}
 								disabled={loadingChildren}
 								class="text-mofu-light-400 dark:text-mofu-dark-400 hover:text-mofu-light-200 dark:hover:text-mofu-dark-200 flex cursor-pointer items-center gap-1.5 pt-1 pl-2 text-sm hover:underline disabled:cursor-not-allowed disabled:opacity-50"
-								aria-label="{remainChildren()}개의 댓글 더 불러오기"
+								aria-label={m.comment_load_more({ count: remainChildren() })}
 							>
-								<div>{remainChildren()}개의 댓글 더 불러오기</div>
+								<div>{m.comment_load_more({ count: remainChildren() })}</div>
 								{#if loadingChildren}
 									<div class="border-mofu h-4 w-4 animate-spin rounded-full border-1 border-t-transparent"></div>
 								{/if}
@@ -363,9 +364,9 @@
 					onclick={toggleChildren}
 					class="text-mofu-light-400 dark:text-mofu-dark-400 hover:text-mofu-light-200 dark:hover:text-mofu-dark-200 absolute left-[60px] flex cursor-pointer items-center gap-1.5 pt-1 text-sm hover:underline disabled:cursor-not-allowed disabled:opacity-50"
 					disabled={loadingChildren}
-					aria-label="{localReplyCount}개의 댓글 펼치기"
+					aria-label={m.comment_show_replies({ count: localReplyCount })}
 				>
-					<div>{localReplyCount}개의 댓글</div>
+					<div>{m.comment_show_replies({ count: localReplyCount })}</div>
 					{#if loadingChildren}
 						<div class="border-mofu h-4 w-4 animate-spin rounded-full border-1 border-t-transparent"></div>
 					{/if}
@@ -388,7 +389,7 @@
 			<CommentForm
 				{postId}
 				parentId={comment.id}
-				placeholder={`${displayUserName}에게 답글을 작성하세요...`}
+				placeholder={m.comment_reply_placeholder({ name: displayUserName || 'User' })}
 				onSubmit={handleReplySubmit}
 				onCancel={() => (showReplyForm = false)}
 			/>
@@ -401,19 +402,18 @@
 	<Dialog.Content class="dark:bg-mofu-dark-800 p-2 text-black sm:max-w-md dark:text-white">
 		<div class="rounded-lg px-2 pt-4">
 			<Dialog.Header class="mb-2 p-0">
-				<Dialog.Title class="text-lg font-semibold">댓글 삭제</Dialog.Title>
+				<Dialog.Title class="text-lg font-semibold">{m.comment_delete_dialog_title()}</Dialog.Title>
 				<Dialog.Description class="text-gray-600 dark:text-gray-300">
-					이 댓글을 정말 삭제하시겠습니까?<br />
-					삭제된 댓글은 복구할 수 없습니다.
+					{@html m.comment_delete_dialog_description()}
 				</Dialog.Description>
 			</Dialog.Header>
 		</div>
 
 		<!-- 버튼 영역 -->
 		<div class="flex justify-end gap-3 rounded-b-lg px-2 py-2">
-			<Button variant="ghost" onclick={cancelDelete} disabled={isDeleting}>취소</Button>
+			<Button variant="ghost" onclick={cancelDelete} disabled={isDeleting}>{m.comment_delete_cancel()}</Button>
 			<Button variant="destructive" onclick={confirmDelete} disabled={isDeleting}>
-				{isDeleting ? '삭제 중...' : '삭제하기'}
+				{isDeleting ? m.comment_deleting() : m.comment_delete_confirm()}
 			</Button>
 		</div>
 	</Dialog.Content>

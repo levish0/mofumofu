@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
 	import { Icon, EllipsisVertical, PencilSquare, Trash, Flag } from 'svelte-hero-icons';
+	import * as m from '../../../../paraglide/messages';
 
 	interface Props {
 		isDropdownOpen: boolean;
@@ -48,14 +49,14 @@
 						onclick={onEdit}
 					>
 						<Icon src={PencilSquare} solid size="16" class="mr-3" />
-						수정하기
+						{m.comment_edit()}
 					</button>
 					<button
 						class="flex w-full items-center px-4 py-2 text-rose-600 hover:opacity-70 dark:text-rose-500"
 						onclick={onDelete}
 					>
 						<Icon src={Trash} solid size="16" class="mr-3" />
-						삭제하기
+						{m.comment_delete()}
 					</button>
 				{/if}
 				<button
@@ -63,7 +64,7 @@
 					onclick={onReport}
 				>
 					<Icon src={Flag} solid size="16" class="mr-3" />
-					신고하기
+					{m.comment_report()}
 				</button>
 			</div>
 		</div>

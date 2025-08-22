@@ -2,11 +2,12 @@
 	import { ShieldExclamation, Icon } from 'svelte-hero-icons';
 	import { Button } from '$lib/components/ui/button';
 	import { goto } from '$app/navigation';
+	import * as m from '../../../paraglide/messages';
 
 	let {
 		isVisible,
-		title = '이메일 인증이 필요한 서비스입니다',
-		description = '이 기능을 이용하려면 이메일 인증을 완료해 주세요.',
+		title = m.email_verification_required_title(),
+		description = m.email_verification_required_description(),
 		showHomeButton = true,
 		showSettingsButton = true
 	} = $props<{
@@ -30,7 +31,7 @@
 					<p class="text-sm text-gray-400">{description}</p>
 					<div class="flex flex-col space-y-3 pt-4">
 						{#if showSettingsButton}
-							<Button onclick={() => goto('/settings#account')} class="w-full">계정 설정으로 이동</Button>
+							<Button onclick={() => goto('/settings#account')} class="w-full">{m.email_verification_go_to_settings()}</Button>
 						{/if}
 						{#if showHomeButton}
 							<Button
@@ -38,7 +39,7 @@
 								variant="ghost"
 								class="dark:text-mofu-dark-300 w-full rounded-md text-sm hover:opacity-70"
 							>
-								홈으로 가기
+								{m.auth_error_go_home()}
 							</Button>
 						{/if}
 					</div>

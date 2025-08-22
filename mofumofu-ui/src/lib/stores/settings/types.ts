@@ -45,6 +45,8 @@ export type AccountSettings = {
 	email: string;
 	password: string;
 	twoFactorEnabled: boolean;
+	oauthConnections: string[];
+	isOAuthOnly: boolean;
 };
 
 export type WritingSettings = {

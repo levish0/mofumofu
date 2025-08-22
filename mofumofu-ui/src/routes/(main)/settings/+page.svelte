@@ -17,6 +17,7 @@
 	import { settingsStore } from '$lib/stores/settings.svelte';
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { userStore } from '$lib/stores/user.svelte';
+	import { getOAuthConnections } from '$lib/api/auth/authApi';
 	import LoadingOverlay from '$lib/components/common/LoadingOverlay.svelte';
 	import MobileSettingsLayout from '$lib/components/settings/layouts/MobileSettingsLayout.svelte';
 	import DesktopSettingsLayout from '$lib/components/settings/layouts/DesktopSettingsLayout.svelte';
@@ -153,6 +154,9 @@
 				bannerImage: userStore.user.banner_image || null
 			});
 
+			// OAuth 데이터도 함께 로드
+			loadOAuthData();
+
 			// API 호출이 성공하면 인증된 상태이므로 personal 섹션으로 변경 (단, 해시가 없는 경우만)
 			if (!window.location.hash && selectedSection === 'display') {
 				selectedSection = 'personal';
@@ -162,6 +166,19 @@
 			userInitialized = true;
 		}
 	});
+
+	// OAuth 데이터 로드 함수
+	async function loadOAuthData() {
+		try {
+			const response = await getOAuthConnections();
+			settingsStore.updateAccount({
+				oauthConnections: response.connections,
+				isOAuthOnly: response.is_oauth_only
+			});
+		} catch (error) {
+			console.error('Failed to load OAuth connections:', error);
+		}
+	}
 
 	async function handleSave() {
 		const result = await settingsStore.saveChanges();

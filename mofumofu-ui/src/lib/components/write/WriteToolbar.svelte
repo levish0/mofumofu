@@ -49,7 +49,7 @@
 				// 파일 크기 체크 (8MB 제한)
 				const fileSizeMB = file.size / (1024 * 1024);
 				if (fileSizeMB > 8) {
-					toast.error(`파일 크기가 ${fileSizeMB.toFixed(2)}MB로 8MB 제한을 초과합니다.`);
+					toast.error(m.file_size_limit_exceeded({ size: fileSizeMB.toFixed(2) }));
 					return;
 				}
 
@@ -181,9 +181,9 @@
 			<!-- 모바일/태블릿 전용 에디터/프리뷰 모드 스위치 -->
 			{#if onTogglePreviewMode}
 				<div class="flex items-center gap-2 lg:hidden">
-					<span class="dark:text-mofu-dark-400 text-mofu-light-400 text-sm">에디터</span>
+					<span class="dark:text-mofu-dark-400 text-mofu-light-400 text-sm">{m.write_editor_mobile_label()}</span>
 					<Switch checked={isPreviewMode} onCheckedChange={onTogglePreviewMode} />
-					<span class="dark:text-mofu-dark-400 text-mofu-light-400 text-sm">프리뷰</span>
+					<span class="dark:text-mofu-dark-400 text-mofu-light-400 text-sm">{m.write_preview_mobile_label()}</span>
 				</div>
 			{/if}
 

@@ -3,6 +3,7 @@
 	import { Button } from '../ui/button';
 	import { ArrowLeft, Save, Send } from '@lucide/svelte';
 	import { PublishDialog } from './PublishDialog';
+	import * as m from '../../../paraglide/messages';
 
 	interface Props {
 		title: string;
@@ -39,7 +40,7 @@
 			class="dark:text-mofu-dark-200 flex items-center gap-2 rounded px-4 py-2 text-lg"
 		>
 			<ArrowLeft class="h-5 w-5" />
-			돌아가기
+			{m.write_back()}
 		</Button>
 
 		<div class="flex items-center gap-3">
@@ -49,7 +50,7 @@
 				class=" dark:text-mofu-dark-200 flex items-center gap-2 rounded px-4 py-2 text-lg"
 			>
 				<Icon src={ClipboardDocumentList} class="h-5 w-5" solid />
-				임시저장
+				{m.write_save_draft()}
 			</Button>
 
 			<PublishDialog {title} {content} {tags} {onPublished} {isEditMode} {editSlug} {editPostId} {summary} />
