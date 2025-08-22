@@ -7,3 +7,4 @@ pub mod sync_follows;
 pub mod sync_all_counts;
 pub mod cleanup_expired_tokens;
 pub mod cleanup_old_events;
+pub mod check_admin_status;

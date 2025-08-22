@@ -21,14 +21,27 @@ class MeilisearchService:
         try:
             index = self.client.index(self.index_name)
             stats = index.get_stats()
-            # Meilisearch 응답 객체를 딕셔너리로 변환
+            
+            # Meilisearch 응답 객체를 딕셔너리로 변환 (올바른 속성명 사용)
+            field_dist = getattr(stats, "field_distribution", None)
+            field_dist_dict = {}
+            if field_dist:
+                # FieldDistribution 객체의 실제 딕셔너리 데이터 추출
+                if hasattr(field_dist, '__dict__'):
+                    # 내부 딕셔너리에서 실제 필드 분포 데이터 찾기
+                    for key, value in field_dist.__dict__.items():
+                        if isinstance(value, dict) and not key.startswith('_'):
+                            field_dist_dict = value
+                            break
+                    if not field_dist_dict and '_FieldDistribution__dict' in field_dist.__dict__:
+                        field_dist_dict = field_dist.__dict__['_FieldDistribution__dict']
+            
             stats_dict = {
-                "numberOfDocuments": getattr(stats, "numberOfDocuments", 0),
-                "isIndexing": getattr(stats, "isIndexing", False),
-                "fieldDistribution": dict(getattr(stats, "fieldDistribution", {}))
-                if hasattr(stats, "fieldDistribution")
-                else {},
+                "numberOfDocuments": getattr(stats, "number_of_documents", 0),
+                "isIndexing": getattr(stats, "is_indexing", False),
+                "fieldDistribution": field_dist_dict,
             }
+            
             return {"status": "success", "stats": stats_dict}
         except Exception as e:
             logger.error(f"색인 통계 조회 실패: {str(e)}")

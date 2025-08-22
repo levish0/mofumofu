@@ -59,12 +59,12 @@ fn get_task_server_url() -> &'static str {
 /// 전체 포스트 재색인 작업 트리거
 pub async fn trigger_reindex_all_posts(
     http_client: &Client,
-) -> Result<SearchStatsResponse, Box<dyn std::error::Error + Send + Sync>> {
+) -> Result<serde_json::Value, Box<dyn std::error::Error + Send + Sync>> {
     let task_server_url = get_task_server_url();
     info!("Triggering reindex all posts task");
 
     let response = http_client
-        .post(&format!("{}/tasks/search/reindex", task_server_url))
+        .post(&format!("{}/tasks/search-reindex/reindex", task_server_url))
         .send()
         .await?;
 
@@ -78,7 +78,7 @@ pub async fn trigger_reindex_all_posts(
         return Err(format!("Task request failed: {} - {}", status, error_text).into());
     }
 
-    let task_response: SearchStatsResponse = response.json().await?;
+    let task_response: serde_json::Value = response.json().await?;
     info!("Reindex all posts task triggered successfully");
     Ok(task_response)
 }
@@ -86,12 +86,12 @@ pub async fn trigger_reindex_all_posts(
 /// Meilisearch 헬스체크 실행
 pub async fn check_meilisearch_health(
     http_client: &Client,
-) -> Result<SearchStatsResponse, Box<dyn std::error::Error + Send + Sync>> {
+) -> Result<serde_json::Value, Box<dyn std::error::Error + Send + Sync>> {
     let task_server_url = get_task_server_url();
     info!("Checking Meilisearch health");
 
     let response = http_client
-        .get(&format!("{}/tasks/search/health", task_server_url))
+        .get(&format!("{}/tasks/search-reindex/health", task_server_url))
         .send()
         .await?;
 
@@ -105,7 +105,7 @@ pub async fn check_meilisearch_health(
         return Err(format!("Health check failed: {} - {}", status, error_text).into());
     }
 
-    let task_response: SearchStatsResponse = response.json().await?;
+    let task_response: serde_json::Value = response.json().await?;
     info!("Meilisearch health check completed");
     Ok(task_response)
 }
@@ -113,12 +113,12 @@ pub async fn check_meilisearch_health(
 /// 검색 색인 통계 조회
 pub async fn get_search_stats(
     http_client: &Client,
-) -> Result<SearchStatsResponse, Box<dyn std::error::Error + Send + Sync>> {
+) -> Result<serde_json::Value, Box<dyn std::error::Error + Send + Sync>> {
     let task_server_url = get_task_server_url();
     info!("Getting search index stats");
 
     let response = http_client
-        .get(&format!("{}/tasks/search/stats", task_server_url))
+        .get(&format!("{}/tasks/search-reindex/stats", task_server_url))
         .send()
         .await?;
 
@@ -132,7 +132,7 @@ pub async fn get_search_stats(
         return Err(format!("Get stats failed: {} - {}", status, error_text).into());
     }
 
-    let task_response: SearchStatsResponse = response.json().await?;
+    let task_response: serde_json::Value = response.json().await?;
     info!("Search stats retrieved successfully");
     Ok(task_response)
 }
@@ -142,12 +142,12 @@ pub async fn get_search_stats(
 /// 포스트 좋아요 수 동기화 트리거
 pub async fn sync_post_like_counts(
     http_client: &Client,
-) -> Result<CountSyncResponse, Box<dyn std::error::Error + Send + Sync>> {
+) -> Result<serde_json::Value, Box<dyn std::error::Error + Send + Sync>> {
     let task_server_url = get_task_server_url();
     info!("Triggering post like counts sync");
 
     let response = http_client
-        .post(&format!("{}/tasks/count/sync-likes", task_server_url))
+        .post(&format!("{}/tasks/count/sync/likes", task_server_url))
         .send()
         .await?;
 
@@ -161,7 +161,7 @@ pub async fn sync_post_like_counts(
         return Err(format!("Sync failed: {} - {}", status, error_text).into());
     }
 
-    let task_response: CountSyncResponse = response.json().await?;
+    let task_response: serde_json::Value = response.json().await?;
     info!("Post like counts sync triggered successfully");
     Ok(task_response)
 }
@@ -169,12 +169,12 @@ pub async fn sync_post_like_counts(
 /// 유저 팔로우 수 동기화 트리거
 pub async fn sync_user_follow_counts(
     http_client: &Client,
-) -> Result<CountSyncResponse, Box<dyn std::error::Error + Send + Sync>> {
+) -> Result<serde_json::Value, Box<dyn std::error::Error + Send + Sync>> {
     let task_server_url = get_task_server_url();
     info!("Triggering user follow counts sync");
 
     let response = http_client
-        .post(&format!("{}/tasks/count/sync-follows", task_server_url))
+        .post(&format!("{}/tasks/count/sync/follows", task_server_url))
         .send()
         .await?;
 
@@ -188,7 +188,7 @@ pub async fn sync_user_follow_counts(
         return Err(format!("Sync failed: {} - {}", status, error_text).into());
     }
 
-    let task_response: CountSyncResponse = response.json().await?;
+    let task_response: serde_json::Value = response.json().await?;
     info!("User follow counts sync triggered successfully");
     Ok(task_response)
 }
@@ -196,12 +196,12 @@ pub async fn sync_user_follow_counts(
 /// 전체 카운트 동기화 트리거
 pub async fn sync_all_counts(
     http_client: &Client,
-) -> Result<CountSyncResponse, Box<dyn std::error::Error + Send + Sync>> {
+) -> Result<serde_json::Value, Box<dyn std::error::Error + Send + Sync>> {
     let task_server_url = get_task_server_url();
     info!("Triggering all counts sync");
 
     let response = http_client
-        .post(&format!("{}/tasks/count/sync-all", task_server_url))
+        .post(&format!("{}/tasks/count/sync/all", task_server_url))
         .send()
         .await?;
 
@@ -215,7 +215,7 @@ pub async fn sync_all_counts(
         return Err(format!("Sync failed: {} - {}", status, error_text).into());
     }
 
-    let task_response: CountSyncResponse = response.json().await?;
+    let task_response: serde_json::Value = response.json().await?;
     info!("All counts sync triggered successfully");
     Ok(task_response)
 }
@@ -225,12 +225,12 @@ pub async fn sync_all_counts(
 /// 만료된 리프레시 토큰 정리 트리거
 pub async fn cleanup_expired_refresh_tokens(
     http_client: &Client,
-) -> Result<TokenCleanupResponse, Box<dyn std::error::Error + Send + Sync>> {
+) -> Result<serde_json::Value, Box<dyn std::error::Error + Send + Sync>> {
     let task_server_url = get_task_server_url();
     info!("Triggering expired refresh tokens cleanup");
 
     let response = http_client
-        .post(&format!("{}/tasks/token/cleanup-refresh", task_server_url))
+        .post(&format!("{}/tasks/token-cleanup/cleanup", task_server_url))
         .send()
         .await?;
 
@@ -244,7 +244,7 @@ pub async fn cleanup_expired_refresh_tokens(
         return Err(format!("Cleanup failed: {} - {}", status, error_text).into());
     }
 
-    let task_response: TokenCleanupResponse = response.json().await?;
+    let task_response: serde_json::Value = response.json().await?;
     info!("Expired refresh tokens cleanup triggered successfully");
     Ok(task_response)
 }
@@ -252,12 +252,12 @@ pub async fn cleanup_expired_refresh_tokens(
 /// 오래된 시스템 이벤트 정리 트리거
 pub async fn cleanup_old_system_events(
     http_client: &Client,
-) -> Result<TokenCleanupResponse, Box<dyn std::error::Error + Send + Sync>> {
+) -> Result<serde_json::Value, Box<dyn std::error::Error + Send + Sync>> {
     let task_server_url = get_task_server_url();
     info!("Triggering old system events cleanup");
 
     let response = http_client
-        .post(&format!("{}/tasks/token/cleanup-events", task_server_url))
+        .post(&format!("{}/tasks/token-cleanup/cleanup-events", task_server_url))
         .send()
         .await?;
 
@@ -271,7 +271,7 @@ pub async fn cleanup_old_system_events(
         return Err(format!("Cleanup failed: {} - {}", status, error_text).into());
     }
 
-    let task_response: TokenCleanupResponse = response.json().await?;
+    let task_response: serde_json::Value = response.json().await?;
     info!("Old system events cleanup triggered successfully");
     Ok(task_response)
 }

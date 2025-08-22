@@ -1,8 +1,9 @@
-use axum::{routing::post, Router};
+use axum::{routing::{get, post}, Router};
 
 use crate::{middleware::auth::access_jwt_auth, state::AppState};
 
 use super::{
+    check_admin_status::check_admin_status,
     cleanup_expired_tokens::cleanup_expired_tokens,
     cleanup_old_events::cleanup_old_events,
     meilisearch_health::meilisearch_health,
@@ -15,6 +16,9 @@ use super::{
 
 pub fn admin_routes() -> Router<AppState> {
     Router::new()
+        // Admin status check
+        .route("/status", get(check_admin_status))
+        
         // Search management endpoints
         .route("/search/reindex-all", post(reindex_all_posts))
         .route("/search/health", post(meilisearch_health))

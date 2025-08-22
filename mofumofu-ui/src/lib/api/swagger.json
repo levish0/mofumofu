@@ -11,17 +11,17 @@
 		"/v0/admin/cleanup/events": {
 			"post": {
 				"tags": ["Admin"],
-				"summary": "오래된 시스템 이벤트 정리",
-				"description": "30일 이상 된 시스템 이벤트를 데이터베이스에서 정리합니다. (Admin 전용)",
+				"summary": "Clean up old system events",
+				"description": "Queue task to clean up system events older than 30 days from database. (Admin only)",
 				"operationId": "cleanup_old_events",
 				"responses": {
 					"200": {
-						"description": "정리 작업 시작됨",
+						"description": "Event cleanup task queued successfully",
 						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminTaskResponse" } } }
 					},
-					"401": { "description": "인증 실패" },
-					"403": { "description": "Admin 권한 필요" },
-					"500": { "description": "서버 오류" }
+					"401": { "description": "Unauthorized" },
+					"403": { "description": "Admin access required" },
+					"500": { "description": "Internal server error" }
 				},
 				"security": [{ "bearer_auth": [] }]
 			}
@@ -29,17 +29,17 @@
 		"/v0/admin/cleanup/tokens": {
 			"post": {
 				"tags": ["Admin"],
-				"summary": "만료된 리프레시 토큰 정리",
-				"description": "만료되거나 폐기된 리프레시 토큰을 데이터베이스에서 정리합니다. (Admin 전용)",
+				"summary": "Clean up expired refresh tokens",
+				"description": "Queue task to clean up expired or revoked refresh tokens from database. (Admin only)",
 				"operationId": "cleanup_expired_tokens",
 				"responses": {
 					"200": {
-						"description": "정리 작업 시작됨",
+						"description": "Token cleanup task queued successfully",
 						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminTaskResponse" } } }
 					},
-					"401": { "description": "인증 실패" },
-					"403": { "description": "Admin 권한 필요" },
-					"500": { "description": "서버 오류" }
+					"401": { "description": "Unauthorized" },
+					"403": { "description": "Admin access required" },
+					"500": { "description": "Internal server error" }
 				},
 				"security": [{ "bearer_auth": [] }]
 			}
@@ -47,17 +47,17 @@
 		"/v0/admin/search/health": {
 			"post": {
 				"tags": ["Admin"],
-				"summary": "Meilisearch 헬스체크",
-				"description": "Meilisearch 서버 상태를 확인합니다. (Admin 전용)",
+				"summary": "Meilisearch health check",
+				"description": "Check Meilisearch server health status. (Admin only)",
 				"operationId": "meilisearch_health",
 				"responses": {
 					"200": {
-						"description": "헬스체크 완료",
+						"description": "Health check completed successfully",
 						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminTaskResponse" } } }
 					},
-					"401": { "description": "인증 실패" },
-					"403": { "description": "Admin 권한 필요" },
-					"500": { "description": "서버 오류" }
+					"401": { "description": "Unauthorized" },
+					"403": { "description": "Admin access required" },
+					"500": { "description": "Internal server error" }
 				},
 				"security": [{ "bearer_auth": [] }]
 			}
@@ -65,17 +65,17 @@
 		"/v0/admin/search/reindex-all": {
 			"post": {
 				"tags": ["Admin"],
-				"summary": "전체 포스트 재색인 트리거",
-				"description": "모든 포스트를 Meilisearch에 재색인합니다. (Admin 전용)",
+				"summary": "Trigger full posts reindex",
+				"description": "Reindex all posts in Meilisearch. (Admin only)",
 				"operationId": "reindex_all_posts",
 				"responses": {
 					"200": {
-						"description": "재색인 작업이 성공적으로 시작됨",
+						"description": "Reindex task started successfully",
 						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminTaskResponse" } } }
 					},
-					"401": { "description": "인증 실패" },
-					"403": { "description": "Admin 권한 필요" },
-					"500": { "description": "서버 오류" }
+					"401": { "description": "Unauthorized" },
+					"403": { "description": "Admin access required" },
+					"500": { "description": "Internal server error" }
 				},
 				"security": [{ "bearer_auth": [] }]
 			}
@@ -83,17 +83,33 @@
 		"/v0/admin/search/stats": {
 			"post": {
 				"tags": ["Admin"],
-				"summary": "검색 색인 통계 조회",
-				"description": "Meilisearch 색인 통계를 조회합니다. (Admin 전용)",
+				"summary": "Get search index statistics",
+				"description": "Retrieve Meilisearch index statistics. (Admin only)",
 				"operationId": "search_stats",
 				"responses": {
 					"200": {
-						"description": "통계 조회 완료",
+						"description": "Statistics retrieved successfully",
 						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminTaskResponse" } } }
 					},
-					"401": { "description": "인증 실패" },
-					"403": { "description": "Admin 권한 필요" },
-					"500": { "description": "서버 오류" }
+					"401": { "description": "Unauthorized" },
+					"403": { "description": "Admin access required" },
+					"500": { "description": "Internal server error" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/admin/status": {
+			"get": {
+				"tags": ["Admin"],
+				"summary": "Check admin status",
+				"description": "Check if the current user has admin privileges.",
+				"operationId": "check_admin_status",
+				"responses": {
+					"200": {
+						"description": "Admin status checked successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminStatusResponse" } } }
+					},
+					"401": { "description": "Unauthorized" }
 				},
 				"security": [{ "bearer_auth": [] }]
 			}
@@ -101,17 +117,17 @@
 		"/v0/admin/sync/all": {
 			"post": {
 				"tags": ["Admin"],
-				"summary": "전체 카운트 동기화",
-				"description": "모든 카운트(좋아요, 팔로우)를 실제 데이터와 동기화합니다. (Admin 전용)",
+				"summary": "Sync all counts",
+				"description": "Synchronize all counts (likes, follows) with actual data. (Admin only)",
 				"operationId": "sync_all_counts",
 				"responses": {
 					"200": {
-						"description": "동기화 작업 시작됨",
+						"description": "Sync task started successfully",
 						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminTaskResponse" } } }
 					},
-					"401": { "description": "인증 실패" },
-					"403": { "description": "Admin 권한 필요" },
-					"500": { "description": "서버 오류" }
+					"401": { "description": "Unauthorized" },
+					"403": { "description": "Admin access required" },
+					"500": { "description": "Internal server error" }
 				},
 				"security": [{ "bearer_auth": [] }]
 			}
@@ -119,17 +135,17 @@
 		"/v0/admin/sync/follows": {
 			"post": {
 				"tags": ["Admin"],
-				"summary": "유저 팔로우 수 동기화",
-				"description": "모든 유저의 팔로워/팔로잉 수를 실제 데이터와 동기화합니다. (Admin 전용)",
+				"summary": "Sync user follow counts",
+				"description": "Synchronize all users' follower/following counts with actual data. (Admin only)",
 				"operationId": "sync_follows",
 				"responses": {
 					"200": {
-						"description": "동기화 작업 시작됨",
+						"description": "Follow sync task started successfully",
 						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminTaskResponse" } } }
 					},
-					"401": { "description": "인증 실패" },
-					"403": { "description": "Admin 권한 필요" },
-					"500": { "description": "서버 오류" }
+					"401": { "description": "Unauthorized" },
+					"403": { "description": "Admin access required" },
+					"500": { "description": "Internal server error" }
 				},
 				"security": [{ "bearer_auth": [] }]
 			}
@@ -137,17 +153,17 @@
 		"/v0/admin/sync/likes": {
 			"post": {
 				"tags": ["Admin"],
-				"summary": "포스트 좋아요 수 동기화",
-				"description": "모든 포스트의 좋아요 수를 실제 데이터와 동기화합니다. (Admin 전용)",
+				"summary": "Sync post like counts",
+				"description": "Synchronize all posts' like counts with actual data. (Admin only)",
 				"operationId": "sync_likes",
 				"responses": {
 					"200": {
-						"description": "동기화 작업 시작됨",
+						"description": "Like sync task started successfully",
 						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminTaskResponse" } } }
 					},
-					"401": { "description": "인증 실패" },
-					"403": { "description": "Admin 권한 필요" },
-					"500": { "description": "서버 오류" }
+					"401": { "description": "Unauthorized" },
+					"403": { "description": "Admin access required" },
+					"500": { "description": "Internal server error" }
 				},
 				"security": [{ "bearer_auth": [] }]
 			}
@@ -1205,6 +1221,11 @@
 	},
 	"components": {
 		"schemas": {
+			"AdminStatusResponse": {
+				"type": "object",
+				"required": ["is_admin"],
+				"properties": { "is_admin": { "type": "boolean" } }
+			},
 			"AdminTaskResponse": {
 				"type": "object",
 				"required": ["success", "message"],

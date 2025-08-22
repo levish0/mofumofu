@@ -1,17 +1,17 @@
 use crate::{
+    dto::admin::response::AdminTaskResponse,
     microservices::admin_tasks_client::cleanup_old_system_events,
     service::auth::role_check::require_admin,
     service::error::errors::{Errors, ServiceResult},
     state::AppState,
 };
-use serde_json::json;
 use tracing::{error, info};
 use uuid::Uuid;
 
 pub async fn service_cleanup_old_events(
     app_state: &AppState,
     user_id: Uuid,
-) -> ServiceResult<serde_json::Value> {
+) -> ServiceResult<AdminTaskResponse> {
     // Admin 권한 확인
     require_admin(&app_state.conn, user_id).await?;
 
@@ -20,11 +20,11 @@ pub async fn service_cleanup_old_events(
     match cleanup_old_system_events(&app_state.http_client).await {
         Ok(response) => {
             info!("Successfully triggered old events cleanup");
-            Ok(json!({
-                "status": response.status,
-                "message": response.message,
-                "deleted_count": response.deleted_count
-            }))
+            Ok(AdminTaskResponse {
+                success: true,
+                message: "오래된 시스템 이벤트 정리 작업이 시작되었습니다".to_string(),
+                data: Some(response),
+            })
         }
         Err(e) => {
             error!("Failed to cleanup old events: {}", e);

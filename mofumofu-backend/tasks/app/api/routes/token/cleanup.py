@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from celery.result import AsyncResult
 from app.core.celery_app import celery_app
-from app.tasks.token_tasks import cleanup_expired_refresh_tokens
+from app.tasks.token_tasks import cleanup_expired_refresh_tokens, cleanup_old_system_events
 import logging
 
 logger = logging.getLogger(__name__)
@@ -93,3 +93,24 @@ async def token_cleanup_health():
         "status": "healthy",
         "message": "토큰 정리 서비스가 정상 작동 중입니다",
     }
+
+
+@router.post("/cleanup-events")
+async def cleanup_events():
+    """
+    오래된 시스템 이벤트를 수동으로 정리합니다.
+
+    Returns:
+        dict: 작업 ID와 상태
+    """
+    try:
+        task = cleanup_old_system_events.delay()
+
+        return {
+            "message": "시스템 이벤트 정리 작업이 큐에 추가되었습니다",
+            "task_id": task.id,
+            "status": "PENDING",
+        }
+    except Exception as e:
+        logger.error(f"시스템 이벤트 정리 작업 큐 추가 실패: {str(e)}")
+        return {"error": f"작업 큐 추가 실패: {str(e)}", "status": "FAILED"}

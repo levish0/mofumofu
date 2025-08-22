@@ -50,7 +50,7 @@ use crate::dto::post::response::{
 };
 use crate::dto::report::request::{CreateReportRequest, GetReportsRequest, ProcessReportRequest};
 use crate::dto::report::response::{CreateReportResponse, GetReportsResponse, ReportInfo};
-use crate::dto::admin::response::AdminTaskResponse;
+use crate::dto::admin::response::{AdminStatusResponse, AdminTaskResponse};
 use crate::dto::user::request::avatar_image::ProfileAvatarForm;
 use crate::dto::user::request::banner_image::ProfileBannerForm;
 use crate::dto::user::request::create::CreateUserRequest;
@@ -125,6 +125,7 @@ use utoipa::{
         crate::api::v0::routes::report::get_reports::get_reports,
         crate::api::v0::routes::report::process_report::process_report,
         // Admin endpoints
+        crate::api::v0::routes::admin::check_admin_status::check_admin_status,
         crate::api::v0::routes::admin::reindex_all_posts::reindex_all_posts,
         crate::api::v0::routes::admin::meilisearch_health::meilisearch_health,
         crate::api::v0::routes::admin::search_stats::search_stats,
@@ -210,6 +211,7 @@ use utoipa::{
             ReportStatus,
             ReportTargetType,
             // Admin schemas
+            AdminStatusResponse,
             AdminTaskResponse,
         )
     ),

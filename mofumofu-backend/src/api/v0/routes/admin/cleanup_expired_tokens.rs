@@ -1,10 +1,10 @@
 use axum::{extract::State, http::StatusCode, Extension};
 
-
 use crate::{
     dto::admin::response::AdminTaskResponse,
     dto::auth::internal::access_token::AccessTokenClaims,
     service::admin::cleanup_expired_tokens::service_cleanup_expired_tokens,
+    service::error::errors::Errors,
     state::AppState,
 };
 
@@ -13,13 +13,13 @@ use crate::{
 #[utoipa::path(
     post,
     path = "/v0/admin/cleanup/tokens",
-    summary = "만료된 리프레시 토큰 정리",
-    description = "만료되거나 폐기된 리프레시 토큰을 데이터베이스에서 정리합니다. (Admin 전용)",
+    summary = "Clean up expired refresh tokens",
+    description = "Queue task to clean up expired or revoked refresh tokens from database. (Admin only)",
     responses(
-        (status = 200, description = "정리 작업 시작됨", body = AdminTaskResponse),
-        (status = 401, description = "인증 실패"),
-        (status = 403, description = "Admin 권한 필요"),
-        (status = 500, description = "서버 오류")
+        (status = 200, description = "Token cleanup task queued successfully", body = AdminTaskResponse),
+        (status = 401, description = "Unauthorized"),
+        (status = 403, description = "Admin access required"),
+        (status = 500, description = "Internal server error")
     ),
     security(
         ("bearer_auth" = [])
@@ -29,13 +29,8 @@ use crate::{
 pub async fn cleanup_expired_tokens(
     State(app_state): State<AppState>,
     Extension(token_data): Extension<AccessTokenClaims>,
-) -> Result<AdminTaskResponse, StatusCode> {
-    match service_cleanup_expired_tokens(&app_state, token_data.sub).await {
-        Ok(data) => Ok(AdminTaskResponse {
-            success: true,
-            message: "만료된 토큰 정리 작업이 시작되었습니다".to_string(),
-            data: Some(data),
-        }),
-        Err(_) => Err(StatusCode::INTERNAL_SERVER_ERROR),
-    }
+) -> Result<AdminTaskResponse, Errors> {
+    let response = service_cleanup_expired_tokens(&app_state, token_data.sub).await?;
+    
+    Ok(response)
 }

@@ -1,4 +1,5 @@
 use crate::{
+    dto::admin::response::AdminTaskResponse,
     microservices::admin_tasks_client::sync_user_follow_counts,
     service::auth::role_check::require_admin,
     service::error::errors::{Errors, ServiceResult},
@@ -11,7 +12,7 @@ use uuid::Uuid;
 pub async fn service_sync_follows(
     app_state: &AppState,
     user_id: Uuid,
-) -> ServiceResult<serde_json::Value> {
+) -> ServiceResult<AdminTaskResponse> {
     // Admin 권한 확인
     require_admin(&app_state.conn, user_id).await?;
 
@@ -20,13 +21,11 @@ pub async fn service_sync_follows(
     match sync_user_follow_counts(&app_state.http_client).await {
         Ok(response) => {
             info!("Successfully triggered follow counts sync");
-            Ok(json!({
-                "status": response.status,
-                "message": response.message,
-                "follower_updated_count": response.follower_updated_count,
-                "following_updated_count": response.following_updated_count,
-                "total_updated": response.total_updated
-            }))
+            Ok(AdminTaskResponse {
+                success: true,
+                message: "팔로우 수 동기화 작업이 시작되었습니다".to_string(),
+                data: Some(response),
+            })
         }
         Err(e) => {
             error!("Failed to sync follow counts: {}", e);

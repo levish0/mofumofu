@@ -1,4 +1,5 @@
 use crate::{
+    dto::admin::response::AdminTaskResponse,
     microservices::admin_tasks_client::get_search_stats,
     service::auth::role_check::require_admin,
     service::error::errors::{Errors, ServiceResult},
@@ -11,7 +12,7 @@ use uuid::Uuid;
 pub async fn service_search_stats(
     app_state: &AppState,
     user_id: Uuid,
-) -> ServiceResult<serde_json::Value> {
+) -> ServiceResult<AdminTaskResponse> {
     // Admin 권한 확인
     require_admin(&app_state.conn, user_id).await?;
 
@@ -20,11 +21,11 @@ pub async fn service_search_stats(
     match get_search_stats(&app_state.http_client).await {
         Ok(response) => {
             info!("Successfully retrieved search stats");
-            Ok(json!({
-                "status": response.status,
-                "message": response.message,
-                "stats": response.stats
-            }))
+            Ok(AdminTaskResponse {
+                success: true,
+                message: "검색 통계를 성공적으로 조회했습니다".to_string(),
+                data: Some(response),
+            })
         }
         Err(e) => {
             error!("Failed to get search stats: {}", e);

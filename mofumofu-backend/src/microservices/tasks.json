@@ -1,0 +1,1117 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "mofumofu_tasks",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/tasks/tasks/status/{task_id}": {
+      "get": {
+        "tags": [
+          "common"
+        ],
+        "summary": "Get Task Status",
+        "description": "태스크 실행 상태와 결과를 조회",
+        "operationId": "common-get_task_status",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Task Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/app__api__routes__common__status__TaskStatusResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/tasks/health": {
+      "get": {
+        "tags": [
+          "common"
+        ],
+        "summary": "Health Check",
+        "description": "태스크 서비스 헬스 체크",
+        "operationId": "common-health_check",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/token-cleanup/cleanup": {
+      "post": {
+        "tags": [
+          "Token Cleanup"
+        ],
+        "summary": "Cleanup Tokens",
+        "description": "만료된 리프레시 토큰을 수동으로 정리합니다.\n\nReturns:\n    dict: 작업 ID와 상태",
+        "operationId": "Token Cleanup-cleanup_tokens",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/token-cleanup/cleanup/status/{task_id}": {
+      "get": {
+        "tags": [
+          "Token Cleanup"
+        ],
+        "summary": "Get Cleanup Status",
+        "description": "토큰 정리 작업의 상태를 확인합니다.\n\nArgs:\n    task_id: 작업 ID\n\nReturns:\n    dict: 작업 상태와 결과",
+        "operationId": "Token Cleanup-get_cleanup_status",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Task Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/token-cleanup/health": {
+      "get": {
+        "tags": [
+          "Token Cleanup"
+        ],
+        "summary": "Token Cleanup Health",
+        "description": "토큰 정리 서비스 상태를 확인합니다.\n\nReturns:\n    dict: 서비스 상태",
+        "operationId": "Token Cleanup-token_cleanup_health",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/token-cleanup/cleanup-events": {
+      "post": {
+        "tags": [
+          "Token Cleanup"
+        ],
+        "summary": "Cleanup Events",
+        "description": "오래된 시스템 이벤트를 수동으로 정리합니다.\n\nReturns:\n    dict: 작업 ID와 상태",
+        "operationId": "Token Cleanup-cleanup_events",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/search-reindex/reindex": {
+      "post": {
+        "tags": [
+          "Search Reindex"
+        ],
+        "summary": "Reindex Posts",
+        "description": "전체 포스트를 수동으로 재색인합니다.\n\nCelery 태스크를 사용하여 백그라운드에서 처리됩니다.\n\nReturns:\n    dict: 작업 ID와 상태",
+        "operationId": "Search Reindex-reindex_posts",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/search-reindex/reindex/status/{task_id}": {
+      "get": {
+        "tags": [
+          "Search Reindex"
+        ],
+        "summary": "Get Reindex Status",
+        "description": "포스트 재색인 작업의 상태를 확인합니다.\n\nArgs:\n    task_id: 작업 ID\n\nReturns:\n    dict: 작업 상태와 결과",
+        "operationId": "Search Reindex-get_reindex_status",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Task Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/search-reindex/stats": {
+      "get": {
+        "tags": [
+          "Search Reindex"
+        ],
+        "summary": "Get Search Stats",
+        "description": "검색 색인 통계를 직접 조회합니다.\n\nReturns:\n    dict: 색인 통계 정보",
+        "operationId": "Search Reindex-get_search_stats",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/search-reindex/stats/task": {
+      "get": {
+        "tags": [
+          "Search Reindex"
+        ],
+        "summary": "Get Search Stats Task",
+        "description": "검색 색인 통계를 Celery 태스크로 조회합니다.\n\nReturns:\n    dict: 작업 ID와 상태",
+        "operationId": "Search Reindex-get_search_stats_task",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/search-reindex/health": {
+      "get": {
+        "tags": [
+          "Search Reindex"
+        ],
+        "summary": "Search Health",
+        "description": "검색 서비스 상태를 직접 확인합니다.\n\nReturns:\n    dict: 서비스 상태",
+        "operationId": "Search Reindex-search_health",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/search-reindex/health/task": {
+      "get": {
+        "tags": [
+          "Search Reindex"
+        ],
+        "summary": "Search Health Task",
+        "description": "검색 서비스 상태를 Celery 태스크로 확인합니다.\n\nReturns:\n    dict: 작업 ID와 상태",
+        "operationId": "Search Reindex-search_health_task",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/search/index": {
+      "post": {
+        "tags": [
+          "Search Index"
+        ],
+        "summary": "Index Post",
+        "description": "단일 포스트를 색인합니다.\n\nArgs:\n    request: 포스트 ID가 포함된 요청 객체\n\nReturns:\n    dict: 작업 ID와 상태",
+        "operationId": "Search Index-index_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostIndexRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/search/update": {
+      "put": {
+        "tags": [
+          "Search Index"
+        ],
+        "summary": "Update Post",
+        "description": "단일 포스트 색인을 업데이트합니다.\n\nArgs:\n    request: 포스트 ID가 포함된 요청 객체\n\nReturns:\n    dict: 작업 ID와 상태",
+        "operationId": "Search Index-update_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostIndexRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/search/delete": {
+      "delete": {
+        "tags": [
+          "Search Index"
+        ],
+        "summary": "Delete Post",
+        "description": "단일 포스트를 색인에서 삭제합니다.\n\nArgs:\n    request: 포스트 ID가 포함된 요청 객체\n\nReturns:\n    dict: 작업 ID와 상태",
+        "operationId": "Search Index-delete_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostIndexRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/search/index/status/{task_id}": {
+      "get": {
+        "tags": [
+          "Search Index"
+        ],
+        "summary": "Get Index Status",
+        "description": "색인 작업의 상태를 확인합니다.\n\nArgs:\n    task_id: 작업 ID\n\nReturns:\n    dict: 작업 상태와 결과",
+        "operationId": "Search Index-get_index_status",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Task Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/markdown/render": {
+      "post": {
+        "tags": [
+          "markdown"
+        ],
+        "summary": "마크다운 렌더링",
+        "description": "마크다운 렌더링을 비동기로 요청하고 태스크 ID를 반환합니다.",
+        "operationId": "markdown-render_markdown",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarkdownRenderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Markdown-Render Markdown"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/markdown/task-status/{task_id}": {
+      "get": {
+        "tags": [
+          "markdown"
+        ],
+        "summary": "태스크 상태 조회",
+        "description": "마크다운 관련 태스크의 상태를 조회합니다.",
+        "operationId": "markdown-get_task_status",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Task Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/app__api__routes__markdown__render__TaskStatusResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/markdown/health": {
+      "get": {
+        "tags": [
+          "markdown"
+        ],
+        "summary": "마크다운 서비스 헬스 체크",
+        "description": "마크다운 서비스의 헬스 체크",
+        "operationId": "markdown-health_check",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Markdown-Health Check"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/count/sync/likes": {
+      "post": {
+        "tags": [
+          "count"
+        ],
+        "summary": "Sync Likes",
+        "description": "포스트 좋아요 개수 동기화를 수동으로 실행",
+        "operationId": "count-sync_likes",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/count/sync/follows": {
+      "post": {
+        "tags": [
+          "count"
+        ],
+        "summary": "Sync Follows",
+        "description": "유저 팔로우 개수 동기화를 수동으로 실행",
+        "operationId": "count-sync_follows",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/count/sync/all": {
+      "post": {
+        "tags": [
+          "count"
+        ],
+        "summary": "Sync All",
+        "description": "모든 카운트 동기화를 수동으로 실행",
+        "operationId": "count-sync_all",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/count/sync/status/{task_id}": {
+      "get": {
+        "tags": [
+          "count"
+        ],
+        "summary": "Get Sync Status",
+        "description": "동기화 작업의 상태를 확인",
+        "operationId": "count-get_sync_status",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Task Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/email/send": {
+      "post": {
+        "tags": [
+          "Email"
+        ],
+        "summary": "Send Email",
+        "description": "이메일을 보냅니다.\n\nArgs:\n    request: 이메일 정보가 포함된 요청 객체\n\nReturns:\n    dict: 작업 ID와 상태",
+        "operationId": "Email-send_email",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/email/send-reset-password": {
+      "post": {
+        "tags": [
+          "Email"
+        ],
+        "summary": "Send Reset Password Email",
+        "description": "비밀번호 재설정 이메일을 보냅니다.\n\nArgs:\n    request: 비밀번호 재설정 이메일 정보가 포함된 요청 객체\n\nReturns:\n    dict: 작업 ID와 상태",
+        "operationId": "Email-send_reset_password_email",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordEmailRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/email/send-verification": {
+      "post": {
+        "tags": [
+          "Email"
+        ],
+        "summary": "Send Email Verification",
+        "description": "이메일 인증 메일을 보냅니다.\n\nArgs:\n    request: 이메일 인증 정보가 포함된 요청 객체\n\nReturns:\n    dict: 작업 ID와 상태",
+        "operationId": "Email-send_email_verification",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailVerificationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/email/status/{task_id}": {
+      "get": {
+        "tags": [
+          "Email"
+        ],
+        "summary": "Get Email Status",
+        "description": "이메일 작업의 상태를 확인합니다.\n\nArgs:\n    task_id: 작업 ID\n\nReturns:\n    dict: 작업 상태와 결과",
+        "operationId": "Email-get_email_status",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Task Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EmailRequest": {
+        "properties": {
+          "email_to": {
+            "type": "string",
+            "format": "email",
+            "title": "Email To"
+          },
+          "subject": {
+            "type": "string",
+            "title": "Subject"
+          },
+          "html_content": {
+            "type": "string",
+            "title": "Html Content"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email_to",
+          "subject",
+          "html_content"
+        ],
+        "title": "EmailRequest"
+      },
+      "EmailVerificationRequest": {
+        "properties": {
+          "email_to": {
+            "type": "string",
+            "format": "email",
+            "title": "Email To"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "verification_token": {
+            "type": "string",
+            "title": "Verification Token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email_to",
+          "username",
+          "verification_token"
+        ],
+        "title": "EmailVerificationRequest"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "MarkdownRenderRequest": {
+        "properties": {
+          "post_id": {
+            "type": "string",
+            "title": "Post Id"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          }
+        },
+        "type": "object",
+        "required": [
+          "post_id",
+          "content"
+        ],
+        "title": "MarkdownRenderRequest"
+      },
+      "PostIndexRequest": {
+        "properties": {
+          "post_id": {
+            "type": "string",
+            "title": "Post Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "post_id"
+        ],
+        "title": "PostIndexRequest"
+      },
+      "ResetPasswordEmailRequest": {
+        "properties": {
+          "email_to": {
+            "type": "string",
+            "format": "email",
+            "title": "Email To"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
+          "token": {
+            "type": "string",
+            "title": "Token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email_to",
+          "email",
+          "token"
+        ],
+        "title": "ResetPasswordEmailRequest"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "app__api__routes__common__status__TaskStatusResponse": {
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "title": "Task Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "result": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Result"
+          },
+          "error": {
+            "type": "string",
+            "title": "Error"
+          }
+        },
+        "type": "object",
+        "required": [
+          "task_id",
+          "status"
+        ],
+        "title": "TaskStatusResponse"
+      },
+      "app__api__routes__markdown__render__TaskStatusResponse": {
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "title": "Task Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result"
+          },
+          "meta": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Meta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "task_id",
+          "status"
+        ],
+        "title": "TaskStatusResponse"
+      }
+    }
+  }
+}

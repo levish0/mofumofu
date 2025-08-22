@@ -1,17 +1,17 @@
 use crate::{
+    dto::admin::response::AdminTaskResponse,
     microservices::admin_tasks_client::cleanup_expired_refresh_tokens,
     service::auth::role_check::require_admin,
     service::error::errors::{Errors, ServiceResult},
     state::AppState,
 };
-use serde_json::json;
 use tracing::{error, info};
 use uuid::Uuid;
 
 pub async fn service_cleanup_expired_tokens(
     app_state: &AppState,
     user_id: Uuid,
-) -> ServiceResult<serde_json::Value> {
+) -> ServiceResult<AdminTaskResponse> {
     // Admin 권한 확인
     require_admin(&app_state.conn, user_id).await?;
 
@@ -20,13 +20,11 @@ pub async fn service_cleanup_expired_tokens(
     match cleanup_expired_refresh_tokens(&app_state.http_client).await {
         Ok(response) => {
             info!("Successfully triggered expired tokens cleanup");
-            Ok(json!({
-                "status": response.status,
-                "message": response.message,
-                "expired_tokens_deleted": response.expired_tokens_deleted,
-                "revoked_tokens_deleted": response.revoked_tokens_deleted,
-                "total_deleted": response.total_deleted
-            }))
+            Ok(AdminTaskResponse {
+                success: true,
+                message: "만료된 토큰 정리 작업이 시작되었습니다".to_string(),
+                data: Some(response),
+            })
         }
         Err(e) => {
             error!("Failed to cleanup expired tokens: {}", e);
