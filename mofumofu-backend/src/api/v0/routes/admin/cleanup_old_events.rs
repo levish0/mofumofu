@@ -1,13 +1,10 @@
-use axum::{extract::State, http::StatusCode, Extension};
+use axum::{Extension, extract::State, http::StatusCode};
 
 use crate::{
-    dto::admin::response::AdminTaskResponse,
-    dto::auth::internal::access_token::AccessTokenClaims,
-    service::admin::cleanup_old_events::service_cleanup_old_events,
-    service::error::errors::Errors,
+    dto::admin::response::AdminTaskResponse, dto::auth::internal::access_token::AccessTokenClaims,
+    service::admin::cleanup_old_events::service_cleanup_old_events, service::error::errors::Errors,
     state::AppState,
 };
-
 
 /// 오래된 시스템 이벤트 정리
 #[utoipa::path(
@@ -31,6 +28,6 @@ pub async fn cleanup_old_events(
     Extension(token_data): Extension<AccessTokenClaims>,
 ) -> Result<AdminTaskResponse, Errors> {
     let response = service_cleanup_old_events(&app_state, token_data.sub).await?;
-    
+
     Ok(response)
 }

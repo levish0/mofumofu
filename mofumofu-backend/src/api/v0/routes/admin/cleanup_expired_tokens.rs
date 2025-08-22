@@ -1,13 +1,10 @@
-use axum::{extract::State, http::StatusCode, Extension};
+use axum::{Extension, extract::State, http::StatusCode};
 
 use crate::{
-    dto::admin::response::AdminTaskResponse,
-    dto::auth::internal::access_token::AccessTokenClaims,
+    dto::admin::response::AdminTaskResponse, dto::auth::internal::access_token::AccessTokenClaims,
     service::admin::cleanup_expired_tokens::service_cleanup_expired_tokens,
-    service::error::errors::Errors,
-    state::AppState,
+    service::error::errors::Errors, state::AppState,
 };
-
 
 /// 만료된 토큰 정리
 #[utoipa::path(
@@ -31,6 +28,6 @@ pub async fn cleanup_expired_tokens(
     Extension(token_data): Extension<AccessTokenClaims>,
 ) -> Result<AdminTaskResponse, Errors> {
     let response = service_cleanup_expired_tokens(&app_state, token_data.sub).await?;
-    
+
     Ok(response)
 }

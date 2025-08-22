@@ -1,3 +1,4 @@
+use crate::dto::admin::response::{AdminStatusResponse, AdminTaskResponse};
 use crate::dto::auth::request::forgot_password::ForgotPasswordRequest;
 use crate::dto::auth::request::link_oauth::LinkOAuthRequest;
 use crate::dto::auth::request::login::AuthLoginRequest;
@@ -50,7 +51,6 @@ use crate::dto::post::response::{
 };
 use crate::dto::report::request::{CreateReportRequest, GetReportsRequest, ProcessReportRequest};
 use crate::dto::report::response::{CreateReportResponse, GetReportsResponse, ReportInfo};
-use crate::dto::admin::response::{AdminStatusResponse, AdminTaskResponse};
 use crate::dto::user::request::avatar_image::ProfileAvatarForm;
 use crate::dto::user::request::banner_image::ProfileBannerForm;
 use crate::dto::user::request::create::CreateUserRequest;

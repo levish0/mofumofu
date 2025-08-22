@@ -1,10 +1,8 @@
-use axum::{extract::State, Extension};
+use axum::{Extension, extract::State};
 
 use crate::{
-    dto::admin::response::AdminTaskResponse,
-    dto::auth::internal::access_token::AccessTokenClaims,
-    service::admin::reindex_all_posts::service_reindex_all_posts,
-    service::error::errors::Errors,
+    dto::admin::response::AdminTaskResponse, dto::auth::internal::access_token::AccessTokenClaims,
+    service::admin::reindex_all_posts::service_reindex_all_posts, service::error::errors::Errors,
     state::AppState,
 };
 
@@ -30,6 +28,6 @@ pub async fn reindex_all_posts(
     Extension(token_data): Extension<AccessTokenClaims>,
 ) -> Result<AdminTaskResponse, Errors> {
     let response = service_reindex_all_posts(&app_state, token_data.sub).await?;
-    
+
     Ok(response)
 }

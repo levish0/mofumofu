@@ -1,10 +1,9 @@
-use axum::{extract::State, Extension};
+use axum::{Extension, extract::State};
 
 use crate::{
     dto::admin::response::admin_status::AdminStatusResponse,
     dto::auth::internal::access_token::AccessTokenClaims,
-    service::admin::check_admin_status::service_check_admin_status,
-    service::error::errors::Errors,
+    service::admin::check_admin_status::service_check_admin_status, service::error::errors::Errors,
     state::AppState,
 };
 

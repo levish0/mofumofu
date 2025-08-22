@@ -1,14 +1,10 @@
-use axum::{extract::State, Extension};
-
+use axum::{Extension, extract::State};
 
 use crate::{
-    dto::admin::response::AdminTaskResponse,
-    dto::auth::internal::access_token::AccessTokenClaims,
-    service::admin::sync_likes::service_sync_likes,
-    service::error::errors::Errors,
+    dto::admin::response::AdminTaskResponse, dto::auth::internal::access_token::AccessTokenClaims,
+    service::admin::sync_likes::service_sync_likes, service::error::errors::Errors,
     state::AppState,
 };
-
 
 /// 포스트 좋아요 수 동기화
 #[utoipa::path(
@@ -32,6 +28,6 @@ pub async fn sync_likes(
     Extension(token_data): Extension<AccessTokenClaims>,
 ) -> Result<AdminTaskResponse, Errors> {
     let response = service_sync_likes(&app_state, token_data.sub).await?;
-    
+
     Ok(response)
 }

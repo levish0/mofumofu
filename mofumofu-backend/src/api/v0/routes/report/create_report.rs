@@ -28,7 +28,7 @@ pub async fn create_report(
     ValidatedJson(payload): ValidatedJson<CreateReportRequest>,
 ) -> Result<CreateReportResponse, Errors> {
     info!("Received request to create report: {:?}", payload);
-    
+
     // 로그인한 사용자라면 user_id 추출, 아니면 None
     let user_id = claims.map(|ext| ext.sub);
 

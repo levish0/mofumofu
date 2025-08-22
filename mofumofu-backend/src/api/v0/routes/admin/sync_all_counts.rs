@@ -1,14 +1,10 @@
-use axum::{extract::State, Extension};
-
+use axum::{Extension, extract::State};
 
 use crate::{
-    dto::admin::response::AdminTaskResponse,
-    dto::auth::internal::access_token::AccessTokenClaims,
-    service::admin::sync_all_counts::service_sync_all_counts,
-    service::error::errors::Errors,
+    dto::admin::response::AdminTaskResponse, dto::auth::internal::access_token::AccessTokenClaims,
+    service::admin::sync_all_counts::service_sync_all_counts, service::error::errors::Errors,
     state::AppState,
 };
-
 
 /// 전체 카운트 동기화
 #[utoipa::path(
@@ -32,6 +28,6 @@ pub async fn sync_all_counts(
     Extension(token_data): Extension<AccessTokenClaims>,
 ) -> Result<AdminTaskResponse, Errors> {
     let response = service_sync_all_counts(&app_state, token_data.sub).await?;
-    
+
     Ok(response)
 }

@@ -101,7 +101,10 @@ pub async fn check_meilisearch_health(
             .text()
             .await
             .unwrap_or_else(|_| "Unknown error".to_string());
-        warn!("Meilisearch health check failed: {} - {}", status, error_text);
+        warn!(
+            "Meilisearch health check failed: {} - {}",
+            status, error_text
+        );
         return Err(format!("Health check failed: {} - {}", status, error_text).into());
     }
 
@@ -184,7 +187,10 @@ pub async fn sync_user_follow_counts(
             .text()
             .await
             .unwrap_or_else(|_| "Unknown error".to_string());
-        warn!("User follow counts sync failed: {} - {}", status, error_text);
+        warn!(
+            "User follow counts sync failed: {} - {}",
+            status, error_text
+        );
         return Err(format!("Sync failed: {} - {}", status, error_text).into());
     }
 
@@ -257,7 +263,10 @@ pub async fn cleanup_old_system_events(
     info!("Triggering old system events cleanup");
 
     let response = http_client
-        .post(&format!("{}/tasks/token-cleanup/cleanup-events", task_server_url))
+        .post(&format!(
+            "{}/tasks/token-cleanup/cleanup-events",
+            task_server_url
+        ))
         .send()
         .await?;
 

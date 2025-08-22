@@ -1,14 +1,10 @@
-use axum::{extract::State, Extension};
-
+use axum::{Extension, extract::State};
 
 use crate::{
-    dto::admin::response::AdminTaskResponse,
-    dto::auth::internal::access_token::AccessTokenClaims,
-    service::admin::search_stats::service_search_stats,
-    service::error::errors::Errors,
+    dto::admin::response::AdminTaskResponse, dto::auth::internal::access_token::AccessTokenClaims,
+    service::admin::search_stats::service_search_stats, service::error::errors::Errors,
     state::AppState,
 };
-
 
 /// 검색 색인 통계 조회
 #[utoipa::path(
@@ -32,6 +28,6 @@ pub async fn search_stats(
     Extension(token_data): Extension<AccessTokenClaims>,
 ) -> Result<AdminTaskResponse, Errors> {
     let response = service_search_stats(&app_state, token_data.sub).await?;
-    
+
     Ok(response)
 }
