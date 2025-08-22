@@ -1,19 +1,18 @@
 <script lang="ts">
 	import { Input } from '../../../ui/input';
 	import { Button } from '../../../ui/button';
-	import { setPassword, getOAuthConnections } from '$lib/api/auth/authApi';
+	import { setPassword } from '$lib/api/auth/authApi';
 	import { updateProfile } from '$lib/api/user/userApi';
-	import type { OAuthConnectionsResponse } from '$lib/api/auth/types';
 	import type { UpdateProfileRequest } from '$lib/api/user/types';
 	import { toast } from 'svelte-sonner';
-	import { onMount } from 'svelte';
+	import { settingsStore } from '$lib/stores/settings.svelte';
 	import * as v from 'valibot';
 
 	let currentPassword = $state('');
 	let newPassword = $state('');
 	let confirmPassword = $state('');
 	let isProcessing = $state(false);
-	let isOAuthOnly = $state(false);
+	const isOAuthOnly = $derived(settingsStore.account.isOAuthOnly);
 	let showPasswordFields = $state(false);
 
 	const passwordSchema = v.pipe(
@@ -44,18 +43,6 @@
 		newPassword && confirmPassword && !newPasswordError() && !confirmPasswordError() && (isOAuthOnly || currentPassword)
 	);
 
-	onMount(async () => {
-		await checkOAuthStatus();
-	});
-
-	async function checkOAuthStatus() {
-		try {
-			const response = await getOAuthConnections();
-			isOAuthOnly = response.is_oauth_only;
-		} catch (error) {
-			console.error('Failed to check OAuth status:', error);
-		}
-	}
 
 	async function handlePasswordAction() {
 		if (!isFormValid) return;
@@ -66,7 +53,8 @@
 			if (isOAuthOnly) {
 				// OAuth 전용 계정 - 새 비밀번호 설정
 				await setPassword(newPassword);
-				await checkOAuthStatus();
+				// isOAuthOnly 상태를 업데이트 (이제 OAuth 전용이 아님)
+				settingsStore.updateAccountSilent({ isOAuthOnly: false });
 				toast.success('비밀번호가 성공적으로 설정되었습니다.');
 			} else {
 				// 기존 계정 - 비밀번호 변경
