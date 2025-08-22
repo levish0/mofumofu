@@ -229,7 +229,6 @@
 	function handleCropCancel() {
 		showImageCrop = false;
 	}
-
 </script>
 
 <svelte:head>

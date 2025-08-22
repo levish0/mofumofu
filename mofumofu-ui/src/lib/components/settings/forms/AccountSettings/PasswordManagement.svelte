@@ -43,7 +43,6 @@
 		newPassword && confirmPassword && !newPasswordError() && !confirmPasswordError() && (isOAuthOnly || currentPassword)
 	);
 
-
 	async function handlePasswordAction() {
 		if (!isFormValid) return;
 

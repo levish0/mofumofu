@@ -13,10 +13,7 @@ export function createPostSchema() {
 			v.string(),
 			v.minLength(1, m.post_validation_slug_required()),
 			v.maxLength(80, m.post_validation_slug_max_length()),
-			v.regex(
-				/^[^\s\/\?#\[\]@!$&'()*+,;=]+$/,
-				m.post_validation_slug_format()
-			)
+			v.regex(/^[^\s\/\?#\[\]@!$&'()*+,;=]+$/, m.post_validation_slug_format())
 		),
 		summary: v.optional(v.pipe(v.string(), v.maxLength(500, m.post_validation_summary_max_length()))),
 		tags: v.optional(

@@ -6,7 +6,6 @@
 	import { toast } from 'svelte-sonner';
 	import { settingsStore } from '$lib/stores/settings.svelte';
 
-
 	// settingsStore에서 데이터 가져오기
 	const connections = $derived(settingsStore.account.oauthConnections as OAuthProvider[]);
 	const isOAuthOnly = $derived(settingsStore.account.isOAuthOnly);
@@ -19,7 +18,6 @@
 
 	const availableProviders: OAuthProvider[] = ['Google', 'Github'];
 	const unconnectedProviders = $derived(availableProviders.filter((provider) => !connections.includes(provider)));
-
 
 	async function loadConnections() {
 		try {

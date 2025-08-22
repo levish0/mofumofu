@@ -9,7 +9,11 @@ export function createSignupSchema() {
 			v.minLength(3, m.signup_validation_name_min_length()),
 			v.maxLength(20, m.signup_validation_name_max_length())
 		),
-		email: v.pipe(v.string(), v.minLength(1, m.signup_validation_email_required()), v.email(m.signup_validation_email_invalid())),
+		email: v.pipe(
+			v.string(),
+			v.minLength(1, m.signup_validation_email_required()),
+			v.email(m.signup_validation_email_invalid())
+		),
 		handle: v.pipe(
 			v.string(),
 			v.minLength(1, m.signup_validation_handle_required()),

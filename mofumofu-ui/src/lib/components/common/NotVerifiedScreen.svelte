@@ -31,7 +31,9 @@
 					<p class="text-sm text-gray-400">{description}</p>
 					<div class="flex flex-col space-y-3 pt-4">
 						{#if showSettingsButton}
-							<Button onclick={() => goto('/settings#account')} class="w-full">{m.email_verification_go_to_settings()}</Button>
+							<Button onclick={() => goto('/settings#account')} class="w-full"
+								>{m.email_verification_go_to_settings()}</Button
+							>
 						{/if}
 						{#if showHomeButton}
 							<Button
