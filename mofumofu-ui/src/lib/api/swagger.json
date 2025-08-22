@@ -5,9 +5,153 @@
 		"description": "A soft and simple blogging platform for everyone.",
 		"contact": { "name": "Levi Lim", "email": "shiueo.csh@gmail.com" },
 		"license": { "name": "" },
-		"version": "0.7.2"
+		"version": "0.8.2"
 	},
 	"paths": {
+		"/v0/admin/cleanup/events": {
+			"post": {
+				"tags": ["Admin"],
+				"summary": "오래된 시스템 이벤트 정리",
+				"description": "30일 이상 된 시스템 이벤트를 데이터베이스에서 정리합니다. (Admin 전용)",
+				"operationId": "cleanup_old_events",
+				"responses": {
+					"200": {
+						"description": "정리 작업 시작됨",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminTaskResponse" } } }
+					},
+					"401": { "description": "인증 실패" },
+					"403": { "description": "Admin 권한 필요" },
+					"500": { "description": "서버 오류" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/admin/cleanup/tokens": {
+			"post": {
+				"tags": ["Admin"],
+				"summary": "만료된 리프레시 토큰 정리",
+				"description": "만료되거나 폐기된 리프레시 토큰을 데이터베이스에서 정리합니다. (Admin 전용)",
+				"operationId": "cleanup_expired_tokens",
+				"responses": {
+					"200": {
+						"description": "정리 작업 시작됨",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminTaskResponse" } } }
+					},
+					"401": { "description": "인증 실패" },
+					"403": { "description": "Admin 권한 필요" },
+					"500": { "description": "서버 오류" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/admin/search/health": {
+			"post": {
+				"tags": ["Admin"],
+				"summary": "Meilisearch 헬스체크",
+				"description": "Meilisearch 서버 상태를 확인합니다. (Admin 전용)",
+				"operationId": "meilisearch_health",
+				"responses": {
+					"200": {
+						"description": "헬스체크 완료",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminTaskResponse" } } }
+					},
+					"401": { "description": "인증 실패" },
+					"403": { "description": "Admin 권한 필요" },
+					"500": { "description": "서버 오류" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/admin/search/reindex-all": {
+			"post": {
+				"tags": ["Admin"],
+				"summary": "전체 포스트 재색인 트리거",
+				"description": "모든 포스트를 Meilisearch에 재색인합니다. (Admin 전용)",
+				"operationId": "reindex_all_posts",
+				"responses": {
+					"200": {
+						"description": "재색인 작업이 성공적으로 시작됨",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminTaskResponse" } } }
+					},
+					"401": { "description": "인증 실패" },
+					"403": { "description": "Admin 권한 필요" },
+					"500": { "description": "서버 오류" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/admin/search/stats": {
+			"post": {
+				"tags": ["Admin"],
+				"summary": "검색 색인 통계 조회",
+				"description": "Meilisearch 색인 통계를 조회합니다. (Admin 전용)",
+				"operationId": "search_stats",
+				"responses": {
+					"200": {
+						"description": "통계 조회 완료",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminTaskResponse" } } }
+					},
+					"401": { "description": "인증 실패" },
+					"403": { "description": "Admin 권한 필요" },
+					"500": { "description": "서버 오류" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/admin/sync/all": {
+			"post": {
+				"tags": ["Admin"],
+				"summary": "전체 카운트 동기화",
+				"description": "모든 카운트(좋아요, 팔로우)를 실제 데이터와 동기화합니다. (Admin 전용)",
+				"operationId": "sync_all_counts",
+				"responses": {
+					"200": {
+						"description": "동기화 작업 시작됨",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminTaskResponse" } } }
+					},
+					"401": { "description": "인증 실패" },
+					"403": { "description": "Admin 권한 필요" },
+					"500": { "description": "서버 오류" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/admin/sync/follows": {
+			"post": {
+				"tags": ["Admin"],
+				"summary": "유저 팔로우 수 동기화",
+				"description": "모든 유저의 팔로워/팔로잉 수를 실제 데이터와 동기화합니다. (Admin 전용)",
+				"operationId": "sync_follows",
+				"responses": {
+					"200": {
+						"description": "동기화 작업 시작됨",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminTaskResponse" } } }
+					},
+					"401": { "description": "인증 실패" },
+					"403": { "description": "Admin 권한 필요" },
+					"500": { "description": "서버 오류" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/admin/sync/likes": {
+			"post": {
+				"tags": ["Admin"],
+				"summary": "포스트 좋아요 수 동기화",
+				"description": "모든 포스트의 좋아요 수를 실제 데이터와 동기화합니다. (Admin 전용)",
+				"operationId": "sync_likes",
+				"responses": {
+					"200": {
+						"description": "동기화 작업 시작됨",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminTaskResponse" } } }
+					},
+					"401": { "description": "인증 실패" },
+					"403": { "description": "Admin 권한 필요" },
+					"500": { "description": "서버 오류" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
 		"/v0/auth/forgot_password": {
 			"post": {
 				"tags": ["Auth"],
@@ -1061,6 +1205,11 @@
 	},
 	"components": {
 		"schemas": {
+			"AdminTaskResponse": {
+				"type": "object",
+				"required": ["success", "message"],
+				"properties": { "data": {}, "message": { "type": "string" }, "success": { "type": "boolean" } }
+			},
 			"AuthJWTResponse": {
 				"type": "object",
 				"required": ["access_token"],
@@ -1668,6 +1817,7 @@
 		{ "name": "Follow", "description": "Follow endpoints" },
 		{ "name": "Hashtag", "description": "Hashtag endpoints" },
 		{ "name": "Like", "description": "Like endpoints" },
-		{ "name": "Report", "description": "Report endpoints" }
+		{ "name": "Report", "description": "Report endpoints" },
+		{ "name": "Admin", "description": "Admin management endpoints" }
 	]
 }

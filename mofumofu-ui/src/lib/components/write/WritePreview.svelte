@@ -1,10 +1,42 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { mode } from 'mode-watcher';
+
 	interface Props {
 		title: string;
 		htmlOutput: string;
 	}
 
 	const { title, htmlOutput }: Props = $props();
+
+	function updateHighlightTheme(isDark: boolean) {
+		if (typeof document === 'undefined') return;
+
+		// Remove existing highlight.js theme
+		const existingLink = document.querySelector('link[data-highlight-theme]');
+		if (existingLink) {
+			existingLink.remove();
+		}
+
+		// Add new theme
+		const link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.href = isDark
+			? 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/styles/night-owl.css'
+			: 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/styles/atom-one-light.css';
+		link.setAttribute('data-highlight-theme', isDark ? 'dark' : 'light');
+
+		document.head.appendChild(link);
+	}
+
+	// Watch for theme changes
+	$effect(() => {
+		updateHighlightTheme(mode.current === 'dark');
+	});
+
+	onMount(() => {
+		updateHighlightTheme(mode.current === 'dark');
+	});
 </script>
 
 <div

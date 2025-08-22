@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '$lib/styles/markdown.css';
 	import { getContext, onMount } from 'svelte';
+	import { mode } from 'mode-watcher';
 	import type { PageData } from './$types';
 	import { incrementPostView, deletePost } from '$lib/api/post/postApi';
 	import { goto } from '$app/navigation';
@@ -57,10 +58,37 @@
 		isDeleteModalOpen = false;
 	}
 
+	function updateHighlightTheme(isDark: boolean) {
+		if (typeof document === 'undefined') return;
+
+		// Remove existing highlight.js theme
+		const existingLink = document.querySelector('link[data-highlight-theme]');
+		if (existingLink) {
+			existingLink.remove();
+		}
+
+		// Add new theme
+		const link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.href = isDark
+			? 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/styles/night-owl.css'
+			: 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/styles/atom-one-light.css';
+		link.setAttribute('data-highlight-theme', isDark ? 'dark' : 'light');
+
+		document.head.appendChild(link);
+	}
+
+	// Watch for theme changes
+	$effect(() => {
+		updateHighlightTheme(mode.current === 'dark');
+	});
+
 	onMount(() => {
 		incrementPostView({ post_id: data.post.id }).catch((error) => {
 			console.warn('Failed to increment view count:', error);
 		});
+
+		updateHighlightTheme(mode.current === 'dark');
 	});
 </script>
 
