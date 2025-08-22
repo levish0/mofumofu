@@ -31,7 +31,7 @@
 		handleReset: () => void;
 	};
 
-	const { sections, handleSave, saveSuccess, openImageCrop, handleReset, handleOAuthDataLoaded }: Props = $props();
+	const { sections, handleSave, saveSuccess, openImageCrop, handleReset }: Props = $props();
 
 	// 모바일에서 accordion의 기본 열린 섹션
 	let accordionValue = $state(authStore.isAuthenticated ? 'personal' : 'display');
