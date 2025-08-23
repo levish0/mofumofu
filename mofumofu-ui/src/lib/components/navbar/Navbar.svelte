@@ -44,9 +44,12 @@
 	const isAuthenticated = $derived(authStore.isAuthenticated);
 
 	onMount(async () => {
-		// localStorage에 토큰이 있거나, refresh token이 있으면 프로필 로드 시도
-		// private API가 토큰 만료시 자동으로 refresh 처리
-		if (authStore.isAuthenticated && !userStore.user) {
+		// 초기 로드시 항상 refresh 시도하여 토큰 상태 확인
+		// refresh token이 있으면 새 access token을 받고, 없으면 로그아웃 상태 유지
+		const refreshSuccess = await authStore.tryRefreshToken();
+		
+		// refresh 성공하거나 이미 유효한 토큰이 있으면 프로필 로드
+		if ((refreshSuccess || authStore.isAuthenticated) && !userStore.user) {
 			await userStore.loadProfile();
 		}
 	});
