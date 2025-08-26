@@ -40,7 +40,8 @@
 		isPreviewMode = false,
 		onTogglePreviewMode,
 		htmlOutput = '',
-		summary
+		summary,
+		existingThumbnail
 	}: Props = $props();
 
 	let contentTextarea: HTMLTextAreaElement | undefined = $state();
@@ -117,5 +118,6 @@
 		{editSlug}
 		{editPostId}
 		{summary}
+		{existingThumbnail}
 	/>
 </div>

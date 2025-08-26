@@ -140,6 +140,7 @@
 					editSlug={data.slug}
 					editPostId={data.post.id}
 					summary={data.post.summary || undefined}
+					existingThumbnail={data.post.thumbnail_image}
 					{isPreviewMode}
 					onTogglePreviewMode={handleTogglePreviewMode}
 					{htmlOutput}
