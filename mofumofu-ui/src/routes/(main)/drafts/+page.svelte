@@ -9,6 +9,7 @@
 	import AuthErrorScreen from '$lib/components/common/AuthErrorScreen.svelte';
 	import DraftCard from '$lib/components/draft/DraftCard.svelte';
 	import DraftDeleteModal from '$lib/components/draft/DraftDeleteModal.svelte';
+	import { toast } from 'svelte-sonner';
 	let drafts = $state<DraftInfo[]>([]);
 	let isLoading = $state(true);
 	let authError = $state(false);
@@ -66,7 +67,7 @@
 			draftToDelete = null;
 		} catch (error) {
 			console.error('Failed to delete draft:', error);
-			// TODO: 토스트로 에러 메시지 표시
+			toast.error('초안 삭제에 실패했습니다.');
 		} finally {
 			isDeleting = false;
 		}
