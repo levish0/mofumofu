@@ -9,7 +9,6 @@ use uuid::Uuid;
 #[derive(Debug, Clone, Serialize, ToSchema)]
 pub struct DraftInfo {
     pub draft_id: Uuid,
-    pub user_id: Uuid,
     pub title: Option<String>,
     pub thumbnail_image: Option<String>,
     pub summary: Option<String>,

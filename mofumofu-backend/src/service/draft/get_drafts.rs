@@ -15,7 +15,6 @@ where
         .into_iter()
         .map(|draft| DraftInfo {
             draft_id: draft.id,
-            user_id: draft.user_id,
             title: draft.title,
             thumbnail_image: draft.thumbnail_image,
             summary: draft.summary,

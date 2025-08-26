@@ -2,7 +2,6 @@
 
 export interface DraftInfo {
 	draft_id: string;
-	user_id: string;
 	slug: string;
 	title?: string | null;
 	content?: string | null;

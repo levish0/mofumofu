@@ -37,7 +37,6 @@ where
 
     Ok(DraftInfo {
         draft_id: created_draft.id,
-        user_id: created_draft.user_id,
         title: created_draft.title,
         thumbnail_image: created_draft.thumbnail_image,
         summary: created_draft.summary,
