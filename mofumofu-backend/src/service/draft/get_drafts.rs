@@ -5,10 +5,7 @@ use crate::service::error::errors::ServiceResult;
 use sea_orm::ConnectionTrait;
 use uuid::Uuid;
 
-pub async fn service_get_drafts<C>(
-    conn: &C,
-    user_uuid: &Uuid,
-) -> ServiceResult<GetDraftsResponse>
+pub async fn service_get_drafts<C>(conn: &C, user_uuid: &Uuid) -> ServiceResult<GetDraftsResponse>
 where
     C: ConnectionTrait,
 {

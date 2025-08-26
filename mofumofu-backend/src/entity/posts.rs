@@ -70,7 +70,6 @@ pub enum Relation {
         to = "super::post_hash_tags::Column::PostId"
     )]
     PostHashTags,
-
 }
 
 impl Related<super::users::Entity> for Entity {
@@ -90,7 +89,6 @@ impl Related<super::post_hash_tags::Entity> for Entity {
         Relation::PostHashTags.def()
     }
 }
-
 
 // Post -> HashTags (Many-to-Many through PostHashTags)
 #[derive(Debug, Clone)]

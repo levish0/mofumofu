@@ -390,7 +390,9 @@ impl IntoResponse for Errors {
             // Draft errors
             Errors::DraftNotFound => (StatusCode::NOT_FOUND, "draft:not_found", None),
             Errors::DraftLimitExceeded => (StatusCode::BAD_REQUEST, "draft:limit_exceeded", None),
-            Errors::DraftSlugAlreadyExists => (StatusCode::CONFLICT, "draft:slug_already_exists", None),
+            Errors::DraftSlugAlreadyExists => {
+                (StatusCode::CONFLICT, "draft:slug_already_exists", None)
+            }
 
             // 일반 오류 - 400 Bad Request
             Errors::BadRequestError(msg) => (StatusCode::BAD_REQUEST, BAD_REQUEST, Some(msg)),

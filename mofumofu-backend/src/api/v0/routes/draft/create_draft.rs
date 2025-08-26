@@ -2,13 +2,13 @@ use crate::dto::auth::internal::access_token::AccessTokenClaims;
 use crate::dto::draft::request::create_draft::CreateDraftRequest;
 use crate::dto::draft::response::draft_info::DraftInfo;
 use crate::service::auth::require_verified_user;
-use crate::service::error::errors::Errors;
 use crate::service::draft::create_draft::service_create_draft;
+use crate::service::error::errors::Errors;
 use crate::service::validator::json_validator::ValidatedJson;
 use crate::state::AppState;
+use axum::Extension;
 use axum::extract::State;
 use axum::http::StatusCode;
-use axum::{Extension};
 use tracing::info;
 
 #[utoipa::path(

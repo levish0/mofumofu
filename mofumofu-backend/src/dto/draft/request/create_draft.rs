@@ -11,6 +11,10 @@ pub struct CreateDraftRequest {
     pub summary: Option<String>,
     #[validate(length(max = 40000, message = "Content must be at most 40000 characters."))]
     pub content: Option<String>,
-    #[validate(length(min = 1, max = 80, message = "Slug must be between 1 and 80 characters."))]
+    #[validate(length(
+        min = 1,
+        max = 80,
+        message = "Slug must be between 1 and 80 characters."
+    ))]
     pub slug: String,
 }
