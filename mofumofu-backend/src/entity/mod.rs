@@ -1,6 +1,6 @@
 pub mod comments;
 pub mod common;
-mod drafts;
+pub mod drafts;
 pub mod follows;
 pub(crate) mod hash_tags;
 pub mod likes;

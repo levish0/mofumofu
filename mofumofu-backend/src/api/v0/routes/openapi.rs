@@ -10,6 +10,12 @@ use crate::dto::auth::request::verify_email::VerifyEmailRequest;
 use crate::dto::auth::response::jwt::AuthJWTResponse;
 use crate::dto::auth::response::oauth_connections::OAuthConnectionsResponse;
 use crate::dto::comment::request::create_comment::CreateCommentRequest;
+use crate::dto::draft::request::create_draft::CreateDraftRequest;
+use crate::dto::draft::request::delete_draft::DeleteDraftRequest;
+use crate::dto::draft::request::get_draft::GetDraftRequest;
+use crate::dto::draft::request::update_draft::UpdateDraftRequest;
+use crate::dto::draft::response::draft_info::DraftInfo;
+use crate::dto::draft::response::get_drafts::GetDraftsResponse;
 use crate::dto::comment::request::delete_comment::DeleteCommentRequest;
 use crate::dto::comment::request::get_comment_by_id::GetCommentByIdRequest;
 use crate::dto::comment::request::get_comments::{GetCommentsRequest, GetRepliesRequest};
@@ -121,6 +127,11 @@ use utoipa::{
         crate::api::v0::routes::comment::get_comments::get_comments,
         crate::api::v0::routes::comment::get_replies::get_replies,
         crate::api::v0::routes::comment::update_comment::update_comment,
+        crate::api::v0::routes::draft::create_draft::create_draft,
+        crate::api::v0::routes::draft::delete_draft::delete_draft,
+        crate::api::v0::routes::draft::get_draft::get_draft,
+        crate::api::v0::routes::draft::get_drafts::get_drafts,
+        crate::api::v0::routes::draft::update_draft::update_draft,
         crate::api::v0::routes::report::create_report::create_report,
         crate::api::v0::routes::report::get_reports::get_reports,
         crate::api::v0::routes::report::process_report::process_report,
@@ -201,6 +212,12 @@ use utoipa::{
             CommentInfo,
             GetCommentsResponse,
             GetRepliesResponse,
+            CreateDraftRequest,
+            DeleteDraftRequest,
+            GetDraftRequest,
+            UpdateDraftRequest,
+            DraftInfo,
+            GetDraftsResponse,
             CreateReportRequest,
             GetReportsRequest,
             ProcessReportRequest,
@@ -219,6 +236,7 @@ use utoipa::{
         (name = "Auth", description = "Authentication endpoints"),
         (name = "User", description = "User endpoints"),
         (name = "Post", description = "Post endpoints"),
+        (name = "Draft", description = "Draft management endpoints"),
         (name = "Comment", description = "Comment endpoints"),
         (name = "Follow", description = "Follow endpoints"),
         (name = "Hashtag", description = "Hashtag endpoints"),

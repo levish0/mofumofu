@@ -5,7 +5,7 @@
 		"description": "A soft and simple blogging platform for everyone.",
 		"contact": { "name": "Levi Lim", "email": "shiueo.csh@gmail.com" },
 		"license": { "name": "" },
-		"version": "0.8.2"
+		"version": "0.8.4"
 	},
 	"paths": {
 		"/v0/admin/cleanup/events": {
@@ -579,6 +579,99 @@
 					"400": { "description": "Invalid input" },
 					"500": { "description": "Internal Server Error" }
 				}
+			}
+		},
+		"/v0/draft": {
+			"post": {
+				"tags": ["Draft"],
+				"operationId": "create_draft",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateDraftRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Draft created successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/DraftInfo" } } }
+					},
+					"400": { "description": "Draft limit exceeded: draft:limit_exceeded" },
+					"401": { "description": "Unauthorized or email not verified" },
+					"409": { "description": "Draft slug already exists: draft:slug_already_exists" },
+					"500": { "description": "Internal Server Error" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/draft/delete": {
+			"post": {
+				"tags": ["Draft"],
+				"operationId": "delete_draft",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/DeleteDraftRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"204": { "description": "Draft deleted successfully" },
+					"401": { "description": "Unauthorized or email not verified" },
+					"404": { "description": "Draft not found: draft:not_found" },
+					"500": { "description": "Internal Server Error" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/draft/get": {
+			"post": {
+				"tags": ["Draft"],
+				"operationId": "get_draft",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetDraftRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Draft retrieved successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/DraftInfo" } } }
+					},
+					"401": { "description": "Unauthorized or email not verified" },
+					"404": { "description": "Draft not found: draft:not_found" },
+					"500": { "description": "Internal Server Error" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/draft/update": {
+			"post": {
+				"tags": ["Draft"],
+				"operationId": "update_draft",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateDraftRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Draft updated successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/DraftInfo" } } }
+					},
+					"401": { "description": "Unauthorized or email not verified" },
+					"404": { "description": "Draft not found: draft:not_found" },
+					"500": { "description": "Internal Server Error" }
+				},
+				"security": [{ "bearer_auth": [] }]
+			}
+		},
+		"/v0/drafts": {
+			"post": {
+				"tags": ["Draft"],
+				"operationId": "get_drafts",
+				"responses": {
+					"200": {
+						"description": "Drafts retrieved successfully",
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetDraftsResponse" } } }
+					},
+					"401": { "description": "Unauthorized or email not verified" },
+					"500": { "description": "Internal Server Error" }
+				},
+				"security": [{ "bearer_auth": [] }]
 			}
 		},
 		"/v0/follow": {
@@ -1295,6 +1388,17 @@
 				"required": ["comment_id"],
 				"properties": { "comment_id": { "type": "string", "format": "uuid" } }
 			},
+			"CreateDraftRequest": {
+				"type": "object",
+				"required": ["slug"],
+				"properties": {
+					"content": { "type": ["string", "null"] },
+					"slug": { "type": "string" },
+					"summary": { "type": ["string", "null"] },
+					"thumbnail_image": { "type": ["string", "null"] },
+					"title": { "type": ["string", "null"] }
+				}
+			},
 			"CreateFollowRequest": {
 				"type": "object",
 				"required": ["followee_handle"],
@@ -1356,6 +1460,11 @@
 				"required": ["comment_id"],
 				"properties": { "comment_id": { "type": "string", "format": "uuid" } }
 			},
+			"DeleteDraftRequest": {
+				"type": "object",
+				"required": ["draft_id"],
+				"properties": { "draft_id": { "type": "string", "format": "uuid" } }
+			},
 			"DeleteFollowRequest": {
 				"type": "object",
 				"required": ["followee_handle"],
@@ -1367,6 +1476,21 @@
 				"properties": { "post_id": { "type": "string", "format": "uuid" } }
 			},
 			"DeletePostRequest": { "type": "object", "required": ["slug"], "properties": { "slug": { "type": "string" } } },
+			"DraftInfo": {
+				"type": "object",
+				"required": ["draft_id", "user_id", "slug", "created_at"],
+				"properties": {
+					"content": { "type": ["string", "null"] },
+					"created_at": { "type": "string", "format": "date-time" },
+					"draft_id": { "type": "string", "format": "uuid" },
+					"slug": { "type": "string" },
+					"summary": { "type": ["string", "null"] },
+					"thumbnail_image": { "type": ["string", "null"] },
+					"title": { "type": ["string", "null"] },
+					"updated_at": { "type": ["string", "null"], "format": "date-time" },
+					"user_id": { "type": "string", "format": "uuid" }
+				}
+			},
 			"ErrorResponse": {
 				"type": "object",
 				"required": ["status", "code"],
@@ -1427,6 +1551,16 @@
 					"per_page": { "type": "integer", "format": "int32", "minimum": 0 },
 					"total_count": { "type": "integer", "format": "int64", "minimum": 0 }
 				}
+			},
+			"GetDraftRequest": {
+				"type": "object",
+				"required": ["draft_id"],
+				"properties": { "draft_id": { "type": "string", "format": "uuid" } }
+			},
+			"GetDraftsResponse": {
+				"type": "object",
+				"required": ["drafts"],
+				"properties": { "drafts": { "type": "array", "items": { "$ref": "#/components/schemas/DraftInfo" } } }
 			},
 			"GetFollowCountRequest": {
 				"type": "object",
@@ -1777,6 +1911,17 @@
 				"required": ["comment_id", "content"],
 				"properties": { "comment_id": { "type": "string", "format": "uuid" }, "content": { "type": "string" } }
 			},
+			"UpdateDraftRequest": {
+				"type": "object",
+				"required": ["draft_id"],
+				"properties": {
+					"content": { "type": ["string", "null"] },
+					"draft_id": { "type": "string", "format": "uuid" },
+					"summary": { "type": ["string", "null"] },
+					"thumbnail_image": { "type": ["string", "null"] },
+					"title": { "type": ["string", "null"] }
+				}
+			},
 			"UpdatePostRequest": {
 				"type": "object",
 				"required": ["post_id"],
@@ -1834,6 +1979,7 @@
 		{ "name": "Auth", "description": "Authentication endpoints" },
 		{ "name": "User", "description": "User endpoints" },
 		{ "name": "Post", "description": "Post endpoints" },
+		{ "name": "Draft", "description": "Draft management endpoints" },
 		{ "name": "Comment", "description": "Comment endpoints" },
 		{ "name": "Follow", "description": "Follow endpoints" },
 		{ "name": "Hashtag", "description": "Hashtag endpoints" },

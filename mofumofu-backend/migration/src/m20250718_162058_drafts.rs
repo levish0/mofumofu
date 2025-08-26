@@ -19,11 +19,12 @@ impl MigrationTrait for Migration {
                             .primary_key() // PK 지정
                             .default(Expr::cust("gen_random_uuid()")),
                     )
-                    .col(ColumnDef::new(Drafts::PostId).uuid().null()) // 기존 포스트 수정시
                     .col(ColumnDef::new(Drafts::UserId).uuid().not_null())
-                    .col(ColumnDef::new(Drafts::Title).string_len(200).null())
+                    .col(ColumnDef::new(Drafts::Title).string_len(80).null())
+                    .col(ColumnDef::new(Drafts::ThumbnailImage).text().null())
                     .col(ColumnDef::new(Drafts::Summary).string_len(500).null())
                     .col(ColumnDef::new(Drafts::Content).text().null())
+                    .col(ColumnDef::new(Drafts::Slug).string_len(80).not_null())
                     .col(
                         ColumnDef::new(Drafts::CreatedAt)
                             .timestamp_with_time_zone()
@@ -35,12 +36,6 @@ impl MigrationTrait for Migration {
                             .timestamp_with_time_zone()
                             .null(),
                     )
-                    .col(
-                        ColumnDef::new(Drafts::AutoSaveVersion)
-                            .integer()
-                            .not_null()
-                            .default(1), // 자동저장 버전
-                    )
                     // 작성자와의 외래키
                     .foreign_key(
                         ForeignKey::create()
@@ -48,24 +43,17 @@ impl MigrationTrait for Migration {
                             .to(Users::Table, Users::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
-                    // 기존 포스트와의 외래키 (수정시)
-                    .foreign_key(
-                        ForeignKey::create()
-                            .from(Drafts::Table, Drafts::PostId)
-                            .to(Posts::Table, Posts::Id)
-                            .on_delete(ForeignKeyAction::Cascade),
-                    )
                     .to_owned(),
             )
             .await?;
 
-        // 기존 포스트의 드래프트 조회
+        // 사용자별 드래프트 조회
         manager
             .create_index(
                 Index::create()
-                    .name("idx_drafts_post_id")
+                    .name("idx_drafts_user_id")
                     .table(Drafts::Table)
-                    .col(Drafts::PostId)
+                    .col(Drafts::UserId)
                     .to_owned(),
             )
             .await?;
@@ -77,6 +65,19 @@ impl MigrationTrait for Migration {
                     .name("idx_drafts_created_at")
                     .table(Drafts::Table)
                     .col(Drafts::CreatedAt)
+                    .to_owned(),
+            )
+            .await?;
+
+        // 각 사용자에 대해 슬러그가 고유하도록 보장
+        manager
+            .create_index(
+                Index::create()
+                    .name("uq_drafts_user_id_slug")
+                    .table(Drafts::Table)
+                    .col(Drafts::UserId)
+                    .col(Drafts::Slug)
+                    .unique()
                     .to_owned(),
             )
             .await
@@ -93,14 +94,14 @@ impl MigrationTrait for Migration {
 enum Drafts {
     Table,
     Id,
-    PostId,
     UserId,
     Title,
+    ThumbnailImage,
     Summary,
     Content,
+    Slug,
     CreatedAt,
     UpdatedAt,
-    AutoSaveVersion,
 }
 #[derive(DeriveIden)]
 enum Posts {

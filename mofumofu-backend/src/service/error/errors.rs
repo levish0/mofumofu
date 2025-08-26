@@ -159,6 +159,11 @@ pub enum Errors {
     InvalidParentComment,
     CannotReplyToDeletedComment,
 
+    // Draft errors
+    DraftNotFound,
+    DraftLimitExceeded,
+    DraftSlugAlreadyExists,
+
     // 일반 오류
     BadRequestError(String),   // 잘못된 요청 (추가 정보 포함)
     ValidationError(String),   // 유효성 검사 오류 (추가 정보 포함)
@@ -193,6 +198,7 @@ impl IntoResponse for Errors {
             // 리소스 찾을 수 없음 - warn! 레벨
             Errors::UserNotFound
             | Errors::PostNotFound
+            | Errors::DraftNotFound
             | Errors::NotFound(_)
             | Errors::FollowNotExist => {
                 warn!("Resource not found: {:?}", self);
@@ -226,6 +232,8 @@ impl IntoResponse for Errors {
             | Errors::OauthConnectionNotFound
             | Errors::OauthCannotUnlinkLastConnection
             | Errors::OauthInvalidImageUrl
+            | Errors::DraftLimitExceeded
+            | Errors::DraftSlugAlreadyExists
             | Errors::BadRequestError(_)
             | Errors::ValidationError(_)
             | Errors::FileTooLargeError(_) => {
@@ -378,6 +386,11 @@ impl IntoResponse for Errors {
                 "comment:cannot_reply_to_deleted",
                 None,
             ),
+
+            // Draft errors
+            Errors::DraftNotFound => (StatusCode::NOT_FOUND, "draft:not_found", None),
+            Errors::DraftLimitExceeded => (StatusCode::BAD_REQUEST, "draft:limit_exceeded", None),
+            Errors::DraftSlugAlreadyExists => (StatusCode::CONFLICT, "draft:slug_already_exists", None),
 
             // 일반 오류 - 400 Bad Request
             Errors::BadRequestError(msg) => (StatusCode::BAD_REQUEST, BAD_REQUEST, Some(msg)),

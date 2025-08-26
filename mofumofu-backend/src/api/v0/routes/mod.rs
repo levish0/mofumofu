@@ -1,6 +1,7 @@
 mod admin;
 mod auth;
 mod comment;
+mod draft;
 mod follow;
 mod hashtag;
 mod like;

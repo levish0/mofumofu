@@ -7,7 +7,7 @@ pub struct Model {
     #[sea_orm(primary_key)]
     pub id: Uuid,
 
-    #[sea_orm(column_type = "Text", not_null, string_len = 200)]
+    #[sea_orm(column_type = "Text", not_null, string_len = 80)]
     pub title: String,
 
     #[sea_orm(column_type = "Text", nullable)]
@@ -71,13 +71,6 @@ pub enum Relation {
     )]
     PostHashTags,
 
-    // 관련된 임시저장들
-    #[sea_orm(
-        has_many = "super::drafts::Entity",
-        from = "Column::Id",
-        to = "super::drafts::Column::PostId"
-    )]
-    Drafts,
 }
 
 impl Related<super::users::Entity> for Entity {
@@ -98,11 +91,6 @@ impl Related<super::post_hash_tags::Entity> for Entity {
     }
 }
 
-impl Related<super::drafts::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::Drafts.def()
-    }
-}
 
 // Post -> HashTags (Many-to-Many through PostHashTags)
 #[derive(Debug, Clone)]

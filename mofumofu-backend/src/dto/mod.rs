@@ -2,6 +2,7 @@ pub mod admin;
 pub mod auth;
 pub mod comment;
 pub mod common;
+pub mod draft;
 pub mod follow;
 pub mod hashtag;
 pub mod like;
