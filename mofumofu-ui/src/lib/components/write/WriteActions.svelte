@@ -44,14 +44,16 @@
 		</Button>
 
 		<div class="flex items-center gap-3">
-			<Button
-				variant="ghost"
-				onclick={onSaveDraft}
-				class=" dark:text-mofu-dark-200 flex items-center gap-2 rounded px-4 py-2 text-lg"
-			>
-				<Icon src={ClipboardDocumentList} class="h-5 w-5" solid />
-				{m.write_save_draft()}
-			</Button>
+			{#if !isEditMode}
+				<Button
+					variant="ghost"
+					onclick={onSaveDraft}
+					class=" dark:text-mofu-dark-200 flex items-center gap-2 rounded px-4 py-2 text-lg"
+				>
+					<Icon src={ClipboardDocumentList} class="h-5 w-5" solid />
+					{m.write_save_draft()}
+				</Button>
+			{/if}
 
 			<PublishDialog {title} {content} {tags} {onPublished} {isEditMode} {editSlug} {editPostId} {summary} />
 		</div>
