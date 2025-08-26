@@ -28,9 +28,10 @@
 		editSlug?: string;
 		editPostId?: string;
 		summary?: string;
+		existingThumbnail?: string | null;
 	}
 
-	let { title, content, tags, onPublished, isEditMode = false, editSlug, editPostId, summary }: Props = $props();
+	let { title, content, tags, onPublished, isEditMode = false, editSlug, editPostId, summary, existingThumbnail }: Props = $props();
 
 	let isOpen = $state(false);
 	let isLoading = $state(false);
@@ -65,7 +66,7 @@
 			content: content,
 			summary: summary || '',
 			tags: tags,
-			thumbnail: null,
+			thumbnail: isEditMode ? existingThumbnail || null : null,
 			thumbnailFile: null
 		};
 		validationErrors = {};

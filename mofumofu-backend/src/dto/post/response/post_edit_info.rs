@@ -11,6 +11,7 @@ pub struct PostEditInfoResponse {
     pub title: String,
     pub summary: Option<String>,
     pub content: String,
+    pub thumbnail_image: Option<String>,
     pub created_at: DateTime<Utc>,
     pub updated_at: Option<DateTime<Utc>>,
     pub slug: String,

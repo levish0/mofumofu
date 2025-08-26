@@ -21,6 +21,7 @@
 		onTogglePreviewMode?: (isPreview: boolean) => void;
 		htmlOutput?: string;
 		summary?: string;
+		existingThumbnail?: string | null;
 	}
 
 	const {

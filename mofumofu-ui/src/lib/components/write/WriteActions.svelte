@@ -16,6 +16,7 @@
 		editSlug?: string;
 		editPostId?: string;
 		summary?: string;
+		existingThumbnail?: string | null;
 	}
 
 	const {
@@ -28,7 +29,8 @@
 		isEditMode = false,
 		editSlug,
 		editPostId,
-		summary
+		summary,
+		existingThumbnail
 	}: Props = $props();
 </script>
 
@@ -55,7 +57,7 @@
 				</Button>
 			{/if}
 
-			<PublishDialog {title} {content} {tags} {onPublished} {isEditMode} {editSlug} {editPostId} {summary} />
+			<PublishDialog {title} {content} {tags} {onPublished} {isEditMode} {editSlug} {editPostId} {summary} {existingThumbnail} />
 		</div>
 	</div>
 </div>

@@ -23,6 +23,7 @@ where
         title: post.title,
         summary: post.summary,
         content: post.content,
+        thumbnail_image: post.thumbnail_image,
         created_at: post.created_at,
         updated_at: post.updated_at,
         slug: post.slug,

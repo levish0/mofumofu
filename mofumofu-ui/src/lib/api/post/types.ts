@@ -142,5 +142,6 @@ export interface PostEditInfoResponse {
 	slug: string;
 	tags: string[];
 	summary?: string | null;
+	thumbnail_image?: string | null;
 	updated_at?: string | null;
 }
