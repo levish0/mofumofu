@@ -19,8 +19,8 @@ importers:
         specifier: 2.2.0
         version: 2.2.0
       '@internationalized/date':
-        specifier: ^3.8.2
-        version: 3.8.2
+        specifier: ^3.9.0
+        version: 3.9.0
       '@lucide/svelte':
         specifier: ^0.525.0
         version: 0.525.0(svelte@5.38.2)
@@ -53,7 +53,7 @@ importers:
         version: 4.1.5
       bits-ui:
         specifier: ^2.9.4
-        version: 2.9.4(@internationalized/date@3.8.2)(svelte@5.38.2)
+        version: 2.9.4(@internationalized/date@3.9.0)(svelte@5.38.2)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -658,8 +658,8 @@ packages:
     resolution: {integrity: sha512-cvz/C1rF5WBxzHbEoiBoI6Sz6q6M+TdxfWkEGBYTD77opY8i8WN01prUWXEM87GPF4SZcyIySez9U0Ccm12oFQ==}
     engines: {node: '>=18.0.0'}
 
-  '@internationalized/date@3.8.2':
-    resolution: {integrity: sha512-/wENk7CbvLbkUvX1tu0mwq49CVkkWpkXubGel6birjRPyo6uQ4nQpnq5xZu823zRCwwn82zgHrvgF1vZyvmVgA==}
+  '@internationalized/date@3.9.0':
+    resolution: {integrity: sha512-yaN3brAnHRD+4KyyOsJyk49XUvj2wtbNACSqg0bz3u8t2VuzhC8Q5dfRnrSxjnnbDb+ienBnkn1TzQfE154vyg==}
 
   '@isaacs/fs-minipass@4.0.1':
     resolution: {integrity: sha512-wgm9Ehl2jpeqP3zw/7mo3kRHFp5MEDhqAdwy1fTGkHAwnkGOVsgpvQhL8B5n1qlb01jV3n/bI0ZfZp5lWA1k4w==}
@@ -2248,8 +2248,8 @@ packages:
   undici-types@7.10.0:
     resolution: {integrity: sha512-t5Fy/nfn+14LuOc2KNYg75vZqClpAiqscVvMygNnlsHBFpSXdJaYtXMcdNLpl/Qvc3P2cB3s6lOV51nqsFq4ag==}
 
-  undici@7.14.0:
-    resolution: {integrity: sha512-Vqs8HTzjpQXZeXdpsfChQTlafcMQaaIwnGwLam1wudSSjlJeQ3bw1j+TLPePgrCnCpUXx7Ba5Pdpf5OBih62NQ==}
+  undici@7.15.0:
+    resolution: {integrity: sha512-7oZJCPvvMvTd0OlqWsIxTuItTpJBpU1tcbVl24FMn3xt3+VSunwUasmfPJRE57oNO1KsZ4PgA1xTdAX4hq8NyQ==}
     engines: {node: '>=20.18.1'}
 
   unenv@2.0.0-rc.17:
@@ -2739,7 +2739,7 @@ snapshots:
     transitivePeerDependencies:
       - babel-plugin-macros
 
-  '@internationalized/date@3.8.2':
+  '@internationalized/date@3.9.0':
     dependencies:
       '@swc/helpers': 0.5.17
 
@@ -3090,11 +3090,11 @@ snapshots:
 
   balanced-match@1.0.2: {}
 
-  bits-ui@2.9.4(@internationalized/date@3.8.2)(svelte@5.38.2):
+  bits-ui@2.9.4(@internationalized/date@3.9.0)(svelte@5.38.2):
     dependencies:
       '@floating-ui/core': 1.7.3
       '@floating-ui/dom': 1.7.4
-      '@internationalized/date': 3.8.2
+      '@internationalized/date': 3.9.0
       esm-env: 1.2.2
       runed: 0.29.2(svelte@5.38.2)
       svelte: 5.38.2
@@ -3958,7 +3958,7 @@ snapshots:
       glob-to-regexp: 0.4.1
       sharp: 0.33.5
       stoppable: 1.1.0
-      undici: 7.14.0
+      undici: 7.15.0
       workerd: 1.20250712.0
       ws: 8.18.0
       youch: 4.1.0-beta.10
@@ -4566,7 +4566,7 @@ snapshots:
 
   undici-types@7.10.0: {}
 
-  undici@7.14.0: {}
+  undici@7.15.0: {}
 
   unenv@2.0.0-rc.17:
     dependencies:
