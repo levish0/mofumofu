@@ -592,7 +592,7 @@
 				"responses": {
 					"201": {
 						"description": "Draft created successfully",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/DraftInfo" } } }
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateDraftResponse" } } }
 					},
 					"400": { "description": "Draft limit exceeded: draft:limit_exceeded" },
 					"401": { "description": "Unauthorized or email not verified" },
@@ -648,10 +648,7 @@
 					"required": true
 				},
 				"responses": {
-					"200": {
-						"description": "Draft updated successfully",
-						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/DraftInfo" } } }
-					},
+					"204": { "description": "Draft updated successfully" },
 					"401": { "description": "Unauthorized or email not verified" },
 					"404": { "description": "Draft not found: draft:not_found" },
 					"500": { "description": "Internal Server Error" }
@@ -1399,6 +1396,11 @@
 					"title": { "type": ["string", "null"] }
 				}
 			},
+			"CreateDraftResponse": {
+				"type": "object",
+				"required": ["draft_id"],
+				"properties": { "draft_id": { "type": "string", "format": "uuid" } }
+			},
 			"CreateFollowRequest": {
 				"type": "object",
 				"required": ["followee_handle"],
@@ -1478,7 +1480,7 @@
 			"DeletePostRequest": { "type": "object", "required": ["slug"], "properties": { "slug": { "type": "string" } } },
 			"DraftInfo": {
 				"type": "object",
-				"required": ["draft_id", "user_id", "slug", "created_at"],
+				"required": ["draft_id", "slug", "created_at"],
 				"properties": {
 					"content": { "type": ["string", "null"] },
 					"created_at": { "type": "string", "format": "date-time" },
@@ -1487,8 +1489,7 @@
 					"summary": { "type": ["string", "null"] },
 					"thumbnail_image": { "type": ["string", "null"] },
 					"title": { "type": ["string", "null"] },
-					"updated_at": { "type": ["string", "null"], "format": "date-time" },
-					"user_id": { "type": "string", "format": "uuid" }
+					"updated_at": { "type": ["string", "null"], "format": "date-time" }
 				}
 			},
 			"ErrorResponse": {

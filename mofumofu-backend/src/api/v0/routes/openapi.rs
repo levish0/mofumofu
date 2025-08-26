@@ -20,6 +20,7 @@ use crate::dto::draft::request::create_draft::CreateDraftRequest;
 use crate::dto::draft::request::delete_draft::DeleteDraftRequest;
 use crate::dto::draft::request::get_draft::GetDraftRequest;
 use crate::dto::draft::request::update_draft::UpdateDraftRequest;
+use crate::dto::draft::response::create_draft::CreateDraftResponse;
 use crate::dto::draft::response::draft_info::DraftInfo;
 use crate::dto::draft::response::get_drafts::GetDraftsResponse;
 use crate::dto::follow::request::check_follow_status::CheckFollowStatusRequest;
@@ -216,6 +217,7 @@ use utoipa::{
             DeleteDraftRequest,
             GetDraftRequest,
             UpdateDraftRequest,
+            CreateDraftResponse,
             DraftInfo,
             GetDraftsResponse,
             CreateReportRequest,

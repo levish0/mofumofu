@@ -66,7 +66,7 @@
 		try {
 			if (currentDraftId) {
 				// 기존 draft 업데이트
-				const updatedDraft = await updateDraft({
+				await updateDraft({
 					draft_id: currentDraftId,
 					title: title || null,
 					content: content || null,

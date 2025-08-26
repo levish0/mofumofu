@@ -11,6 +11,10 @@ export interface DraftInfo {
 	updated_at?: string | null;
 }
 
+export interface CreateDraftResponse {
+	draft_id: string;
+}
+
 export interface CreateDraftRequest {
 	slug: string;
 	title?: string | null;

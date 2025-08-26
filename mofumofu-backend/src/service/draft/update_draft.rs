@@ -1,5 +1,4 @@
 use crate::dto::draft::request::update_draft::UpdateDraftRequest;
-use crate::dto::draft::response::draft_info::DraftInfo;
 use crate::repository::draft::get_draft_by_id::repository_get_draft_by_id;
 use crate::repository::draft::update_draft::repository_update_draft;
 use crate::service::error::errors::{Errors, ServiceResult};
@@ -11,7 +10,7 @@ pub async fn service_update_draft<C>(
     conn: &C,
     payload: UpdateDraftRequest,
     user_uuid: &Uuid,
-) -> ServiceResult<DraftInfo>
+) -> ServiceResult<()>
 where
     C: ConnectionTrait + TransactionTrait,
 {
@@ -24,20 +23,11 @@ where
     let txn = conn.begin().await?;
 
     let draft_id = payload.draft_id;
-    let updated_draft = repository_update_draft(&txn, &draft_id, payload).await?;
+    repository_update_draft(&txn, &draft_id, payload).await?;
 
     txn.commit().await?;
 
     info!("드래프트 수정 완료 (draft_id: {})", draft_id);
 
-    Ok(DraftInfo {
-        draft_id: updated_draft.id,
-        title: updated_draft.title,
-        thumbnail_image: updated_draft.thumbnail_image,
-        summary: updated_draft.summary,
-        content: updated_draft.content,
-        slug: updated_draft.slug,
-        created_at: updated_draft.created_at,
-        updated_at: updated_draft.updated_at,
-    })
+    Ok(())
 }

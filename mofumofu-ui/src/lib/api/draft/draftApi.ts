@@ -5,23 +5,23 @@ import type {
 	GetDraftRequest,
 	DeleteDraftRequest,
 	DraftInfo,
+	CreateDraftResponse,
 	GetDraftsResponse
 } from './types';
 
 /**
  * Create a new draft
  */
-export async function createDraft(data: CreateDraftRequest): Promise<DraftInfo> {
-	const response = await privateApi.post('v0/draft', { json: data }).json<DraftInfo>();
+export async function createDraft(data: CreateDraftRequest): Promise<CreateDraftResponse> {
+	const response = await privateApi.post('v0/draft', { json: data }).json<CreateDraftResponse>();
 	return response;
 }
 
 /**
  * Update an existing draft
  */
-export async function updateDraft(data: UpdateDraftRequest): Promise<DraftInfo> {
-	const response = await privateApi.post('v0/draft/update', { json: data }).json<DraftInfo>();
-	return response;
+export async function updateDraft(data: UpdateDraftRequest): Promise<void> {
+	await privateApi.post('v0/draft/update', { json: data });
 }
 
 /**
