@@ -1243,8 +1243,8 @@ packages:
     resolution: {integrity: sha512-3UDv+G9CsCKO1WKMGw9fwq/SWJYbI0c5Y7LU1AXYoDdbhE2AHQ6N6Nb34sG8Fj7T5APy8qXDCKuuIHd1BR0tVA==}
     engines: {node: '>=8'}
 
-  devalue@5.2.0:
-    resolution: {integrity: sha512-pn/4yAWRz7WrDNpr29JUv2s+8Q4zyf/9I5SuFlhf8wTHfc3HFakOwU2A9da1fokbVym/6IZq5alo18pIByxxQg==}
+  devalue@5.3.1:
+    resolution: {integrity: sha512-+eacAWjj8JNlvlnLnBvxkHF4Hsep3ip5Uxf4Wg2+hCspuM1xWRCG7RRL0ur00goXHhm9lBVleftYwSPGZOggHA==}
 
   devlop@1.1.0:
     resolution: {integrity: sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==}
@@ -2898,7 +2898,7 @@ snapshots:
       '@types/cookie': 0.6.0
       acorn: 8.15.0
       cookie: 0.6.0
-      devalue: 5.2.0
+      devalue: 5.3.1
       esm-env: 1.2.2
       kleur: 4.1.5
       magic-string: 0.30.18
@@ -3224,7 +3224,7 @@ snapshots:
 
   detect-libc@2.0.4: {}
 
-  devalue@5.2.0: {}
+  devalue@5.3.1: {}
 
   devlop@1.1.0:
     dependencies:
