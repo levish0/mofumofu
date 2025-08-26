@@ -91,7 +91,7 @@
 <AuthErrorScreen isVisible={authError} description="초안을 볼 수 있는 권한이 없습니다." />
 
 {#if !isLoading && !authError}
-	<div class="container mx-auto px-4 py-8">
+	<div class="min-h-screen">
 		<div class="mb-8">
 			<h1 class="text-3xl font-bold text-gray-900 dark:text-white">내 초안 목록</h1>
 			<p class="mt-2 text-gray-600 dark:text-gray-300">
