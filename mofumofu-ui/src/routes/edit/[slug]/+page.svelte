@@ -165,6 +165,7 @@
 						editPostId={data.post.id}
 						editSlug={data.slug}
 						summary={data.post.summary || undefined}
+						existingThumbnail={data.post.thumbnail_image}
 						isPreviewMode={false}
 						onTogglePreviewMode={undefined}
 						htmlOutput=""
