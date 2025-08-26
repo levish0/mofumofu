@@ -112,10 +112,7 @@
 				</div>
 				<h3 class="mb-2 text-lg font-medium text-gray-900 dark:text-white">저장된 초안이 없습니다</h3>
 				<p class="mb-6 text-gray-500 dark:text-gray-400">글을 작성하고 임시저장하면 여기에 나타납니다</p>
-				<button
-					onclick={() => goto('/write')}
-					class="rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
-				>
+				<button onclick={() => goto('/write')} class="bg-mofu rounded-lg px-4 py-2 text-white transition-colors">
 					새 글 작성하기
 				</button>
 			</div>

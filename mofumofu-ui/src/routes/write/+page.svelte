@@ -131,12 +131,15 @@
 	function startAutoSave() {
 		if (autoSaveInterval) clearInterval(autoSaveInterval);
 
-		autoSaveInterval = setInterval(async () => {
-			// 내용이 있을 때만 자동 저장
-			if (title.trim() || content.trim()) {
-				await handleSaveDraft(true); // isAutoSave = true
-			}
-		}, 10 * 1000); // 5분
+		autoSaveInterval = setInterval(
+			async () => {
+				// 내용이 있을 때만 자동 저장
+				if (title.trim() || content.trim()) {
+					await handleSaveDraft(true); // isAutoSave = true
+				}
+			},
+			5 * 60 * 1000
+		); // 5분
 	}
 
 	function stopAutoSave() {
