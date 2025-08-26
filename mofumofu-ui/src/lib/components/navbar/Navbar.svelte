@@ -9,7 +9,8 @@
 		MagnifyingGlass,
 		ChevronDown,
 		User,
-		ArrowRightOnRectangle
+		ArrowRightOnRectangle,
+		DocumentText
 	} from 'svelte-hero-icons';
 	import { onMount } from 'svelte';
 	import { authStore } from '$lib/stores/auth.svelte';
@@ -47,7 +48,7 @@
 		// 초기 로드시 항상 refresh 시도하여 토큰 상태 확인
 		// refresh token이 있으면 새 access token을 받고, 없으면 로그아웃 상태 유지
 		const refreshSuccess = await authStore.tryRefreshToken();
-		
+
 		// refresh 성공하거나 이미 유효한 토큰이 있으면 프로필 로드
 		if ((refreshSuccess || authStore.isAuthenticated) && !userStore.user) {
 			await userStore.loadProfile();
@@ -176,6 +177,13 @@
 								>
 									<Icon src={User} solid size="16" class="mr-3" />
 									{m.navbar_my_page()}
+								</a>
+								<a
+									href="/drafts"
+									class="dark:text-mofu-dark-200 text-mofu-light-200 hover:text-mofu flex items-center px-4 py-2"
+								>
+									<Icon src={DocumentText} solid size="16" class="mr-3" />
+									내 초안
 								</a>
 								<a
 									href="/settings"

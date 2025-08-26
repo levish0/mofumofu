@@ -8,10 +8,13 @@
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { userStore } from '$lib/stores/user.svelte';
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import LoadingOverlay from '$lib/components/common/LoadingOverlay.svelte';
 	import AuthErrorScreen from '$lib/components/common/AuthErrorScreen.svelte';
 	import NotVerifiedScreen from '$lib/components/common/NotVerifiedScreen.svelte';
+	import { createDraft, updateDraft, generateDraftSlug, getDraft, type DraftInfo } from '$lib/api/draft';
+	import { toast } from 'svelte-sonner';
+	import { page } from '$app/state';
 
 	let title = $state('');
 	let tags = $state('');
@@ -22,6 +25,14 @@
 	let isAuthChecking = $state(true); // 인증 체크 중인지
 	let authError = $state(false); // 인증 실패 상태
 	let verificationError = $state(false); // 이메일 인증 실패 상태
+
+	// Draft 관련 상태
+	let currentDraftId = $state<string | null>(null);
+	let lastSaveTime = $state<Date | null>(null);
+	let autoSaveInterval: ReturnType<typeof setInterval> | null = null;
+
+	// URL에서 draft ID 가져오기
+	const draftIdFromUrl = $derived(page.url.searchParams.get('draft'));
 
 	// Resizable hook
 	let resizableHook = $state<ReturnType<typeof useResizable> | null>(null);
@@ -51,8 +62,88 @@
 		content = value;
 	}
 
-	function handleSaveDraft() {
-		console.log(m.temporary_save_console(), { title, tags, content });
+	async function handleSaveDraft(isAutoSave = false) {
+		try {
+			if (currentDraftId) {
+				// 기존 draft 업데이트
+				const updatedDraft = await updateDraft({
+					draft_id: currentDraftId,
+					title: title || null,
+					content: content || null,
+					summary: tags || null
+				});
+				lastSaveTime = new Date();
+				if (!isAutoSave) {
+					toast.success('초안이 저장되었습니다.');
+				}
+			} else {
+				// 새 draft 생성
+				const slug = generateDraftSlug(title);
+				const newDraft = await createDraft({
+					slug,
+					title: title || null,
+					content: content || null,
+					summary: tags || null
+				});
+				currentDraftId = newDraft.draft_id;
+				lastSaveTime = new Date();
+				if (isAutoSave) {
+					toast.success('초안이 자동저장되었습니다.', {
+						duration: 2000
+					});
+				} else {
+					toast.success('초안이 저장되었습니다.');
+				}
+			}
+		} catch (error: any) {
+			console.error('Failed to save draft:', error);
+
+			// Draft 개수 제한 에러 처리
+			if (error?.response?.status === 400) {
+				const responseText = await error.response.text();
+				if (responseText.includes('draft:limit_exceeded')) {
+					toast.error('초안은 최대 10개까지만 저장할 수 있습니다. 기존 초안을 삭제한 후 다시 시도해주세요.');
+					return;
+				}
+			}
+
+			// Slug 중복 에러 처리
+			if (error?.response?.status === 409) {
+				const responseText = await error.response.text();
+				if (responseText.includes('draft:slug_already_exists')) {
+					toast.error('같은 이름의 초안이 이미 존재합니다.');
+					return;
+				}
+			}
+
+			// 기타 에러
+			if (isAutoSave) {
+				toast.error('자동저장에 실패했습니다.', {
+					duration: 3000
+				});
+			} else {
+				toast.error('초안 저장에 실패했습니다. 다시 시도해주세요.');
+			}
+		}
+	}
+
+	// 5분마다 자동 저장
+	function startAutoSave() {
+		if (autoSaveInterval) clearInterval(autoSaveInterval);
+
+		autoSaveInterval = setInterval(async () => {
+			// 내용이 있을 때만 자동 저장
+			if (title.trim() || content.trim()) {
+				await handleSaveDraft(true); // isAutoSave = true
+			}
+		}, 10 * 1000); // 5분
+	}
+
+	function stopAutoSave() {
+		if (autoSaveInterval) {
+			clearInterval(autoSaveInterval);
+			autoSaveInterval = null;
+		}
 	}
 
 	function handleExit() {
@@ -82,10 +173,41 @@
 				verificationError = true;
 				return;
 			}
+
+			// 자동 저장 시작
+			startAutoSave();
+
+			// URL에 draft ID가 있으면 로드
+			if (draftIdFromUrl) {
+				await loadDraft(draftIdFromUrl);
+			}
 		} finally {
 			isAuthChecking = false;
 		}
 	});
+
+	// 컴포넌트 정리
+	onDestroy(() => {
+		stopAutoSave();
+	});
+
+	// Draft 로드하는 함수
+	async function loadDraft(draftId: string) {
+		try {
+			const draft = await getDraft({ draft_id: draftId });
+
+			// Draft 데이터를 에디터에 로드
+			title = draft.title || '';
+			content = draft.content || '';
+			tags = draft.summary || '';
+			currentDraftId = draft.draft_id;
+
+			toast.success('초안이 로드되었습니다.');
+		} catch (error) {
+			console.error('Failed to load draft:', error);
+			toast.error('초안을 불러오는데 실패했습니다.');
+		}
+	}
 </script>
 
 <svelte:head>
@@ -125,7 +247,7 @@
 					onTagsChange={handleTagsChange}
 					onContentChange={handleContentChange}
 					onExit={handleExit}
-					onSaveDraft={handleSaveDraft}
+					onSaveDraft={() => handleSaveDraft(false)}
 					onPublished={() => {}}
 					{isPreviewMode}
 					onTogglePreviewMode={handleTogglePreviewMode}
@@ -145,7 +267,7 @@
 						onTagsChange={handleTagsChange}
 						onContentChange={handleContentChange}
 						onExit={handleExit}
-						onSaveDraft={handleSaveDraft}
+						onSaveDraft={() => handleSaveDraft(false)}
 						onPublished={() => {}}
 						isPreviewMode={false}
 						onTogglePreviewMode={undefined}
