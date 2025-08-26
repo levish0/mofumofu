@@ -92,7 +92,7 @@
 
 /* Paragraph and line break styling */
 .prose p {
-	line-height: 0.8 !important;
+	line-height: 0.8rem !important;
 	margin-top: 1rem !important;
 	margin-bottom: 0.8rem !important;
 }
