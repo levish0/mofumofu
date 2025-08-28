@@ -662,7 +662,7 @@ See [LICENSE](./LICENSE) for the full license text.
 - **🐛 Bug Reports**: [GitHub Issues](https://github.com/levish0/mofumofu/issues)
 - **💡 Feature Requests**: [GitHub Discussions](https://github.com/levish0/mofumofu/discussions)
 - **📚 Documentation**: [Project Wiki](https://github.com/levish0/mofumofu/wiki)
-- **💬 Community Chat**: [Discord Server](https://discord.gg/mofumofu) _(coming soon)_
+- **💬 Community Chat**: [Discord Server]https://discord.gg/86wResmMSH)
 
 ---
 
@@ -679,7 +679,7 @@ _If you're tired of the noise, Mofumofu offers a quieter place to write._
 
 ---
 
-**Made with 💜 and lots of ☕ by the Mofumofu team**
+**Made with 💜 and lots of ☕ by levish(Levi Lim) & Community**
 
 _Soft, simple, and genuine - just like something mofumofu (もふもふ)_
 
