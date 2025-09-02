@@ -51,7 +51,7 @@
 		"color-thief": "^2.2.5",
 		"date-fns": "^4.1.0",
 		"escape-html": "^1.0.3",
-		"ky": "^1.9.0",
+		"ky": "^1.9.1",
 		"mode-watcher": "^1.1.0",
 		"pica": "^9.0.1",
 		"prettier": "^3.6.2",
