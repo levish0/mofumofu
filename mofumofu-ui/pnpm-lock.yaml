@@ -52,8 +52,8 @@ importers:
         specifier: ^4.1.5
         version: 4.1.5
       bits-ui:
-        specifier: ^2.9.4
-        version: 2.9.4(@internationalized/date@3.9.0)(svelte@5.38.3)
+        specifier: ^2.9.5
+        version: 2.9.5(@internationalized/date@3.9.0)(svelte@5.38.3)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -224,8 +224,8 @@ packages:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
 
-  '@emnapi/runtime@1.4.5':
-    resolution: {integrity: sha512-++LApOtY0pEEz1zrd9vy1/zXVaVJJ/EbAF3u0fXIzPJEDtnITsBGbbK0EkM72amhl/R5b+5xx0Y/QhcVOpuulg==}
+  '@emnapi/runtime@1.5.0':
+    resolution: {integrity: sha512-97/BJ3iXHww3djw6hYIfErCZFee7qCtrneuLa20UXFCOTCfBM2cvQHjWJ2EG0s0MtdNwInarqCTz35i4wWXHsQ==}
 
   '@esbuild/aix-ppc64@0.25.4':
     resolution: {integrity: sha512-1VCICWypeQKhVbE9oW/sJaAmjLxhVqacdkvPLEjwlttjfwENRSClS8EjBz0KzRyFSCPDIkuXW34Je/vk7zdB7Q==}
@@ -1068,8 +1068,8 @@ packages:
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
-  bits-ui@2.9.4:
-    resolution: {integrity: sha512-Cqn685P6DDuEyBZT/CWMyS5+8JAnYbctvoEVPcmiut+HUpG3SozVgjoDaUib5VG4ZYUKEi1FPwHxiXo9c6J0PA==}
+  bits-ui@2.9.5:
+    resolution: {integrity: sha512-Al3U2TqTyVbkf6sH6ltMj16AZ6495ueKoqdxwg+vs0g0WYekRLGBXFUZXz3TP3uRjofZMMN+ePxRFNsAW7Fpgw==}
     engines: {node: '>=20'}
     peerDependencies:
       '@internationalized/date': ^3.8.1
@@ -2469,7 +2469,7 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  '@emnapi/runtime@1.4.5':
+  '@emnapi/runtime@1.5.0':
     dependencies:
       tslib: 2.8.1
     optional: true
@@ -2704,7 +2704,7 @@ snapshots:
 
   '@img/sharp-wasm32@0.33.5':
     dependencies:
-      '@emnapi/runtime': 1.4.5
+      '@emnapi/runtime': 1.5.0
     optional: true
 
   '@img/sharp-win32-ia32@0.33.5':
@@ -3090,7 +3090,7 @@ snapshots:
 
   balanced-match@1.0.2: {}
 
-  bits-ui@2.9.4(@internationalized/date@3.9.0)(svelte@5.38.3):
+  bits-ui@2.9.5(@internationalized/date@3.9.0)(svelte@5.38.3):
     dependencies:
       '@floating-ui/core': 1.7.3
       '@floating-ui/dom': 1.7.4
