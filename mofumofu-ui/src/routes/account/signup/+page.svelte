@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { getGoogleOAuthUrl, getGitHubOAuthUrl } from '$lib/oauth/config';
 	import { checkHandleAvailability } from '$lib/api/user/userApi';
 	import { signup } from '$lib/api/auth/authApi';
 	import { createSignupSchema } from '$lib/schemas/signup';

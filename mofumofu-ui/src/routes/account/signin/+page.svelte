@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { getGoogleOAuthUrl, getGitHubOAuthUrl } from '$lib/oauth/config';
 	import { signin } from '$lib/api/auth/authApi';
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { goto } from '$app/navigation';
