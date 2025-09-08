@@ -7,7 +7,7 @@ export const actions: Actions = {
 	linkGoogle: async ({ cookies }) => {
 		// Generate secure random state for Google link
 		const state = `link_${crypto.randomBytes(16).toString('hex')}`;
-		
+
 		// Store state in HttpOnly cookie (expires in 10 minutes)
 		cookies.set('oauth_link_state', state, {
 			httpOnly: true,
@@ -35,7 +35,7 @@ export const actions: Actions = {
 	linkGithub: async ({ cookies }) => {
 		// Generate secure random state for GitHub link
 		const state = `link_${crypto.randomBytes(16).toString('hex')}`;
-		
+
 		// Store state in HttpOnly cookie (expires in 10 minutes)
 		cookies.set('oauth_link_state', state, {
 			httpOnly: true,
