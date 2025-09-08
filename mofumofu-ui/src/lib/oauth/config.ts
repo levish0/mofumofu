@@ -21,6 +21,6 @@ export const OAUTH_CONFIG = {
 
 // OAuth URL generation functions have been moved to server actions for CSRF protection:
 // - getGoogleOAuthUrl() → /account/signin/+page.server.ts googleOAuth action
-// - getGitHubOAuthUrl() → /account/signin/+page.server.ts githubOAuth action  
+// - getGitHubOAuthUrl() → /account/signin/+page.server.ts githubOAuth action
 // - getGoogleOAuthLinkUrl() → /settings/+page.server.ts linkGoogle action
 // - getGitHubOAuthLinkUrl() → /settings/+page.server.ts linkGithub action
