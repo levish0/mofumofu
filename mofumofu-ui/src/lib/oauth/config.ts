@@ -19,50 +19,8 @@ export const OAUTH_CONFIG = {
 	}
 };
 
-export function getGoogleOAuthUrl(): string {
-	const params = new URLSearchParams({
-		client_id: OAUTH_CONFIG.google.clientId,
-		redirect_uri: OAUTH_CONFIG.google.redirectUri,
-		response_type: OAUTH_CONFIG.google.responseType,
-		scope: OAUTH_CONFIG.google.scope,
-		access_type: 'offline',
-		prompt: 'consent'
-	});
-
-	return `${OAUTH_CONFIG.google.authUrl}?${params.toString()}`;
-}
-
-export function getGitHubOAuthUrl(): string {
-	const params = new URLSearchParams({
-		client_id: OAUTH_CONFIG.github.clientId,
-		redirect_uri: OAUTH_CONFIG.github.redirectUri,
-		scope: OAUTH_CONFIG.github.scope,
-		state: Math.random().toString(36).substring(2, 15)
-	});
-
-	return `${OAUTH_CONFIG.github.authUrl}?${params.toString()}`;
-}
-
-export function getGoogleOAuthLinkUrl(): string {
-	const params = new URLSearchParams({
-		client_id: OAUTH_CONFIG.google.clientId,
-		redirect_uri: OAUTH_CONFIG.google.linkRedirectUri,
-		response_type: OAUTH_CONFIG.google.responseType,
-		scope: OAUTH_CONFIG.google.scope,
-		access_type: 'offline',
-		prompt: 'consent'
-	});
-
-	return `${OAUTH_CONFIG.google.authUrl}?${params.toString()}`;
-}
-
-export function getGitHubOAuthLinkUrl(): string {
-	const params = new URLSearchParams({
-		client_id: OAUTH_CONFIG.github.clientId,
-		redirect_uri: OAUTH_CONFIG.github.redirectUri,
-		scope: OAUTH_CONFIG.github.scope,
-		state: `link_${Math.random().toString(36).substring(2, 15)}`
-	});
-
-	return `${OAUTH_CONFIG.github.authUrl}?${params.toString()}`;
-}
+// OAuth URL generation functions have been moved to server actions for CSRF protection:
+// - getGoogleOAuthUrl() → /account/signin/+page.server.ts googleOAuth action
+// - getGitHubOAuthUrl() → /account/signin/+page.server.ts githubOAuth action  
+// - getGoogleOAuthLinkUrl() → /settings/+page.server.ts linkGoogle action
+// - getGitHubOAuthLinkUrl() → /settings/+page.server.ts linkGithub action
