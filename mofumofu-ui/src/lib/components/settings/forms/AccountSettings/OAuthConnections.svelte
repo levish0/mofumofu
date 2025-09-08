@@ -2,9 +2,9 @@
 	import { Button } from '../../../ui/button';
 	import { getOAuthConnections, unlinkOAuth } from '$lib/api/auth/authApi';
 	import type { OAuthConnectionsResponse, OAuthProvider } from '$lib/api/auth/types';
-	import { getGoogleOAuthLinkUrl, getGitHubOAuthLinkUrl } from '$lib/oauth/config';
 	import { toast } from 'svelte-sonner';
 	import { settingsStore } from '$lib/stores/settings.svelte';
+	import { enhance } from '$app/forms';
 
 	// settingsStore에서 데이터 가져오기
 	const connections = $derived(settingsStore.account.oauthConnections as OAuthProvider[]);
@@ -54,13 +54,6 @@
 		}
 	}
 
-	function handleLinkOAuth(provider: OAuthProvider) {
-		if (provider === 'Google') {
-			window.location.href = getGoogleOAuthLinkUrl();
-		} else if (provider === 'Github') {
-			window.location.href = getGitHubOAuthLinkUrl();
-		}
-	}
 </script>
 
 <div class="space-y-4">
@@ -135,10 +128,16 @@
 				<h3 class="mb-3 text-lg font-medium">계정 연결 추가</h3>
 				<div class="space-y-2">
 					{#each unconnectedProviders as provider}
-						<button
-							onclick={() => handleLinkOAuth(provider)}
-							class="border-mofu-light-700 dark:border-mofu-dark-700 bg-mofu-light-800 dark:bg-mofu-dark-800 hover:bg-mofu-light-700 dark:hover:bg-mofu-dark-700 flex w-full items-center justify-between rounded-lg border p-4 transition-colors"
+						<form 
+							method="POST" 
+							action="?/{provider === 'Google' ? 'linkGoogle' : 'linkGithub'}" 
+							use:enhance
+							class="w-full"
 						>
+							<button
+								type="submit"
+								class="border-mofu-light-700 dark:border-mofu-dark-700 bg-mofu-light-800 dark:bg-mofu-dark-800 hover:bg-mofu-light-700 dark:hover:bg-mofu-dark-700 flex w-full items-center justify-between rounded-lg border p-4 transition-colors"
+							>
 							<div class="flex items-center space-x-3">
 								<div
 									class="bg-mofu-light-700 dark:bg-mofu-dark-700 flex h-10 w-10 items-center justify-center rounded-full"
@@ -187,7 +186,8 @@
 							>
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
 							</svg>
-						</button>
+							</button>
+						</form>
 					{/each}
 				</div>
 			</div>

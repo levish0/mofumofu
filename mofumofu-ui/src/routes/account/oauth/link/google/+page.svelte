@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import { linkOAuth } from '$lib/api/auth/authApi';
 	import { toast } from 'svelte-sonner';
@@ -8,19 +7,22 @@
 	import { ExclamationTriangle, Icon } from 'svelte-hero-icons';
 	import * as m from '../../../../../paraglide/messages';
 	import { Button } from '$lib/components/ui/button';
+	import type { PageData } from './$types';
+
+	let { data }: { data: PageData } = $props();
 
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 
 	onMount(async () => {
 		try {
-			const code = page.url.searchParams.get('code');
-			const errorParam = page.url.searchParams.get('error');
-
-			if (errorParam) {
-				throw new Error(`OAuth error: ${errorParam}`);
+			// Check if server detected an error
+			if (data.error) {
+				throw new Error(data.error);
 			}
 
+			// Get code from server data (already verified)
+			const code = data.code;
 			if (!code) {
 				throw new Error('Authorization code not found');
 			}

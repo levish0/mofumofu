@@ -23,10 +23,17 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 	// Check if this is a link request (state starts with 'link_')
 	const isLinkRequest = state?.startsWith('link_') ?? false;
 
-	// For link requests, we need different state verification logic
 	if (isLinkRequest) {
-		// For now, allow link requests to pass through
-		// TODO: Implement proper state verification for link requests
+		// Verify link state parameter for CSRF protection
+		const storedLinkState = cookies.get('oauth_link_state');
+		if (!state || !storedLinkState || state !== storedLinkState) {
+			console.error('Link state verification failed', { state, storedLinkState });
+			throw error(400, 'Invalid link state parameter - potential CSRF attack');
+		}
+
+		// Clean up link state cookie after verification
+		cookies.delete('oauth_link_state', { path: '/' });
+
 		return {
 			code,
 			handle: null,
