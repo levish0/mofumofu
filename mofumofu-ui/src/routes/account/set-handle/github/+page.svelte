@@ -3,20 +3,20 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Button } from '$lib/components/ui/button';
 	import { checkHandleAvailability } from '$lib/api/user/userApi';
-	import { getGitHubOAuthUrl } from '$lib/oauth/config';
 	import { createPersonalInfoSchema } from '$lib/schemas/personal-info';
 	import { safeParse } from 'valibot';
 	import { goto } from '$app/navigation';
-	import { oauthHandleStore } from '$lib/stores/oauthHandle.svelte';
 	import { ApiError } from '$lib/api/error/common_error';
 	import { ExclamationTriangle, CheckCircle, Icon } from 'svelte-hero-icons';
 	import * as m from '../../../../paraglide/messages';
+	import { enhance } from '$app/forms';
+	import type { ActionData } from './$types';
 
 	let handle = $state('');
 	let validationError = $state<string | undefined>();
 	let verificationState = $state<'unverified' | 'checking' | 'verified' | 'unavailable'>('unverified');
-	let proceeding = $state(false);
-	let proceedError = $state<string | undefined>();
+	
+	let { data, form }: { data: any; form: ActionData } = $props();
 
 	const characterCount = $derived(handle.length);
 	const canCheck = $derived(handle.trim() !== '' && !validationError);
@@ -47,25 +47,6 @@
 		} catch (error) {
 			console.error('Handle availability check failed:', error);
 			verificationState = 'unverified';
-		}
-	}
-
-	async function proceedWithGitHub() {
-		if (!canProceed) return;
-
-		proceeding = true;
-		proceedError = undefined;
-
-		try {
-			// Store handle in store
-			oauthHandleStore.setHandle(handle.trim());
-
-			// Redirect to GitHub OAuth
-			window.location.href = getGitHubOAuthUrl();
-		} catch (error) {
-			console.error('Failed to proceed with GitHub OAuth:', error);
-			proceedError = m.oauth_github_error();
-			proceeding = false;
 		}
 	}
 
@@ -155,32 +136,23 @@
 				{/if}
 			</div>
 
-			{#if proceedError}
+			{#if form?.error}
 				<div
 					class="flex items-center gap-2 rounded-md border border-rose-400/20 bg-rose-400/10 p-3 text-sm text-rose-400"
 				>
 					<Icon src={ExclamationTriangle} size="16" />
-					{proceedError}
+					{form.error}
 				</div>
 			{/if}
 
 			<div class="space-y-3">
-				<Button
-					onclick={proceedWithGitHub}
-					disabled={!canProceed || proceeding}
-					class="flex w-full items-center justify-center gap-3 bg-[#24292e] text-white hover:bg-[#24292e]/80 disabled:opacity-50"
-				>
-					{#if proceeding}
-						<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-							<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-							<path
-								class="opacity-75"
-								fill="currentColor"
-								d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-							></path>
-						</svg>
-						{m.oauth_github_continuing()}
-					{:else}
+				<form method="POST" action="?/proceedWithGitHub" use:enhance>
+					<input type="hidden" name="handle" value={handle} />
+					<Button
+						type="submit"
+						disabled={!canProceed}
+						class="flex w-full items-center justify-center gap-3 bg-[#24292e] text-white hover:bg-[#24292e]/80 disabled:opacity-50"
+					>
 						<!-- GitHub 아이콘 -->
 						<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5 fill-white">
 							<path
@@ -190,8 +162,8 @@
 							/>
 						</svg>
 						{m.oauth_continue_with_github()}
-					{/if}
-				</Button>
+					</Button>
+				</form>
 
 				<Button
 					onclick={goBack}

@@ -1,7 +1,6 @@
 <!-- src/routes/accounts/oauth/callback/github/+page.svelte -->
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { page } from '$app/state';
 	import { githubAuth, linkOAuth } from '$lib/api/auth/authApi';
 	import { goto } from '$app/navigation';
 	import { authStore } from '$lib/stores/auth.svelte';
@@ -11,6 +10,9 @@
 	import * as m from '../../../../../paraglide/messages';
 	import { Button } from '$lib/components/ui/button';
 	import { toast } from 'svelte-sonner';
+	import type { PageData } from './$types';
+
+	let { data }: { data: PageData } = $props();
 
 	let loading = $state(true);
 	let error = $state<string | null>(null);
@@ -18,20 +20,19 @@
 
 	onMount(async () => {
 		try {
-			const code = page.url.searchParams.get('code');
-			const errorParam = page.url.searchParams.get('error');
-			const state = page.url.searchParams.get('state');
-
-			if (errorParam) {
-				throw new Error(`OAuth error: ${errorParam}`);
+			// Check if server detected an error
+			if (data.error) {
+				throw new Error(data.error);
 			}
 
+			// Get code from server data (already verified)
+			const code = data.code;
 			if (!code) {
 				throw new Error('Authorization code not found');
 			}
 
-			// state가 'link_'로 시작하면 계정 연결 요청
-			isLinkRequest = state?.startsWith('link_') ?? false;
+			// Get link request status from server data
+			isLinkRequest = data.isLinkRequest ?? false;
 
 			if (isLinkRequest) {
 				// 계정 연결 처리
@@ -40,9 +41,9 @@
 				await goto('/settings', { replaceState: true });
 			} else {
 				// 기존 로그인/가입 처리
-				// 저장된 핸들 가져오기 (가입 시에만 존재)
-				const handle = oauthHandleStore.currentHandle;
-				console.log('Handle from store:', handle);
+				// Use handle from server data (already extracted from cookie)
+				const handle = data.handle;
+				console.log('Handle from server:', handle);
 
 				// GitHub OAuth 처리 (핸들이 있으면 가입, 없으면 로그인)
 				const response = await githubAuth(code, handle || undefined);
@@ -50,7 +51,7 @@
 				// 토큰을 스토어에 저장
 				authStore.setToken(response.access_token);
 
-				// 핸들 스토어 정리
+				// 핸들 스토어 정리 (서버에서 이미 쿠키를 정리했지만 클라이언트 스토어도 정리)
 				if (handle) {
 					oauthHandleStore.clearHandle();
 				}
