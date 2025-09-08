@@ -192,7 +192,7 @@ export async function processMarkdown(markdown: string): Promise<MarkdownProcess
 				details: ['open'],
 
 				// SVG 속성들
-				svg: ['width', 'height', 'viewBox', 'xmlns', 'fill', 'stroke'],
+				svg: ['width', 'height', 'viewBox', 'xmlns', 'fill', 'stroke', 'preserveAspectRatio'],
 				g: ['transform', 'fill', 'stroke'],
 				path: ['d', 'fill', 'stroke', 'strokeWidth'],
 				rect: ['x', 'y', 'width', 'height', 'fill', 'stroke'],
@@ -200,6 +200,10 @@ export async function processMarkdown(markdown: string): Promise<MarkdownProcess
 				ellipse: ['cx', 'cy', 'rx', 'ry', 'fill', 'stroke'],
 				line: ['x1', 'y1', 'x2', 'y2', 'stroke'],
 				text: ['x', 'y', 'fill', 'fontSize', 'textAnchor'],
+				tspan: ['x', 'y', 'dx', 'dy', 'rotate', 'textLength', 'lengthAdjust'],
+				defs: ['id'],
+				marker: ['id', 'viewBox', 'refX', 'refY', 'markerUnits', 'markerWidth', 'markerHeight', 'orient'],
+				use: ['href'],
 
 				// KaTeX 속성들
 				math: ['xmlns', 'display'],
@@ -210,7 +214,9 @@ export async function processMarkdown(markdown: string): Promise<MarkdownProcess
 				mfrac: ['linethickness', 'numalign', 'denomalign'],
 				msup: ['superscriptshift'],
 				msub: ['subscriptshift'],
-				mspace: ['width', 'height', 'depth']
+				mspace: ['width', 'height', 'depth'],
+				menclose: ['notation'],
+				mpadded: ['width', 'height', 'depth', 'lspace', 'rspace']
 			},
 
 			protocols: {
