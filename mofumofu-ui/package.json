@@ -85,13 +85,13 @@
 		"unified": "^11.0.5",
 		"valibot": "^1.1.0",
 		"vaul-svelte": "1.0.0-next.7",
-		"vite": "^7.1.4"
+		"vite": "^7.1.5"
 	},
 	"keywords": [
 		"svelte"
 	],
 	"dependencies": {
-		"@sveltejs/kit": "^2.37.0",
+		"@sveltejs/kit": "^2.37.1",
 		"esm-env": "^1.2.2"
 	}
 }
