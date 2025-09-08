@@ -1,5 +1,5 @@
 /* Markdown content styles */
-@import url('https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css');
+@import url('https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css');
 @import url(remark-github-blockquote-alert/alert.css);
 
 .prose pre {
