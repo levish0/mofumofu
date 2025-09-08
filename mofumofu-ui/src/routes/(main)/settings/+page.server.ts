@@ -1,12 +1,11 @@
 import { redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { PUBLIC_GOOGLE_CLIENT_ID, PUBLIC_GITHUB_CLIENT_ID, PUBLIC_APP_URL } from '$env/static/public';
-import crypto from 'crypto';
 
 export const actions: Actions = {
 	linkGoogle: async ({ cookies }) => {
 		// Generate secure random state for Google link
-		const state = `link_${crypto.randomBytes(16).toString('hex')}`;
+		const state = `link_${crypto.randomUUID()}`;
 
 		// Store state in HttpOnly cookie (expires in 10 minutes)
 		cookies.set('oauth_link_state', state, {
@@ -34,7 +33,7 @@ export const actions: Actions = {
 
 	linkGithub: async ({ cookies }) => {
 		// Generate secure random state for GitHub link
-		const state = `link_${crypto.randomBytes(16).toString('hex')}`;
+		const state = `link_${crypto.randomUUID()}`;
 
 		// Store state in HttpOnly cookie (expires in 10 minutes)
 		cookies.set('oauth_link_state', state, {
