@@ -1,7 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { PUBLIC_GOOGLE_CLIENT_ID, PUBLIC_GITHUB_CLIENT_ID, PUBLIC_APP_URL } from '$env/static/public';
-import crypto from 'crypto';
 
 export const load: PageServerLoad = async () => {
 	return {};
@@ -10,7 +9,7 @@ export const load: PageServerLoad = async () => {
 export const actions: Actions = {
 	googleOAuth: async ({ cookies }) => {
 		// Generate secure random state
-		const state = crypto.randomBytes(32).toString('hex');
+		const state = crypto.randomUUID();
 
 		// Store state in HttpOnly cookie (expires in 10 minutes)
 		cookies.set('oauth_state', state, {
