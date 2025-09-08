@@ -18,7 +18,7 @@ export const actions: Actions = {
 
 		// Generate secure random state
 		const state = crypto.randomBytes(32).toString('hex');
-		
+
 		// Store state in HttpOnly cookie (expires in 10 minutes)
 		cookies.set('oauth_state', state, {
 			httpOnly: true,

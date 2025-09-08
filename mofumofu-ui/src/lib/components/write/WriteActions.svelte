@@ -57,7 +57,17 @@
 				</Button>
 			{/if}
 
-			<PublishDialog {title} {content} {tags} {onPublished} {isEditMode} {editSlug} {editPostId} {summary} {existingThumbnail} />
+			<PublishDialog
+				{title}
+				{content}
+				{tags}
+				{onPublished}
+				{isEditMode}
+				{editSlug}
+				{editPostId}
+				{summary}
+				{existingThumbnail}
+			/>
 		</div>
 	</div>
 </div>

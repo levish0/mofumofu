@@ -15,7 +15,7 @@
 	let handle = $state('');
 	let validationError = $state<string | undefined>();
 	let verificationState = $state<'unverified' | 'checking' | 'verified' | 'unavailable'>('unverified');
-	
+
 	let { data, form }: { data: any; form: ActionData } = $props();
 
 	const characterCount = $derived(handle.length);

@@ -11,7 +11,7 @@ export const actions: Actions = {
 	googleOAuth: async ({ cookies }) => {
 		// Generate secure random state
 		const state = crypto.randomBytes(32).toString('hex');
-		
+
 		// Store state in HttpOnly cookie (expires in 10 minutes)
 		cookies.set('oauth_state', state, {
 			httpOnly: true,
@@ -39,7 +39,7 @@ export const actions: Actions = {
 	githubOAuth: async ({ cookies }) => {
 		// Generate secure random state
 		const state = crypto.randomBytes(32).toString('hex');
-		
+
 		// Store state in HttpOnly cookie (expires in 10 minutes)
 		cookies.set('oauth_state', state, {
 			httpOnly: true,
