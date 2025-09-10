@@ -115,6 +115,9 @@ The fastest way to get Mofumofu running locally:
 git clone https://github.com/levish0/mofumofu.git
 cd mofumofu
 
+# Navigate to backend directory where docker-compose.yml is located
+cd mofumofu-backend
+
 # Start all services
 docker-compose up --build
 
