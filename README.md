@@ -665,7 +665,7 @@ See [LICENSE](./LICENSE) for the full license text.
 - **🐛 Bug Reports**: [GitHub Issues](https://github.com/levish0/mofumofu/issues)
 - **💡 Feature Requests**: [GitHub Discussions](https://github.com/levish0/mofumofu/discussions)
 - **📚 Documentation**: [Project Wiki](https://github.com/levish0/mofumofu/wiki)
-- **💬 Community Chat**: [Discord Server]https://discord.gg/86wResmMSH)
+- **💬 Community Chat**: [Discord Server](https://discord.gg/Q2kEy8WCKK)
 
 ---
 
