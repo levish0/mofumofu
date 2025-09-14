@@ -127,7 +127,7 @@
 
 					<!-- Post Content -->
 					<div
-						class="prose prose-invert prose-lg dark:text-mofu-dark-200 text-mofu-light-200 mb-12 max-w-none break-all"
+						class="prose prose-invert prose-lg dark:text-mofu-dark-200 text-mofu-light-200 mb-12 max-w-none wrap-break-word break-keep"
 					>
 						{@html htmlContent}
 					</div>
