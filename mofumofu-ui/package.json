@@ -38,15 +38,15 @@
 		"@internationalized/date": "^3.9.0",
 		"@lucide/svelte": "^0.525.0",
 		"@sveltejs/adapter-cloudflare": "^7.2.3",
-		"@sveltejs/package": "^2.5.0",
-		"@sveltejs/vite-plugin-svelte": "^6.1.4",
+		"@sveltejs/package": "^2.5.2",
+		"@sveltejs/vite-plugin-svelte": "^6.2.0",
 		"@tailwindcss/typography": "^0.5.16",
 		"@tailwindcss/vite": "^4.1.13",
 		"@types/escape-html": "^1.0.4",
-		"@types/node": "^24.3.1",
+		"@types/node": "^24.5.0",
 		"@types/pica": "^9.0.5",
 		"autolinker": "^4.1.5",
-		"bits-ui": "^2.9.6",
+		"bits-ui": "^2.9.8",
 		"clsx": "^2.1.1",
 		"color-thief": "^2.2.5",
 		"date-fns": "^4.1.0",
@@ -72,7 +72,7 @@
 		"remark-parse": "^11.0.0",
 		"remark-rehype": "^11.1.2",
 		"remark-toc": "^9.0.0",
-		"svelte": "^5.38.7",
+		"svelte": "^5.38.10",
 		"svelte-check": "^4.3.1",
 		"svelte-easy-crop": "^4.0.1",
 		"svelte-hero-icons": "^5.2.0",
@@ -91,7 +91,7 @@
 		"svelte"
 	],
 	"dependencies": {
-		"@sveltejs/kit": "^2.37.1",
+		"@sveltejs/kit": "^2.41.0",
 		"esm-env": "^1.2.2"
 	}
 }
