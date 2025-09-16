@@ -136,8 +136,8 @@ importers:
         specifier: ^4.3.1
         version: 4.3.1(picomatch@4.0.3)(svelte@5.38.10)(typescript@5.9.2)
       svelte-easy-crop:
-        specifier: ^4.0.1
-        version: 4.0.1(svelte@5.38.10)
+        specifier: ^5.0.0
+        version: 5.0.0(svelte@5.38.10)
       svelte-hero-icons:
         specifier: ^5.2.0
         version: 5.2.0(svelte@5.38.10)
@@ -2153,8 +2153,8 @@ packages:
       svelte: ^4.0.0 || ^5.0.0-next.0
       typescript: '>=5.0.0'
 
-  svelte-easy-crop@4.0.1:
-    resolution: {integrity: sha512-0k7vVpHVLrPyobSXqey5IJUmFVxOoCaQrobFEsFXpSCyK8N5jTkRj1VX6NuCOZK8XXcMAqUvV0MktB8D5x1oCw==}
+  svelte-easy-crop@5.0.0:
+    resolution: {integrity: sha512-niWtner+qYVas6ypIOQ277NKNACVz9qz6wfpEW7t+x5Lhv6nOjpv3S1WhEPO+SnDaW3VZv+0bmm6jVDHK2GMAg==}
     peerDependencies:
       svelte: ^5.0.0
 
@@ -4468,7 +4468,7 @@ snapshots:
     transitivePeerDependencies:
       - picomatch
 
-  svelte-easy-crop@4.0.1(svelte@5.38.10):
+  svelte-easy-crop@5.0.0(svelte@5.38.10):
     dependencies:
       svelte: 5.38.10
 
