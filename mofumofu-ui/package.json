@@ -40,13 +40,13 @@
 		"@sveltejs/adapter-cloudflare": "^7.2.3",
 		"@sveltejs/package": "^2.5.2",
 		"@sveltejs/vite-plugin-svelte": "^6.2.0",
-		"@tailwindcss/typography": "^0.5.16",
+		"@tailwindcss/typography": "^0.5.18",
 		"@tailwindcss/vite": "^4.1.13",
 		"@types/escape-html": "^1.0.4",
-		"@types/node": "^24.5.0",
+		"@types/node": "^24.5.2",
 		"@types/pica": "^9.0.5",
 		"autolinker": "^4.1.5",
-		"bits-ui": "^2.9.8",
+		"bits-ui": "^2.11.0",
 		"clsx": "^2.1.1",
 		"color-thief": "^2.2.5",
 		"date-fns": "^4.1.0",
@@ -57,7 +57,7 @@
 		"prettier": "^3.6.2",
 		"prettier-plugin-svelte": "^3.4.0",
 		"prettier-plugin-tailwindcss": "^0.6.14",
-		"publint": "^0.3.12",
+		"publint": "^0.3.13",
 		"rehype-highlight": "^7.0.2",
 		"rehype-katex": "^7.0.1",
 		"rehype-raw": "^7.0.0",
@@ -72,7 +72,7 @@
 		"remark-parse": "^11.0.0",
 		"remark-rehype": "^11.1.2",
 		"remark-toc": "^9.0.0",
-		"svelte": "^5.38.10",
+		"svelte": "^5.39.3",
 		"svelte-check": "^4.3.1",
 		"svelte-easy-crop": "^4.0.1",
 		"svelte-hero-icons": "^5.2.0",
@@ -85,13 +85,13 @@
 		"unified": "^11.0.5",
 		"valibot": "^1.1.0",
 		"vaul-svelte": "1.0.0-next.7",
-		"vite": "^7.1.5"
+		"vite": "^7.1.6"
 	},
 	"keywords": [
 		"svelte"
 	],
 	"dependencies": {
-		"@sveltejs/kit": "^2.41.0",
+		"@sveltejs/kit": "^2.42.2",
 		"esm-env": "^1.2.2"
 	}
 }
